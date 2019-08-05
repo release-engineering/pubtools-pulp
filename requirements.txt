@@ -1,0 +1,7 @@
+requests
+more-executors>=2.1.2
+six
+PyYAML
+jsonschema
+attrs
+six

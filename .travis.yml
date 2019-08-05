@@ -1,0 +1,31 @@
+sudo: false
+language: python
+install: pip install tox
+matrix:
+  include:
+  - python: "2.7"
+    env: TOX_ENV=py27
+  - python: "3.6"
+    env: TOX_ENV=static
+  - python: "3.6"
+    env: TOX_ENV=cov-travis DEPLOY=1
+  - python: "3.6"
+    env: TOX_ENV=docs
+script: tox -e $TOX_ENV
+after_success:
+- test $TOX_ENV = docs && scripts/push-docs
+
+deploy:
+  # Adding a new tag automatically releases to PyPI.
+  provider: pypi
+  user: content-delivery-release-bot
+  password:
+    secure: mnw4d949DWPmJPhoMzKMv0G+IqYNhuOxfWQWrc8x2SjPIP6OzXZXcErJZ7pz1gq7JIzD9psyD8uIIlPZFsw47yDcAbSOaaa1EhcB134Weonxl2AlgrM9uD6beQaOU1g+UqY4Ej6CQmmm1AN1r/2il6P8b2guYkQvregSjS1uiL1lr0dYsk/Pr9hhgWUQgxLpnjaH7V4GHWsesOMrNp9v8dFlzJTgR2E7f/gqtC362VoSZq6AR9jEjMi4L+B+6zF7qycnEa6BnMCHIBDUS04GQ3LD9PvyGTvbz1dekmQ75NGBvBr36RuIMPv3eeAp8Anm3NMtTnKiuiAEcEAFf85rs3hWOiIIMgcEf/dfunWaNk1vR8aMYgQj21r7fqMHtJJQb55YNa3/Bx1ngjyOmuGxBUUkrk9UOHhMrXVpSftORFnoNSgLKxSFxNW9ByUz9n5ga1x0TQSwVlQT9ZinVRXsgj7T3w/Rvo+4CBlLafUz3vkKyhPUzKPbx3IMGDBLYsxL1gP61ndkfmOnHsjQUOCOM4OKmWfkwSOodJwoU143KlO0tHn/HD+xostND7kV59VHbitzl+E2iJXnvpJ4QXYizj8zPMyMZ30olpzZnhvJ3s0XkKmhkbBop6DpPi8S1HXDPdQC4LiwbhGO/C1H4dLfN8gvY49ssrJAgSeqaUEewQE=
+  on:
+    tags: true
+    # Only one of the environments in the matrix should have
+    # deployments enabled. It's mostly arbitrary which one,
+    # but best to select some Python 3.x so up-to-date tools
+    # are used during release.
+    condition: $DEPLOY = 1
+  skip_existing: true
