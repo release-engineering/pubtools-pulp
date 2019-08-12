@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime, timedelta
 
-from pubtools.pulplib import Criteria, Matcher, Task
+from pubtools.pulplib import Criteria, Matcher
 
 from pubtools.pulp.task import PulpTask
 

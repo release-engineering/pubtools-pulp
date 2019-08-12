@@ -1,8 +1,7 @@
 import logging
 import os
-import attr
-
 from argparse import ArgumentParser
+import attr
 
 from pubtools.pulplib import Client
 
