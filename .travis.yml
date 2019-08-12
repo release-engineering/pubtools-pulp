@@ -8,7 +8,7 @@ matrix:
   - python: "3.6"
     env: TOX_ENV=static
   - python: "3.6"
-    env: TOX_ENV=cov-travis DEPLOY=1
+    env: TOX_ENV=cov-travis
   - python: "3.6"
     env: TOX_ENV=docs
 script: tox -e $TOX_ENV
