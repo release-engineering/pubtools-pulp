@@ -1,7 +1,7 @@
 import logging
 import os
-from argparse import ArgumentParser
-import attr
+import textwrap
+from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
 from pubtools.pulplib import Client
 
@@ -10,7 +10,6 @@ LOG = logging.getLogger("pulp-task")
 LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
 
 
-@attr.s
 class PulpTask(object):
     """Base class for Pulp CLI tasks
 
@@ -21,17 +20,39 @@ class PulpTask(object):
     configured with minimal options which can be extended by subclass.
     The pulp client uses the args from cli and connects to the url
     provided in the request.
-
     """
 
-    parser = attr.ib(init=False, default=attr.Factory(ArgumentParser))
-    """CLI parser for the task """
+    def __init__(self):
+        self._args = None
+        self._pulp_client = None
 
-    _args = attr.ib(init=False, default=None)
-    # internal attribute that stores the parsed args from cli
+        self.parser = ArgumentParser(
+            description=self.description, formatter_class=RawDescriptionHelpFormatter
+        )
+        self._basic_args()
+        self.add_args()
 
-    _pulp_client = attr.ib(init=False, default=None)
-    # internal attribute to store the instance of the pulp client
+    @property
+    def description(self):
+        """Description for argument parser; shows up in generated docs.
+
+        Defaults to the class doc string with some whitespace fixes."""
+
+        # Doc strings are typically written having the first line starting
+        # without whitespace, and all other lines starting with whitespace.
+        # That would be formatted oddly when copied into RST verbatim,
+        # so we'll dedent all lines *except* the first.
+        split = self.__doc__.splitlines(True)
+        firstline = split[0]
+        rest = "".join(split[1:])
+        rest = textwrap.dedent(rest)
+        out = "".join([firstline, rest]).strip()
+
+        # To keep separate paragraphs, we use RawDescriptionHelpFormatter,
+        # but that means we have to wrap it ourselves, so do that here.
+        paragraphs = out.split("\n\n")
+        chunks = ["\n".join(textwrap.wrap(p)) for p in paragraphs]
+        return "\n\n".join(chunks)
 
     @property
     def args(self):
@@ -41,8 +62,6 @@ class PulpTask(object):
         else parses with defined options and return the args
         """
         if not self._args:
-            self._basic_args()
-            self.add_args()
             self._args = self.parser.parse_args()
         return self._args
 
@@ -75,9 +94,13 @@ class PulpTask(object):
     def _basic_args(self):
         # minimum args required for a pulp CLI task
 
-        self.parser.add_argument("--url", help="pulp server URL", required=True)
-        self.parser.add_argument("--user", help="pulp user", default=None)
-        self.parser.add_argument("--password", help="pulp password", default=None)
+        self.parser.add_argument("--url", help="Pulp server URL", required=True)
+        self.parser.add_argument("--user", help="Pulp username", default=None)
+        self.parser.add_argument(
+            "--password",
+            help="Pulp password (or set PULP_PASSWORD environment variable)",
+            default=None,
+        )
         self.parser.add_argument("--verbose", action="store_true", help="show logs")
         self.parser.add_argument(
             "--debug",

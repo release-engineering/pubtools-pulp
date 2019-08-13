@@ -10,16 +10,20 @@ LOG = logging.getLogger("garbage-collect")
 
 
 class GarbageCollect(PulpTask):
-    """A class for the pulp task of garbage collect.
+    """Perform garbage collection on Pulp data.
 
-    The task accepts --gc-threshold as a cli option to delete the
-    repos that older than the provided threshold (defaults to 5).
+    Garbage collection consists of deleting temporary Pulp repositories
+    (created by certain tools) older than a certain age.  Future versions
+    of this command may also perform other types of garbage collection.
+
+    This command is suitable for use periodically; for example, from a weekly
+    scheduled trigger.
     """
 
     def add_args(self):
         self.parser.add_argument(
             "--gc-threshold",
-            help="# of days beyond with gc applies",
+            help="delete repos older than this many days",
             type=int,
             default=5,
         )
@@ -58,3 +62,7 @@ class GarbageCollect(PulpTask):
 
 def entry_point():
     GarbageCollect().main()
+
+
+def doc_parser():
+    return GarbageCollect().parser

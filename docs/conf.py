@@ -45,6 +45,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.githubpages",
     "sphinx.ext.viewcode",
+    "sphinxarg.ext",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -88,10 +89,10 @@ html_theme = "alabaster"
 #
 html_theme_options = {
     "github_user": "release-engineering",
-    "github_repo": "pubtools-pulpl",
+    "github_repo": "pubtools-pulp",
     "github_button": False,
     "github_banner": True,
-    "description": "A library for Pulp task CLI",
+    "description": "Publishing tools for Pulp",
     "extra_nav_links": {
         "Source": "https://github.com/release-engineering/pubtools-pulp",
         "PyPI": "https://pypi.org/project/pubtools-pulp",
@@ -130,9 +131,4 @@ html_sidebars = {
 autoclass_content = "both"
 autodoc_member_order = "bysource"
 autodoc_inherit_docstrings = False
-intersphinx_mapping = {
-    "python": ("https://docs.python.org/3", None),
-    "requests": ("https://2.python-requests.org/en/master/", None),
-    "more-executors": ("https://rohanpm.github.io/more-executors/", None),
-    "attrs": ("https://www.attrs.org/en/stable/", None),
-}
+intersphinx_mapping = {"python": ("https://docs.python.org/3", None)}

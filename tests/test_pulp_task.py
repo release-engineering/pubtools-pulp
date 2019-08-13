@@ -51,3 +51,21 @@ def test_main(p_add_args):
     with patch("sys.argv", arg):
         with patch("pubtools.pulp.task.PulpTask.run"):
             assert task.main() == 0
+
+
+def test_description():
+    """description is initialized from subclass docstring, de-dented."""
+
+    class MyTask(PulpTask):
+        """This is an example task subclass.
+
+        It has a realistic multi-line doc string:
+
+            ...and may have several levels of indent.
+        """
+
+    assert MyTask().description == (
+        "This is an example task subclass.\n\n"
+        "It has a realistic multi-line doc string:\n\n"
+        "    ...and may have several levels of indent."
+    )
