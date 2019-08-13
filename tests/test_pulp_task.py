@@ -17,11 +17,11 @@ def test_task_run():
 def test_init_args():
     """Checks whether the args from cli are available for the task"""
     task = PulpTask()
-    arg = ["", "--url", "http://some.url", "--verbose", "--debug"]
+    arg = ["", "--pulp-url", "http://some.url", "--verbose", "--debug"]
     with patch("sys.argv", arg):
         task_args = task.args
 
-    cli_args = ["url", "user", "password", "verbose", "debug"]
+    cli_args = ["pulp_url", "pulp_user", "pulp_password", "verbose", "debug"]
     for a in cli_args:
         assert hasattr(task_args, a)
 
@@ -29,7 +29,7 @@ def test_init_args():
 def test_pulp_client():
     """Checks that the client in the task is an instance of pubtools.pulplib.Client"""
     task = PulpTask()
-    arg = ["", "--url", "http://some.url", "--user", "user"]
+    arg = ["", "--pulp-url", "http://some.url", "--pulp-user", "user"]
     with patch("sys.argv", arg):
         client = task.pulp_client
 
@@ -41,7 +41,7 @@ def test_main():
         assuming run() and add_args() are implemented
     """
     task = PulpTask()
-    arg = ["", "--url", "http://some.url", "--verbose", "--debug"]
+    arg = ["", "--pulp-url", "http://some.url", "--verbose", "--debug"]
     with patch("sys.argv", arg):
         with patch("pubtools._pulp.task.PulpTask.run"):
             assert task.main() == 0

@@ -82,22 +82,21 @@ class PulpTask(object):
         auth = None
 
         # checks if pulp password is available as enviornment variable
-        if self.args.user:
-            if not self.args.password:
-                self.args.password = os.environ.get("PULP_PASSWORD")
-                if not self.args.password:
-                    LOG.warning("No password provided for %s", self.args.user)
-            auth = (self.args.user, self.args.password)
+        if self.args.pulp_user:
+            pulp_password = self.args.pulp_password or os.environ.get("PULP_PASSWORD")
+            if not pulp_password:
+                LOG.warning("No pulp password provided for %s", self.args.pulp_user)
+            auth = (self.args.pulp_user, pulp_password)
 
-        return Client(self.args.url, auth=auth, verify=False)
+        return Client(self.args.pulp_url, auth=auth)
 
     def _basic_args(self):
         # minimum args required for a pulp CLI task
 
-        self.parser.add_argument("--url", help="Pulp server URL", required=True)
-        self.parser.add_argument("--user", help="Pulp username", default=None)
+        self.parser.add_argument("--pulp-url", help="Pulp server URL", required=True)
+        self.parser.add_argument("--pulp-user", help="Pulp username", default=None)
         self.parser.add_argument(
-            "--password",
+            "--pulp-password",
             help="Pulp password (or set PULP_PASSWORD environment variable)",
             default=None,
         )

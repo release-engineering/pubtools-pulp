@@ -46,7 +46,7 @@ def _get_fake_controller(*args):
 def _run_test(*repos):
     controller = _get_fake_controller(*repos)
     gc = GarbageCollect()
-    arg = ["", "--url", "http://some.url", "--verbose"]
+    arg = ["", "--pulp-url", "http://some.url", "--verbose"]
 
     with patch("sys.argv", arg):
         with patch("pubtools._pulp.task.PulpTask.pulp_client", controller.client):
@@ -57,7 +57,7 @@ def _run_test(*repos):
 def test_add_args():
     """adds the arg to the PulpTask parser """
     gc = GarbageCollect()
-    arg = ["", "--url", "http://some.url", "--verbose", "--gc-threshold", "7"]
+    arg = ["", "--pulp-url", "http://some.url", "--verbose", "--gc-threshold", "7"]
 
     with patch("sys.argv", arg):
         gc_args = gc.args
@@ -122,7 +122,7 @@ def test_gc_error(mock_logger):
 
     controller = _get_fake_controller(repo)
     gc = GarbageCollect()
-    arg = ["", "--url", "http://some.url", "--verbose"]
+    arg = ["", "--pulp-url", "http://some.url", "--verbose"]
 
     with patch("sys.argv", arg):
         with patch.object(controller.client, "_delete_repository") as repo_delete:
@@ -153,7 +153,7 @@ def test_entry_point(mock_logger):
     }
 
     controller = _get_fake_controller(repo)
-    arg = ["", "--url", "http://some.url", "--verbose"]
+    arg = ["", "--pulp-url", "http://some.url", "--verbose"]
 
     with patch("sys.argv", arg):
         with patch("pubtools._pulp.task.PulpTask.pulp_client", controller.client):
