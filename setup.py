@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 
 def get_description():
-    return "A library for Pulp tasks"
+    return "Publishing tools for Pulp"
 
 
 def get_long_description():
