@@ -4,12 +4,12 @@ import pytest
 from mock import Mock, patch
 
 from pubtools.pulplib import Client
-from pubtools.pulp.task import PulpTask
+from pubtools._pulp.task import PulpTask
 
 
 @pytest.fixture
 def p_add_args():
-    with patch("pubtools.pulp.task.PulpTask.add_args") as p_args:
+    with patch("pubtools._pulp.task.PulpTask.add_args") as p_args:
         yield p_args
 
 
@@ -49,7 +49,7 @@ def test_main(p_add_args):
     task = PulpTask()
     arg = ["", "--url", "http://some.url", "--verbose", "--debug"]
     with patch("sys.argv", arg):
-        with patch("pubtools.pulp.task.PulpTask.run"):
+        with patch("pubtools._pulp.task.PulpTask.run"):
             assert task.main() == 0
 
 

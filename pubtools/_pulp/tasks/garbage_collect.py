@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 from pubtools.pulplib import Criteria, Matcher
 
-from pubtools.pulp.task import PulpTask
+from pubtools._pulp.task import PulpTask
 
 
 LOG = logging.getLogger("garbage-collect")

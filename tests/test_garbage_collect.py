@@ -14,12 +14,12 @@ from pubtools.pulplib import (
 import pubtools.pulplib._impl.model.attr as pp_attr
 import pubtools.pulplib._impl.compat_attr as attr
 
-from pubtools.pulp.tasks.garbage_collect import GarbageCollect, entry_point
+from pubtools._pulp.tasks.garbage_collect import GarbageCollect, entry_point
 
 
 @pytest.fixture
 def mock_logger():
-    with patch("pubtools.pulp.tasks.garbage_collect.LOG") as mocked_info:
+    with patch("pubtools._pulp.tasks.garbage_collect.LOG") as mocked_info:
         yield mocked_info
 
 
@@ -49,7 +49,7 @@ def _run_test(*repos):
     arg = ["", "--url", "http://some.url", "--verbose"]
 
     with patch("sys.argv", arg):
-        with patch("pubtools.pulp.task.PulpTask.pulp_client", controller.client):
+        with patch("pubtools._pulp.task.PulpTask.pulp_client", controller.client):
             gc.main()
     return controller
 
@@ -126,7 +126,7 @@ def test_gc_error(mock_logger):
 
     with patch("sys.argv", arg):
         with patch.object(controller.client, "_delete_repository") as repo_delete:
-            with patch("pubtools.pulp.task.PulpTask.pulp_client", controller.client):
+            with patch("pubtools._pulp.task.PulpTask.pulp_client", controller.client):
                 repo_delete.return_value = f_return(
                     [
                         Task(
@@ -156,7 +156,7 @@ def test_entry_point(mock_logger):
     arg = ["", "--url", "http://some.url", "--verbose"]
 
     with patch("sys.argv", arg):
-        with patch("pubtools.pulp.task.PulpTask.pulp_client", controller.client):
+        with patch("pubtools._pulp.task.PulpTask.pulp_client", controller.client):
             entry_point()
 
     mock_logger.info.assert_any_call(
