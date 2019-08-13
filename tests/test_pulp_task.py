@@ -7,12 +7,6 @@ from pubtools.pulplib import Client
 from pubtools._pulp.task import PulpTask
 
 
-@pytest.fixture
-def p_add_args():
-    with patch("pubtools._pulp.task.PulpTask.add_args") as p_args:
-        yield p_args
-
-
 def test_task_run():
     """ raises if run() is not implemeted"""
     task = PulpTask()
@@ -20,7 +14,7 @@ def test_task_run():
         task.run()
 
 
-def test_init_args(p_add_args):
+def test_init_args():
     """Checks whether the args from cli are available for the task"""
     task = PulpTask()
     arg = ["", "--url", "http://some.url", "--verbose", "--debug"]
@@ -32,7 +26,7 @@ def test_init_args(p_add_args):
         assert hasattr(task_args, a)
 
 
-def test_pulp_client(p_add_args):
+def test_pulp_client():
     """Checks that the client in the task is an instance of pubtools.pulplib.Client"""
     task = PulpTask()
     arg = ["", "--url", "http://some.url", "--user", "user"]
@@ -42,7 +36,7 @@ def test_pulp_client(p_add_args):
     assert isinstance(client, Client)
 
 
-def test_main(p_add_args):
+def test_main():
     """Checks main returns without exception when invoked with minimal args
         assuming run() and add_args() are implemented
     """
