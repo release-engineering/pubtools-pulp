@@ -96,7 +96,6 @@ class PulpTask(object):
 
         e.g. self.parser.add_argument("option", help="help text")
         """
-        raise NotImplementedError()
 
     def run(self):
         """Implement a specific task"""

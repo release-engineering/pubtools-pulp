@@ -20,13 +20,6 @@ def test_task_run():
         task.run()
 
 
-def test_add_args():
-    """raises if add_args() is not implemeted"""
-    task = PulpTask()
-    with pytest.raises(NotImplementedError):
-        task.add_args()
-
-
 def test_init_args(p_add_args):
     """Checks whether the args from cli are available for the task"""
     task = PulpTask()
