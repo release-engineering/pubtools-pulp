@@ -1,5 +1,4 @@
 import pytest
-import attr
 import datetime
 from mock import Mock, patch
 from more_executors.futures import f_return
@@ -11,8 +10,6 @@ from pubtools.pulplib import (
     Task,
     InvalidDataException,
 )
-import pubtools.pulplib._impl.model.attr as pp_attr
-import pubtools.pulplib._impl.compat_attr as attr
 
 from pubtools.pulp.tasks.garbage_collect import GarbageCollect, entry_point
 
@@ -30,15 +27,9 @@ def _get_time_created(d=0, h=0, s=0):
 
 
 def _get_fake_controller(*args):
-    @attr.s(kw_only=True, frozen=True)
-    class TestRepo(Repository):
-        is_temp_repo = pp_attr.pulp_attrib(
-            default=None, type=str, pulp_field="notes.pub_temp_repo"
-        )
-
     controller = FakeController()
     for repo in args:
-        yum_repo = TestRepo.from_data(repo)
+        yum_repo = Repository.from_data(repo)
         controller.insert_repository(yum_repo)
     return controller
 
