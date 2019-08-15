@@ -20,17 +20,14 @@ def mock_logger():
         yield mocked_info
 
 
-def _get_time_created(d=0, h=0, s=0):
-    return (
-        datetime.datetime.utcnow() - datetime.timedelta(days=d, hours=h, seconds=s)
-    ).strftime("%Y-%m-%dT%H:%M:%SZ")
+def _get_created(d=0, h=0, s=0):
+    return datetime.datetime.utcnow() - datetime.timedelta(days=d, hours=h, seconds=s)
 
 
 def _get_fake_controller(*args):
     controller = FakeController()
     for repo in args:
-        yum_repo = Repository.from_data(repo)
-        controller.insert_repository(yum_repo)
+        controller.insert_repository(repo)
     return controller
 
 
@@ -59,16 +56,8 @@ def test_add_args():
 
 def test_garbage_collect():
     """deletes the repo that confirms to garbage collect criteria"""
-    repo1 = {
-        "id": "rhel-test-garbage-collect-7-days-old",
-        "notes": {"pub_temp_repo": True, "created": _get_time_created(7)},
-    }
-
-    repo2 = {
-        "id": "rhel-test-garbage-collect-3-days-old",
-        "notes": {"pub_temp_repo": True, "created": _get_time_created(3)},
-    }
-
+    repo1 = Repository(id="rhel-test-garbage-collect-7-days-old", created=_get_created(7), is_temporary=True)
+    repo2 = Repository(id="rhel-test-garbage-collect-3-days-old", created=_get_created(3), is_temporary=True)
     controller = _run_test(repo1, repo2)
     assert len(controller.repositories) == 1
     assert controller.repositories[0].id == "rhel-test-garbage-collect-3-days-old"
@@ -76,18 +65,14 @@ def test_garbage_collect():
 
 def test_gc_no_repo_found(mock_logger):
     """checks no repo returned when age of repo less than gc limit"""
-    repo = {
-        "id": "rhel-test-garbage-collect-3-days-old",
-        "notes": {"pub_temp_repo": True, "created": _get_time_created(3)},
-    }
-
+    repo = Repository(id="rhel-test-garbage-collect-3-days-old", created=_get_created(3), is_temporary=True)
     _run_test(repo)
     mock_logger.info.assert_any_call("No repo(s) found older than %s day(s)", 5)
 
 
 def test_gc_no_created_date(mock_logger):
     """no repo returned for gc when creatd date is missing"""
-    repo = {"id": "rhel-test-garbage-collect", "notes": {"pub_temp_repo": True}}
+    repo = Repository(id="rhel-test-garbage-collect", is_temporary=True)
 
     _run_test(repo)
     mock_logger.info.assert_any_call("No repo(s) found older than %s day(s)", 5)
@@ -95,22 +80,14 @@ def test_gc_no_created_date(mock_logger):
 
 def test_gc_no_temp_repo_note(mock_logger):
     """repo not returned for gc when pub_temp_repo note is missing"""
-    repo = {
-        "id": "rhel-test-garbage-collect",
-        "notes": {"created": _get_time_created(7)},
-    }
-
+    repo = Repository(id="rhel-test-garbage-collect", created=_get_created(7))
     _run_test(repo)
     mock_logger.info.assert_any_call("No repo(s) found older than %s day(s)", 5)
 
 
 def test_gc_error(mock_logger):
     """logs error when repo delete task returns an error reponse"""
-    repo = {
-        "id": "rhel-test-garbage-collect-7-days-old",
-        "notes": {"pub_temp_repo": True, "created": _get_time_created(7)},
-    }
-
+    repo = Repository(id="rhel-test-garbage-collect-7-days-old", created=_get_created(7), is_temporary=True)
     controller = _get_fake_controller(repo)
     gc = GarbageCollect()
     arg = ["", "--url", "http://some.url", "--verbose"]
@@ -135,14 +112,8 @@ def test_gc_error(mock_logger):
 
 def test_entry_point(mock_logger):
     """check entry point does gc as expected"""
-
-    created_time = _get_time_created(7)
-    dt_created_time = datetime.datetime.strptime(created_time, "%Y-%m-%dT%H:%M:%SZ")
-    repo = {
-        "id": "rhel-test-garbage-collect-7-days-old",
-        "notes": {"pub_temp_repo": True, "created": created_time},
-    }
-
+    created_time = _get_created(7)
+    repo = Repository(id="rhel-test-garbage-collect-7-days-old", created=created_time, is_temporary=True)
     controller = _get_fake_controller(repo)
     arg = ["", "--url", "http://some.url", "--verbose"]
 
@@ -153,6 +124,6 @@ def test_entry_point(mock_logger):
     mock_logger.info.assert_any_call(
         "Deleting %s (created on %s)",
         "rhel-test-garbage-collect-7-days-old",
-        dt_created_time,
+        created_time,
     )
     mock_logger.info.assert_any_call("Temporary repo(s) deletion completed")
