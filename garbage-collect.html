@@ -40,20 +40,21 @@ of this command may also perform other types of garbage collection.</p>
 <p>This command is suitable for use periodically; for example, from a
 weekly scheduled trigger.</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">garbage</span><span class="o">-</span><span class="n">collect</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">--</span><span class="n">url</span> <span class="n">URL</span> <span class="p">[</span><span class="o">--</span><span class="n">user</span> <span class="n">USER</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">password</span> <span class="n">PASSWORD</span><span class="p">]</span>
-                       <span class="p">[</span><span class="o">--</span><span class="n">verbose</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">gc</span><span class="o">-</span><span class="n">threshold</span> <span class="n">GC_THRESHOLD</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">garbage</span><span class="o">-</span><span class="n">collect</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
+                       <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">verbose</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span>
+                       <span class="p">[</span><span class="o">--</span><span class="n">gc</span><span class="o">-</span><span class="n">threshold</span> <span class="n">GC_THRESHOLD</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="section" id="Named Arguments">
 <h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
-<dt><kbd>--url</kbd></dt>
+<dt><kbd>--pulp-url</kbd></dt>
 <dd><p>Pulp server URL</p>
 </dd>
-<dt><kbd>--user</kbd></dt>
+<dt><kbd>--pulp-user</kbd></dt>
 <dd><p>Pulp username</p>
 </dd>
-<dt><kbd>--password</kbd></dt>
+<dt><kbd>--pulp-password</kbd></dt>
 <dd><p>Pulp password (or set PULP_PASSWORD environment variable)</p>
 </dd>
 <dt><kbd>--verbose</kbd></dt>
@@ -74,9 +75,9 @@ weekly scheduled trigger.</p>
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <p>A typical invocation of garbage-collect would look like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">garbage</span><span class="o">-</span><span class="n">collect</span> \
-  <span class="o">--</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pulp</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span> \
-  <span class="o">--</span><span class="n">user</span> <span class="n">admin</span> \
-  <span class="o">--</span><span class="n">password</span> <span class="n">XXXXX</span> \
+  <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pulp</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span> \
+  <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">admin</span> \
+  <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">XXXXX</span> \
   <span class="o">--</span><span class="n">gc</span><span class="o">-</span><span class="n">threshold</span> <span class="mi">14</span>
 </pre></div>
 </div>
