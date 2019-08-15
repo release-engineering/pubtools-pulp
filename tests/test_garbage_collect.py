@@ -14,12 +14,12 @@ from pubtools.pulplib import (
 import pubtools.pulplib._impl.model.attr as pp_attr
 import pubtools.pulplib._impl.compat_attr as attr
 
-from pubtools.pulp.tasks.garbage_collect import GarbageCollect, entry_point
+from pubtools._pulp.tasks.garbage_collect import GarbageCollect, entry_point
 
 
 @pytest.fixture
 def mock_logger():
-    with patch("pubtools.pulp.tasks.garbage_collect.LOG") as mocked_info:
+    with patch("pubtools._pulp.tasks.garbage_collect.LOG") as mocked_info:
         yield mocked_info
 
 
@@ -46,10 +46,10 @@ def _get_fake_controller(*args):
 def _run_test(*repos):
     controller = _get_fake_controller(*repos)
     gc = GarbageCollect()
-    arg = ["", "--url", "http://some.url", "--verbose"]
+    arg = ["", "--pulp-url", "http://some.url", "--verbose"]
 
     with patch("sys.argv", arg):
-        with patch("pubtools.pulp.task.PulpTask.pulp_client", controller.client):
+        with patch("pubtools._pulp.task.PulpTask.pulp_client", controller.client):
             gc.main()
     return controller
 
@@ -57,7 +57,7 @@ def _run_test(*repos):
 def test_add_args():
     """adds the arg to the PulpTask parser """
     gc = GarbageCollect()
-    arg = ["", "--url", "http://some.url", "--verbose", "--gc-threshold", "7"]
+    arg = ["", "--pulp-url", "http://some.url", "--verbose", "--gc-threshold", "7"]
 
     with patch("sys.argv", arg):
         gc_args = gc.args
@@ -122,11 +122,11 @@ def test_gc_error(mock_logger):
 
     controller = _get_fake_controller(repo)
     gc = GarbageCollect()
-    arg = ["", "--url", "http://some.url", "--verbose"]
+    arg = ["", "--pulp-url", "http://some.url", "--verbose"]
 
     with patch("sys.argv", arg):
         with patch.object(controller.client, "_delete_repository") as repo_delete:
-            with patch("pubtools.pulp.task.PulpTask.pulp_client", controller.client):
+            with patch("pubtools._pulp.task.PulpTask.pulp_client", controller.client):
                 repo_delete.return_value = f_return(
                     [
                         Task(
@@ -153,10 +153,10 @@ def test_entry_point(mock_logger):
     }
 
     controller = _get_fake_controller(repo)
-    arg = ["", "--url", "http://some.url", "--verbose"]
+    arg = ["", "--pulp-url", "http://some.url", "--verbose"]
 
     with patch("sys.argv", arg):
-        with patch("pubtools.pulp.task.PulpTask.pulp_client", controller.client):
+        with patch("pubtools._pulp.task.PulpTask.pulp_client", controller.client):
             entry_point()
 
     mock_logger.info.assert_any_call(
