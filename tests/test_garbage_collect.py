@@ -56,8 +56,16 @@ def test_add_args():
 
 def test_garbage_collect():
     """deletes the repo that confirms to garbage collect criteria"""
-    repo1 = Repository(id="rhel-test-garbage-collect-7-days-old", created=_get_created(7), is_temporary=True)
-    repo2 = Repository(id="rhel-test-garbage-collect-3-days-old", created=_get_created(3), is_temporary=True)
+    repo1 = Repository(
+        id="rhel-test-garbage-collect-7-days-old",
+        created=_get_created(7),
+        is_temporary=True,
+    )
+    repo2 = Repository(
+        id="rhel-test-garbage-collect-3-days-old",
+        created=_get_created(3),
+        is_temporary=True,
+    )
     controller = _run_test(repo1, repo2)
     assert len(controller.repositories) == 1
     assert controller.repositories[0].id == "rhel-test-garbage-collect-3-days-old"
@@ -65,7 +73,11 @@ def test_garbage_collect():
 
 def test_gc_no_repo_found(mock_logger):
     """checks no repo returned when age of repo less than gc limit"""
-    repo = Repository(id="rhel-test-garbage-collect-3-days-old", created=_get_created(3), is_temporary=True)
+    repo = Repository(
+        id="rhel-test-garbage-collect-3-days-old",
+        created=_get_created(3),
+        is_temporary=True,
+    )
     _run_test(repo)
     mock_logger.info.assert_any_call("No repo(s) found older than %s day(s)", 5)
 
@@ -87,7 +99,11 @@ def test_gc_no_temp_repo_note(mock_logger):
 
 def test_gc_error(mock_logger):
     """logs error when repo delete task returns an error reponse"""
-    repo = Repository(id="rhel-test-garbage-collect-7-days-old", created=_get_created(7), is_temporary=True)
+    repo = Repository(
+        id="rhel-test-garbage-collect-7-days-old",
+        created=_get_created(7),
+        is_temporary=True,
+    )
     controller = _get_fake_controller(repo)
     gc = GarbageCollect()
     arg = ["", "--url", "http://some.url", "--verbose"]
@@ -113,7 +129,11 @@ def test_gc_error(mock_logger):
 def test_entry_point(mock_logger):
     """check entry point does gc as expected"""
     created_time = _get_created(7)
-    repo = Repository(id="rhel-test-garbage-collect-7-days-old", created=created_time, is_temporary=True)
+    repo = Repository(
+        id="rhel-test-garbage-collect-7-days-old",
+        created=created_time,
+        is_temporary=True,
+    )
     controller = _get_fake_controller(repo)
     arg = ["", "--url", "http://some.url", "--verbose"]
 
