@@ -1,2 +1,2 @@
 six
-pubtools-pulplib
+pubtools-pulplib>=1.3.0
