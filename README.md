@@ -8,6 +8,7 @@ used by [release-engineering](https://github.com/release-engineering) publishing
 [![Coverage Status](https://coveralls.io/repos/github/release-engineering/pubtools-pulp/badge.svg?branch=master)](https://coveralls.io/github/release-engineering/pubtools-pulp?branch=master)
 
 - [Source](https://github.com/release-engineering/pubtools-pulp)
+- [Documentation](https://release-engineering.github.io/pubtools-pulp/)
 
 License
 -------
