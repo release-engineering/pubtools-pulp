@@ -26,8 +26,8 @@ setup(
     url="https://github.com/release-engineering/pubtools-pulp",
     license="GNU General Public License",
     description=get_description(),
-    # long_description=get_long_description(),
-    # long_description_content_type="text/markdown",
+    long_description=get_long_description(),
+    long_description_content_type="text/markdown",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
