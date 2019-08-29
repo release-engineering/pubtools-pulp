@@ -4,12 +4,13 @@ from datetime import datetime, timedelta
 from pubtools.pulplib import Criteria, Matcher
 
 from pubtools._pulp.task import PulpTask
+from pubtools._pulp.services import PulpClientService
 
 
 LOG = logging.getLogger("garbage-collect")
 
 
-class GarbageCollect(PulpTask):
+class GarbageCollect(PulpClientService, PulpTask):
     """Perform garbage collection on Pulp data.
 
     Garbage collection consists of deleting temporary Pulp repositories
@@ -21,6 +22,8 @@ class GarbageCollect(PulpTask):
     """
 
     def add_args(self):
+        super(GarbageCollect, self).add_args()
+
         self.parser.add_argument(
             "--gc-threshold",
             help="delete repos older than this many days",

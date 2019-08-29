@@ -5,6 +5,11 @@ from mock import Mock, patch
 
 from pubtools.pulplib import Client
 from pubtools._pulp.task import PulpTask
+from pubtools._pulp.services import PulpClientService
+
+
+class TaskWithPulpClient(PulpTask, PulpClientService):
+    pass
 
 
 def test_task_run():
@@ -16,7 +21,7 @@ def test_task_run():
 
 def test_init_args():
     """Checks whether the args from cli are available for the task"""
-    task = PulpTask()
+    task = TaskWithPulpClient()
     arg = ["", "--pulp-url", "http://some.url", "--verbose", "--debug"]
     with patch("sys.argv", arg):
         task_args = task.args
@@ -28,7 +33,7 @@ def test_init_args():
 
 def test_pulp_client():
     """Checks that the client in the task is an instance of pubtools.pulplib.Client"""
-    task = PulpTask()
+    task = TaskWithPulpClient()
     arg = ["", "--pulp-url", "http://some.url", "--pulp-user", "user"]
     with patch("sys.argv", arg):
         client = task.pulp_client
@@ -40,7 +45,7 @@ def test_main():
     """Checks main returns without exception when invoked with minimal args
         assuming run() and add_args() are implemented
     """
-    task = PulpTask()
+    task = TaskWithPulpClient()
     arg = ["", "--pulp-url", "http://some.url", "--verbose", "--debug"]
     with patch("sys.argv", arg):
         with patch("pubtools._pulp.task.PulpTask.run"):

@@ -31,13 +31,17 @@ def _get_fake_controller(*args):
     return controller
 
 
+def _patch_pulp_client(client):
+    return patch("pubtools._pulp.services.PulpClientService.pulp_client", client)
+
+
 def _run_test(*repos):
     controller = _get_fake_controller(*repos)
     gc = GarbageCollect()
     arg = ["", "--pulp-url", "http://some.url", "--verbose"]
 
     with patch("sys.argv", arg):
-        with patch("pubtools._pulp.task.PulpTask.pulp_client", controller.client):
+        with _patch_pulp_client(controller.client):
             gc.main()
     return controller
 
@@ -110,7 +114,7 @@ def test_gc_error(mock_logger):
 
     with patch("sys.argv", arg):
         with patch.object(controller.client, "_delete_repository") as repo_delete:
-            with patch("pubtools._pulp.task.PulpTask.pulp_client", controller.client):
+            with _patch_pulp_client(controller.client):
                 repo_delete.return_value = f_return(
                     [
                         Task(
@@ -138,7 +142,7 @@ def test_entry_point(mock_logger):
     arg = ["", "--pulp-url", "http://some.url", "--verbose"]
 
     with patch("sys.argv", arg):
-        with patch("pubtools._pulp.task.PulpTask.pulp_client", controller.client):
+        with _patch_pulp_client(controller.client):
             entry_point()
 
     mock_logger.info.assert_any_call(

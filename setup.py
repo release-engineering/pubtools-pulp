@@ -42,7 +42,8 @@ setup(
     python_requires=">=2.6",
     entry_points={
         "console_scripts": [
-            "pubtools-pulp-garbage-collect = pubtools._pulp.tasks.garbage_collect:entry_point"
+            "pubtools-pulp-garbage-collect = pubtools._pulp.tasks.garbage_collect:entry_point",
+            "pubtools-pulp-clear-repo = pubtools._pulp.tasks.clear_repo:entry_point",
         ]
     },
     project_urls={
