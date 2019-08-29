@@ -10,4 +10,5 @@ content via `Pulp <https://pulpproject.org/>`_.
    :maxdepth: 1
    :caption: Command Reference:
 
+   clear-repo
    garbage-collect

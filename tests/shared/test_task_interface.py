@@ -4,7 +4,9 @@ import sys
 import pytest
 
 
-@pytest.fixture(params=["pubtools._pulp.tasks.garbage_collect"])
+@pytest.fixture(
+    params=["pubtools._pulp.tasks.garbage_collect", "pubtools._pulp.tasks.clear_repo"]
+)
 def task_module(request):
     __import__(request.param)
     return sys.modules[request.param]
