@@ -77,7 +77,7 @@ class FakeClearRepo(ClearRepo):
             # If it did create one, it should be this
             assert isinstance(from_super, FastPurgeClient)
 
-        # We'll substitute our own, only if UD client is being used
+        # We'll substitute our own, only if fastpurge client is being used
         return self._fastpurge_client if from_super else None
 
 
