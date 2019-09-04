@@ -14,7 +14,7 @@
     <script type="text/javascript" src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="pubtools-pulp" href="index.html" />
+    <link rel="prev" title="clear-repo" href="clear-repo.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -40,25 +40,16 @@ of this command may also perform other types of garbage collection.</p>
 <p>This command is suitable for use periodically; for example, from a
 weekly scheduled trigger.</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">garbage</span><span class="o">-</span><span class="n">collect</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span>
-                                     <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">garbage</span><span class="o">-</span><span class="n">collect</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">verbose</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span>
+                                     <span class="n">PULP_URL</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span>
-                                     <span class="p">[</span><span class="o">--</span><span class="n">verbose</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span>
+                                     <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">gc</span><span class="o">-</span><span class="n">threshold</span> <span class="n">GC_THRESHOLD</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="section" id="Named Arguments">
 <h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
-<dt><kbd>--pulp-url</kbd></dt>
-<dd><p>Pulp server URL</p>
-</dd>
-<dt><kbd>--pulp-user</kbd></dt>
-<dd><p>Pulp username</p>
-</dd>
-<dt><kbd>--pulp-password</kbd></dt>
-<dd><p>Pulp password (or set PULP_PASSWORD environment variable)</p>
-</dd>
 <dt><kbd>--verbose</kbd></dt>
 <dd><p>show logs</p>
 <p>Default: False</p>
@@ -70,6 +61,24 @@ weekly scheduled trigger.</p>
 <dt><kbd>--gc-threshold</kbd></dt>
 <dd><p>delete repos older than this many days</p>
 <p>Default: 5</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Pulp environment">
+<h2>Pulp environment<a class="headerlink" href="#Pulp environment" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>--pulp-url</kbd></dt>
+<dd><p>Pulp server URL</p>
+</dd>
+<dt><kbd>--pulp-user</kbd></dt>
+<dd><p>Pulp username</p>
+</dd>
+<dt><kbd>--pulp-password</kbd></dt>
+<dd><p>Pulp password (or set PULP_PASSWORD environment variable)</p>
+</dd>
+<dt><kbd>--pulp-insecure</kbd></dt>
+<dd><p>Allow unverified HTTPS connection to Pulp</p>
+<p>Default: False</p>
 </dd>
 </dl>
 </div>
@@ -111,6 +120,7 @@ deleted from the remote Pulp server.</p>
 <h3>Navigation</h3>
 <p class="caption"><span class="caption-text">Command Reference:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="clear-repo.html">clear-repo</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">garbage-collect</a></li>
 </ul>
 
@@ -129,7 +139,7 @@ deleted from the remote Pulp server.</p>
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="index.html" title="previous chapter">pubtools-pulp</a></li>
+      <li>Previous: <a href="clear-repo.html" title="previous chapter">clear-repo</a></li>
   </ul></li>
 </ul>
 </div>

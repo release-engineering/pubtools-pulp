@@ -1,0 +1,275 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>clear-repo &#8212; pubtools-pulp  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="garbage-collect" href="garbage-collect.html" />
+    <link rel="prev" title="pubtools-pulp" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="clear-repo">
+<h1>clear-repo<a class="headerlink" href="#clear-repo" title="Permalink to this headline">¶</a></h1>
+<p><p>Remove all contents from one or more Pulp repositories.</p>
+<p>This command will remove contents from repositories and record
+information on what was removed.  Removal may optionally be filtered
+to selected content types.</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">clear</span><span class="o">-</span><span class="n">repo</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">verbose</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">url</span> <span class="n">UDCACHE_URL</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">user</span> <span class="n">UDCACHE_USER</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">password</span> <span class="n">UDCACHE_PASSWORD</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">host</span> <span class="n">FASTPURGE_HOST</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">token</span> <span class="n">FASTPURGE_CLIENT_TOKEN</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">secret</span> <span class="n">FASTPURGE_CLIENT_SECRET</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">access</span><span class="o">-</span><span class="n">token</span> <span class="n">FASTPURGE_ACCESS_TOKEN</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">root</span><span class="o">-</span><span class="n">url</span> <span class="n">FASTPURGE_ROOT_URL</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">skip</span> <span class="n">SKIP</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">content</span><span class="o">-</span><span class="nb">type</span> <span class="n">CONTENT_TYPE</span><span class="p">]</span>
+                                <span class="n">repo</span> <span class="p">[</span><span class="n">repo</span> <span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments">
+<h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>repo</kbd></dt>
+<dd><p>Repositories to be cleared</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments">
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>--verbose</kbd></dt>
+<dd><p>show logs</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--debug</kbd></dt>
+<dd><p>show debug statements. Used along –verbose</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--skip</kbd></dt>
+<dd><p>skip given comma-separated sub-steps</p>
+</dd>
+<dt><kbd>--content-type</kbd></dt>
+<dd><p>remove only content of these comma-separated type(s)</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Pulp environment">
+<h2>Pulp environment<a class="headerlink" href="#Pulp environment" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>--pulp-url</kbd></dt>
+<dd><p>Pulp server URL</p>
+</dd>
+<dt><kbd>--pulp-user</kbd></dt>
+<dd><p>Pulp username</p>
+</dd>
+<dt><kbd>--pulp-password</kbd></dt>
+<dd><p>Pulp password (or set PULP_PASSWORD environment variable)</p>
+</dd>
+<dt><kbd>--pulp-insecure</kbd></dt>
+<dd><p>Allow unverified HTTPS connection to Pulp</p>
+<p>Default: False</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Unified Downloads Cache environment">
+<h2>Unified Downloads Cache environment<a class="headerlink" href="#Unified Downloads Cache environment" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>--udcache-url</kbd></dt>
+<dd><p>Base URL of UD cache flush API; if omitted, UD cache flush features are disabled.</p>
+</dd>
+<dt><kbd>--udcache-user</kbd></dt>
+<dd><p>Username for UD cache flush</p>
+</dd>
+<dt><kbd>--udcache-password</kbd></dt>
+<dd><p>Password for UD cache flush (or set UDCACHE_PASSWORD)</p>
+<p>Default: “”</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Akamai FastPurge environment">
+<h2>Akamai FastPurge environment<a class="headerlink" href="#Akamai FastPurge environment" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>--fastpurge-host</kbd></dt>
+<dd><p>FastPurge hostname (xxx.purge.akamaiapis.net)</p>
+</dd>
+<dt><kbd>--fastpurge-client-token</kbd></dt>
+<dd><p>Fast Purge client token</p>
+</dd>
+<dt><kbd>--fastpurge-client-secret</kbd></dt>
+<dd><p>FastPurge client secret (or set FASTPURGE_SECRET environment variable)</p>
+<p>Default: “”</p>
+</dd>
+<dt><kbd>--fastpurge-access-token</kbd></dt>
+<dd><p>FastPurge access token</p>
+</dd>
+<dt><kbd>--fastpurge-root-url</kbd></dt>
+<dd><p>Root URL of CDN for all cache purges (or set FASTPURGE_ROOT_URL environment variable). If omitted, FastPurge features are disabled.</p>
+<p>Default: “”</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>A typical invocation of clear-repo would look like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">clear</span><span class="o">-</span><span class="n">repo</span> \
+  <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pulp</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span> \
+  <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">admin</span> \
+  <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">XXXXX</span> \
+  <span class="n">my</span><span class="o">-</span><span class="n">repo1</span> <span class="n">my</span><span class="o">-</span><span class="n">repo2</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p>All content of the mentioned repositories would be removed.</p>
+</div>
+<div class="section" id="example-skipping-publish">
+<h2>Example: skipping publish<a class="headerlink" href="#example-skipping-publish" title="Permalink to this headline">¶</a></h2>
+<p>If you know that there’s no point in publishing Pulp repositories
+(for example, you’re about to push new content into repos after
+clearing them), you can speed up the task by skipping publish:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">clear</span><span class="o">-</span><span class="n">repo</span> \
+  <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pulp</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span> \
+  <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">admin</span> \
+  <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">XXXXX</span> \
+  <span class="o">--</span><span class="n">skip</span> <span class="n">publish</span> \
+  <span class="n">my</span><span class="o">-</span><span class="n">repo1</span> <span class="n">my</span><span class="o">-</span><span class="n">repo2</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-with-cache-flush">
+<h2>Example: with cache flush<a class="headerlink" href="#example-with-cache-flush" title="Permalink to this headline">¶</a></h2>
+<p>If your Pulp server is configured to publish to an Akamai CDN,
+usage of the Akamai FastPurge API for cache flushing may be enabled
+to flush cache after publishing repositories.</p>
+<p>This is enabled by providing a value for <code class="docutils literal notranslate"><span class="pre">--fastpurge-root-url</span></code>.
+FastPurge credentials may also be provided; if omitted, the command
+will attempt to use a local
+<a class="reference external" href="https://developer.akamai.com/introduction/Conf_Client.html">edgerc</a>
+file for authentication.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">clear</span><span class="o">-</span><span class="n">repo</span> \
+  <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pulp</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span> \
+  <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">admin</span> \
+  <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">XXXXX</span> \
+  <span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">root</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">cdn</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span> \
+  <span class="n">my</span><span class="o">-</span><span class="n">repo1</span> <span class="n">my</span><span class="o">-</span><span class="n">repo2</span> <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pubtools-pulp</a></h1>
+
+
+
+<p class="blurb">Publishing tools for Pulp</p>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Command Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">clear-repo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="garbage-collect.html">garbage-collect</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://github.com/release-engineering/pubtools-pulp">Source</a></li>
+    
+    <li class="toctree-l1"><a href="https://pypi.org/project/pubtools-pulp">PyPI</a></li>
+    
+    <li class="toctree-l1"><a href="genindex.html">Index</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">pubtools-pulp</a></li>
+      <li>Next: <a href="garbage-collect.html" title="next chapter">garbage-collect</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Red Hat.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/clear-repo.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/release-engineering/pubtools-pulp" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>
