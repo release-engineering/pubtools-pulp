@@ -5,7 +5,12 @@ import pytest
 
 
 @pytest.fixture(
-    params=["pubtools._pulp.tasks.garbage_collect", "pubtools._pulp.tasks.clear_repo"]
+    params=[
+        "pubtools._pulp.tasks.garbage_collect",
+        "pubtools._pulp.tasks.clear_repo",
+        "pubtools._pulp.tasks.set_maintenance.set_maintenance_on",
+        "pubtools._pulp.tasks.set_maintenance.set_maintenance_off",
+    ]
 )
 def task_module(request):
     __import__(request.param)

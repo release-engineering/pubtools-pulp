@@ -12,3 +12,4 @@ content via `Pulp <https://pulpproject.org/>`_.
 
    clear-repo
    garbage-collect
+   set-maintenance
