@@ -87,7 +87,7 @@ class ClearRepo(
 
         out = []
         search = self.pulp_client.search_repository(Criteria.with_id(repo_ids))
-        for repo in search.result().as_iter():
+        for repo in search.result():
             out.append(repo)
             found_repo_ids.append(repo.id)
 

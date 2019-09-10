@@ -45,7 +45,7 @@ class GarbageCollect(PulpClientService, PulpTask):
         gc_threshold = self.args.gc_threshold
         deleted_repos = []
         # initiate deletion task for the repos
-        for repo in repos.as_iter():
+        for repo in repos:
             repo_age = datetime.utcnow() - repo.created
             if repo_age > timedelta(days=gc_threshold):
                 LOG.info("Deleting %s (created on %s)", repo.id, repo.created)
