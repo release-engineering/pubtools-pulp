@@ -1,0 +1,10 @@
+[    INFO] Get maintenance report: started
+[    INFO] Get maintenance report: finished
+[    INFO] Adjust maintenance report: started
+[    INFO] Setting following repos to maintenance mode: 
+repo1
+repo2
+[    INFO] Adjust maintenance report: finished
+[    INFO] Set maintenance report: started
+[    INFO] Set maintenance report: finished
+[    INFO] Completed adjusting maintenance mode: 23a7711a-8133-2876-37eb-dcd9e87a1613

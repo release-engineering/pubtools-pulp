@@ -1,178 +1,192 @@
 import pytest
-from mock import patch
 
 from pubtools.pulplib import (
+    Client,
     FakeController,
     Distributor,
     Repository,
     FileRepository,
-    Task,
-    PulpException,
 )
 
 from pubtools._pulp.tasks.set_maintenance import SetMaintenanceOn, SetMaintenanceOff
 
 
-@pytest.fixture
-def mock_on_logger():
-    with patch(
-        "pubtools._pulp.tasks.set_maintenance.set_maintenance_on.LOG"
-    ) as mocked_info:
-        yield mocked_info
+class FakeSetMaintenanceOn(SetMaintenanceOn):
+    def __init__(self, *args, **kwargs):
+        super(FakeSetMaintenanceOn, self).__init__(*args, **kwargs)
+        self.pulp_client_controller = FakeController()
+
+    @property
+    def pulp_client(self):
+        # Super should give a Pulp client
+        assert isinstance(super(FakeSetMaintenanceOn, self).pulp_client, Client)
+        # But we'll substitute our own
+        return self.pulp_client_controller.client
 
 
-@pytest.fixture
-def mock_off_logger():
-    with patch(
-        "pubtools._pulp.tasks.set_maintenance.set_maintenance_off.LOG"
-    ) as mocked_info:
-        yield mocked_info
+class FakeSetMaintenanceOff(SetMaintenanceOff):
+    def __init__(self, *args, **kwargs):
+        super(FakeSetMaintenanceOff, self).__init__(*args, **kwargs)
+        self.pulp_client_controller = FakeController()
+
+    @property
+    def pulp_client(self):
+        """Doesn't check if super gives a Pulp client or not:
+            1. it's been checked in maintenance on, which has the same client
+            2. we need to pre-set maintenance mode before test, check would
+               break that since there's no service args passed.
+        """
+        return self.pulp_client_controller.client
 
 
-def maintenance_repo():
+def get_task_instance(on, *repos):
+
     iso_distributor = Distributor(id="iso_distributor", type_id="iso_distributor")
-    repo = FileRepository(id="redhat-maintenance", distributors=[iso_distributor])
+    maint_repo = FileRepository(id="redhat-maintenance", distributors=[iso_distributor])
 
-    return repo
-
-
-def _get_fake_controller(*args):
-    controller = FakeController()
-    for repo in args:
-        controller.insert_repository(repo)
-    controller.insert_repository(maintenance_repo())
-    return controller
-
-
-def _patch_pulp_client(client):
-    return patch("pubtools._pulp.services.PulpClientService.pulp_client", client)
-
-
-def _run_test(cmd_args, on, *repos):
-    controller = _get_fake_controller(*repos)
     if on:
-        s_m = SetMaintenanceOn()
+        task_instance = FakeSetMaintenanceOn()
+        task_instance.pulp_client_controller.insert_repository(maint_repo)
     else:
-        s_m = SetMaintenanceOff()
-    arg = ["", "--pulp-url", "http://some.url", "--verbose"]
-    arg.extend(cmd_args)
+        task_instance = FakeSetMaintenanceOff()
+        task_instance.pulp_client_controller.insert_repository(maint_repo)
+        # if unset maintenance mode, we need to pre-set maintenance first
+        report = task_instance.pulp_client.get_maintenance_report().result()
+        report = report.add([repo.id for repo in repos])
+        task_instance.pulp_client.set_maintenance(report)
 
-    with patch("sys.argv", arg):
-        with _patch_pulp_client(controller.client):
-            s_m.main()
-    return controller
+    for repo in list(repos):
+        task_instance.pulp_client_controller.insert_repository(repo)
+
+    return task_instance
 
 
-def test_maintenance_on(mock_on_logger):
+def test_maintenance_on(command_tester):
     """Test set maintenance by passing repo ids."""
     repo1 = Repository(id="repo1")
     repo2 = Repository(id="repo2")
 
-    cmd_args = ["--repo-id", "repo1", "repo2", "--message", "Now in Miantenance"]
+    task_instance = get_task_instance(True, repo1, repo2)
 
-    controller = _run_test(cmd_args, True, repo1, repo2)
+    command_tester.test(
+        task_instance.main,
+        [
+            "test-maintenance-on",
+            "--pulp-url",
+            "http://some.url",
+            "--verbose",
+            "--repo-ids",
+            "repo1",
+            "repo2",
+            "--message",
+            "Now in Maintenance",
+        ],
+    )
 
+    controller = task_instance.pulp_client_controller
     # upload and publish should be called once each
     assert len(controller.upload_history) == 1
     assert controller.upload_history[0].repository.id == "redhat-maintenance"
     assert len(controller.publish_history) == 1
     assert controller.publish_history[0].repository.id == "redhat-maintenance"
 
-    # logged message should indicate both repos are set to maintenance
-    mock_on_logger.info.assert_called_with(
-        "Setting following repos to Maintenance Mode: \n%s", "repo1\nrepo2"
-    )
 
-
-def test_maintenance_on_with_regex(mock_on_logger):
+def test_maintenance_on_with_regex(command_tester):
     """Test set maintenance by using regex"""
     repo1 = Repository(id="repo1")
     repo2 = Repository(id="repo2")
 
-    cmd_args = ["--repo-regex", "repo1"]
+    task_instance = get_task_instance(True, repo1, repo2)
 
-    controller = _run_test(cmd_args, True, repo1, repo2)
-
-    # only repo1 should be set to maintenance
-    mock_on_logger.info.assert_called_with(
-        "Setting following repos to Maintenance Mode: \n%s", "repo1"
+    command_tester.test(
+        task_instance.main,
+        [
+            "test-maintenance-on",
+            "--pulp-url",
+            "http://some.url",
+            "--verbose",
+            "--repo-regex",
+            "repo1",
+        ],
     )
 
 
-def test_maintenance_on_with_repo_not_exists():
+def test_maintenance_on_with_repo_not_exists(command_tester):
     """Set maintenance to non-existed repo in server will fail"""
     repo1 = Repository(id="repo1")
-    cmd_args = ["--repo-id", "repo2"]
 
-    with pytest.raises(PulpException):
-        _run_test(cmd_args, True, repo1)
+    task_instance = get_task_instance(True, repo1)
+
+    command_tester.test(
+        task_instance.main,
+        [
+            "test-maintenance-on",
+            "--pulp-url",
+            "http://some.url",
+            "--verbose",
+            "--repo-ids",
+            "repo2",
+        ],
+    )
 
 
-def test_maintenance_off(mock_off_logger):
+def test_maintenance_off(command_tester):
     repo1 = Repository(id="repo1")
     repo2 = Repository(id="repo2")
 
-    # set maintenance first, get the controller
-    cmd_args = ["--repo-id", "repo1", "repo2"]
-    controller = _run_test(cmd_args, True, repo1, repo2)
+    task_instance = get_task_instance(False, repo1, repo2)
 
-    args = [
-        "",
-        "--pulp-url",
-        "http://some.url",
-        "--verbose",
-        "--repo-id",
-        "repo1",
-        "repo2",
-    ]
-    s_m = SetMaintenanceOff()
-
-    # remove repos from maintenance mode by id
-    with patch("sys.argv", args):
-        with _patch_pulp_client(controller.client):
-            s_m.main()
-
-    mock_off_logger.info.assert_called_with(
-        "Following repositories will be removed from Maintenance Mode: \n%s",
-        "repo1\nrepo2",
+    command_tester.test(
+        task_instance.main,
+        [
+            "test-maintenance-off",
+            "--pulp-url",
+            "http://some.url",
+            "--verbose",
+            "--repo-ids",
+            "repo2",
+        ],
     )
 
-    # upload and publish should be called twice eachassert len(controller.upload_history) == 1
+    controller = task_instance.pulp_client_controller
+    # upload and publish should be called twice each
     assert len(controller.upload_history) == 2
     assert len(controller.publish_history) == 2
 
 
-def test_maintenance_off_with_regex(mock_off_logger):
+def test_maintenance_off_with_regex(command_tester):
     repo1 = Repository(id="repo1")
     repo2 = Repository(id="repo2")
 
-    # set maintenance first, get the controller
-    cmd_args = ["--repo-id", "repo1", "repo2"]
-    controller = _run_test(cmd_args, True, repo1, repo2)
+    task_instance = get_task_instance(False, repo1, repo2)
 
-    args = ["", "--pulp-url", "http://some.url", "--verbose", "--repo-regex", "repo1"]
-    s_m = SetMaintenanceOff()
-
-    # remove repos from maintenance mode by id
-    with patch("sys.argv", args):
-        with _patch_pulp_client(controller.client):
-            s_m.main()
-
-    mock_off_logger.info.assert_called_with(
-        "Following repositories will be removed from Maintenance Mode: \n%s", "repo1"
+    command_tester.test(
+        task_instance.main,
+        [
+            "test-maintenance-off",
+            "--pulp-url",
+            "http://some.url",
+            "--verbose",
+            "--repo-regex",
+            "repo1",
+        ],
     )
 
 
-def test_maintenance_off_with_repo_not_in_maintenance(mock_off_logger):
-    controller = _get_fake_controller()
-    args = ["", "--pulp-url", "http://some.url", "--verbose", "--repo-id", "repo1"]
-    s_m = SetMaintenanceOff()
+def test_maintenance_off_with_repo_not_in_maintenance(command_tester):
+    repo1 = Repository(id="repo1")
 
-    # remove repos from maintenance mode by id
-    with patch("sys.argv", args):
-        with _patch_pulp_client(controller.client):
-            s_m.main()
+    task_instance = get_task_instance(False, repo1)
 
-    mock_off_logger.warn.assert_called_with(
-        "Repository %s is not in Maintenance Mode", "repo1"
+    command_tester.test(
+        task_instance.main,
+        [
+            "test-maintenance-off",
+            "--pulp-url",
+            "http://some.url",
+            "--verbose",
+            "--repo-ids",
+            "repo1",
+            "repo2",
+        ],
     )

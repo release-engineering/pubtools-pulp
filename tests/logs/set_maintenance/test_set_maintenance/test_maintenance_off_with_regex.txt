@@ -1,0 +1,9 @@
+[    INFO] Get maintenance report: started
+[    INFO] Get maintenance report: finished
+[    INFO] Adjust maintenance report: started
+[    INFO] Following repositories will be removed from maintenance mode: 
+repo1
+[    INFO] Adjust maintenance report: finished
+[    INFO] Set maintenance report: started
+[    INFO] Set maintenance report: finished
+[    INFO] Completed adjusting maintenance mode: f7b0b7d2-cda8-056c-3d15-eef738c1962e

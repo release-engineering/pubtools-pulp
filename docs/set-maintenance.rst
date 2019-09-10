@@ -20,7 +20,7 @@ A typical invocation of set maintenance would look like this:
     --pulp-url https://pulp.example.com/ \
     --pulp-user admin \
     --pulp-password XXXXX \
-    --repo-id example-repo
+    --repo-ids example-repo
 
 In this example, the repository with id 'example-repo' will be set to
 maintenance mode.
@@ -45,7 +45,7 @@ A typical invocation of unset maintenance would look like this:
     --pulp-url https://pulp.example.com/ \
     --pulp-user admin \
     --pulp-password XXXXX \
-    --repo-id example-repo
+    --repo-ids example-repo
 
 In this example, the repository with id 'example-repo' will be removed
 from maintenance mode.

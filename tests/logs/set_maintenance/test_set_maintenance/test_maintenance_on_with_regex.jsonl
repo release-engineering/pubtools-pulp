@@ -1,0 +1,6 @@
+{"event": {"type": "get-maintenance-report-start"}}
+{"event": {"type": "get-maintenance-report-end"}}
+{"event": {"type": "adjust-maintenance-report-start"}}
+{"event": {"type": "adjust-maintenance-report-end"}}
+{"event": {"type": "set-maintenance-report-start"}}
+{"event": {"type": "set-maintenance-report-end"}}
