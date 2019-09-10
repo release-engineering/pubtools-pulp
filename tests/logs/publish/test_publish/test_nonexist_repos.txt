@@ -1,0 +1,5 @@
+[    INFO] run publish
+[    INFO] Get repos: started
+[   ERROR] Requested repo(s) don't exist: repo1, repo2
+[   ERROR] Get repos: failed
+# Raised: 30

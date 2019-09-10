@@ -10,6 +10,7 @@ import pytest
         "pubtools._pulp.tasks.clear_repo",
         "pubtools._pulp.tasks.set_maintenance.set_maintenance_on",
         "pubtools._pulp.tasks.set_maintenance.set_maintenance_off",
+        "pubtools._pulp.tasks.publish",
     ]
 )
 def task_module(request):

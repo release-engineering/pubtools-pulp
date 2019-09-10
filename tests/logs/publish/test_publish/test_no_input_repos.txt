@@ -1,0 +1,5 @@
+[    INFO] run publish
+[    INFO] Get repos: started
+[   ERROR] No repo(s) found to publish
+[   ERROR] Get repos: failed
+# Raised: 30

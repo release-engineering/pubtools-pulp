@@ -1,0 +1,13 @@
+[    INFO] run publish
+[    INFO] Get repos: started
+[    INFO] Get repos: finished
+[    INFO] Publish: started
+[    INFO] Publishing repo1
+[    INFO] Publishing repo1 successful
+[    INFO] Publishing repo1 successful
+[    INFO] Publish: finished
+[    INFO] Flush UD cache: started
+[    INFO] Flush UD cache: finished
+[    INFO] Flush CDN cache: started
+[    INFO] Flush CDN cache: finished
+[    INFO] Publishing repositories completed
