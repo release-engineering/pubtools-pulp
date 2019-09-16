@@ -2,8 +2,8 @@
 [    INFO] Get maintenance report: finished
 [    INFO] Adjust maintenance report: started
 [ WARNING] Repository repo2 is not in maintenance mode
-[    INFO] Following repositories will be removed from maintenance mode: 
-repo1
+[    INFO] Following repositories will be removed from maintenance mode:
+[    INFO]  - repo1
 [    INFO] Adjust maintenance report: finished
 [    INFO] Set maintenance report: started
 [    INFO] Set maintenance report: finished

@@ -1,9 +1,9 @@
 [    INFO] Get maintenance report: started
 [    INFO] Get maintenance report: finished
 [    INFO] Adjust maintenance report: started
-[    INFO] Setting following repos to maintenance mode: 
-repo1
-repo2
+[    INFO] Setting following repos to maintenance mode:
+[    INFO]  - repo1
+[    INFO]  - repo2
 [    INFO] Adjust maintenance report: finished
 [    INFO] Set maintenance report: started
 [    INFO] Set maintenance report: finished

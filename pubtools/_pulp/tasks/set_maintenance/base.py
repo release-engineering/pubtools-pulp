@@ -15,8 +15,8 @@ class SetMaintenance(PulpClientService, PulpTask):
         self.parser.add_argument("--owner", help="who sets/unsets maintenance mode")
 
         self.parser.add_argument(
-            "--repo-regex",
-            help="only set repositories matched this regex to maintenance mode",
+            "--repo-url-regex",
+            help="set repositories whose relative_url matches to this regex to maintenance mode",
         )
 
         self.parser.add_argument(

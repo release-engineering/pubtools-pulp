@@ -26,20 +26,27 @@ class SetMaintenanceOn(SetMaintenance):
 
     @step("Adjust maintenance report")
     def adjust_maintenance_report(self, report):
-        repo_ids = []
+        to_add = []
         if self.args.repo_ids:
             found_ids = self._ensure_repos_exist(self.args.repo_ids)
-            repo_ids.extend(found_ids)
+            to_add.extend(found_ids)
 
-        if self.args.repo_regex:
-            crit = Criteria.with_field("id", Matcher.regex(self.args.repo_regex))
-            repos = self.pulp_client.search_repository(crit).result()
-            repo_ids.extend([repo.id for repo in repos])
+        if self.args.repo_url_regex:
+            # search distributors with relative_url, get the repo id from distributors
+            crit = Criteria.with_field(
+                "relative_url", Matcher.regex(self.args.repo_url_regex)
+            )
+            dists = self.pulp_client.search_distributor(crit).result()
+            to_add.extend(set([dist.repo_id for dist in dists]))
 
-        report = report.add(repo_ids, owner=self.args.owner, message=self.args.message)
-        LOG.info(
-            "Setting following repos to maintenance mode: \n%s", "\n".join(repo_ids)
-        )
+        if to_add:
+            LOG.info("Setting following repos to maintenance mode:")
+            for repo_id in to_add:
+                LOG.info(" - %s", repo_id)
+
+            report = report.add(
+                to_add, owner=self.args.owner, message=self.args.message
+            )
 
         return report
 
@@ -54,15 +61,15 @@ class SetMaintenanceOn(SetMaintenance):
         missing_ids = set(repo_ids) - set(found_ids)
 
         if missing_ids:
-            LOG.warning(
-                "Didn't find following repositories: \n%s", "\n".join(missing_ids)
-            )
+            LOG.warning("Didn't find following repositories:")
+            for repo_id in missing_ids:
+                LOG.warning(" - %s", repo_id)
 
         return sorted(found_ids)
 
 
 def entry_point(cls=SetMaintenanceOn):
-    cls().main()  # pragma: no cover
+    cls().main()
 
 
 def doc_parser():

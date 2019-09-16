@@ -9,6 +9,7 @@ from pubtools.pulplib import (
 )
 
 from pubtools._pulp.tasks.set_maintenance import SetMaintenanceOn, SetMaintenanceOff
+import pubtools._pulp.tasks.set_maintenance.set_maintenance_on
 
 
 class FakeSetMaintenanceOn(SetMaintenanceOn):
@@ -41,7 +42,12 @@ class FakeSetMaintenanceOff(SetMaintenanceOff):
 
 def get_task_instance(on, *repos):
 
-    iso_distributor = Distributor(id="iso_distributor", type_id="iso_distributor")
+    iso_distributor = Distributor(
+        id="iso_distributor",
+        type_id="iso_distributor",
+        relative_url="root",
+        repo_id="redhat-maintenance",
+    )
     maint_repo = FileRepository(id="redhat-maintenance", distributors=[iso_distributor])
 
     if on:
@@ -94,7 +100,15 @@ def test_maintenance_on(command_tester):
 def test_maintenance_on_with_regex(command_tester):
     """Test set maintenance by using regex"""
     repo1 = Repository(id="repo1")
-    repo2 = Repository(id="repo2")
+
+    dist1 = Distributor(
+        id="yum_distributor",
+        type_id="yum_distributor",
+        relative_url="rhel/7",
+        repo_id="repo2",
+    )
+
+    repo2 = Repository(id="repo2", distributors=(dist1,))
 
     task_instance = get_task_instance(True, repo1, repo2)
 
@@ -105,8 +119,8 @@ def test_maintenance_on_with_regex(command_tester):
             "--pulp-url",
             "http://some.url",
             "--verbose",
-            "--repo-regex",
-            "repo1",
+            "--repo-url-regex",
+            "rhel",
         ],
     )
 
@@ -118,13 +132,16 @@ def test_maintenance_on_with_repo_not_exists(command_tester):
     task_instance = get_task_instance(True, repo1)
 
     command_tester.test(
-        task_instance.main,
+        lambda: pubtools._pulp.tasks.set_maintenance.set_maintenance_on.entry_point(
+            lambda: task_instance
+        ),
         [
             "test-maintenance-on",
             "--pulp-url",
             "http://some.url",
             "--verbose",
             "--repo-ids",
+            "repo1",
             "repo2",
         ],
     )
@@ -156,7 +173,7 @@ def test_maintenance_off(command_tester):
 
 def test_maintenance_off_with_regex(command_tester):
     repo1 = Repository(id="repo1")
-    repo2 = Repository(id="repo2")
+    repo2 = Repository(id="repo2", relative_url="rhel/7/")
 
     task_instance = get_task_instance(False, repo1, repo2)
 
@@ -167,8 +184,8 @@ def test_maintenance_off_with_regex(command_tester):
             "--pulp-url",
             "http://some.url",
             "--verbose",
-            "--repo-regex",
-            "repo1",
+            "--repo-url-regex",
+            "rhel",
         ],
     )
 
