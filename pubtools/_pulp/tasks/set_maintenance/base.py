@@ -1,4 +1,5 @@
 import logging
+import re
 
 from pubtools._pulp.task import PulpTask
 from pubtools._pulp.services import PulpClientService
@@ -16,7 +17,8 @@ class SetMaintenance(PulpClientService, PulpTask):
 
         self.parser.add_argument(
             "--repo-url-regex",
-            help="set repositories whose relative_url matches to this regex to maintenance mode",
+            help="adjust maintenance mode for repositories with a publish URL matching this pattern",
+            type=re.compile,
         )
 
         self.parser.add_argument(
@@ -42,6 +44,4 @@ class SetMaintenance(PulpClientService, PulpTask):
 
         report = self.adjust_maintenance_report(report)
 
-        tasks = self.set_maintenance(report).result()
-        task_ids = ", ".join([t.id for t in tasks])
-        LOG.info("Completed adjusting maintenance mode: %s", task_ids)
+        self.set_maintenance(report).result()

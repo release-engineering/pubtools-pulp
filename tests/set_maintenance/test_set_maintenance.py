@@ -10,6 +10,7 @@ from pubtools.pulplib import (
 
 from pubtools._pulp.tasks.set_maintenance import SetMaintenanceOn, SetMaintenanceOff
 import pubtools._pulp.tasks.set_maintenance.set_maintenance_on
+import pubtools._pulp.tasks.set_maintenance.set_maintenance_off
 
 
 class FakeSetMaintenanceOn(SetMaintenanceOn):
@@ -154,7 +155,9 @@ def test_maintenance_off(command_tester):
     task_instance = get_task_instance(False, repo1, repo2)
 
     command_tester.test(
-        task_instance.main,
+        lambda: pubtools._pulp.tasks.set_maintenance.set_maintenance_off.entry_point(
+            lambda: task_instance
+        ),
         [
             "test-maintenance-off",
             "--pulp-url",
