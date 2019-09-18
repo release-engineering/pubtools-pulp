@@ -41,6 +41,22 @@ class FakeSetMaintenanceOff(SetMaintenanceOff):
         return self.pulp_client_controller.client
 
 
+def assert_expected_report(expected_repos, pulp_client, message=None):
+    report = pulp_client.get_maintenance_report().result()
+    result_repos = [entry.repo_id for entry in report.entries]
+    if not message:
+        message = "Maintenance mode is enabled"
+
+    # check the number of entries in report is expected
+    assert len(expected_repos) == len(result_repos)
+    # check all entries are expected
+    for repo in expected_repos:
+        assert repo in result_repos
+    # check expected message is written to report
+    if report.entries:
+        assert report.entries[0].message == message
+
+
 def get_task_instance(on, *repos):
 
     iso_distributor = Distributor(
@@ -97,6 +113,10 @@ def test_maintenance_on(command_tester):
     assert len(controller.publish_history) == 1
     assert controller.publish_history[0].repository.id == "redhat-maintenance"
 
+    assert_expected_report(
+        ["repo1", "repo2"], task_instance.pulp_client, message="Now in Maintenance"
+    )
+
 
 def test_maintenance_on_with_regex(command_tester):
     """Test set maintenance by using regex"""
@@ -124,6 +144,8 @@ def test_maintenance_on_with_regex(command_tester):
             "rhel",
         ],
     )
+
+    assert_expected_report(["repo2"], task_instance.pulp_client)
 
 
 def test_maintenance_on_with_repo_not_exists(command_tester):
@@ -173,6 +195,8 @@ def test_maintenance_off(command_tester):
     assert len(controller.upload_history) == 2
     assert len(controller.publish_history) == 2
 
+    assert_expected_report(["repo1"], task_instance.pulp_client)
+
 
 def test_maintenance_off_with_regex(command_tester):
     repo1 = Repository(id="repo1")
@@ -191,6 +215,7 @@ def test_maintenance_off_with_regex(command_tester):
             "rhel",
         ],
     )
+    assert_expected_report(["repo1"], task_instance.pulp_client)
 
 
 def test_maintenance_off_with_repo_not_in_maintenance(command_tester):
@@ -210,3 +235,5 @@ def test_maintenance_off_with_repo_not_in_maintenance(command_tester):
             "repo2",
         ],
     )
+
+    assert_expected_report([], task_instance.pulp_client)
