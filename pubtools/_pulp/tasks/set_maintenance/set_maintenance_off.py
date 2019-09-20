@@ -8,7 +8,7 @@ from pubtools._pulp.task import PulpTask
 
 
 step = PulpTask.step
-LOG = logging.getLogger("set-maintenance")
+LOG = logging.getLogger("pubtools.pulp")
 
 
 class SetMaintenanceOff(SetMaintenance):

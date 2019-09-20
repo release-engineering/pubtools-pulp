@@ -6,7 +6,7 @@ from pubtools._pulp.services import PulpClientService
 
 
 step = PulpTask.step
-LOG = logging.getLogger("set-maintenance")
+LOG = logging.getLogger("pubtools.pulp")
 
 
 class SetMaintenance(PulpClientService, PulpTask):
