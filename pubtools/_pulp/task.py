@@ -5,7 +5,7 @@ from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from .step import StepDecorator
 
 
-LOG = logging.getLogger("pulp-task")
+LOG = logging.getLogger("pubtools.pulp")
 LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
 
 
@@ -89,14 +89,35 @@ class PulpTask(object):
     def _basic_args(self):
         # minimum args required for a pulp CLI task
         self.parser.add_argument(
-            "--debug", action="store_true", help="show debug statements"
+            "--debug",
+            action="count",
+            default=0,
+            help=(
+                "Show debug logs; can be provided up to three times "
+                "to enable more logs"
+            ),
         )
 
     def _setup_logging(self):
-        level = logging.INFO
-        if self.args.debug:
-            level = logging.DEBUG
-        logging.basicConfig(level=level, format=LOG_FORMAT)
+        logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
+
+        # All loggers will now log at INFO or higher.
+        # If we were given --debug, enable DEBUG level from some loggers,
+        # depending on how many were given.
+        debug_loggers = []
+        if self.args.debug >= 1:
+            # debug level 1: enable DEBUG from this project
+            debug_loggers.append("pubtools.pulp")
+        if self.args.debug >= 2:
+            # debug level 2: enable DEBUG from closely related projects.
+            debug_loggers.extend(["pubtools", "fastpurge"])
+        if self.args.debug >= 3:
+            # debug level 3: enable DEBUG from root logger
+            # (potentially very, very verbose!)
+            debug_loggers.append(None)
+
+        for logger_name in debug_loggers:
+            logging.getLogger(logger_name).setLevel(logging.DEBUG)
 
     def add_args(self):
         """Add parser options/arguments for a task

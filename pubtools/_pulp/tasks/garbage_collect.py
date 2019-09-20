@@ -7,7 +7,7 @@ from pubtools._pulp.task import PulpTask
 from pubtools._pulp.services import PulpClientService
 
 
-LOG = logging.getLogger("garbage-collect")
+LOG = logging.getLogger("pubtools.pulp")
 
 
 class GarbageCollect(PulpClientService, PulpTask):
