@@ -88,11 +88,8 @@ class PulpTask(object):
 
     def _basic_args(self):
         # minimum args required for a pulp CLI task
-        self.parser.add_argument("--verbose", action="store_true", help="show logs")
         self.parser.add_argument(
-            "--debug",
-            action="store_true",
-            help="show debug statements. " "Used along --verbose",
+            "--debug", action="store_true", help="show debug statements"
         )
 
     def _setup_logging(self):
@@ -120,8 +117,7 @@ class PulpTask(object):
         """Main method called by the entrypoint of the task."""
 
         # setup the logging as required
-        if self.args and self.args.verbose:
-            self._setup_logging()
+        self._setup_logging()
 
         self.run()
         return 0
