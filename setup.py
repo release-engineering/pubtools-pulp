@@ -46,7 +46,7 @@ setup(
             "pubtools-pulp-clear-repo = pubtools._pulp.tasks.clear_repo:entry_point",
             "pubtools-pulp-maintenance-on = pubtools._pulp.tasks.set_maintenance.set_maintenance_on:entry_point",
             "pubtools-pulp-maintenance-off = pubtools._pulp.tasks.set_maintenance.set_maintenance_off:entry_point",
-            "pubtools-pulp-publish = pubtools._pulp.tasks.publish:entry_point"
+            "pubtools-pulp-publish = pubtools._pulp.tasks.publish:entry_point",
         ]
     },
     project_urls={
