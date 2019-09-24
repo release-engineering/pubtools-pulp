@@ -90,6 +90,7 @@ class PulpTask(object):
         # minimum args required for a pulp CLI task
         self.parser.add_argument(
             "--debug",
+            "-d",
             action="count",
             default=0,
             help=(
