@@ -97,7 +97,7 @@ def test_debug2_logs(tier1_logger, tier2_logger, tier3_logger):
     """Tier 1 & 2 loggers use DEBUG if --debug is provided twice."""
 
     task = MyTask()
-    sys.argv = ["my-task", "--debug", "--debug"]
+    sys.argv = ["my-task", "-dd"]
     task.main()
 
     assert tier1_logger.getEffectiveLevel() == logging.DEBUG
@@ -109,7 +109,7 @@ def test_debug3_logs(tier1_logger, tier2_logger, tier3_logger):
     """All loggers use DEBUG if --debug is provided thrice."""
 
     task = MyTask()
-    sys.argv = ["my-task", "--debug", "--debug", "--debug"]
+    sys.argv = ["my-task", "--debug", "-d", "--debug"]
     task.main()
 
     assert tier1_logger.getEffectiveLevel() == logging.DEBUG

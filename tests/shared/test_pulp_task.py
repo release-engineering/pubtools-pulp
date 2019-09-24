@@ -46,7 +46,7 @@ def test_main():
         assuming run() and add_args() are implemented
     """
     task = TaskWithPulpClient()
-    arg = ["", "--pulp-url", "http://some.url", "--debug"]
+    arg = ["", "--pulp-url", "http://some.url", "-d"]
     with patch("sys.argv", arg):
         with patch("pubtools._pulp.task.PulpTask.run"):
             assert task.main() == 0
