@@ -39,8 +39,8 @@
 <p>When a repository is in maintenance mode, publishing onto customer-
 visible locations should be forbidden.</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">maintenance</span><span class="o">-</span><span class="n">on</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">verbose</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span>
-                                    <span class="n">PULP_URL</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">maintenance</span><span class="o">-</span><span class="n">on</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span>
+                                    <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
                                     <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span>
                                     <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">owner</span> <span class="n">OWNER</span><span class="p">]</span>
                                     <span class="p">[</span><span class="o">--</span><span class="n">repo</span><span class="o">-</span><span class="n">url</span><span class="o">-</span><span class="n">regex</span> <span class="n">REPO_URL_REGEX</span><span class="p">]</span>
@@ -51,13 +51,9 @@ visible locations should be forbidden.</p>
 <div class="section" id="Named Arguments">
 <h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h3>
 <dl class="option-list">
-<dt><kbd>--verbose</kbd></dt>
-<dd><p>show logs</p>
-<p>Default: False</p>
-</dd>
 <dt><kbd>--debug</kbd></dt>
-<dd><p>show debug statements. Used along –verbose</p>
-<p>Default: False</p>
+<dd><p>Show debug logs; can be provided up to three times to enable more logs</p>
+<p>Default: 0</p>
 </dd>
 <dt><kbd>--owner</kbd></dt>
 <dd><p>who sets/unsets maintenance mode</p>
@@ -109,8 +105,8 @@ maintenance mode.</p>
 <h2>Set Maintenance Off<a class="headerlink" href="#set-maintenance-off" title="Permalink to this headline">¶</a></h2>
 <p><p>Unset repositories maintenance mode.</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">maintenance</span><span class="o">-</span><span class="n">off</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">verbose</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span>
-                                     <span class="n">PULP_URL</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">maintenance</span><span class="o">-</span><span class="n">off</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span>
+                                     <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">owner</span> <span class="n">OWNER</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">repo</span><span class="o">-</span><span class="n">url</span><span class="o">-</span><span class="n">regex</span> <span class="n">REPO_URL_REGEX</span><span class="p">]</span>
@@ -120,13 +116,9 @@ maintenance mode.</p>
 <div class="section" id="Named Arguments">
 <h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h3>
 <dl class="option-list">
-<dt><kbd>--verbose</kbd></dt>
-<dd><p>show logs</p>
-<p>Default: False</p>
-</dd>
 <dt><kbd>--debug</kbd></dt>
-<dd><p>show debug statements. Used along –verbose</p>
-<p>Default: False</p>
+<dd><p>Show debug logs; can be provided up to three times to enable more logs</p>
+<p>Default: 0</p>
 </dd>
 <dt><kbd>--owner</kbd></dt>
 <dd><p>who sets/unsets maintenance mode</p>
