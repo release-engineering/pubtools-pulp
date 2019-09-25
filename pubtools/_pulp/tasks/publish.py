@@ -9,11 +9,7 @@ from more_executors.futures import f_map, f_sequence
 from pubtools.pulplib import Criteria, Matcher, PublishOptions
 
 from pubtools._pulp.task import PulpTask, CDNCached
-from pubtools._pulp.services import (
-    PulpClientService,
-    FastPurgeClientService,
-    UdCacheClientService,
-)
+from pubtools._pulp.services import PulpClientService, UdCacheClientService
 
 
 step = PulpTask.step

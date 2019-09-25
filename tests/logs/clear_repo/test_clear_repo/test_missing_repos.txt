@@ -1,4 +1,4 @@
-[    INFO] Check repos: started
+[    INFO] Get repos: started
 [   ERROR] Requested repo(s) don't exist: repo1, repo2, repo3
-[   ERROR] Check repos: failed
+[   ERROR] Get repos: failed
 # Raised: 30
