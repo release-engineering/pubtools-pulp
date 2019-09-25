@@ -8,7 +8,7 @@ from more_executors.futures import f_map, f_sequence
 
 from pubtools.pulplib import Criteria, Matcher, PublishOptions
 
-from pubtools._pulp.task import PulpTask
+from pubtools._pulp.task import PulpTask, CDNCached
 from pubtools._pulp.services import (
     PulpClientService,
     FastPurgeClientService,
@@ -26,9 +26,7 @@ def publish_date(str_date):
     return datetime.strptime(str_date, "%Y-%m-%d")
 
 
-class Publish(
-    PulpClientService, FastPurgeClientService, UdCacheClientService, PulpTask
-):
+class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCached):
     """Publishes the pulp repositories to the endpoints defined by the distributors
 
     This command will publish the pulp repositories provided in the request or
@@ -40,16 +38,15 @@ class Publish(
         super(Publish, self).add_args()
 
         self.parser.add_argument(
-            "--repos", help="list of repos to be published", nargs="+"
+            "--repo-ids", help="list of repos to be published", nargs="+"
         )
         self.parser.add_argument(
             "--clean",
             help="attempt to remove content not in the repo",
-            type=bool,
-            default=None,
+            action="store_true",
         )
         self.parser.add_argument(
-            "--force", help="execute a full repo publish", type=bool, default=None
+            "--force", help="execute a full repo publish", action="store_true"
         )
         self.parser.add_argument(
             "--published-before",
@@ -58,7 +55,7 @@ class Publish(
             default=None,
         )
         self.parser.add_argument(
-            "--url-regex",
+            "--repo-url-regex",
             help="publish repos whose repo url match",
             default=None,
             type=re.compile,
@@ -122,39 +119,21 @@ class Publish(
         out = []
         for repo in repos:
             out.append(client.flush_repo(repo.id))
-            if repo.eng_product_id:
-                out.append(client.flush_product(repo.eng_product_id))
 
         return out
 
     @step("Flush CDN cache")
     def flush_cdn(self, repos):
-        if not self.fastpurge_client:
-            LOG.info("CDN cache flush is not enabled.")
-            return []
-
-        def purge_repo(repo):
-            to_flush = []
-            for url in repo.mutable_urls:
-                flush_url = os.path.join(
-                    self.fastpurge_root_url, repo.relative_url, url
-                )
-                to_flush.append(flush_url)
-
-            LOG.debug("Flush: %s", to_flush)
-            flush = self.fastpurge_client.purge_by_url(to_flush)
-            return f_map(flush, lambda _: repo)
-
-        return [purge_repo(r) for r in repos if r.relative_url]
+        return self._flush_cdn(repos)
 
     @step("Get repos")
     def get_repos(self):
-        repos = self.args.repos
+        repo_ids = self.args.repo_ids
         found_repo_ids = []
         out = []
 
         # apply the filters and get repo_ids
-        repo_ids = self._filter_repos(repos)
+        repo_ids = self._filter_repos(repo_ids)
 
         # get repo objects for the repo_ids
         searched_repos = self.pulp_client.search_repository(Criteria.with_id(repo_ids))
@@ -183,7 +162,7 @@ class Publish(
 
         repos = set(repos) if repos else set()
 
-        if self.args.published_before or self.args.url_regex:
+        if self.args.published_before or self.args.repo_url_regex:
             repo_dist_f = self._filtered_repo_distributors()
             filtered_repos = [repo_dist.repo_id for repo_dist in repo_dist_f]
 
@@ -193,23 +172,18 @@ class Publish(
 
     def _filtered_repo_distributors(self):
         published_before = self.args.published_before
-        url_regex = self.args.url_regex
+        url_regex = self.args.repo_url_regex
 
         # define the criteria on available filters
-        if published_before and url_regex:
-            crit = Criteria.and_(
-                Criteria.with_field(
-                    "last_publish", Matcher.less_than(published_before)
-                ),
-                Criteria.with_field("relative_url", Matcher.regex(url_regex)),
+        crit = [Criteria.true()]
+        if published_before:
+            crit.append(
+                Criteria.with_field("last_publish", Matcher.less_than(published_before))
             )
-        elif published_before:
-            crit = Criteria.with_field(
-                "last_publish", Matcher.less_than(published_before)
-            )
-        elif url_regex:
-            crit = Criteria.with_field("relative_url", Matcher.regex(url_regex))
+        if url_regex:
+            crit.append(Criteria.with_field("relative_url", Matcher.regex(url_regex)))
 
+        crit = Criteria.and_(*crit)
         return self.pulp_client.search_distributor(crit)
 
 

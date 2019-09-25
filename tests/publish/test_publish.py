@@ -137,9 +137,9 @@ def test_nonexist_repos(command_tester):
         [
             "test-publish",
             "--pulp-url",
-            "https://pulp.examle.com",
+            "https://pulp.example.com",
             "--verbose",
-            "--repos",
+            "--repo-ids",
             "repo1",
             "repo2",
         ],
@@ -147,10 +147,10 @@ def test_nonexist_repos(command_tester):
 
 
 def test_no_input_repos(command_tester):
-    """Fails if no repos are avialble to publish"""
+    """Fails if no repos are available to publish"""
     command_tester.test(
         lambda: entry_point(FakePublish),
-        ["test-publish", "--pulp-url", "https://pulp.examle.com", "--verbose"],
+        ["test-publish", "--pulp-url", "https://pulp.example.com", "--verbose"],
     )
 
 
@@ -165,9 +165,9 @@ def test_repo_publish_only(command_tester):
         [
             "test-publish",
             "--pulp-url",
-            "https://pulp.examle.com",
+            "https://pulp.example.com",
             "--verbose",
-            "--repos",
+            "--repo-ids",
             "repo1",
         ],
     )
@@ -186,7 +186,7 @@ def test_repo_publish_cache_cleanup(command_tester):
         [
             "test-publish",
             "--pulp-url",
-            "https://pulp.examle.com",
+            "https://pulp.example.com",
             "--fastpurge-host",
             "fakehost-xxx.example.net",
             "--fastpurge-client-secret",
@@ -200,7 +200,7 @@ def test_repo_publish_cache_cleanup(command_tester):
             "--udcache-url",
             "https://ud.example.com/",
             "--verbose",
-            "--repos",
+            "--repo-ids",
             "repo1",
         ],
     )
@@ -227,9 +227,9 @@ def test_publish_url_regex_filtered_repos(command_tester):
         [
             "test-publish",
             "--pulp-url",
-            "https://pulp.examle.com",
+            "https://pulp.example.com",
             "--verbose",
-            "--url-regex",
+            "--repo-url-regex",
             "/unit/2/",
         ],
     )
@@ -249,7 +249,7 @@ def test_publish_repos_published_before_a_date(command_tester):
         [
             "test-publish",
             "--pulp-url",
-            "https://pulp.examle.com",
+            "https://pulp.example.com",
             "--verbose",
             "--published-before",
             "2019-09-08",
@@ -271,11 +271,11 @@ def test_publish_filtered_repos(command_tester):
         [
             "test-publish",
             "--pulp-url",
-            "https://pulp.examle.com",
+            "https://pulp.example.com",
             "--verbose",
             "--published-before",
             "2019-09-11",
-            "--url-regex",
+            "--repo-url-regex",
             "/unit/3/",
         ],
     )
@@ -296,13 +296,13 @@ def test_publish_filtered_input_repos(command_tester):
         [
             "test-publish",
             "--pulp-url",
-            "https://pulp.examle.com",
+            "https://pulp.example.com",
             "--verbose",
             "--published-before",
             "2019-09-11",
-            "--url-regex",
+            "--repo-url-regex",
             "/unit/3/",
-            "--repos",
+            "--repo-ids",
             "repo1",
             "repo2",
             "repo3",
