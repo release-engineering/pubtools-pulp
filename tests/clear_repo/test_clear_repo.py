@@ -91,7 +91,6 @@ def test_missing_repos(command_tester):
             "test-clear-repo",
             "--pulp-url",
             "https://pulp.example.com/",
-            "--verbose",
             "repo1",
             "repo2",
             "repo3",
@@ -110,13 +109,7 @@ def test_clear_empty_repo(command_tester, fake_collector):
 
     command_tester.test(
         task_instance.main,
-        [
-            "test-clear-repo",
-            "--pulp-url",
-            "https://pulp.example.com/",
-            "--verbose",
-            "some-filerepo",
-        ],
+        ["test-clear-repo", "--pulp-url", "https://pulp.example.com/", "some-filerepo"],
     )
 
     # No push items recorded
@@ -164,7 +157,6 @@ def test_clear_file_repo(command_tester, fake_collector):
             "https://cdn.example.com/",
             "--udcache-url",
             "https://ud.example.com/",
-            "--verbose",
             "some-filerepo",
         ],
     )
@@ -227,7 +219,6 @@ def test_clear_file_skip_publish(command_tester):
             "https://pulp.example.com/",
             "--skip",
             "foo,publish,bar",
-            "--verbose",
             "some-filerepo",
         ],
     )
@@ -273,7 +264,6 @@ def test_clear_yum_repo(command_tester, fake_collector, monkeypatch):
             "test-clear-repo",
             "--pulp-url",
             "https://pulp.example.com/",
-            "--verbose",
             "--fastpurge-host",
             "fakehost-xxx.example.net",
             "--fastpurge-client-secret",
@@ -320,7 +310,6 @@ def test_clear_container_repo(command_tester):
             "test-clear-repo",
             "--pulp-url",
             "https://pulp.example.com/",
-            "--verbose",
             "some-containerrepo",
         ],
     )

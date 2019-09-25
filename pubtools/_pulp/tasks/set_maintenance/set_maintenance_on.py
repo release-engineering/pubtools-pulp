@@ -7,7 +7,7 @@ from .base import SetMaintenance
 
 step = PulpTask.step
 
-LOG = logging.getLogger("set-maintenance")
+LOG = logging.getLogger("pubtools.pulp")
 
 
 class SetMaintenanceOn(SetMaintenance):

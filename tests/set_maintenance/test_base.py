@@ -19,14 +19,7 @@ def test_no_implemented(command_tester):
     controller.insert_repository(FileRepository(id="redhat-maintenance"))
     client = controller.client
 
-    arg = [
-        "test-maintenance",
-        "--pulp-url",
-        "http://some.url",
-        "--verbose",
-        "--repo-ids",
-        "repo1",
-    ]
+    arg = ["test-maintenance", "--pulp-url", "http://some.url", "--repo-ids", "repo1"]
 
     with patch("pubtools._pulp.services.PulpClientService.pulp_client", client):
         with pytest.raises(NotImplementedError):
