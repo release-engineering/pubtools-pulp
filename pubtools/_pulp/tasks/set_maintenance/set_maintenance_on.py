@@ -34,7 +34,7 @@ class SetMaintenanceOn(SetMaintenance):
         if self.args.repo_url_regex:
             # search distributors with relative_url, get the repo id from distributors
             crit = Criteria.with_field(
-                "relative_url", Matcher.regex(self.args.repo_url_regex)
+                "relative_url", Matcher.regex(self.args.repo_url_regex.pattern)
             )
             dists = self.pulp_client.search_distributor(crit).result()
             to_add.extend(set([dist.repo_id for dist in dists]))
