@@ -1,9 +1,7 @@
-[    INFO] run publish
-[    INFO] Get repos: started
-[    INFO] Get repos: finished
+[    INFO] Check repos: started
+[    INFO] Check repos: finished
 [    INFO] Publish: started
 [    INFO] Publishing repo3
-[    INFO] Publishing repo3 successful
 [    INFO] Publish: finished
 [    INFO] Flush UD cache: started
 [    INFO] UD cache flush is not enabled.

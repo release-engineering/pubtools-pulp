@@ -1,5 +1,5 @@
-[    INFO] Get repos: started
-[    INFO] Get repos: finished
+[    INFO] Check repos: started
+[    INFO] Check repos: finished
 [    INFO] Clear content: started
 [ WARNING] some-filerepo: no content removed, tasks: e3e70682-c209-4cac-629f-6fbed82c07cd
 [    INFO] Clear content: finished

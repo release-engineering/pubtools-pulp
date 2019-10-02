@@ -1,5 +1,5 @@
-{"event": {"type": "get-repos-start"}}
-{"event": {"type": "get-repos-end"}}
+{"event": {"type": "check-repos-start"}}
+{"event": {"type": "check-repos-end"}}
 {"event": {"type": "publish-start"}}
 {"event": {"type": "publish-end"}}
 {"event": {"type": "flush-ud-cache-start"}}

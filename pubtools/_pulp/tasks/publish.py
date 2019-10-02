@@ -108,7 +108,7 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
 
         return out
 
-    @step("Get repos")
+    @step("Check repos")
     def get_repos(self):
         repo_ids = self.args.repo_ids
         found_repo_ids = []

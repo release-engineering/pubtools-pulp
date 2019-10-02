@@ -72,7 +72,7 @@ class ClearRepo(
         LOG.error(*args, **kwargs)
         sys.exit(30)
 
-    @step("Get repos")
+    @step("Check repos")
     def get_repos(self):
         # Returns all repos to be operated on by this task.
         # Eagerly loads the repos so we fail early if the user passed any nonexistent
