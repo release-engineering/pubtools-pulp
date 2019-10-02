@@ -7,7 +7,8 @@ from more_executors.futures import f_map, f_sequence
 
 from pubtools.pulplib import Criteria, Matcher, PublishOptions
 
-from pubtools._pulp.task import PulpTask, CDNCached
+from pubtools._pulp.task import PulpTask
+from pubtools._pulp.cdn_cache import CDNCache
 from pubtools._pulp.services import PulpClientService, UdCacheClientService
 
 
@@ -21,12 +22,12 @@ def publish_date(str_date):
     return datetime.strptime(str_date, "%Y-%m-%d")
 
 
-class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCached):
-    """Publishes the pulp repositories to the endpoints defined by the distributors
+class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
+    """Publish one or more Pulp repositories to the endpoints defined by their distributors.
 
-    This command will publish the pulp repositories provided in the request or
+    This command will publish the Pulp repositories provided in the request or
     fetched using the filters(url-regex or published-before) or an intersection
-    of input repos and filters.
+    of input repositories and filters.
     """
 
     def add_args(self):
@@ -58,7 +59,7 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCached):
 
     def run(self):
         to_await = []
-        LOG.info("run publish")
+        LOG.debug("Begin publishing repositories")
 
         # get repos applying filters
         repos = self.get_repos()
@@ -76,7 +77,7 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCached):
         # flush CDN cache
         to_await.extend(self.flush_cdn(repos))
 
-        # wait for everthing to finish.
+        # wait for everything to finish.
         for f in to_await:
             f.result()
 
@@ -90,19 +91,9 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCached):
         for repo in repos:
             LOG.info("Publishing %s", repo.id)
             f = repo.publish(publish_opts)
-            f = f_map(f, partial(self.log_publish, repo))
             out.append(f)
 
         return out
-
-    def log_publish(self, repo, tasks):
-        # logs publish status
-        for task in tasks:
-            LOG.info(
-                "Publishing %s %s",
-                repo.id,
-                "successful" if task.succeeded else "unsuccessful",
-            )
 
     @step("Flush UD cache")
     def flush_ud(self, repos):
@@ -116,10 +107,6 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCached):
             out.append(client.flush_repo(repo.id))
 
         return out
-
-    @step("Flush CDN cache")
-    def flush_cdn(self, repos):
-        return self._flush_cdn(repos)
 
     @step("Get repos")
     def get_repos(self):

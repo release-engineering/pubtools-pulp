@@ -1,11 +1,8 @@
-import os
 import logging
 import textwrap
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
-from more_executors.futures import f_map
 
 from .step import StepDecorator
-from .services import FastPurgeClientService
 
 
 LOG = logging.getLogger("pubtools.pulp")
@@ -146,28 +143,3 @@ class PulpTask(object):
 
         self.run()
         return 0
-
-
-class CDNCached(FastPurgeClientService):
-    # provding CDN cache related features
-
-    def _flush_cdn(self, repos):
-        # CDN cache flush functionality to be
-        # used across tasks
-        if not self.fastpurge_client:
-            LOG.info("CDN cache flush is not enabled.")
-            return []
-
-        def purge_repo(repo):
-            to_flush = []
-            for url in repo.mutable_urls:
-                flush_url = os.path.join(
-                    self.fastpurge_root_url, repo.relative_url, url
-                )
-                to_flush.append(flush_url)
-
-            LOG.debug("Flush: %s", to_flush)
-            flush = self.fastpurge_client.purge_by_url(to_flush)
-            return f_map(flush, lambda _: repo)
-
-        return [purge_repo(r) for r in repos if r.relative_url]

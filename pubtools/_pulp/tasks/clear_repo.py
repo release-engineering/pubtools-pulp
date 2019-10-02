@@ -13,7 +13,8 @@ from pubtools.pulplib import (
     ModulemdUnit,
 )
 
-from pubtools._pulp.task import PulpTask, CDNCached
+from pubtools._pulp.task import PulpTask
+from pubtools._pulp.cdn_cache import CDNCache
 from pubtools._pulp.services import (
     CollectorService,
     UdCacheClientService,
@@ -38,7 +39,7 @@ class ClearedRepo(object):
 
 
 class ClearRepo(
-    CollectorService, UdCacheClientService, PulpClientService, PulpTask, CDNCached
+    CollectorService, UdCacheClientService, PulpClientService, PulpTask, CDNCache
 ):
     """Remove all contents from one or more Pulp repositories.
 
@@ -250,10 +251,6 @@ class ClearRepo(
                 out.append(client.flush_product(repo.eng_product_id))
 
         return out
-
-    @step("Flush CDN cache")
-    def flush_cdn(self, repos):
-        return self._flush_cdn(repos)
 
     def run(self):
         to_await = []
