@@ -2,8 +2,7 @@ import logging
 import sys
 import re
 from datetime import datetime
-from functools import partial
-from more_executors.futures import f_map, f_sequence
+from more_executors.futures import f_sequence
 
 from pubtools.pulplib import Criteria, Matcher, PublishOptions
 

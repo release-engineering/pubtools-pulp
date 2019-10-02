@@ -9,6 +9,7 @@ LOG = logging.getLogger("pubtools.pulp")
 
 step = PulpTask.step
 
+
 class CDNCache(FastPurgeClientService):
     """Provide features to interact with CDN cache."""
 
