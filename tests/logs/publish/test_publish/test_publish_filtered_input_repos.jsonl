@@ -2,7 +2,7 @@
 {"event": {"type": "check-repos-end"}}
 {"event": {"type": "publish-start"}}
 {"event": {"type": "publish-end"}}
-{"event": {"type": "flush-ud-cache-start"}}
-{"event": {"type": "flush-ud-cache-end"}}
 {"event": {"type": "flush-cdn-cache-start"}}
 {"event": {"type": "flush-cdn-cache-end"}}
+{"event": {"type": "flush-ud-cache-start"}}
+{"event": {"type": "flush-ud-cache-end"}}

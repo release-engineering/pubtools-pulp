@@ -60,7 +60,7 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
         LOG.debug("Begin publishing repositories")
 
         # get repos applying filters
-        repos = self.get_repos()
+        repos = self.check_repos()
 
         # publish the repos found
         publish_fs = self.publish(repos)
@@ -69,11 +69,11 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
         # flushing caches.
         f_sequence(publish_fs).result()
 
-        # flush UD cache
-        to_await.extend(self.flush_ud(repos))
-
         # flush CDN cache
         to_await.extend(self.flush_cdn(repos))
+
+        # flush UD cache
+        to_await.extend(self.flush_ud(repos))
 
         # wait for everything to finish.
         for f in to_await:
@@ -107,7 +107,7 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
         return out
 
     @step("Check repos")
-    def get_repos(self):
+    def check_repos(self):
         repo_ids = self.args.repo_ids
         found_repo_ids = []
         out = []
@@ -161,7 +161,9 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
                 Criteria.with_field("last_publish", Matcher.less_than(published_before))
             )
         if url_regex:
-            crit.append(Criteria.with_field("relative_url", Matcher.regex(url_regex.pattern)))
+            crit.append(
+                Criteria.with_field("relative_url", Matcher.regex(url_regex.pattern))
+            )
 
         crit = Criteria.and_(*crit)
         return self.pulp_client.search_distributor(crit)
