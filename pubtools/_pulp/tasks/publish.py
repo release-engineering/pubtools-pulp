@@ -162,7 +162,7 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
                 Criteria.with_field("last_publish", Matcher.less_than(published_before))
             )
         if url_regex:
-            crit.append(Criteria.with_field("relative_url", Matcher.regex(url_regex)))
+            crit.append(Criteria.with_field("relative_url", Matcher.regex(url_regex.pattern)))
 
         crit = Criteria.and_(*crit)
         return self.pulp_client.search_distributor(crit)
