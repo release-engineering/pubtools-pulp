@@ -7,9 +7,8 @@ from more_executors.futures import f_sequence
 from pubtools.pulplib import Criteria, Matcher, PublishOptions
 
 from pubtools._pulp.task import PulpTask
-from pubtools._pulp.cdn_cache import CDNCache
 from pubtools._pulp.services import PulpClientService, UdCacheClientService
-
+from pubtools._pulp.tasks.common import CDNCache
 
 step = PulpTask.step
 

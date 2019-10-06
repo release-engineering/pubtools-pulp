@@ -3,7 +3,7 @@ import logging
 from more_executors.futures import f_map
 
 from pubtools._pulp.task import PulpTask
-from .services import FastPurgeClientService
+from pubtools._pulp.services import FastPurgeClientService
 
 LOG = logging.getLogger("pubtools.pulp")
 
