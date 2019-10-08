@@ -8,7 +8,7 @@ matrix:
   - python: "3.6"
     env: TOX_ENV=static
   - python: "3.6"
-    env: TOX_ENV=cov-travis
+    env: TOX_ENV=cov-travis DEPLOY=1
   - python: "3.6"
     env: TOX_ENV=docs
 script: tox -e $TOX_ENV
@@ -20,7 +20,7 @@ deploy:
   provider: pypi
   user: content-delivery-release-bot
   password:
-    secure: mnw4d949DWPmJPhoMzKMv0G+IqYNhuOxfWQWrc8x2SjPIP6OzXZXcErJZ7pz1gq7JIzD9psyD8uIIlPZFsw47yDcAbSOaaa1EhcB134Weonxl2AlgrM9uD6beQaOU1g+UqY4Ej6CQmmm1AN1r/2il6P8b2guYkQvregSjS1uiL1lr0dYsk/Pr9hhgWUQgxLpnjaH7V4GHWsesOMrNp9v8dFlzJTgR2E7f/gqtC362VoSZq6AR9jEjMi4L+B+6zF7qycnEa6BnMCHIBDUS04GQ3LD9PvyGTvbz1dekmQ75NGBvBr36RuIMPv3eeAp8Anm3NMtTnKiuiAEcEAFf85rs3hWOiIIMgcEf/dfunWaNk1vR8aMYgQj21r7fqMHtJJQb55YNa3/Bx1ngjyOmuGxBUUkrk9UOHhMrXVpSftORFnoNSgLKxSFxNW9ByUz9n5ga1x0TQSwVlQT9ZinVRXsgj7T3w/Rvo+4CBlLafUz3vkKyhPUzKPbx3IMGDBLYsxL1gP61ndkfmOnHsjQUOCOM4OKmWfkwSOodJwoU143KlO0tHn/HD+xostND7kV59VHbitzl+E2iJXnvpJ4QXYizj8zPMyMZ30olpzZnhvJ3s0XkKmhkbBop6DpPi8S1HXDPdQC4LiwbhGO/C1H4dLfN8gvY49ssrJAgSeqaUEewQE=
+    secure: kFej0raJl2VeZqeEVQ/opXg3ztEVcaNePuuQKBNM7AUA4/TIJRFJiMfpJ7Z/WJAZzzyGOy4YnrLZeum8w0X38UR4eV11pwdNFf1FGMNQRDKyhow3MOhHtA2Oz8ecEUEldUajNf1QkOxiS9ABnbUymIs3SgB7DPtdvQMq7ENr+gyiS4CSHonf96Y3JDbtTCU3LMSvgKKjTyS1Awc8c6LN5vJ36AVfe4Y8GbBKHkwJho4ekPF6nGSAyJg2zh9vMqsUAgz+yIMmHDAAfZJimRPEB+ZdShNtqs8GXnD6KpSJXD+4b6N1YUIg24ltp3d4L7J9h5WyfIA7dfG/QmakiNToR8rgJu1hH6vewye/qKScsZu+T6VN8tY4YrBrERID9juHTIG67tdTP0N7ygwqtV7wohpXNpGanAiNVeVYP/WO5KJYcOlZBdhbXhZuRRbgT0PhQ3cQa8Fj34htllvYSKoq35NIEJIqK8ZgCGPKrNwm2oGkw2ZHQ93+KYXMvWOK3r4Rlsj6b1mAoV/8yyFPoljzr9JDiNd9CsNkQslSXUW958Mszet+rbsovitB2R1Bo8lymwzWGogKJZb366mH2/kjE/uwH2rvQNnEEnldv+L2QVPw5kejBenOa/VgxWBM5/tiIjhkmveAj0N8sNxSuB5x9Z0va3n9it3z/Fp1tth5EdY=
   on:
     tags: true
     # Only one of the environments in the matrix should have
