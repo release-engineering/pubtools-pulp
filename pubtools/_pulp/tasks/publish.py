@@ -32,7 +32,9 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
         super(Publish, self).add_args()
 
         self.parser.add_argument(
-            "--repo-ids", help="list of repos to be published", nargs="+"
+            "--repo-ids",
+            help="comma separated repos to be published",
+            type=lambda x: x.split(","),
         )
         self.parser.add_argument(
             "--clean",

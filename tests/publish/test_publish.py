@@ -139,8 +139,7 @@ def test_nonexist_repos(command_tester):
             "--pulp-url",
             "https://pulp.example.com",
             "--repo-ids",
-            "repo1",
-            "repo2",
+            "repo1,repo2",
         ],
     )
 
@@ -296,9 +295,7 @@ def test_publish_filtered_input_repos(command_tester):
             "--repo-url-regex",
             "/unit/3/",
             "--repo-ids",
-            "repo1",
-            "repo2",
-            "repo3",
+            "repo1,repo2,repo3",
         ],
     )
 
