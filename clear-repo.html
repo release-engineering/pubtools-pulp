@@ -39,17 +39,17 @@
 information on what was removed.  Removal may optionally be filtered
 to selected content types.</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">clear</span><span class="o">-</span><span class="n">repo</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">url</span> <span class="n">UDCACHE_URL</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">user</span> <span class="n">UDCACHE_USER</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">password</span> <span class="n">UDCACHE_PASSWORD</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">clear</span><span class="o">-</span><span class="n">repo</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span>
                                 <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">host</span> <span class="n">FASTPURGE_HOST</span><span class="p">]</span>
                                 <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">token</span> <span class="n">FASTPURGE_CLIENT_TOKEN</span><span class="p">]</span>
                                 <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">secret</span> <span class="n">FASTPURGE_CLIENT_SECRET</span><span class="p">]</span>
                                 <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">access</span><span class="o">-</span><span class="n">token</span> <span class="n">FASTPURGE_ACCESS_TOKEN</span><span class="p">]</span>
                                 <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">root</span><span class="o">-</span><span class="n">url</span> <span class="n">FASTPURGE_ROOT_URL</span><span class="p">]</span>
+                                <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">url</span> <span class="n">UDCACHE_URL</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">user</span> <span class="n">UDCACHE_USER</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">password</span> <span class="n">UDCACHE_PASSWORD</span><span class="p">]</span>
                                 <span class="p">[</span><span class="o">--</span><span class="n">skip</span> <span class="n">SKIP</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">content</span><span class="o">-</span><span class="nb">type</span> <span class="n">CONTENT_TYPE</span><span class="p">]</span>
                                 <span class="n">repo</span> <span class="p">[</span><span class="n">repo</span> <span class="o">...</span><span class="p">]</span>
 </pre></div>
@@ -74,6 +74,28 @@ to selected content types.</p>
 </dd>
 <dt><kbd>--content-type</kbd></dt>
 <dd><p>remove only content of these comma-separated type(s)</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Akamai FastPurge environment">
+<h2>Akamai FastPurge environment<a class="headerlink" href="#Akamai FastPurge environment" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>--fastpurge-host</kbd></dt>
+<dd><p>FastPurge hostname (xxx.purge.akamaiapis.net)</p>
+</dd>
+<dt><kbd>--fastpurge-client-token</kbd></dt>
+<dd><p>Fast Purge client token</p>
+</dd>
+<dt><kbd>--fastpurge-client-secret</kbd></dt>
+<dd><p>FastPurge client secret (or set FASTPURGE_SECRET environment variable)</p>
+<p>Default: “”</p>
+</dd>
+<dt><kbd>--fastpurge-access-token</kbd></dt>
+<dd><p>FastPurge access token</p>
+</dd>
+<dt><kbd>--fastpurge-root-url</kbd></dt>
+<dd><p>Root URL of CDN for all cache purges (or set FASTPURGE_ROOT_URL environment variable). If omitted, FastPurge features are disabled.</p>
+<p>Default: “”</p>
 </dd>
 </dl>
 </div>
@@ -106,28 +128,6 @@ to selected content types.</p>
 </dd>
 <dt><kbd>--udcache-password</kbd></dt>
 <dd><p>Password for UD cache flush (or set UDCACHE_PASSWORD)</p>
-<p>Default: “”</p>
-</dd>
-</dl>
-</div>
-<div class="section" id="Akamai FastPurge environment">
-<h2>Akamai FastPurge environment<a class="headerlink" href="#Akamai FastPurge environment" title="Permalink to this headline">¶</a></h2>
-<dl class="option-list">
-<dt><kbd>--fastpurge-host</kbd></dt>
-<dd><p>FastPurge hostname (xxx.purge.akamaiapis.net)</p>
-</dd>
-<dt><kbd>--fastpurge-client-token</kbd></dt>
-<dd><p>Fast Purge client token</p>
-</dd>
-<dt><kbd>--fastpurge-client-secret</kbd></dt>
-<dd><p>FastPurge client secret (or set FASTPURGE_SECRET environment variable)</p>
-<p>Default: “”</p>
-</dd>
-<dt><kbd>--fastpurge-access-token</kbd></dt>
-<dd><p>FastPurge access token</p>
-</dd>
-<dt><kbd>--fastpurge-root-url</kbd></dt>
-<dd><p>Root URL of CDN for all cache purges (or set FASTPURGE_ROOT_URL environment variable). If omitted, FastPurge features are disabled.</p>
 <p>Default: “”</p>
 </dd>
 </dl>
@@ -204,6 +204,7 @@ file for authentication.</p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">clear-repo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="garbage-collect.html">garbage-collect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publish.html">publish</a></li>
 <li class="toctree-l1"><a class="reference internal" href="set-maintenance.html">set-maintenance</a></li>
 </ul>
 
