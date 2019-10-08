@@ -1,6 +1,5 @@
 import logging
 import sys
-import os
 from functools import partial
 import attr
 
@@ -17,10 +16,10 @@ from pubtools.pulplib import (
 from pubtools._pulp.task import PulpTask
 from pubtools._pulp.services import (
     CollectorService,
-    FastPurgeClientService,
     UdCacheClientService,
     PulpClientService,
 )
+from pubtools._pulp.tasks.common import CDNCache
 
 step = PulpTask.step
 
@@ -40,11 +39,7 @@ class ClearedRepo(object):
 
 
 class ClearRepo(
-    CollectorService,
-    FastPurgeClientService,
-    UdCacheClientService,
-    PulpClientService,
-    PulpTask,
+    CollectorService, UdCacheClientService, PulpClientService, PulpTask, CDNCache
 ):
     """Remove all contents from one or more Pulp repositories.
 
@@ -256,26 +251,6 @@ class ClearRepo(
                 out.append(client.flush_product(repo.eng_product_id))
 
         return out
-
-    @step("Flush CDN cache")
-    def flush_cdn(self, repos):
-        if not self.fastpurge_client:
-            LOG.info("CDN cache flush is not enabled.")
-            return []
-
-        def purge_repo(repo):
-            to_flush = []
-            for url in repo.mutable_urls:
-                flush_url = os.path.join(
-                    self.fastpurge_root_url, repo.relative_url, url
-                )
-                to_flush.append(flush_url)
-
-            LOG.debug("Flush: %s", to_flush)
-            flush = self.fastpurge_client.purge_by_url(to_flush)
-            return f_map(flush, lambda _: repo)
-
-        return [purge_repo(r) for r in repos if r.relative_url]
 
     def run(self):
         to_await = []

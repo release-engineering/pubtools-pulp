@@ -1,0 +1,12 @@
+[    INFO] Check repos: started
+[    INFO] Check repos: finished
+[    INFO] Publish: started
+[    INFO] Publishing repo3
+[    INFO] Publish: finished
+[    INFO] Flush CDN cache: started
+[    INFO] CDN cache flush is not enabled.
+[    INFO] Flush CDN cache: finished
+[    INFO] Flush UD cache: started
+[    INFO] UD cache flush is not enabled.
+[    INFO] Flush UD cache: finished
+[    INFO] Publishing repositories completed

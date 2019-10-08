@@ -1,0 +1,10 @@
+[    INFO] Check repos: started
+[    INFO] Check repos: finished
+[    INFO] Publish: started
+[    INFO] Publishing repo1
+[    INFO] Publish: finished
+[    INFO] Flush CDN cache: started
+[    INFO] Flush CDN cache: finished
+[    INFO] Flush UD cache: started
+[    INFO] Flush UD cache: finished
+[    INFO] Publishing repositories completed
