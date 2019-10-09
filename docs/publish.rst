@@ -18,7 +18,7 @@ A typical invocation of publish would look like this:
     --pulp-url https://pulp.example.com/ \
     --pulp-user admin \
     --pulp-password XXXXX \
-    --repo-ids my-repo1 my-repo2 ...
+    --repo-ids my-repo1,my-repo2 ...
 
 Mentioned repositories will be published to the defined
 endpoints in the distributors.
@@ -51,7 +51,7 @@ only the repos matching those filters are published.
     --pulp-password XXXXX \
     --published-before 2019-09-10
     --repo-url-regex /some/url/to/match
-    --repo-ids my-repo1 my-repo2 ...
+    --repo-ids my-repo1,my-repo2 ...
 
 
 Example: with cache flush
@@ -74,4 +74,4 @@ file for authentication.
     --pulp-user admin \
     --pulp-password XXXXX \
     --fastpurge-root-url https://cdn.example.com/ \
-    --repo-ids my-repo1 my-repo2 ...
+    --repo-ids my-repo1,my-repo2 ...
