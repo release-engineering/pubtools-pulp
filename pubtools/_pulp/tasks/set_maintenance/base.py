@@ -23,8 +23,8 @@ class SetMaintenance(PulpClientService, PulpTask):
 
         self.parser.add_argument(
             "--repo-ids",
-            nargs="+",
-            help="repository to be set/unset to maintenance mode",
+            help="comma separated repositories to be set/unset to maintenance mode",
+            type=lambda x: x.split(","),
         )
 
     @step("Get maintenance report")

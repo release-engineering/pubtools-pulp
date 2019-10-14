@@ -98,8 +98,7 @@ def test_maintenance_on(command_tester):
             "--pulp-url",
             "http://some.url",
             "--repo-ids",
-            "repo1",
-            "repo2",
+            "repo1,repo2",
             "--message",
             "Now in Maintenance",
         ],
@@ -161,8 +160,7 @@ def test_maintenance_on_with_repo_not_exists(command_tester):
             "--pulp-url",
             "http://some.url",
             "--repo-ids",
-            "repo1",
-            "repo2",
+            "repo1,repo2",
         ],
     )
 
@@ -225,8 +223,7 @@ def test_maintenance_off_with_repo_not_in_maintenance(command_tester):
             "--pulp-url",
             "http://some.url",
             "--repo-ids",
-            "repo1",
-            "repo2",
+            "repo1,repo2",
         ],
     )
 
