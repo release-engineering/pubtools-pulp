@@ -12,6 +12,10 @@ LOG = logging.getLogger("pubtools.pulp")
 class UdCacheClient(object):
     # Client for flushing UD cache.
 
+    # Default number of request thread modifiable by an env variable.
+    # This is not a documented/supported feature of the library.
+    _REQUEST_THREADS = int(os.environ.get("UDCACHE_REQUEST_THREADS", "4"))
+
     def __init__(self, url, max_retry_sleep=None, **kwargs):
         """Create a new UD cache flush client.
 
@@ -34,7 +38,7 @@ class UdCacheClient(object):
 
         self._session_attrs = kwargs
         self._executor = (
-            Executors.thread_pool()
+            Executors.thread_pool(max_workers=self._REQUEST_THREADS)
             .with_map(self._check_http_response)
             .with_retry(**retry_args)
         )
