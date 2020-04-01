@@ -64,7 +64,7 @@ class UdCacheClient(object):
 
     def _flush_object(self, object_type, object_id):
         url = os.path.join(
-            self._url, "internal/rcm/flush-cache", object_type, object_id
+            self._url, "internal/rcm/flush-cache", object_type, str(object_id)
         )
 
         LOG.info("Invalidating %s %s", object_type, object_id)
