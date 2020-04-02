@@ -10,7 +10,7 @@ def test_flush(requests_mock):
     client = UdCacheClient("https://ud.example.com/", auth=("user", "pass"))
 
     urls = [
-        "https://ud.example.com/internal/rcm/flush-cache/eng-product/some-product",
+        "https://ud.example.com/internal/rcm/flush-cache/eng-product/1234",
         "https://ud.example.com/internal/rcm/flush-cache/repo/some-repo",
     ]
 
@@ -18,7 +18,7 @@ def test_flush(requests_mock):
         requests_mock.register_uri("GET", url)
 
     # It should succeed
-    client.flush_product("some-product").result()
+    client.flush_product(1234).result()
     client.flush_repo("some-repo").result()
 
     # It should have called above two URLs
