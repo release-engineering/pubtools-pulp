@@ -34,9 +34,9 @@ class FakeSetMaintenanceOff(SetMaintenanceOff):
     @property
     def pulp_client(self):
         """Doesn't check if super gives a Pulp client or not:
-            1. it's been checked in maintenance on, which has the same client
-            2. we need to pre-set maintenance mode before test, check would
-               break that since there's no service args passed.
+        1. it's been checked in maintenance on, which has the same client
+        2. we need to pre-set maintenance mode before test, check would
+           break that since there's no service args passed.
         """
         return self.pulp_client_controller.client
 

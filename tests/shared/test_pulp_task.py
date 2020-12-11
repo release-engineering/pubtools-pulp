@@ -43,7 +43,7 @@ def test_pulp_client():
 
 def test_main():
     """Checks main returns without exception when invoked with minimal args
-        assuming run() and add_args() are implemented
+    assuming run() and add_args() are implemented
     """
     task = TaskWithPulpClient()
     arg = ["", "--pulp-url", "http://some.url", "-d"]
