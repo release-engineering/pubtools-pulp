@@ -166,14 +166,22 @@ def test_clear_file_repo(command_tester, fake_collector):
         {
             "state": "DELETED",
             "origin": "pulp",
+            "src": None,
+            "dest": None,
             "filename": "hello.txt",
             "checksums": {"sha256": "a" * 64},
+            "build": None,
+            "signing_key": None,
         },
         {
             "state": "DELETED",
             "origin": "pulp",
+            "src": None,
+            "dest": None,
             "filename": "with/subdir.json",
             "checksums": {"sha256": "b" * 64},
+            "build": None,
+            "signing_key": None,
         },
     ]
 
@@ -281,11 +289,23 @@ def test_clear_yum_repo(command_tester, fake_collector, monkeypatch):
         {
             "state": "DELETED",
             "origin": "pulp",
+            "src": None,
+            "dest": None,
             "filename": "bash-1.23-1.test8.x86_64.rpm",
             "checksums": {"sha256": "a" * 64, "md5": "b" * 32},
-            "signing_key": "aabbcc",
+            "signing_key": "AABBCC",
+            "build": None,
         },
-        {"state": "DELETED", "origin": "pulp", "filename": "mymod:s1:123:a1c2:s390x"},
+        {
+            "state": "DELETED",
+            "origin": "pulp",
+            "src": None,
+            "dest": None,
+            "filename": "mymod:s1:123:a1c2:s390x",
+            "checksums": None,
+            "signing_key": None,
+            "build": None,
+        },
     ]
 
     # It should have flushed these URLs

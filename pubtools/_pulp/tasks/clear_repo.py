@@ -12,6 +12,7 @@ from pubtools.pulplib import (
     RpmUnit,
     ModulemdUnit,
 )
+from pushsource import FilePushItem, ModuleMdPushItem, RpmPushItem
 
 from pubtools._pulp.task import PulpTask
 from pubtools._pulp.services import (
@@ -190,9 +191,9 @@ class ClearRepo(
             [unit.name, unit.stream, str(unit.version), unit.context, unit.arch]
         )
 
-        out["filename"] = nsvca
+        out["name"] = nsvca
 
-        return out
+        return ModuleMdPushItem(**out)
 
     def push_item_for_rpm(self, unit):
         out = {}
@@ -210,25 +211,26 @@ class ClearRepo(
             unit.arch,
             ".rpm",
         ]
-        out["filename"] = "".join(filename_parts)
+        out["name"] = "".join(filename_parts)
 
-        out["checksums"] = {}
         if unit.sha256sum:
-            out["checksums"]["sha256"] = unit.sha256sum
+            out["sha256sum"] = unit.sha256sum
         if unit.md5sum:
-            out["checksums"]["md5"] = unit.md5sum
+            out["md5sum"] = unit.md5sum
 
         out["signing_key"] = unit.signing_key
 
-        return out
+        return RpmPushItem(**out)
 
     def push_item_for_file(self, unit):
-        return {
-            "state": "DELETED",
-            "origin": "pulp",
-            "filename": unit.path,
-            "checksums": {"sha256": unit.sha256sum},
-        }
+        out = {}
+
+        out["state"] = "DELETED"
+        out["origin"] = "pulp"
+        out["name"] = unit.path
+        out["sha256sum"] = unit.sha256sum
+
+        return FilePushItem(**out)
 
     @step("Publish")
     def publish(self, repo_fs):

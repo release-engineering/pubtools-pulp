@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- N/A
+- Updated clear-repo to send pushitem objects to the collector
 
 ## 1.0.2 - 2020-04-02
 
