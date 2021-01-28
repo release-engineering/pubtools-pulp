@@ -12,7 +12,6 @@
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="garbage-collect" href="garbage-collect.html" />
@@ -35,104 +34,6 @@
             
   <div class="section" id="clear-repo">
 <h1>clear-repo<a class="headerlink" href="#clear-repo" title="Permalink to this headline">¶</a></h1>
-<p><p>Remove all contents from one or more Pulp repositories.</p>
-<p>This command will remove contents from repositories and record
-information on what was removed.  Removal may optionally be filtered
-to selected content types.</p>
-</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">clear</span><span class="o">-</span><span class="n">repo</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">host</span> <span class="n">FASTPURGE_HOST</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">token</span> <span class="n">FASTPURGE_CLIENT_TOKEN</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">secret</span> <span class="n">FASTPURGE_CLIENT_SECRET</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">access</span><span class="o">-</span><span class="n">token</span> <span class="n">FASTPURGE_ACCESS_TOKEN</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">root</span><span class="o">-</span><span class="n">url</span> <span class="n">FASTPURGE_ROOT_URL</span><span class="p">]</span>
-                                <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">url</span> <span class="n">UDCACHE_URL</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">user</span> <span class="n">UDCACHE_USER</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">password</span> <span class="n">UDCACHE_PASSWORD</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">skip</span> <span class="n">SKIP</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">content</span><span class="o">-</span><span class="nb">type</span> <span class="n">CONTENT_TYPE</span><span class="p">]</span>
-                                <span class="n">repo</span> <span class="p">[</span><span class="n">repo</span> <span class="o">...</span><span class="p">]</span>
-</pre></div>
-</div>
-<div class="section" id="Positional Arguments">
-<h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h2>
-<dl class="option-list">
-<dt><kbd>repo</kbd></dt>
-<dd><p>Repositories to be cleared</p>
-</dd>
-</dl>
-</div>
-<div class="section" id="Named Arguments">
-<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
-<dl class="option-list">
-<dt><kbd>--debug, -d</kbd></dt>
-<dd><p>Show debug logs; can be provided up to three times to enable more logs</p>
-<p>Default: 0</p>
-</dd>
-<dt><kbd>--skip</kbd></dt>
-<dd><p>skip given comma-separated sub-steps</p>
-</dd>
-<dt><kbd>--content-type</kbd></dt>
-<dd><p>remove only content of these comma-separated type(s)</p>
-</dd>
-</dl>
-</div>
-<div class="section" id="Akamai FastPurge environment">
-<h2>Akamai FastPurge environment<a class="headerlink" href="#Akamai FastPurge environment" title="Permalink to this headline">¶</a></h2>
-<dl class="option-list">
-<dt><kbd>--fastpurge-host</kbd></dt>
-<dd><p>FastPurge hostname (xxx.purge.akamaiapis.net)</p>
-</dd>
-<dt><kbd>--fastpurge-client-token</kbd></dt>
-<dd><p>Fast Purge client token</p>
-</dd>
-<dt><kbd>--fastpurge-client-secret</kbd></dt>
-<dd><p>FastPurge client secret (or set FASTPURGE_SECRET environment variable)</p>
-<p>Default: “”</p>
-</dd>
-<dt><kbd>--fastpurge-access-token</kbd></dt>
-<dd><p>FastPurge access token</p>
-</dd>
-<dt><kbd>--fastpurge-root-url</kbd></dt>
-<dd><p>Root URL of CDN for all cache purges (or set FASTPURGE_ROOT_URL environment variable). If omitted, FastPurge features are disabled.</p>
-<p>Default: “”</p>
-</dd>
-</dl>
-</div>
-<div class="section" id="Pulp environment">
-<h2>Pulp environment<a class="headerlink" href="#Pulp environment" title="Permalink to this headline">¶</a></h2>
-<dl class="option-list">
-<dt><kbd>--pulp-url</kbd></dt>
-<dd><p>Pulp server URL</p>
-</dd>
-<dt><kbd>--pulp-user</kbd></dt>
-<dd><p>Pulp username</p>
-</dd>
-<dt><kbd>--pulp-password</kbd></dt>
-<dd><p>Pulp password (or set PULP_PASSWORD environment variable)</p>
-</dd>
-<dt><kbd>--pulp-insecure</kbd></dt>
-<dd><p>Allow unverified HTTPS connection to Pulp</p>
-<p>Default: False</p>
-</dd>
-</dl>
-</div>
-<div class="section" id="Unified Downloads Cache environment">
-<h2>Unified Downloads Cache environment<a class="headerlink" href="#Unified Downloads Cache environment" title="Permalink to this headline">¶</a></h2>
-<dl class="option-list">
-<dt><kbd>--udcache-url</kbd></dt>
-<dd><p>Base URL of UD cache flush API; if omitted, UD cache flush features are disabled.</p>
-</dd>
-<dt><kbd>--udcache-user</kbd></dt>
-<dd><p>Username for UD cache flush</p>
-</dd>
-<dt><kbd>--udcache-password</kbd></dt>
-<dd><p>Password for UD cache flush (or set UDCACHE_PASSWORD)</p>
-<p>Default: “”</p>
-</dd>
-</dl>
-</div>
 <div class="section" id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <p>A typical invocation of clear-repo would look like this:</p>
@@ -255,7 +156,7 @@ file for authentication.</p>
       &copy;2019, Red Hat.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.3.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
