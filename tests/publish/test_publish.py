@@ -302,3 +302,29 @@ def test_publish_filtered_input_repos(command_tester):
     # provided repos that were published before 2019-08-11 and
     # has relative url matching '/unit/3/'is published
     assert [hist.repository.id for hist in fake_pulp.publish_history] == ["repo3"]
+
+
+def test_throttled_publish(command_tester):
+    """publishes all provided repos with throttling enabled"""
+    fake_publish = FakePublish()
+    fake_pulp = fake_publish.pulp_client_controller
+    _add_repo(fake_pulp)
+
+    command_tester.test(
+        fake_publish.main,
+        [
+            "test-publish",
+            "--pulp-url",
+            "https://pulp.example.com",
+            "--repo-ids",
+            "repo1,repo2,repo3",
+            "--throttle",
+            "2",
+        ],
+    )
+
+    assert [hist.repository.id for hist in fake_pulp.publish_history] == [
+        "repo1",
+        "repo2",
+        "repo3",
+    ]

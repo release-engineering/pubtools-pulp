@@ -1,6 +1,7 @@
 import logging
 import sys
 import re
+from concurrent.futures import FIRST_COMPLETED, wait
 from datetime import datetime
 from more_executors.futures import f_sequence
 
@@ -18,6 +19,11 @@ LOG = logging.getLogger("pubtools.pulp")
 def publish_date(str_date):
     # validates publish-before date
     return datetime.strptime(str_date, "%Y-%m-%d")
+
+
+def throttle(str_throttle):
+    val = int(str_throttle)
+    return val if val > 0 else None
 
 
 class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
@@ -56,6 +62,12 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
             default=None,
             type=re.compile,
         )
+        self.parser.add_argument(
+            "--throttle",
+            help="allow publishing only specified number of repos at one moment",
+            default=None,
+            type=throttle,
+        )
 
     def run(self):
         to_await = []
@@ -85,6 +97,37 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
 
     @step("Publish")
     def publish(self, repos):
+        # publish all repos at once, if throttle is not requested or when we don't
+        # have enough repos for throttling
+        if self.args.throttle is None or len(repos) <= self.args.throttle:
+            return self._publish_repos(repos)
+        else:
+            return self._publish_with_throttle(repos)
+
+    def _publish_with_throttle(self, repos):
+        throttle_limit = self.args.throttle
+        publish_fs = set()
+        batch = []
+
+        start_index = 0
+
+        LOG.info("Publish throttled to publish %s repo at time", throttle_limit)
+        # finish the loop when we submitted all repos for publish
+        while start_index < len(repos):
+            next_batch_len = throttle_limit - len(publish_fs)
+            batch = repos[start_index : start_index + next_batch_len]
+            start_index += next_batch_len
+            # submit batch of repos for publish
+            publish_fs |= set(self._publish_repos(batch))
+            # wait for one publish to finish
+            wait(publish_fs, return_when=FIRST_COMPLETED)
+            # check whether any other publish finished
+            publish_fs &= set(fs for fs in publish_fs if not fs.done())
+
+        # return unfinished publishes
+        return list(publish_fs)
+
+    def _publish_repos(self, repos):
         out = []
 
         publish_opts = PublishOptions(force=self.args.force, clean=self.args.clean)
@@ -134,7 +177,7 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
         if not out:
             self.fail("No repo(s) found to publish")
 
-        return out
+        return sorted(out)
 
     def fail(self, *args, **kwargs):
         LOG.error(*args, **kwargs)
