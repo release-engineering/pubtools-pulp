@@ -111,7 +111,7 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
 
         start_index = 0
 
-        LOG.info("Publish throttled to publish %s repo at time", throttle_limit)
+        LOG.info("Publish throttled to publish %s repos at time", throttle_limit)
         # finish the loop when we submitted all repos for publish
         while start_index < len(repos):
             next_batch_len = throttle_limit - len(publish_fs)

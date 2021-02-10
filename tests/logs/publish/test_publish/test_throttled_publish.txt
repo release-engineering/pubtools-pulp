@@ -1,7 +1,7 @@
 [    INFO] Check repos: started
 [    INFO] Check repos: finished
 [    INFO] Publish: started
-[    INFO] Publish throttled to publish 2 repo at time
+[    INFO] Publish throttled to publish 2 repos at time
 [    INFO] Publishing repo1
 [    INFO] Publishing repo2
 [    INFO] Publishing repo3
