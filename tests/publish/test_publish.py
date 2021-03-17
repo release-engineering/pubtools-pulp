@@ -295,7 +295,9 @@ def test_publish_filtered_input_repos(command_tester):
             "--repo-url-regex",
             "/unit/3/",
             "--repo-ids",
-            "repo1,repo2,repo3",
+            "repo1",
+            "--repo-ids",
+            "repo2,repo3",
         ],
     )
 

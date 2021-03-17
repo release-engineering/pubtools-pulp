@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- n/a
+- Publish command accepts multiple repo-ids arg
 
 ## [1.0.3] - 2021-02-05
 

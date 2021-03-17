@@ -33,8 +33,9 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
 
         self.parser.add_argument(
             "--repo-ids",
-            help="comma separated repos to be published",
-            type=lambda x: x.split(","),
+            help="comma separated repos to be published, can be specified multiple times",
+            action="append",
+            default=[],
         )
         self.parser.add_argument(
             "--clean",
@@ -56,6 +57,13 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
             default=None,
             type=re.compile,
         )
+
+    def _sanitize_repo_ids_args(self):
+        repo_ids = []
+        for item in self.args.repo_ids:
+            repo_ids.extend(item.split(","))
+
+        self.args.repo_ids = repo_ids
 
     def run(self):
         to_await = []
@@ -110,6 +118,7 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
 
     @step("Check repos")
     def check_repos(self):
+        self._sanitize_repo_ids_args()
         repo_ids = self.args.repo_ids
         found_repo_ids = []
         out = []
