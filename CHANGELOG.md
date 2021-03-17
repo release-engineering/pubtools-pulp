@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Publish command accepts multiple repo-ids arg
+- Add throttle arg for all commands that limit number of pulp tasks running simultaneously
 
 ## [1.0.3] - 2021-02-05
 

@@ -1,5 +1,5 @@
 six
-pubtools-pulplib>=2.3.1
+pubtools-pulplib>=2.8.0
 fastpurge
 more_executors>=2.2.0
 pushcollector>=1.2.0

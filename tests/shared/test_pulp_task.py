@@ -68,3 +68,35 @@ def test_description():
         "It has a realistic multi-line doc string:\n\n"
         "    ...and may have several levels of indent."
     )
+
+
+def test_throttle():
+    """Checks main returns without exception when invoked with minimal args
+    assuming run() and add_args() are implemented
+    """
+    throttle = 7
+    task = TaskWithPulpClient()
+    arg = ["", "--pulp-url", "http://some.url", "-d", "--throttle", str(throttle)]
+    with patch("sys.argv", arg):
+        with patch("pubtools._pulp.task.PulpTask.run"):
+            assert task.main() == 0
+            assert task.args.throttle == throttle
+            assert task.pulp_client._task_executor._delegate._throttle() == throttle
+
+
+def test_throttle_invalid():
+    task = TaskWithPulpClient()
+    arg = ["", "--pulp-url", "http://some.url", "-d", "--throttle", "xyz"]
+    with patch("sys.argv", arg):
+        with patch("pubtools._pulp.task.PulpTask.run"):
+            with pytest.raises(SystemExit):
+                task.main()
+
+
+def test_throttle_negative():
+    task = TaskWithPulpClient()
+    arg = ["", "--pulp-url", "http://some.url", "-d", "--throttle", "-1"]
+    with patch("sys.argv", arg):
+        with patch("pubtools._pulp.task.PulpTask.run"):
+            with pytest.raises(SystemExit):
+                task.main()
