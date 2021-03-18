@@ -98,4 +98,6 @@ disable=print-statement,
         line-too-long,
         # skip linting Python3 features
         super-with-arguments,
+        # we use quite a few one or two letter names of functions
+        invalid-name,
 

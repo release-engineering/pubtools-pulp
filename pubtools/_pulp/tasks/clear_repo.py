@@ -1,25 +1,25 @@
 import logging
 import sys
 from functools import partial
+
 import attr
-
-from more_executors.futures import f_map, f_flat_map, f_sequence
-from pubtools.pulplib import (
-    Criteria,
-    ContainerImageRepository,
-    PublishOptions,
-    FileUnit,
-    RpmUnit,
-    ModulemdUnit,
-)
+from more_executors.futures import f_flat_map, f_map, f_sequence
 from pushsource import FilePushItem, ModuleMdPushItem, RpmPushItem
+from pubtools.pulplib import (
+    ContainerImageRepository,
+    Criteria,
+    FileUnit,
+    ModulemdUnit,
+    PublishOptions,
+    RpmUnit,
+)
 
-from pubtools._pulp.task import PulpTask
 from pubtools._pulp.services import (
     CollectorService,
-    UdCacheClientService,
     PulpClientService,
+    UdCacheClientService,
 )
+from pubtools._pulp.task import PulpTask
 from pubtools._pulp.tasks.common import CDNCache
 
 step = PulpTask.step
