@@ -70,32 +70,41 @@ def test_description():
     )
 
 
-def test_throttle():
+def test_pulp_throttle():
     """Checks main returns without exception when invoked with minimal args
     assuming run() and add_args() are implemented
     """
-    throttle = 7
+    pulp_throttle = 7
     task = TaskWithPulpClient()
-    arg = ["", "--pulp-url", "http://some.url", "-d", "--throttle", str(throttle)]
+    arg = [
+        "",
+        "--pulp-url",
+        "http://some.url",
+        "-d",
+        "--pulp-throttle",
+        str(pulp_throttle),
+    ]
     with patch("sys.argv", arg):
         with patch("pubtools._pulp.task.PulpTask.run"):
             assert task.main() == 0
-            assert task.args.throttle == throttle
-            assert task.pulp_client._task_executor._delegate._throttle() == throttle
+            assert task.args.pulp_throttle == pulp_throttle
+            assert (
+                task.pulp_client._task_executor._delegate._throttle() == pulp_throttle
+            )
 
 
-def test_throttle_invalid():
+def test_pulp_throttle_invalid():
     task = TaskWithPulpClient()
-    arg = ["", "--pulp-url", "http://some.url", "-d", "--throttle", "xyz"]
+    arg = ["", "--pulp-url", "http://some.url", "-d", "--pulp-throttle", "xyz"]
     with patch("sys.argv", arg):
         with patch("pubtools._pulp.task.PulpTask.run"):
             with pytest.raises(SystemExit):
                 task.main()
 
 
-def test_throttle_negative():
+def test_pulp_throttle_negative():
     task = TaskWithPulpClient()
-    arg = ["", "--pulp-url", "http://some.url", "-d", "--throttle", "-1"]
+    arg = ["", "--pulp-url", "http://some.url", "-d", "--pulp-throttle", "-1"]
     with patch("sys.argv", arg):
         with patch("pubtools._pulp.task.PulpTask.run"):
             with pytest.raises(SystemExit):

@@ -10,8 +10,8 @@ from .base import Service
 LOG = logging.getLogger("pubtools.pulp")
 
 
-def throttle(str_throttle):
-    val = int(str_throttle)
+def pulp_throttle(str_pulp_throttle):
+    val = int(str_pulp_throttle)
     if val <= 0:
         raise ValueError
     return val
@@ -46,10 +46,10 @@ class PulpClientService(Service):
             help="Allow unverified HTTPS connection to Pulp",
         )
         group.add_argument(
-            "--throttle",
+            "--pulp-throttle",
             help="Allows to enqueue or run only specified number of Pulp tasks at one moment",
             default=None,
-            type=throttle,
+            type=pulp_throttle,
         )
 
     @property
@@ -79,7 +79,7 @@ class PulpClientService(Service):
             # Thank you, but we don't need to hear about this for every single request
             warnings.filterwarnings("once", r"Unverified HTTPS request is being made")
 
-        if args.throttle:
-            kwargs["task_throttle"] = args.throttle
+        if args.pulp_throttle:
+            kwargs["task_throttle"] = args.pulp_throttle
 
         return pulplib.Client(args.pulp_url, **kwargs)
