@@ -71,8 +71,8 @@ def test_description():
 
 
 def test_pulp_throttle():
-    """Checks main returns without exception when invoked with minimal args
-    assuming run() and add_args() are implemented
+    """Checks main returns without exception when invoked also with --pulp-throttle arg,
+    and checks whether the arg is correctly promoted to pulp_client.
     """
     pulp_throttle = 7
     task = TaskWithPulpClient()
@@ -94,6 +94,7 @@ def test_pulp_throttle():
 
 
 def test_pulp_throttle_invalid():
+    """Checks main raises SystemExit when a non-int string is passed with --pulp-throttle."""
     task = TaskWithPulpClient()
     arg = ["", "--pulp-url", "http://some.url", "-d", "--pulp-throttle", "xyz"]
     with patch("sys.argv", arg):
@@ -103,6 +104,7 @@ def test_pulp_throttle_invalid():
 
 
 def test_pulp_throttle_negative():
+    """Checks main raises SystemExit when a negative int is passed with --pulp-throttle."""
     task = TaskWithPulpClient()
     arg = ["", "--pulp-url", "http://some.url", "-d", "--pulp-throttle", "-1"]
     with patch("sys.argv", arg):
