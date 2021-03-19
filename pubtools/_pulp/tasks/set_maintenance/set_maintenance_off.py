@@ -2,9 +2,9 @@ import logging
 import re
 
 from pubtools.pulplib import Criteria
+from pubtools._pulp.task import PulpTask
 
 from .base import SetMaintenance
-from pubtools._pulp.task import PulpTask
 
 
 step = PulpTask.step
