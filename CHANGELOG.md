@@ -35,7 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.0.3...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.0.3...v1.1.0
 [1.0.3]: https://github.com/release-engineering/pubtools-pulp/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.0.0...v1.0.1
