@@ -68,3 +68,46 @@ def test_description():
         "It has a realistic multi-line doc string:\n\n"
         "    ...and may have several levels of indent."
     )
+
+
+def test_pulp_throttle():
+    """Checks main returns without exception when invoked also with --pulp-throttle arg,
+    and checks whether the arg is correctly promoted to pulp_client.
+    """
+    pulp_throttle = 7
+    task = TaskWithPulpClient()
+    arg = [
+        "",
+        "--pulp-url",
+        "http://some.url",
+        "-d",
+        "--pulp-throttle",
+        str(pulp_throttle),
+    ]
+    with patch("sys.argv", arg):
+        with patch("pubtools._pulp.task.PulpTask.run"):
+            assert task.main() == 0
+            assert task.args.pulp_throttle == pulp_throttle
+            assert (
+                task.pulp_client._task_executor._delegate._throttle() == pulp_throttle
+            )
+
+
+def test_pulp_throttle_invalid():
+    """Checks main raises SystemExit when a non-int string is passed with --pulp-throttle."""
+    task = TaskWithPulpClient()
+    arg = ["", "--pulp-url", "http://some.url", "-d", "--pulp-throttle", "xyz"]
+    with patch("sys.argv", arg):
+        with patch("pubtools._pulp.task.PulpTask.run"):
+            with pytest.raises(SystemExit):
+                task.main()
+
+
+def test_pulp_throttle_negative():
+    """Checks main raises SystemExit when a negative int is passed with --pulp-throttle."""
+    task = TaskWithPulpClient()
+    arg = ["", "--pulp-url", "http://some.url", "-d", "--pulp-throttle", "-1"]
+    with patch("sys.argv", arg):
+        with patch("pubtools._pulp.task.PulpTask.run"):
+            with pytest.raises(SystemExit):
+                task.main()
