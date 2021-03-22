@@ -45,6 +45,7 @@ weekly scheduled trigger.</p>
                                      <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span>
+                                     <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">throttle</span> <span class="n">PULP_THROTTLE</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">gc</span><span class="o">-</span><span class="n">threshold</span> <span class="n">GC_THRESHOLD</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -76,6 +77,9 @@ weekly scheduled trigger.</p>
 <dt><kbd>--pulp-insecure</kbd></dt>
 <dd><p>Allow unverified HTTPS connection to Pulp</p>
 <p>Default: False</p>
+</dd>
+<dt><kbd>--pulp-throttle</kbd></dt>
+<dd><p>Allows to enqueue or run only specified number of Pulp tasks at one moment</p>
 </dd>
 </dl>
 </div>
@@ -169,7 +173,7 @@ deleted from the remote Pulp server.</p>
       &copy;2019, Red Hat.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

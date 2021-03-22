@@ -42,7 +42,9 @@ visible locations should be forbidden.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">maintenance</span><span class="o">-</span><span class="n">on</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span>
                                     <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
                                     <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span>
-                                    <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">owner</span> <span class="n">OWNER</span><span class="p">]</span>
+                                    <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span>
+                                    <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">throttle</span> <span class="n">PULP_THROTTLE</span><span class="p">]</span>
+                                    <span class="p">[</span><span class="o">--</span><span class="n">owner</span> <span class="n">OWNER</span><span class="p">]</span>
                                     <span class="p">[</span><span class="o">--</span><span class="n">repo</span><span class="o">-</span><span class="n">url</span><span class="o">-</span><span class="n">regex</span> <span class="n">REPO_URL_REGEX</span><span class="p">]</span>
                                     <span class="p">[</span><span class="o">--</span><span class="n">repo</span><span class="o">-</span><span class="n">ids</span> <span class="n">REPO_IDS</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">message</span> <span class="n">MESSAGE</span><span class="p">]</span>
 </pre></div>
@@ -84,6 +86,9 @@ visible locations should be forbidden.</p>
 <dd><p>Allow unverified HTTPS connection to Pulp</p>
 <p>Default: False</p>
 </dd>
+<dt><kbd>--pulp-throttle</kbd></dt>
+<dd><p>Allows to enqueue or run only specified number of Pulp tasks at one moment</p>
+</dd>
 </dl>
 </div>
 <div class="section" id="example">
@@ -107,7 +112,9 @@ maintenance mode.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">maintenance</span><span class="o">-</span><span class="n">off</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span>
-                                     <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">owner</span> <span class="n">OWNER</span><span class="p">]</span>
+                                     <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span>
+                                     <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">throttle</span> <span class="n">PULP_THROTTLE</span><span class="p">]</span>
+                                     <span class="p">[</span><span class="o">--</span><span class="n">owner</span> <span class="n">OWNER</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">repo</span><span class="o">-</span><span class="n">url</span><span class="o">-</span><span class="n">regex</span> <span class="n">REPO_URL_REGEX</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">repo</span><span class="o">-</span><span class="n">ids</span> <span class="n">REPO_IDS</span><span class="p">]</span>
 </pre></div>
@@ -145,6 +152,9 @@ maintenance mode.</p>
 <dt><kbd>--pulp-insecure</kbd></dt>
 <dd><p>Allow unverified HTTPS connection to Pulp</p>
 <p>Default: False</p>
+</dd>
+<dt><kbd>--pulp-throttle</kbd></dt>
+<dd><p>Allows to enqueue or run only specified number of Pulp tasks at one moment</p>
 </dd>
 </dl>
 </div>
@@ -238,7 +248,7 @@ from maintenance mode.</p>
       &copy;2019, Red Hat.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
