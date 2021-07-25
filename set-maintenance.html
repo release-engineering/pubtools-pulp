@@ -4,11 +4,12 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>set-maintenance &#8212; pubtools-pulp  documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
@@ -31,9 +32,9 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="set-maintenance">
+  <section id="set-maintenance">
 <h1>set-maintenance<a class="headerlink" href="#set-maintenance" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="set-maintenance-on">
+<section id="set-maintenance-on">
 <h2>Set Maintenance On<a class="headerlink" href="#set-maintenance-on" title="Permalink to this headline">¶</a></h2>
 <p><p>Sets repositories into ‘maintenance mode’.</p>
 <p>When a repository is in maintenance mode, publishing onto customer-
@@ -49,7 +50,7 @@ visible locations should be forbidden.</p>
                                     <span class="p">[</span><span class="o">--</span><span class="n">repo</span><span class="o">-</span><span class="n">ids</span> <span class="n">REPO_IDS</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">message</span> <span class="n">MESSAGE</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="section" id="Named Arguments">
+<section id="Named Arguments">
 <h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h3>
 <dl class="option-list">
 <dt><kbd>--debug, -d</kbd></dt>
@@ -69,8 +70,8 @@ visible locations should be forbidden.</p>
 <dd><p>Describes why set to maintenance mode</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="Pulp environment">
+</section>
+<section id="Pulp environment">
 <h3>Pulp environment<a class="headerlink" href="#Pulp environment" title="Permalink to this headline">¶</a></h3>
 <dl class="option-list">
 <dt><kbd>--pulp-url</kbd></dt>
@@ -90,8 +91,8 @@ visible locations should be forbidden.</p>
 <dd><p>Allows to enqueue or run only specified number of Pulp tasks at one moment</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="example">
+</section>
+<section id="example">
 <h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
 <p>A typical invocation of set maintenance would look like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">maintenance</span><span class="o">-</span><span class="n">on</span> \
@@ -103,9 +104,9 @@ visible locations should be forbidden.</p>
 </div>
 <p>In this example, the repository with id ‘example-repo’ will be set to
 maintenance mode.</p>
-</div>
-</div>
-<div class="section" id="set-maintenance-off">
+</section>
+</section>
+<section id="set-maintenance-off">
 <h2>Set Maintenance Off<a class="headerlink" href="#set-maintenance-off" title="Permalink to this headline">¶</a></h2>
 <p><p>Unset repositories maintenance mode.</p>
 </p>
@@ -119,7 +120,7 @@ maintenance mode.</p>
                                      <span class="p">[</span><span class="o">--</span><span class="n">repo</span><span class="o">-</span><span class="n">ids</span> <span class="n">REPO_IDS</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="section" id="Named Arguments">
+<section id="Named Arguments">
 <h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h3>
 <dl class="option-list">
 <dt><kbd>--debug, -d</kbd></dt>
@@ -136,8 +137,8 @@ maintenance mode.</p>
 <dd><p>comma separated repositories to be set/unset to maintenance mode</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="Pulp environment">
+</section>
+<section id="Pulp environment">
 <h3>Pulp environment<a class="headerlink" href="#Pulp environment" title="Permalink to this headline">¶</a></h3>
 <dl class="option-list">
 <dt><kbd>--pulp-url</kbd></dt>
@@ -157,8 +158,8 @@ maintenance mode.</p>
 <dd><p>Allows to enqueue or run only specified number of Pulp tasks at one moment</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="id1">
+</section>
+<section id="id1">
 <h3>Example<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>A typical invocation of unset maintenance would look like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">maintenance</span><span class="o">-</span><span class="n">off</span> \
@@ -170,9 +171,9 @@ maintenance mode.</p>
 </div>
 <p>In this example, the repository with id ‘example-repo’ will be removed
 from maintenance mode.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
           </div>
@@ -195,7 +196,7 @@ from maintenance mode.</p>
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Command Reference:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Command Reference:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="clear-repo.html">clear-repo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="garbage-collect.html">garbage-collect</a></li>
@@ -226,7 +227,7 @@ from maintenance mode.</p>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -248,7 +249,7 @@ from maintenance mode.</p>
       &copy;2019, Red Hat.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

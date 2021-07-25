@@ -4,11 +4,12 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>garbage-collect &#8212; pubtools-pulp  documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
@@ -32,7 +33,7 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="garbage-collect">
+  <section id="garbage-collect">
 <h1>garbage-collect<a class="headerlink" href="#garbage-collect" title="Permalink to this headline">¶</a></h1>
 <p><p>Perform garbage collection on Pulp data.</p>
 <p>Garbage collection consists of deleting temporary Pulp repositories
@@ -49,7 +50,7 @@ weekly scheduled trigger.</p>
                                      <span class="p">[</span><span class="o">--</span><span class="n">gc</span><span class="o">-</span><span class="n">threshold</span> <span class="n">GC_THRESHOLD</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="section" id="Named Arguments">
+<section id="Named Arguments">
 <h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>--debug, -d</kbd></dt>
@@ -61,8 +62,8 @@ weekly scheduled trigger.</p>
 <p>Default: 5</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="Pulp environment">
+</section>
+<section id="Pulp environment">
 <h2>Pulp environment<a class="headerlink" href="#Pulp environment" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>--pulp-url</kbd></dt>
@@ -82,8 +83,8 @@ weekly scheduled trigger.</p>
 <dd><p>Allows to enqueue or run only specified number of Pulp tasks at one moment</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="example">
+</section>
+<section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <p>A typical invocation of garbage-collect would look like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">garbage</span><span class="o">-</span><span class="n">collect</span> \
@@ -95,8 +96,8 @@ weekly scheduled trigger.</p>
 </div>
 <p>In this example, temporary repositories older than 2 weeks would be
 deleted from the remote Pulp server.</p>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -119,7 +120,7 @@ deleted from the remote Pulp server.</p>
 
 
 <h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Command Reference:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Command Reference:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="clear-repo.html">clear-repo</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">garbage-collect</a></li>
@@ -151,7 +152,7 @@ deleted from the remote Pulp server.</p>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -173,7 +174,7 @@ deleted from the remote Pulp server.</p>
       &copy;2019, Red Hat.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.5.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
