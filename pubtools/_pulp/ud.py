@@ -38,7 +38,7 @@ class UdCacheClient(object):
 
         self._session_attrs = kwargs
         self._executor = (
-            Executors.thread_pool(max_workers=self._REQUEST_THREADS)
+            Executors.thread_pool(name="ud-client", max_workers=self._REQUEST_THREADS)
             .with_map(self._check_http_response)
             .with_retry(**retry_args)
         )
