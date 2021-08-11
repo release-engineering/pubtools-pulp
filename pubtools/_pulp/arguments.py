@@ -116,9 +116,9 @@ class SplitAndExtend(Action):
         https://docs.python.org/3/library/argparse.html#action
     """
 
-    def __init__(self, *args, split_on=",", **kwargs):
+    def __init__(self, *args, **kwargs):
+        self.__split_on = kwargs.pop("split_on", ",")
         super(SplitAndExtend, self).__init__(*args, **kwargs)
-        self.__split_on = split_on
 
     def __call__(self, _, namespace, values, options=None):
         items = getattr(namespace, self.dest, None) or []
