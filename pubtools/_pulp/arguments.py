@@ -124,22 +124,11 @@ class SplitAndExtend(Action):
         items = getattr(namespace, self.dest, None) or []
         # if values isn't a string, don't try to split it
         # just add it to the accumulated list.
-
         # by default, argparse will parse each value as a string,
         # so unless this action is being used in conjunction with
         # parser.add_argument(type=<some non-string type>) this
         # should not be the case.
         split = values.split(self.split_on) if isinstance(values, _STRING) else values
-
-        # it is possible to end up with "" as an entry
-        # after splitting in cases with an extra trailing
-        # delimiter like ``--option value1,`` - remove them.
-
-        # calling filter(None, Iterable) is equivalent to
-        # filter(lambda item: bool(item), Iterable)
-        # i.e. yields items which evaluate to True.
-        split = list(filter(None, split))
-
         items.extend(split)
         setattr(namespace, self.dest, items)
 
