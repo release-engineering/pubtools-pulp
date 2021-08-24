@@ -51,6 +51,14 @@ class PulpClientService(Service):
             default=None,
             type=pulp_throttle,
         )
+        group.add_argument(
+            "--pulp-fake",
+            help=(
+                "Use a fake in-memory Pulp client rather than interacting with a real server. "
+                + "For development/testing only, may have limited functionality."
+            ),
+            action="store_true",
+        )
 
     @property
     def pulp_client(self):
@@ -63,6 +71,11 @@ class PulpClientService(Service):
     def __get_instance(self):
         auth = None
         args = self._service_args
+
+        if args.pulp_fake:
+            LOG.warning("Using a fake Pulp client, no changes will be made to Pulp!")
+            controller = pulplib.FakeController()
+            return controller.client
 
         # checks if pulp password is available as environment variable
         if args.pulp_user:
