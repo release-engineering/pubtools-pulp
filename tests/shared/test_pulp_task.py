@@ -41,6 +41,23 @@ def test_pulp_client():
     assert isinstance(client, Client)
 
 
+def test_pulp_fake_client():
+    """Checks that a fake client is created if --pulp-fake is given"""
+    task = TaskWithPulpClient()
+    arg = ["", "--pulp-url", "https://pulp.example.com/", "--pulp-fake"]
+    with patch("sys.argv", arg):
+        client = task.pulp_client
+
+    # Fake client doesn't advertise itself in any obvious way.
+    # Just do some rough checks...
+    assert "Fake" in type(client).__name__
+
+    # Should be able to use the API even though it's obviously not connected
+    # to a real Pulp server
+    assert "rpm" in client.get_content_type_ids().result()
+    assert list(client.search_repository().result()) == []
+
+
 def test_main():
     """Checks main returns without exception when invoked with minimal args
     assuming run() and add_args() are implemented
