@@ -51,7 +51,7 @@ an intersection of input repositories and filters.</p>
                              <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">password</span> <span class="n">UDCACHE_PASSWORD</span><span class="p">]</span> <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span>
                              <span class="n">PULP_URL</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
                              <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span>
-                             <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">throttle</span> <span class="n">PULP_THROTTLE</span><span class="p">]</span>
+                             <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">throttle</span> <span class="n">PULP_THROTTLE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">fake</span><span class="p">]</span>
                              <span class="p">[</span><span class="o">--</span><span class="n">repo</span><span class="o">-</span><span class="n">ids</span> <span class="n">REPO_IDS</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">clean</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">force</span><span class="p">]</span>
                              <span class="p">[</span><span class="o">--</span><span class="n">published</span><span class="o">-</span><span class="n">before</span> <span class="n">PUBLISHED_BEFORE</span><span class="p">]</span>
                              <span class="p">[</span><span class="o">--</span><span class="n">repo</span><span class="o">-</span><span class="n">url</span><span class="o">-</span><span class="n">regex</span> <span class="n">REPO_URL_REGEX</span><span class="p">]</span>
@@ -139,6 +139,10 @@ an intersection of input repositories and filters.</p>
 </dd>
 <dt><kbd>--pulp-throttle</kbd></dt>
 <dd><p>Allows to enqueue or run only specified number of Pulp tasks at one moment</p>
+</dd>
+<dt><kbd>--pulp-fake</kbd></dt>
+<dd><p>Use a fake in-memory Pulp client rather than interacting with a real server. For development/testing only, may have limited functionality.</p>
+<p>Default: False</p>
 </dd>
 </dl>
 </section>

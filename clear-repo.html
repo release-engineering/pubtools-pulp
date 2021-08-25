@@ -49,7 +49,7 @@ to selected content types.</p>
                                 <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
                                 <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span>
                                 <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">throttle</span> <span class="n">PULP_THROTTLE</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">throttle</span> <span class="n">PULP_THROTTLE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">fake</span><span class="p">]</span>
                                 <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">url</span> <span class="n">UDCACHE_URL</span><span class="p">]</span>
                                 <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">user</span> <span class="n">UDCACHE_USER</span><span class="p">]</span>
                                 <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">password</span> <span class="n">UDCACHE_PASSWORD</span><span class="p">]</span>
@@ -120,6 +120,10 @@ to selected content types.</p>
 </dd>
 <dt><kbd>--pulp-throttle</kbd></dt>
 <dd><p>Allows to enqueue or run only specified number of Pulp tasks at one moment</p>
+</dd>
+<dt><kbd>--pulp-fake</kbd></dt>
+<dd><p>Use a fake in-memory Pulp client rather than interacting with a real server. For development/testing only, may have limited functionality.</p>
+<p>Default: False</p>
 </dd>
 </dl>
 </section>
