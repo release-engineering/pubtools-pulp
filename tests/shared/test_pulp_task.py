@@ -13,7 +13,7 @@ class TaskWithPulpClient(PulpTask, PulpClientService):
 
 
 def test_task_run():
-    """ raises if run() is not implemeted"""
+    """raises if run() is not implemeted"""
     task = PulpTask()
     with pytest.raises(NotImplementedError):
         task.run()
