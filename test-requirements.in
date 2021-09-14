@@ -1,0 +1,14 @@
+pytest
+pytest-cov
+coveralls
+mock
+requests_mock
+rpm-py-installer
+
+# The following deps are not relevant for the legacy test env.
+black; python_version>='3'
+pre-commit; python_version>='3'
+pylint; python_version>='3'
+sphinx; python_version>='3'
+sphinx-argparse; python_version>='3'
+alabaster; python_version>='3'
