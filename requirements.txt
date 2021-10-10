@@ -11,9 +11,9 @@ attrs==21.2.0 \
     #   jsonschema
     #   pubtools-pulplib
     #   pushsource
-certifi==2021.5.30 \
-    --hash=sha256:2bbf76fd432960138b3ef6dda3dde0544f27cbf8546c458e60baf371917ba9ee \
-    --hash=sha256:50b1e4f8446b06f41be7dd6338db18e0990601dce795c2b1686458aa7e8fa7d8
+certifi==2021.10.8 \
+    --hash=sha256:78884e7c1d4b00ce3cea67b44566851c4343c120abd683433ce934a68ea58872 \
+    --hash=sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569
     # via requests
 cffi==1.14.6 \
     --hash=sha256:06c54a68935738d206570b20da5ef2b6b6d92b38ef3ec45c5422c0ebaf338d4d \
@@ -96,8 +96,9 @@ edgegrid-python==1.2.0 \
     --hash=sha256:16d1d0c7c105cd91545e9c6c0c8c357b4b1bf3f7bb8e1965f33683821ced5f1c \
     --hash=sha256:7b80b802294cee4ad188cc83039d452b8d3c1bc10e5f58ee6b097cb68b359e2c
     # via fastpurge
-fastpurge==1.0.2 \
-    --hash=sha256:3c344f294092cc5defc8b6912e9018f48d2066aa85b9118fc34579c85334286f
+fastpurge==1.0.3 \
+    --hash=sha256:178098cf6d39b2887a4c656fc7014cc13f1f64fc353d98324ceb55141b7849ee \
+    --hash=sha256:d82a9ae11eec67ca81207f295b2bd8ddbb1e42f97c1c0b12a3b7295277a695ca
     # via -r requirements.in
 frozendict==2.0.6 \
     --hash=sha256:3f00de72805cf4c9e81b334f3f04809278b967d2fed84552313a0fcce511beb1 \
@@ -122,19 +123,19 @@ idna==3.2 \
     --hash=sha256:14475042e284991034cb48e06f6851428fb14c4dc953acd9be9a5e95c7b6dd7a \
     --hash=sha256:467fbad99067910785144ce333826c71fb0e63a425657295239737f7ecd125f3
     # via requests
-jsonschema==4.0.1 \
-    --hash=sha256:48f4e74f8bec0c2f75e9fcfffa264e78342873e1b57e2cfeae54864cc5e9e4dd \
-    --hash=sha256:9938802041347f2c62cad2aef59e9a0826cd34584f3609db950efacb4dbf6518
+jsonschema==4.1.0 \
+    --hash=sha256:2b3cca28580511d44326f0e7fc582eab3cbe31aabd1a1c2cfa74a399796ffd84 \
+    --hash=sha256:9dd7c33b4a96138dc37bb86b3610d3b12d30d96433d4d73435ca3025804154a8
     # via
     #   pubtools-pulplib
     #   pushcollector
 kobo==0.20.1 \
     --hash=sha256:41ef42a6d1cd3b2a0511b61da20e2bddd6147ee1f5e5438fe52a6d8d6916a6ae
     # via pushsource
-koji==1.26.0 \
-    --hash=sha256:0bedf5f000808da903d208b7538f5ac323219de0c66d9005ba6cee2c3ee18210 \
-    --hash=sha256:27852a890c215e419ce1950dca93b0a743e894cd766df4d7204abfa8f6b51522 \
-    --hash=sha256:5ecacda685bf40977c0a3477cde1b72897d5541e02a0b8d7fa436353a870c2e1
+koji==1.26.1 \
+    --hash=sha256:4e91a9f5fce4ab3e5df2a1c3c731ae98dc999a2e7ee06c138d1fd442d73b394e \
+    --hash=sha256:57a244dff1a1892c2778785e9e4900a5a01514aba18dc4f2be5260b651d40bfc \
+    --hash=sha256:de2bbdebe403015ce74c37ab8627e46cc5f869a875dd820711bb6864a2604118
     # via pushsource
 monotonic==1.6 \
     --hash=sha256:3a55207bcfed53ddd5c5bae174524062935efed17792e9de2ad0205ce9ad63f7 \
