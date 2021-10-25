@@ -15,6 +15,12 @@ step = PulpTask.step
 LOG = logging.getLogger("pubtools.pulp")
 
 
+# Due to some false positives such as:
+# E1101: Instance of 'Client' has no 'flush_repo' member (no-member)
+#
+# pylint: disable=no-member
+
+
 def publish_date(str_date):
     # validates publish-before date
     return datetime.strptime(str_date, "%Y-%m-%d")
