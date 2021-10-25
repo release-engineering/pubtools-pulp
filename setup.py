@@ -15,13 +15,13 @@ def get_long_description():
 
 
 def get_requirements():
-    with open("requirements.txt") as f:
+    with open("requirements.in") as f:
         return f.read().splitlines()
 
 
 setup(
     name="pubtools-pulp",
-    version="1.1.0",
+    version="1.2.0",
     packages=find_packages(exclude=["tests"]),
     url="https://github.com/release-engineering/pubtools-pulp",
     license="GNU General Public License",
