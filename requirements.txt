@@ -105,9 +105,9 @@ fastpurge==1.0.3 \
     --hash=sha256:178098cf6d39b2887a4c656fc7014cc13f1f64fc353d98324ceb55141b7849ee \
     --hash=sha256:d82a9ae11eec67ca81207f295b2bd8ddbb1e42f97c1c0b12a3b7295277a695ca
     # via -r requirements.in
-frozendict==2.0.6 \
-    --hash=sha256:3f00de72805cf4c9e81b334f3f04809278b967d2fed84552313a0fcce511beb1 \
-    --hash=sha256:5d3f75832c35d4df041f0e19c268964cbef29c1eb34cd3517cf883f1c2d089b9
+frozendict==2.0.7 \
+    --hash=sha256:a68f609d1af67da80b45519fdcfca2d60249c0a8c96e68279c1b6ddd92128204 \
+    --hash=sha256:d650f9cf3d2c5438b1631488a975a49b3bdd12c7a97eec59b85e57821eebf28a
     # via pushsource
 frozenlist2==1.0.0 \
     --hash=sha256:33f6c6bb2c7d38524ec3c2d6f2d8a3ee2625a9e13096d8bc64db012b516a95e0 \
@@ -138,9 +138,9 @@ idna==3.3 \
     --hash=sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff \
     --hash=sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d
     # via requests
-jsonschema==4.1.0 \
-    --hash=sha256:2b3cca28580511d44326f0e7fc582eab3cbe31aabd1a1c2cfa74a399796ffd84 \
-    --hash=sha256:9dd7c33b4a96138dc37bb86b3610d3b12d30d96433d4d73435ca3025804154a8
+jsonschema==4.1.2 \
+    --hash=sha256:166870c8ab27bd712a8627e0598de4685bd8d199c4d7bd7cacc3d941ba0c6ca0 \
+    --hash=sha256:5c1a282ee6b74235057421fd0f766ac5f2972f77440927f6471c9e8493632fac
     # via
     #   pubtools-pulplib
     #   pushcollector
@@ -189,9 +189,9 @@ pushcollector==1.2.0 \
     # via
     #   -r requirements.in
     #   pushsource
-pushsource==2.11.0 \
-    --hash=sha256:84e28933609bf19ed4c6af820cf8fb2b814d54d73996686d3729ee738e4a29e7 \
-    --hash=sha256:d53458dd4a825a8ab3c5af1080f57cbc7aedc0626bf3afd3d85f617efbe6ca21
+pushsource==2.12.0 \
+    --hash=sha256:2267dde25a8f808ccfbb5973b2858a81076a0efbc8544a68da0361222eb16f30 \
+    --hash=sha256:ab19897a4ad91323d4be6b93278a58a84e9a31c3b0e8c24292446a7ae22875d0
     # via -r requirements.in
 pyasn1==0.4.8 \
     --hash=sha256:39c7e2ec30515947ff4e87fb6f456dfc6e84857d34be479c9d4a4ba4bf46aa5d \
