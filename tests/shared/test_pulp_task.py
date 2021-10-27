@@ -44,7 +44,7 @@ def test_pulp_client():
 def test_pulp_fake_client():
     """Checks that a fake client is created if --pulp-fake is given"""
     task = TaskWithPulpClient()
-    arg = ["", "--pulp-url", "https://pulp.example.com/", "--pulp-fake"]
+    arg = ["", "--pulp-fake"]
     with patch("sys.argv", arg):
         client = task.pulp_client
 
@@ -55,7 +55,24 @@ def test_pulp_fake_client():
     # Should be able to use the API even though it's obviously not connected
     # to a real Pulp server
     assert "rpm" in client.get_content_type_ids().result()
-    assert list(client.search_repository().result()) == []
+
+    # Some repos should exist, because the fake creates a handful of repos
+    # by default.
+    assert list(client.search_repository().result())
+
+
+def test_pulp_missing_args(caplog):
+    """An error occurs if task is invoked with neither --pulp-url nor --pulp-fake."""
+
+    task = TaskWithPulpClient()
+    arg = [""]
+    with patch("sys.argv", arg):
+        with patch("pubtools._pulp.task.PulpTask.run"):
+            with pytest.raises(SystemExit) as excinfo:
+                task.pulp_client
+
+    assert excinfo.value.code == 41
+    assert "At least one of --pulp-url or --pulp-fake must be provided" in caplog.text
 
 
 def test_main():

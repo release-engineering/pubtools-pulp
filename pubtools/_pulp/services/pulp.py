@@ -1,11 +1,13 @@
 import threading
 import os
+import sys
 import logging
 import warnings
 
 from pubtools import pulplib
 
 from .base import Service
+from .fakepulp import new_fake_client
 
 LOG = logging.getLogger("pubtools.pulp")
 
@@ -33,7 +35,7 @@ class PulpClientService(Service):
         super(PulpClientService, self).add_service_args(parser)
 
         group = parser.add_argument_group("Pulp environment")
-        group.add_argument("--pulp-url", help="Pulp server URL", required=True)
+        group.add_argument("--pulp-url", help="Pulp server URL")
         group.add_argument("--pulp-user", help="Pulp username", default=None)
         group.add_argument(
             "--pulp-password",
@@ -72,10 +74,13 @@ class PulpClientService(Service):
         auth = None
         args = self._service_args
 
+        if not args.pulp_fake and not args.pulp_url:
+            LOG.error("At least one of --pulp-url or --pulp-fake must be provided")
+            sys.exit(41)
+
         if args.pulp_fake:
             LOG.warning("Using a fake Pulp client, no changes will be made to Pulp!")
-            controller = pulplib.FakeController()
-            return controller.client
+            return new_fake_client()
 
         # checks if pulp password is available as environment variable
         if args.pulp_user:
