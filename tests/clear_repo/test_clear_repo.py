@@ -292,8 +292,8 @@ def test_clear_yum_repo(command_tester, fake_collector, monkeypatch):
             "src": None,
             "dest": None,
             "filename": "bash-1.23-1.test8.x86_64.rpm",
-            "checksums": {"sha256": "a" * 64, "md5": "b" * 32},
-            "signing_key": "AABBCC",
+            "checksums": {"sha256": "a" * 64},
+            "signing_key": None,
             "build": None,
         },
         {
@@ -390,8 +390,8 @@ def test_clear_repo_multiple_content_types(command_tester, fake_collector, monke
             "src": None,
             "dest": None,
             "filename": "bash-1.23-1.test8.x86_64.rpm",
-            "checksums": {"sha256": "a" * 64, "md5": "b" * 32},
-            "signing_key": "AABBCC",
+            "checksums": {"sha256": "a" * 64},
+            "signing_key": None,
             "build": None,
         },
         {

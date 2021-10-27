@@ -222,11 +222,12 @@ class ClearRepo(
         ]
         out["name"] = "".join(filename_parts)
 
-        if unit.sha256sum:
-            out["sha256sum"] = unit.sha256sum
-        if unit.md5sum:
-            out["md5sum"] = unit.md5sum
-
+        # Note: in practice we don't necessarily expect to get all of these
+        # attributes, as after a delete the server will only provide those
+        # which make up the unit key. We still copy them anyway (even if
+        # values are None) in case this is improved some day.
+        out["sha256sum"] = unit.sha256sum
+        out["md5sum"] = unit.md5sum
         out["signing_key"] = unit.signing_key
 
         return RpmPushItem(**out)
