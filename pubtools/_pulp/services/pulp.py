@@ -47,7 +47,8 @@ class PulpClientService(Service):
         )
         group.add_argument(
             "--pulp-throttle",
-            help="Allows to enqueue or run only specified number of Pulp tasks at one moment",
+            help="Allows to enqueue or run only specified number of Pulp tasks at one moment "
+            + "(or set PULP_THROTTLE environment variable)",
             default=None,
             type=pulp_throttle,
         )
@@ -92,7 +93,9 @@ class PulpClientService(Service):
             # Thank you, but we don't need to hear about this for every single request
             warnings.filterwarnings("once", r"Unverified HTTPS request is being made")
 
-        if args.pulp_throttle:
-            kwargs["task_throttle"] = args.pulp_throttle
+        if args.pulp_throttle or os.environ.get("PULP_THROTTLE"):
+            kwargs["task_throttle"] = args.pulp_throttle or pulp_throttle(
+                os.environ.get("PULP_THROTTLE")
+            )
 
         return pulplib.Client(args.pulp_url, **kwargs)

@@ -87,37 +87,65 @@ def test_description():
     )
 
 
-def test_pulp_throttle():
-    """Checks main returns without exception when invoked also with --pulp-throttle arg,
-    and checks whether the arg is correctly promoted to pulp_client.
+@pytest.mark.parametrize(
+    "throttle", [None, 8], ids=("throttle_from_env", "throttle_option")
+)
+def test_pulp_throttle(monkeypatch, throttle):
+    """Checks main returns without exception when invoked with --pulp-throttle arg
+    or PULP_THROTTLE value from environment variable, and checks whether the arg is
+    correctly promoted to pulp_client.
     """
     pulp_throttle = 7
+    monkeypatch.setenv("PULP_THROTTLE", pulp_throttle)
     task = TaskWithPulpClient()
     arg = [
         "",
         "--pulp-url",
         "http://some.url",
         "-d",
-        "--pulp-throttle",
-        str(pulp_throttle),
     ]
+    if throttle:
+        arg.extend(
+            [
+                "--pulp-throttle",
+                str(throttle),
+            ]
+        )
+        pulp_throttle = throttle
+
     with patch("sys.argv", arg):
         with patch("pubtools._pulp.task.PulpTask.run"):
             assert task.main() == 0
-            assert task.args.pulp_throttle == pulp_throttle
+            assert task.args.pulp_throttle == throttle
             assert (
                 task.pulp_client._task_executor._delegate._throttle() == pulp_throttle
             )
 
 
-def test_pulp_throttle_invalid():
-    """Checks main raises SystemExit when a non-int string is passed with --pulp-throttle."""
+@pytest.mark.parametrize(
+    "throttle, exception",
+    [(None, ValueError), ("xyz", SystemExit)],
+    ids=("from_env", "from_option"),
+)
+def test_pulp_throttle_invalid(monkeypatch, throttle, exception):
+    """Checks main raises SystemExit when a non-int string is passed with --pulp-throttle
+    or ValueError when PULP_THROTTLE env variable is non-it.
+    """
+    monkeypatch.setenv("PULP_THROTTLE", "abc")
     task = TaskWithPulpClient()
-    arg = ["", "--pulp-url", "http://some.url", "-d", "--pulp-throttle", "xyz"]
+    arg = [
+        "",
+        "--pulp-url",
+        "http://some.url",
+        "-d",
+    ]
+    if throttle:
+        arg.extend(["--pulp-throttle", "xyz"])
     with patch("sys.argv", arg):
         with patch("pubtools._pulp.task.PulpTask.run"):
-            with pytest.raises(SystemExit):
+            with pytest.raises(exception):
                 task.main()
+                assert task.pulp_client is None
 
 
 def test_pulp_throttle_negative():
