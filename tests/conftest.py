@@ -1,4 +1,5 @@
 import sys
+import os
 
 import requests_mock
 import pytest
@@ -27,9 +28,10 @@ def home_tmpdir(tmpdir, monkeypatch):
     for the duration of tests.
 
     This is an autouse fixture because certain used libraries
-    are influenced by files under $HOME, and for tests which
-    actually need it, we should explicitly set up anything
-    needed there instead of inheriting the user's environment.
+    and our own pulp fake are influenced by files under $HOME,
+    and for tests which actually need it, we should explicitly
+    set up anything needed there instead of inheriting the
+    user's environment.
     """
     homedir = str(tmpdir.mkdir("home"))
     monkeypatch.setenv("HOME", homedir)
@@ -62,6 +64,12 @@ def fake_collector():
     yield collector
 
     Collector.set_default_backend(None)
+
+
+@pytest.fixture
+def data_path():
+    """Returns path to the tests/data dir used to store extra files for testing."""
+    return os.path.join(os.path.dirname(__file__), "data")
 
 
 @pytest.fixture

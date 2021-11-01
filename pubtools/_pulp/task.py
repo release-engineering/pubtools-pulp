@@ -2,6 +2,8 @@ import logging
 import textwrap
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
+from pubtools.pluggy import task_context
+
 from .step import StepDecorator
 
 
@@ -138,8 +140,9 @@ class PulpTask(object):
     def main(self):
         """Main method called by the entrypoint of the task."""
 
-        # setup the logging as required
-        self._setup_logging()
+        with task_context():
+            # setup the logging as required
+            self._setup_logging()
 
-        self.run()
-        return 0
+            self.run()
+            return 0
