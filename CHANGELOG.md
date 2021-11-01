@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- n/a
+
+## [1.3.0] - 2021-11-02
+
 - The `--pulp-fake` option was added for development and testing.
+- Pulp throttling may now be controlled via the `PULP_THROTTLE` environment variable.
 
 ## [1.2.0] - 2021-08-18
 
@@ -42,7 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.0.3...v1.1.0
 [1.0.3]: https://github.com/release-engineering/pubtools-pulp/compare/v1.0.2...v1.0.3
