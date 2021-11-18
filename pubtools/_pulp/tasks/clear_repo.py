@@ -14,6 +14,7 @@ from pubtools.pulplib import (
     RpmUnit,
 )
 
+from pubtools._pulp.arguments import SplitAndExtend
 from pubtools._pulp.services import (
     CollectorService,
     PulpClientService,
@@ -58,10 +59,9 @@ class ClearRepo(
 
     @property
     def content_type(self):
-        type_strs = (self.args.content_type or "").split(",")
         # Only return non-None if there were really any types given.
         # Otherwise, return None to let library defaults apply
-        return [x for x in type_strs if x] or None
+        return self.args.content_type or None
 
     def add_args(self):
         super(ClearRepo, self).add_args()
@@ -73,6 +73,8 @@ class ClearRepo(
             "--content-type",
             help="remove only content of these comma-separated type(s)",
             type=str,
+            action=SplitAndExtend,
+            split_on=",",
         )
         self.parser.add_argument("repo", nargs="+", help="Repositories to be cleared")
 
@@ -220,11 +222,12 @@ class ClearRepo(
         ]
         out["name"] = "".join(filename_parts)
 
-        if unit.sha256sum:
-            out["sha256sum"] = unit.sha256sum
-        if unit.md5sum:
-            out["md5sum"] = unit.md5sum
-
+        # Note: in practice we don't necessarily expect to get all of these
+        # attributes, as after a delete the server will only provide those
+        # which make up the unit key. We still copy them anyway (even if
+        # values are None) in case this is improved some day.
+        out["sha256sum"] = unit.sha256sum
+        out["md5sum"] = unit.md5sum
         out["signing_key"] = unit.signing_key
 
         return RpmPushItem(**out)

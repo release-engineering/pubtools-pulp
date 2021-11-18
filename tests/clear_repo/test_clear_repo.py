@@ -292,8 +292,8 @@ def test_clear_yum_repo(command_tester, fake_collector, monkeypatch):
             "src": None,
             "dest": None,
             "filename": "bash-1.23-1.test8.x86_64.rpm",
-            "checksums": {"sha256": "a" * 64, "md5": "b" * 32},
-            "signing_key": "AABBCC",
+            "checksums": {"sha256": "a" * 64},
+            "signing_key": None,
             "build": None,
         },
         {
@@ -333,3 +333,75 @@ def test_clear_container_repo(command_tester):
             "some-containerrepo",
         ],
     )
+
+
+def test_clear_repo_multiple_content_types(command_tester, fake_collector, monkeypatch):
+    """Test clearing a Yum repo given multiple content type values."""
+    task_instance = FakeClearRepo()
+
+    repo = YumRepository(
+        id="some-yumrepo", relative_url="some/publish/url", mutable_urls=["repomd.xml"]
+    )
+
+    files = [
+        RpmUnit(
+            name="bash",
+            version="1.23",
+            release="1.test8",
+            arch="x86_64",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+        ),
+        ModulemdUnit(
+            name="mymod", stream="s1", version=123, context="a1c2", arch="s390x"
+        ),
+    ]
+
+    task_instance.pulp_client_controller.insert_repository(repo)
+    task_instance.pulp_client_controller.insert_units(repo, files)
+
+    # It should run with expected output.
+    command_tester.test(
+        task_instance.main,
+        [
+            "test-clear-repo",
+            "--pulp-url",
+            "https://pulp.example.com/",
+            "--content-type",
+            "rpm",
+            "--content-type",
+            "modulemd",
+            "--content-type",
+            "iso",
+            "some-yumrepo",
+        ],
+    )
+
+    # test the new ClearRepo argument handling for --content-type
+    # produces the expected output
+    assert task_instance.args.content_type == ["rpm", "modulemd", "iso"]
+
+    # It should record that it removed these push items:
+    assert sorted(fake_collector.items, key=lambda pi: pi["filename"]) == [
+        {
+            "state": "DELETED",
+            "origin": "pulp",
+            "src": None,
+            "dest": None,
+            "filename": "bash-1.23-1.test8.x86_64.rpm",
+            "checksums": {"sha256": "a" * 64},
+            "signing_key": None,
+            "build": None,
+        },
+        {
+            "state": "DELETED",
+            "origin": "pulp",
+            "src": None,
+            "dest": None,
+            "filename": "mymod:s1:123:a1c2:s390x",
+            "checksums": None,
+            "signing_key": None,
+            "build": None,
+        },
+    ]

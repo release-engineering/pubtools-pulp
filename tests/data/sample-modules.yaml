@@ -1,0 +1,138 @@
+# This file has a small selection of modules taken from Fedora and used from
+# tests in this repo. Modules with a small number of packages were chosen to
+# keep test data from being larger than necessary. Other than that, the
+# selected modules are more or less arbitrary.
+---
+document: modulemd-defaults
+version: 1
+data:
+  module: ant
+  modified: 202002242100
+  stream: 1.10
+  profiles:
+    1.10: [default]
+...
+---
+document: some-unknown-type
+comment: >
+  This is a made up document type to demonstrate Pulp's behavior of ignoring
+  unknown document types.
+...
+---
+document: modulemd
+version: 2
+data:
+  name: avocado-vt
+  stream: "82lts"
+  version: 3420210902113311
+  context: 035be0ad
+  arch: x86_64
+  summary: Avocado Virt Test Plugin
+  description: >-
+    Avocado Virt Test is a plugin that lets you execute virt-tests with all the avocado
+    convenience features, such as HTML report, Xunit output, among others. This is
+    the '82lts' rolling stream that tracks with the most recent upstream release.
+  license:
+    module:
+    - MIT
+    content:
+    - GPLv2
+  xmd: {}
+  dependencies:
+  - buildrequires:
+      platform: [f34]
+    requires:
+      avocado: [82lts]
+      platform: [f34]
+  references:
+    community: http://avocado-framework.github.io/
+    documentation: http://avocado-vt.readthedocs.io/
+    tracker: https://pagure.io/avocado-vt/issues
+  profiles:
+    default:
+      description: Common profile installing the avocado-vt plugin.
+      rpms:
+      - python3-avocado-vt
+  api:
+    rpms:
+    - python3-avocado-vt
+  components:
+    rpms:
+      avocado-vt:
+        rationale: Avocado Virt Test Plugin
+        ref: 82lts
+        arches: [aarch64, armv7hl, i686, ppc64le, s390x, x86_64]
+  artifacts:
+    rpms:
+    - avocado-vt-0:82.0-3.module_f34+12808+b491ffc8.src
+    - python3-avocado-vt-0:82.0-3.module_f34+12808+b491ffc8.noarch
+...
+---
+document: modulemd-defaults
+version: 1
+data:
+  module: dwm
+  modified: 202002242100
+  profiles:
+    6.0: [default]
+    6.1: [default]
+    6.2: [default]
+    latest: [default]
+...
+---
+document: modulemd
+version: 2
+data:
+  name: dwm
+  stream: "6.0"
+  version: 3420210201213909
+  context: 058368ca
+  arch: x86_64
+  summary: Dynamic window manager for X
+  description: >-
+    dwm is a dynamic window manager for X.  It manages windows in tiled, monocle,
+    and floating layouts.  All of the layouts can be applied dynamically, optimizing
+    the environment for the application in use and the task performed.
+  license:
+    module:
+    - MIT
+    content:
+    - MIT
+  xmd: {}
+  dependencies:
+  - buildrequires:
+      platform: [f34]
+    requires:
+      platform: [f34]
+  references:
+    community: https://suckless.org/
+    documentation: https://dwm.suckless.org/
+  profiles:
+    default:
+      description: The minimal, distribution-compiled dwm binary.
+      rpms:
+      - dwm
+    user:
+      description: Includes distribution-compiled dwm as well as a helper script to
+        apply user patches and configuration, dwm-user.
+      rpms:
+      - dwm
+      - dwm-user
+  api:
+    rpms:
+    - dwm
+    - dwm-user
+  components:
+    rpms:
+      dwm:
+        rationale: The main component of this module.
+        ref: 6.0
+        arches: [aarch64, armv7hl, i686, ppc64le, s390x, x86_64]
+  artifacts:
+    rpms:
+    - dwm-0:6.0-1.module_f34+11150+aec78cf8.src
+    - dwm-0:6.0-1.module_f34+11150+aec78cf8.x86_64
+    - dwm-debuginfo-0:6.0-1.module_f34+11150+aec78cf8.x86_64
+    - dwm-debugsource-0:6.0-1.module_f34+11150+aec78cf8.x86_64
+    - dwm-user-0:6.0-1.module_f34+11150+aec78cf8.x86_64
+...

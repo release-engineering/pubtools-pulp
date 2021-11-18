@@ -1,0 +1,58 @@
+on:
+  workflow_dispatch: {}
+  schedule:
+  - cron: "20 20 * * 0"
+
+name: "pip-compile: create PR"
+jobs:
+ pip_compile:
+   name: pip-compile
+   runs-on: ubuntu-latest
+   steps:
+     - name: Setup Python
+       uses: actions/setup-python@v2
+       with:
+         python-version: "3.9"
+
+     - name: Install system dependencies
+       run: |
+         sudo apt-get update
+         sudo apt-get install -y libkrb5-dev
+
+     - name: Install tox
+       run: pip install tox
+
+     - name: pip-compile
+       uses: technote-space/create-pr-action@v2
+       with:
+         EXECUTE_COMMANDS: tox -e pip-compile
+         COMMIT_MESSAGE: 'chore: scheduled pip-compile'
+         COMMIT_NAME: 'GitHub Actions'
+         COMMIT_EMAIL: 'noreply@github.com'
+         GITHUB_TOKEN: ${{ secrets.PIP_COMPILE_TOKEN }}
+         PR_BRANCH_PREFIX: deps/
+         PR_BRANCH_NAME: 'pip-compile'
+         PR_TITLE: 'chore: scheduled pip-compile'
+         PR_BODY: '## Update dependencies
+
+  This is a scheduled update of Python dependencies within this repo managed by pip-compile.
+
+  This change will be submitted automatically within a few days if all checks have
+  succeeded.'
+
+
+     - name: Look up pull request
+       uses: juliangruber/find-pull-request-action@v1
+       id: find-pull-request
+       with:
+         branch: deps/pip-compile
+
+     # Immediately approve it if we can so it can be merged later
+     - name: Approve Pull Request
+       uses: juliangruber/approve-pull-request-action@v1
+       with:
+         github-token: ${{ secrets.APPROVAL_TOKEN }}
+         number: ${{ steps.find-pull-request.outputs.number }}
+       # allow errors because token may be unset.
+       continue-on-error: true
+       if: ${{ steps.find-pull-request.outputs.number }}

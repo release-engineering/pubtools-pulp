@@ -13,7 +13,7 @@ class TaskWithPulpClient(PulpTask, PulpClientService):
 
 
 def test_task_run():
-    """ raises if run() is not implemeted"""
+    """raises if run() is not implemeted"""
     task = PulpTask()
     with pytest.raises(NotImplementedError):
         task.run()
@@ -39,6 +39,40 @@ def test_pulp_client():
         client = task.pulp_client
 
     assert isinstance(client, Client)
+
+
+def test_pulp_fake_client():
+    """Checks that a fake client is created if --pulp-fake is given"""
+    task = TaskWithPulpClient()
+    arg = ["", "--pulp-fake"]
+    with patch("sys.argv", arg):
+        client = task.pulp_client
+
+    # Fake client doesn't advertise itself in any obvious way.
+    # Just do some rough checks...
+    assert "Fake" in type(client).__name__
+
+    # Should be able to use the API even though it's obviously not connected
+    # to a real Pulp server
+    assert "rpm" in client.get_content_type_ids().result()
+
+    # Some repos should exist, because the fake creates a handful of repos
+    # by default.
+    assert list(client.search_repository().result())
+
+
+def test_pulp_missing_args(caplog):
+    """An error occurs if task is invoked with neither --pulp-url nor --pulp-fake."""
+
+    task = TaskWithPulpClient()
+    arg = [""]
+    with patch("sys.argv", arg):
+        with patch("pubtools._pulp.task.PulpTask.run"):
+            with pytest.raises(SystemExit) as excinfo:
+                task.pulp_client
+
+    assert excinfo.value.code == 41
+    assert "At least one of --pulp-url or --pulp-fake must be provided" in caplog.text
 
 
 def test_main():
@@ -70,37 +104,65 @@ def test_description():
     )
 
 
-def test_pulp_throttle():
-    """Checks main returns without exception when invoked also with --pulp-throttle arg,
-    and checks whether the arg is correctly promoted to pulp_client.
+@pytest.mark.parametrize(
+    "throttle", [None, 8], ids=("throttle_from_env", "throttle_option")
+)
+def test_pulp_throttle(monkeypatch, throttle):
+    """Checks main returns without exception when invoked with --pulp-throttle arg
+    or PULP_THROTTLE value from environment variable, and checks whether the arg is
+    correctly promoted to pulp_client.
     """
     pulp_throttle = 7
+    monkeypatch.setenv("PULP_THROTTLE", pulp_throttle)
     task = TaskWithPulpClient()
     arg = [
         "",
         "--pulp-url",
         "http://some.url",
         "-d",
-        "--pulp-throttle",
-        str(pulp_throttle),
     ]
+    if throttle:
+        arg.extend(
+            [
+                "--pulp-throttle",
+                str(throttle),
+            ]
+        )
+        pulp_throttle = throttle
+
     with patch("sys.argv", arg):
         with patch("pubtools._pulp.task.PulpTask.run"):
             assert task.main() == 0
-            assert task.args.pulp_throttle == pulp_throttle
+            assert task.args.pulp_throttle == throttle
             assert (
                 task.pulp_client._task_executor._delegate._throttle() == pulp_throttle
             )
 
 
-def test_pulp_throttle_invalid():
-    """Checks main raises SystemExit when a non-int string is passed with --pulp-throttle."""
+@pytest.mark.parametrize(
+    "throttle, exception",
+    [(None, ValueError), ("xyz", SystemExit)],
+    ids=("from_env", "from_option"),
+)
+def test_pulp_throttle_invalid(monkeypatch, throttle, exception):
+    """Checks main raises SystemExit when a non-int string is passed with --pulp-throttle
+    or ValueError when PULP_THROTTLE env variable is non-it.
+    """
+    monkeypatch.setenv("PULP_THROTTLE", "abc")
     task = TaskWithPulpClient()
-    arg = ["", "--pulp-url", "http://some.url", "-d", "--pulp-throttle", "xyz"]
+    arg = [
+        "",
+        "--pulp-url",
+        "http://some.url",
+        "-d",
+    ]
+    if throttle:
+        arg.extend(["--pulp-throttle", "xyz"])
     with patch("sys.argv", arg):
         with patch("pubtools._pulp.task.PulpTask.run"):
-            with pytest.raises(SystemExit):
+            with pytest.raises(exception):
                 task.main()
+                assert task.pulp_client is None
 
 
 def test_pulp_throttle_negative():

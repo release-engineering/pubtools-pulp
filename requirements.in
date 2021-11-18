@@ -1,5 +1,9 @@
 six
+<<<<<<< HEAD
 pubtools-pulplib>=2.16.0
+=======
+pubtools-pulplib>=2.17.0
+>>>>>>> 23dc3918edbe1ffd8503d45843c460f281da4e89
 fastpurge
 more_executors>=2.7.0
 pushcollector>=1.2.0

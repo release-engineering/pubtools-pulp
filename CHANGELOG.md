@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Internally created executors are now named for improved metrics and debuggability.
 
+## [1.3.0] - 2021-11-02
+
+- The `--pulp-fake` option was added for development and testing.
+- Pulp throttling may now be controlled via the `PULP_THROTTLE` environment variable.
+
+## [1.2.0] - 2021-08-18
+
+### Changed
+
+- clear-repo now accepts the `--content-type` argument multiple times.
+- Internally created executors are now named for improved metrics and debuggability.
+
 ## [1.1.0] - 2021-03-22
 
 ### Added
@@ -33,11 +45,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Publish and maintenance-on/off commands accept comma seperated repo-ids
 
-## [0.1.0] - 2019-10-09
+## 0.1.0 - 2019-10-09
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.2.0...v1.3.0
+[1.2.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.0.3...v1.1.0
 [1.0.3]: https://github.com/release-engineering/pubtools-pulp/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.0.1...v1.0.2

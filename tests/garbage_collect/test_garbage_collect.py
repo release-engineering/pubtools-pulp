@@ -47,7 +47,7 @@ def _run_test(*repos):
 
 
 def test_add_args():
-    """adds the arg to the PulpTask parser """
+    """adds the arg to the PulpTask parser"""
     gc = GarbageCollect()
     arg = ["", "--pulp-url", "http://some.url", "--gc-threshold", "7"]
 

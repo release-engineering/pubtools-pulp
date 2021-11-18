@@ -12,4 +12,7 @@ pylint; python_version>='3'
 sphinx; python_version>='3'
 sphinx-argparse; python_version>='3'
 alabaster; python_version>='3'
+<<<<<<< HEAD
 
+=======
+>>>>>>> 23dc3918edbe1ffd8503d45843c460f281da4e89
