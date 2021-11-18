@@ -7,4 +7,5 @@
 [    INFO]  - repo1
 [    INFO] Adjust maintenance report: finished
 [    INFO] Set maintenance report: started
+[    INFO] Uploading repos.json to redhat-maintenance [82e2e662-f728-b4fa-4248-5e3a0a5d2f34]
 [    INFO] Set maintenance report: finished

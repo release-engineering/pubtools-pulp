@@ -28,6 +28,13 @@ step = PulpTask.step
 LOG = logging.getLogger("pubtools.pulp")
 
 
+# Due to some false positives such as:
+# E1101: Instance of 'CollectorProxy' has no 'search_repository' member (no-member)
+# Confused by multiple inheritance in the Service classes?
+#
+# pylint: disable=no-member
+
+
 @attr.s
 class ClearedRepo(object):
     """Represents a single repo which has been cleared."""

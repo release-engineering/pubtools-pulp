@@ -104,16 +104,15 @@ def test_maintenance_on(command_tester):
         ],
     )
 
-    controller = task_instance.pulp_client_controller
-    # upload and publish should be called once each
-    assert len(controller.upload_history) == 1
-    assert controller.upload_history[0].repository.id == "redhat-maintenance"
-    assert len(controller.publish_history) == 1
-    assert controller.publish_history[0].repository.id == "redhat-maintenance"
-
+    # It should have set the maintenance report to our requested value.
     assert_expected_report(
         ["repo1", "repo2"], task_instance.pulp_client, message="Now in Maintenance"
     )
+
+    controller = task_instance.pulp_client_controller
+    # It should have published the repo containing the maintenance report.
+    assert len(controller.publish_history) == 1
+    assert controller.publish_history[0].repository.id == "redhat-maintenance"
 
 
 def test_maintenance_on_with_regex(command_tester):
@@ -171,6 +170,12 @@ def test_maintenance_off(command_tester):
 
     task_instance = get_task_instance(False, repo1, repo2)
 
+    controller = task_instance.pulp_client_controller
+
+    # Initially, there has already been a publish because get_task_instance already
+    # sets maintenance report to [repo1, repo2] at beginning of this test.
+    assert len(controller.publish_history) == 1
+
     command_tester.test(
         lambda: pubtools._pulp.tasks.set_maintenance.set_maintenance_off.entry_point(
             lambda: task_instance
@@ -184,12 +189,11 @@ def test_maintenance_off(command_tester):
         ],
     )
 
-    controller = task_instance.pulp_client_controller
-    # upload and publish should be called twice each
-    assert len(controller.upload_history) == 2
-    assert len(controller.publish_history) == 2
-
+    # It should have taken repo2 out of maintenance, leaving just repo1.
     assert_expected_report(["repo1"], task_instance.pulp_client)
+
+    # It should have also published the maintenance repo once more.
+    assert len(controller.publish_history) == 2
 
 
 def test_maintenance_off_with_regex(command_tester):
