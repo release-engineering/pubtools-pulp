@@ -1,11 +1,13 @@
 import threading
 import os
+import sys
 import logging
 import warnings
 
 from pubtools import pulplib
 
 from .base import Service
+from .fakepulp import new_fake_client
 
 LOG = logging.getLogger("pubtools.pulp")
 
@@ -33,7 +35,7 @@ class PulpClientService(Service):
         super(PulpClientService, self).add_service_args(parser)
 
         group = parser.add_argument_group("Pulp environment")
-        group.add_argument("--pulp-url", help="Pulp server URL", required=True)
+        group.add_argument("--pulp-url", help="Pulp server URL")
         group.add_argument("--pulp-user", help="Pulp username", default=None)
         group.add_argument(
             "--pulp-password",
@@ -47,9 +49,18 @@ class PulpClientService(Service):
         )
         group.add_argument(
             "--pulp-throttle",
-            help="Allows to enqueue or run only specified number of Pulp tasks at one moment",
+            help="Allows to enqueue or run only specified number of Pulp tasks at one moment "
+            + "(or set PULP_THROTTLE environment variable)",
             default=None,
             type=pulp_throttle,
+        )
+        group.add_argument(
+            "--pulp-fake",
+            help=(
+                "Use a fake in-memory Pulp client rather than interacting with a real server. "
+                + "For development/testing only, may have limited functionality."
+            ),
+            action="store_true",
         )
 
     @property
@@ -63,6 +74,14 @@ class PulpClientService(Service):
     def __get_instance(self):
         auth = None
         args = self._service_args
+
+        if not args.pulp_fake and not args.pulp_url:
+            LOG.error("At least one of --pulp-url or --pulp-fake must be provided")
+            sys.exit(41)
+
+        if args.pulp_fake:
+            LOG.warning("Using a fake Pulp client, no changes will be made to Pulp!")
+            return new_fake_client()
 
         # checks if pulp password is available as environment variable
         if args.pulp_user:
@@ -79,7 +98,9 @@ class PulpClientService(Service):
             # Thank you, but we don't need to hear about this for every single request
             warnings.filterwarnings("once", r"Unverified HTTPS request is being made")
 
-        if args.pulp_throttle:
-            kwargs["task_throttle"] = args.pulp_throttle
+        if args.pulp_throttle or os.environ.get("PULP_THROTTLE"):
+            kwargs["task_throttle"] = args.pulp_throttle or pulp_throttle(
+                os.environ.get("PULP_THROTTLE")
+            )
 
         return pulplib.Client(args.pulp_url, **kwargs)
