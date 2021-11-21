@@ -105,9 +105,9 @@ fastpurge==1.0.3 \
     --hash=sha256:178098cf6d39b2887a4c656fc7014cc13f1f64fc353d98324ceb55141b7849ee \
     --hash=sha256:d82a9ae11eec67ca81207f295b2bd8ddbb1e42f97c1c0b12a3b7295277a695ca
     # via -r requirements.in
-frozendict==2.0.7 \
-    --hash=sha256:a68f609d1af67da80b45519fdcfca2d60249c0a8c96e68279c1b6ddd92128204 \
-    --hash=sha256:d650f9cf3d2c5438b1631488a975a49b3bdd12c7a97eec59b85e57821eebf28a
+frozendict==2.1.0 \
+    --hash=sha256:0189168749ddea8601afd648146c502533f93ae33840eb76cd71f694742623cd \
+    --hash=sha256:1c0de90a47fcfb9abf18458cb82573e817455e45f9e6a250f8988e6725f3973a
     # via pushsource
 frozenlist2==1.0.0 \
     --hash=sha256:33f6c6bb2c7d38524ec3c2d6f2d8a3ee2625a9e13096d8bc64db012b516a95e0 \
@@ -153,10 +153,10 @@ jsonschema==4.2.1 \
 kobo==0.20.1 \
     --hash=sha256:41ef42a6d1cd3b2a0511b61da20e2bddd6147ee1f5e5438fe52a6d8d6916a6ae
     # via pushsource
-koji==1.26.1 \
-    --hash=sha256:4e91a9f5fce4ab3e5df2a1c3c731ae98dc999a2e7ee06c138d1fd442d73b394e \
-    --hash=sha256:57a244dff1a1892c2778785e9e4900a5a01514aba18dc4f2be5260b651d40bfc \
-    --hash=sha256:de2bbdebe403015ce74c37ab8627e46cc5f869a875dd820711bb6864a2604118
+koji==1.27.0 \
+    --hash=sha256:3cff9d3467c0f3467e991a8ad75f714d0c744ffd6c454692072e21e29511a51a \
+    --hash=sha256:6f7af17f9108841d1c6b4343e6e55c4dff92de67769a2efac55c5218acacfb67 \
+    --hash=sha256:a89a952e6c17ac2d51cf3f448824ebe4f7f84b77f31a29d7b7335b43d7bdf583
     # via pushsource
 monotonic==1.6 \
     --hash=sha256:3a55207bcfed53ddd5c5bae174524062935efed17792e9de2ad0205ce9ad63f7 \
