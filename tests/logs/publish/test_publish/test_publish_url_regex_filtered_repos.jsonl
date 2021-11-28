@@ -4,5 +4,7 @@
 {"event": {"type": "publish-end"}}
 {"event": {"type": "flush-cdn-cache-start"}}
 {"event": {"type": "flush-cdn-cache-end"}}
+{"event": {"type": "set-cdn_published-start"}}
+{"event": {"type": "set-cdn_published-end"}}
 {"event": {"type": "flush-ud-cache-start"}}
 {"event": {"type": "flush-ud-cache-end"}}

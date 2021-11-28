@@ -17,11 +17,14 @@ class CommandTester(object):
     An instance may be obtained via command_tester fixture.
     """
 
-    def __init__(self, node, caplog):
+    def __init__(self, node, tmpdir, caplog):
         self._node = node
+        self._tmpdir = tmpdir
         self._caplog = caplog
 
-    def test(self, fn, args):
+    def test(
+        self, fn, args, compare_plaintext=True, compare_jsonl=True, compare_extra=None
+    ):
         """Put args into sys.argv, then test the given function.
 
         Logs at INFO level and higher will be captured and compared against
@@ -30,6 +33,31 @@ class CommandTester(object):
 
         To update test logs in case of an intentional change, set the
         UPDATE_BASELINES environment variable to 1.
+
+        Arguments:
+            fn
+                Function to be invoked (e.g. a task's main function)
+
+            args
+                Desired content of sys.argv before invoking fn
+
+            compare_plaintext
+                If true, enables comparison of plaintext logs against baseline.
+
+            compare_jsonl
+                If true, enables comparison of JSONL logs against baseline.
+
+            compare_extra
+                If a non-empty dict, enables comparison of arbitrary additional files.
+                Dict should be of the form:
+
+                   {
+                       'basename': {
+                           'filename': '/path/to/file-generated-within-test',
+                           'normalize': <optional normalization functon>
+                        }
+                   }
+
         """
         self._caplog.set_level(logging.INFO)
 
@@ -47,7 +75,16 @@ class CommandTester(object):
             exception = ex
 
         records = self._caplog.records
-        self._compare_outcome(records, exception)
+        self._compare_outcome(
+            records,
+            exception,
+            compare_plaintext=compare_plaintext,
+            compare_jsonl=compare_jsonl,
+            compare_extra=compare_extra or {},
+        )
+
+    def _normalize_plaintext(self, text):
+        return text.replace(str(self._tmpdir), "<tmpdir>")
 
     @property
     def logfile_basename(self):
@@ -69,7 +106,9 @@ class CommandTester(object):
     def _get_actual_plaintext(self, records):
         out = ""
         for record in records:
-            out += "[%8s] %s\n" % (record.levelname, record.message)
+            out += self._normalize_plaintext(
+                "[%8s] %s\n" % (record.levelname, record.message)
+            )
         return out
 
     def _get_actual_jsonl(self, records):
@@ -134,13 +173,24 @@ class CommandTester(object):
 
             raise AssertionError(message)
 
-    def _compare_outcome(self, records, exception):
+    def _compare_outcome(
+        self, records, exception, compare_plaintext, compare_jsonl, compare_extra
+    ):
 
-        plaintext = self._get_actual_plaintext(records)
-        if exception:
-            plaintext += "# Raised: %s\n" % exception
+        if compare_plaintext:
+            plaintext = self._get_actual_plaintext(records)
+            if exception:
+                plaintext += "# Raised: %s\n" % exception
 
-        self._compare_expected(plaintext, ".txt", exception)
+            self._compare_expected(plaintext, ".txt", exception)
 
-        jsonl = self._get_actual_jsonl(records)
-        self._compare_expected(jsonl, ".jsonl")
+        if compare_jsonl:
+            jsonl = self._get_actual_jsonl(records)
+            self._compare_expected(jsonl, ".jsonl")
+
+        for key, extra in compare_extra.items():
+            filename = extra["filename"]
+            normalize = extra.get("normalize", lambda x: x)
+            with open(filename, "rt") as f:
+                actual_extra = normalize(f.read())
+            self._compare_expected(actual_extra, "." + key)

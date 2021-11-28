@@ -1,0 +1,16 @@
+repos:
+- _class: FileRepository
+  id: all-iso-content
+- _class: YumRepository
+  id: all-rpm-content
+- _class: YumRepository
+  id: dest1
+- _class: YumRepository
+  id: dest2
+- _class: FileRepository
+  id: iso-dest1
+- _class: FileRepository
+  id: iso-dest2
+- _class: FileRepository
+  id: redhat-maintenance
+units: []

@@ -1,6 +1,9 @@
 import os
 import logging
-from more_executors.futures import f_map, f_sequence
+import datetime
+import attr
+
+from more_executors.futures import f_map, f_flat_map, f_sequence
 
 from pubtools.pulplib import PublishOptions
 
@@ -100,7 +103,38 @@ class Publisher(CDNCache, UdCache):
 
         return out
 
-    def publish_with_cache_flush(self, repos):
+    @classmethod
+    def cdn_published_value(cls):
+        # Return a value which should be used for cdn_published field.
+        #
+        # This method exists mainly to ensure this is mockable during tests.
+        return datetime.datetime.utcnow()
+
+    @step("Set cdn_published")
+    def set_cdn_published(self, units):
+        now = self.cdn_published_value()
+        out = []
+        for unit in units or []:
+            out.append(
+                self.pulp_client.update_content(attr.evolve(unit, cdn_published=now))
+            )
+
+        if out:
+            LOG.info(
+                "Setting cdn_published = %s on %s unit(s)",
+                now,
+                len(out),
+            )
+        return out
+
+    def publish_with_cache_flush(self, repos, units=None):
+        # Ensure all repos in 'repos' are fully published, and CDN/UD caches are flushed.
+        #
+        # If 'units' are provided, ensures those units have cdn_published field set after
+        # the publish and before the UD cache flush.
+        #
+        units = units or []
+
         # publish the repos found
         publish_fs = self.publish(repos)
 
@@ -111,7 +145,11 @@ class Publisher(CDNCache, UdCache):
         # flush CDN cache
         out = self.flush_cdn(repos)
 
-        # flush UD cache
-        out.extend(self.flush_ud(repos))
+        # set units as published
+        set_published = f_sequence(self.set_cdn_published(units))
+
+        # flush UD cache only after cdn_published is set (if applicable)
+        flush_ud = f_flat_map(set_published, lambda _: f_sequence(self.flush_ud(repos)))
+        out.append(flush_ud)
 
         return out
