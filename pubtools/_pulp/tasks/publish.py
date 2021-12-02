@@ -2,13 +2,12 @@ import logging
 import sys
 import re
 from datetime import datetime
-from more_executors.futures import f_sequence
 
-from pubtools.pulplib import Criteria, Matcher, PublishOptions
+from pubtools.pulplib import Criteria, Matcher
 
 from pubtools._pulp.task import PulpTask
-from pubtools._pulp.services import PulpClientService, UdCacheClientService
-from pubtools._pulp.tasks.common import CDNCache
+from pubtools._pulp.services import PulpClientService
+from pubtools._pulp.tasks.common import Publisher
 
 step = PulpTask.step
 
@@ -26,7 +25,7 @@ def publish_date(str_date):
     return datetime.strptime(str_date, "%Y-%m-%d")
 
 
-class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
+class Publish(PulpClientService, PulpTask, Publisher):
     """Publish one or more Pulp repositories to the endpoints defined by their distributors.
 
     This command will publish the Pulp repositories provided in the request or
@@ -37,27 +36,26 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
     def add_args(self):
         super(Publish, self).add_args()
 
-        self.parser.add_argument(
+        self.add_publisher_args(self.parser)
+
+        group = self.parser.add_argument_group(
+            "Filter options",
+            "Options affecting the selection of repos to be published.",
+        )
+
+        group.add_argument(
             "--repo-ids",
             help="comma separated repos to be published, can be specified multiple times",
             action="append",
             default=[],
         )
-        self.parser.add_argument(
-            "--clean",
-            help="attempt to remove content not in the repo",
-            action="store_true",
-        )
-        self.parser.add_argument(
-            "--force", help="execute a full repo publish", action="store_true"
-        )
-        self.parser.add_argument(
+        group.add_argument(
             "--published-before",
             help="publish the repos last published before given date e.g. 2019-08-21",
             type=publish_date,
             default=None,
         )
-        self.parser.add_argument(
+        group.add_argument(
             "--repo-url-regex",
             help="publish repos whose repo url match",
             default=None,
@@ -72,55 +70,19 @@ class Publish(PulpClientService, UdCacheClientService, PulpTask, CDNCache):
         self.args.repo_ids = repo_ids
 
     def run(self):
-        to_await = []
         LOG.debug("Begin publishing repositories")
 
         # get repos applying filters
         repos = self.check_repos()
 
-        # publish the repos found
-        publish_fs = self.publish(repos)
-
-        # wait for the publish to complete before
-        # flushing caches.
-        f_sequence(publish_fs).result()
-
-        # flush CDN cache
-        to_await.extend(self.flush_cdn(repos))
-
-        # flush UD cache
-        to_await.extend(self.flush_ud(repos))
+        # publish the repos found, including cache flushes
+        publish_fs = self.publish_with_cache_flush(repos)
 
         # wait for everything to finish.
-        for f in to_await:
+        for f in publish_fs:
             f.result()
 
         LOG.info("Publishing repositories completed")
-
-    @step("Publish")
-    def publish(self, repos):
-        out = []
-
-        publish_opts = PublishOptions(force=self.args.force, clean=self.args.clean)
-        for repo in repos:
-            LOG.info("Publishing %s", repo.id)
-            f = repo.publish(publish_opts)
-            out.append(f)
-
-        return out
-
-    @step("Flush UD cache")
-    def flush_ud(self, repos):
-        client = self.udcache_client
-        if not client:
-            LOG.info("UD cache flush is not enabled.")
-            return []
-
-        out = []
-        for repo in repos:
-            out.append(client.flush_repo(repo.id))
-
-        return out
 
     @step("Check repos")
     def check_repos(self):
