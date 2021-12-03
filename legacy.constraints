@@ -1,0 +1,6 @@
+# Oldest supported versions of major libraries can be added to this
+# file. They'll be tested with Python 2.7.
+
+# constraints from pubtools-pulplib 
+attrs==17.4.0
+jsonschema==2.3.0
