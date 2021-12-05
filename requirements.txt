@@ -67,9 +67,9 @@ cffi==1.15.0 \
     --hash=sha256:fd8a250edc26254fe5b33be00402e6d287f562b6a5b2152dec302fa15bb3e997 \
     --hash=sha256:ffaa5c925128e29efbde7301d8ecaf35c8c60ffbcd6a1ffd3a552177c8e5e796
     # via cryptography
-charset-normalizer==2.0.8 \
-    --hash=sha256:735e240d9a8506778cd7a453d97e817e536bb1fc29f4f6961ce297b9c7a917b0 \
-    --hash=sha256:83fcdeb225499d6344c8f7f34684c2981270beacc32ede2e669e94f7fa544405
+charset-normalizer==2.0.9 \
+    --hash=sha256:1eecaa09422db5be9e29d7fc65664e6c33bd06f9ced7838578ba40d58bdf3721 \
+    --hash=sha256:b0b883e8e874edfdece9c28f314e3dd5badf067342e42fb162203335ae61aa2c
     # via requests
 cryptography==36.0.0 \
     --hash=sha256:2049f8b87f449fc6190350de443ee0c1dd631f2ce4fa99efad2984de81031681 \
@@ -106,9 +106,9 @@ fastpurge==1.0.3 \
     --hash=sha256:178098cf6d39b2887a4c656fc7014cc13f1f64fc353d98324ceb55141b7849ee \
     --hash=sha256:d82a9ae11eec67ca81207f295b2bd8ddbb1e42f97c1c0b12a3b7295277a695ca
     # via -r requirements.in
-frozendict==2.1.0 \
-    --hash=sha256:0189168749ddea8601afd648146c502533f93ae33840eb76cd71f694742623cd \
-    --hash=sha256:1c0de90a47fcfb9abf18458cb82573e817455e45f9e6a250f8988e6725f3973a
+frozendict==2.1.1 \
+    --hash=sha256:655b879217dd445a2023e16154cc231febef802b5c812d5c2e822280ad69e1dc \
+    --hash=sha256:bbad8ef1a428f5e6f7e195742fd739f56a5a602f9cf9bbe86f55a4848b1fabd6
     # via pushsource
 frozenlist2==1.0.0 \
     --hash=sha256:33f6c6bb2c7d38524ec3c2d6f2d8a3ee2625a9e13096d8bc64db012b516a95e0 \
@@ -187,18 +187,18 @@ pubtools==1.2.1 \
     --hash=sha256:1e882d0bf622617563aa779049cf6513410b599c971240f614415142979c36a8 \
     --hash=sha256:f630cb91b437c69909bbf8a4c797d2afc9b56ad280b07d912f65e702622f6d60
     # via pubtools-pulplib
-pubtools-pulplib==2.17.0 \
-    --hash=sha256:7ae8b16596357d92aaf6f0fd0baa649c3ba5a8c29675cc790bd12a0d32aa7ea8 \
-    --hash=sha256:9ebb60bc32136163159b7d2bd319004f476a0780ef280f85a0f9b57f8caa2f26
+pubtools-pulplib==2.18.0 \
+    --hash=sha256:10f94d07d14911a30b83286cfcfbfbc262ae059c3e6193577b8247c76ff8a615 \
+    --hash=sha256:47bdf8aa7c837da64e6bb418eab2e8a1c0616bdb45dc57b7170b89dc9fb86879
     # via -r requirements.in
 pushcollector==1.2.0 \
     --hash=sha256:cd53036c7880957577bc9a2a3b1431e81a5aea10f4b4cbcbf98c3ee40c6f2ea3
     # via
     #   -r requirements.in
     #   pushsource
-pushsource==2.13.1 \
-    --hash=sha256:1d2bf2b67438ff8240923e94c3d4c31ba2fbe457d7dba952092fa183688a779b \
-    --hash=sha256:5e21ff0bc2a0d2f417c9b5ab0f72a30d03272eec3db121305b20e6548230afc4
+pushsource==2.13.2 \
+    --hash=sha256:05a3b3865b47121fff7800a1a0d24486d63781280e72ccabb9f192af045d90d8 \
+    --hash=sha256:c7898b1c0d8098f05228fc9b789580654e4d101382463565b14b8d4da716ec5a
     # via -r requirements.in
 pyasn1==0.4.8 \
     --hash=sha256:39c7e2ec30515947ff4e87fb6f456dfc6e84857d34be479c9d4a4ba4bf46aa5d \
