@@ -76,8 +76,9 @@ class PulpTask(object):
         - Log messages will be produced when entering and leaving the method
         - The method can be skipped if requested by the caller (via --skip argument)
 
-        Steps may be written as plain blocking functions, or as non-blocking
-        functions which accept or return Futures.  A single Future or a list of
+        Steps may be written as plain blocking functions, as non-blocking
+        functions which accept or return Futures, or as generators.
+        When futures are accepted or returned, a single Future or a list of
         Futures may be used.
 
         When Futures are used, the following semantics apply:
@@ -85,6 +86,13 @@ class PulpTask(object):
         - The step is considered *started* once *any* of the input futures has finished
         - The step is considered *failed* once *any* of the output futures has failed
         - The step is considered *finished* once *all* of the output futures have finished
+
+        When generators are used, the following semantics apply:
+
+        - The step is considered *started* once the input generator has yielded at least
+          one item, or has completed; or, immediately if the input is not a generator.
+        - The step is considered *failed* if it raised an exception.
+        - The step is considered *finished* once all items have been yielded.
         """
         return StepDecorator(name)
 
