@@ -41,18 +41,18 @@ their distributors.</p>
 request or fetched using the filters(url-regex or published-before) or
 an intersection of input repositories and filters.</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">publish</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">host</span> <span class="n">FASTPURGE_HOST</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">publish</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">url</span> <span class="n">UDCACHE_URL</span><span class="p">]</span>
+                             <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">user</span> <span class="n">UDCACHE_USER</span><span class="p">]</span>
+                             <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">password</span> <span class="n">UDCACHE_PASSWORD</span><span class="p">]</span>
+                             <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">host</span> <span class="n">FASTPURGE_HOST</span><span class="p">]</span>
                              <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">token</span> <span class="n">FASTPURGE_CLIENT_TOKEN</span><span class="p">]</span>
                              <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">secret</span> <span class="n">FASTPURGE_CLIENT_SECRET</span><span class="p">]</span>
                              <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">access</span><span class="o">-</span><span class="n">token</span> <span class="n">FASTPURGE_ACCESS_TOKEN</span><span class="p">]</span>
                              <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">root</span><span class="o">-</span><span class="n">url</span> <span class="n">FASTPURGE_ROOT_URL</span><span class="p">]</span>
-                             <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">url</span> <span class="n">UDCACHE_URL</span><span class="p">]</span>
-                             <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">user</span> <span class="n">UDCACHE_USER</span><span class="p">]</span>
-                             <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">password</span> <span class="n">UDCACHE_PASSWORD</span><span class="p">]</span> <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span>
-                             <span class="n">PULP_URL</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
+                             <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
                              <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span>
                              <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">throttle</span> <span class="n">PULP_THROTTLE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">fake</span><span class="p">]</span>
-                             <span class="p">[</span><span class="o">--</span><span class="n">repo</span><span class="o">-</span><span class="n">ids</span> <span class="n">REPO_IDS</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">clean</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">force</span><span class="p">]</span>
+                             <span class="p">[</span><span class="o">--</span><span class="n">clean</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">force</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">repo</span><span class="o">-</span><span class="n">ids</span> <span class="n">REPO_IDS</span><span class="p">]</span>
                              <span class="p">[</span><span class="o">--</span><span class="n">published</span><span class="o">-</span><span class="n">before</span> <span class="n">PUBLISHED_BEFORE</span><span class="p">]</span>
                              <span class="p">[</span><span class="o">--</span><span class="n">repo</span><span class="o">-</span><span class="n">url</span><span class="o">-</span><span class="n">regex</span> <span class="n">REPO_URL_REGEX</span><span class="p">]</span>
 </pre></div>
@@ -64,23 +64,20 @@ an intersection of input repositories and filters.</p>
 <dd><p>Show debug logs; can be provided up to three times to enable more logs</p>
 <p>Default: 0</p>
 </dd>
-<dt><kbd>--repo-ids</kbd></dt>
-<dd><p>comma separated repos to be published, can be specified multiple times</p>
-<p>Default: []</p>
+</dl>
+</section>
+<section id="Unified Downloads Cache environment">
+<h2>Unified Downloads Cache environment<a class="headerlink" href="#Unified Downloads Cache environment" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>--udcache-url</kbd></dt>
+<dd><p>Base URL of UD cache flush API; if omitted, UD cache flush features are disabled.</p>
 </dd>
-<dt><kbd>--clean</kbd></dt>
-<dd><p>attempt to remove content not in the repo</p>
-<p>Default: False</p>
+<dt><kbd>--udcache-user</kbd></dt>
+<dd><p>Username for UD cache flush</p>
 </dd>
-<dt><kbd>--force</kbd></dt>
-<dd><p>execute a full repo publish</p>
-<p>Default: False</p>
-</dd>
-<dt><kbd>--published-before</kbd></dt>
-<dd><p>publish the repos last published before given date e.g. 2019-08-21</p>
-</dd>
-<dt><kbd>--repo-url-regex</kbd></dt>
-<dd><p>publish repos whose repo url match</p>
+<dt><kbd>--udcache-password</kbd></dt>
+<dd><p>Password for UD cache flush (or set UDCACHE_PASSWORD)</p>
+<p>Default: “”</p>
 </dd>
 </dl>
 </section>
@@ -106,21 +103,6 @@ an intersection of input repositories and filters.</p>
 </dd>
 </dl>
 </section>
-<section id="Unified Downloads Cache environment">
-<h2>Unified Downloads Cache environment<a class="headerlink" href="#Unified Downloads Cache environment" title="Permalink to this headline">¶</a></h2>
-<dl class="option-list">
-<dt><kbd>--udcache-url</kbd></dt>
-<dd><p>Base URL of UD cache flush API; if omitted, UD cache flush features are disabled.</p>
-</dd>
-<dt><kbd>--udcache-user</kbd></dt>
-<dd><p>Username for UD cache flush</p>
-</dd>
-<dt><kbd>--udcache-password</kbd></dt>
-<dd><p>Password for UD cache flush (or set UDCACHE_PASSWORD)</p>
-<p>Default: “”</p>
-</dd>
-</dl>
-</section>
 <section id="Pulp environment">
 <h2>Pulp environment<a class="headerlink" href="#Pulp environment" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
@@ -138,11 +120,41 @@ an intersection of input repositories and filters.</p>
 <p>Default: False</p>
 </dd>
 <dt><kbd>--pulp-throttle</kbd></dt>
-<dd><p>Allows to enqueue or run only specified number of Pulp tasks at one moment</p>
+<dd><p>Allows to enqueue or run only specified number of Pulp tasks at one moment (or set PULP_THROTTLE environment variable)</p>
 </dd>
 <dt><kbd>--pulp-fake</kbd></dt>
 <dd><p>Use a fake in-memory Pulp client rather than interacting with a real server. For development/testing only, may have limited functionality.</p>
 <p>Default: False</p>
+</dd>
+</dl>
+</section>
+<section id="Publish options">
+<h2>Publish options<a class="headerlink" href="#Publish options" title="Permalink to this headline">¶</a></h2>
+<p>Options affecting the behavior of Pulp repo publishes.</p>
+<dl class="option-list">
+<dt><kbd>--clean</kbd></dt>
+<dd><p>attempt to delete remote content not in the repo</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--force</kbd></dt>
+<dd><p>force publish of repos even if Pulp thinks nothing has changed</p>
+<p>Default: False</p>
+</dd>
+</dl>
+</section>
+<section id="Filter options">
+<h2>Filter options<a class="headerlink" href="#Filter options" title="Permalink to this headline">¶</a></h2>
+<p>Options affecting the selection of repos to be published.</p>
+<dl class="option-list">
+<dt><kbd>--repo-ids</kbd></dt>
+<dd><p>comma separated repos to be published, can be specified multiple times</p>
+<p>Default: []</p>
+</dd>
+<dt><kbd>--published-before</kbd></dt>
+<dd><p>publish the repos last published before given date e.g. 2019-08-21</p>
+</dd>
+<dt><kbd>--repo-url-regex</kbd></dt>
+<dd><p>publish repos whose repo url match</p>
 </dd>
 </dl>
 </section>
@@ -280,7 +292,7 @@ file for authentication.</p>
       &copy;2019, Red Hat.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
