@@ -11,6 +11,25 @@ from pubtools.pulplib import FakeController, FileRepository, YumRepository
 LOG = logging.getLogger("pubtools-pulp")
 
 
+def default_value_match(obj, field, field_value):
+    if not field:
+        # No field, hence no default value
+        return False
+
+    if field.default is attr.NOTHING:
+        # Field does not use a default, hence no match
+        return False
+
+    if isinstance(field.default, attr.Factory):
+        if field.default.takes_self:
+            default = field.default.factory(obj)
+        else:
+            default = field.default.factory()
+        return field_value == default
+
+    return field_value == field.default
+
+
 def serialize(value):
     """Serialize pulplib model objects to a form which can be stored
     in YAML and later deserialized.
@@ -30,6 +49,7 @@ def serialize(value):
         # doesn't put enough metadata in the output for deserialization
         # to work (and attr library itself doesn't provide an inverse
         # of asdict either).
+        fields = attr.fields(type(value))
         out = attr.asdict(value, recurse=False)
         out["_class"] = type(value).__name__
 
@@ -37,8 +57,20 @@ def serialize(value):
         if "_client" in out:
             del out["_client"]
 
+        del_keys = []
         for key in out.keys():
-            out[key] = serialize(out[key])
+            field = getattr(fields, key, None)
+            if default_value_match(value, field, out[key]):
+                # Do not serialize fields whose values are simply the default.
+                # This helps keep the state file terse and also allows the data
+                # to be "upgraded" as defaults change in pulplib.
+                del_keys.append(key)
+            else:
+                out[key] = serialize(out[key])
+
+        for key in del_keys:
+            del out[key]
+
         return out
 
     return value
