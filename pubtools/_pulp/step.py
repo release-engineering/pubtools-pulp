@@ -1,5 +1,6 @@
 import logging
 import threading
+import inspect
 from more_executors.futures import f_sequence, f_return
 
 LOG = logging.getLogger("pubtools.pulp")
@@ -30,7 +31,7 @@ class StepDecorator(object):
                 return args[0] if args else None
 
             logger = StepLogger(self)
-            logger.log_start(args)
+            args = logger.log_start(args)
 
             try:
                 ret = fn(instance, *args, **kwargs)
@@ -44,7 +45,7 @@ class StepDecorator(object):
                 logger.log_error()
                 raise
 
-            logger.log_return(ret)
+            ret = logger.with_logs(ret)
 
             return ret
 
@@ -84,29 +85,40 @@ class StepLogger(object):
     def log_start(self, args=None):
         input_future = as_futures(args)
 
-        def do_log():
-            with self.lock:
-                if self.log_opened:
-                    return
-                self.log_opened = True
-
-                LOG.info(
-                    "%s: started",
-                    self.step.human_name,
-                    extra={"event": {"type": "%s-start" % self.step.machine_name}},
+        if input_future:
+            # This function takes future(s) as input: then the step is
+            # only considered to start once *at least one* of the input futures
+            # has completed
+            for f in input_future:
+                f.add_done_callback(
+                    lambda f: self.do_log_start() if not f.exception() else None
                 )
+            return args
 
-        if not input_future:
-            # This function doesn't take futures as input: then it's
-            # about to start immediately
-            do_log()
-            return
+        if args and inspect.isgenerator(args[0]):
+            # This function takes a generator as input: then the step is
+            # only considered to start once the first item is yielded
+            # from that generator.
+            new_args = [self.wrap_generator_start(args[0])]
+            new_args.extend(args[1:])
+            return new_args
 
-        # This function takes future(s) as input: then the step is
-        # only considered to start once *at least one* of the input futures
-        # has completed
-        for f in input_future:
-            f.add_done_callback(lambda f: do_log() if not f.exception() else None)
+        # Boring old function with no futures or generators, then it's
+        # about to start immediately
+        self.do_log_start()
+        return args
+
+    def do_log_start(self):
+        with self.lock:
+            if self.log_opened:
+                return
+            self.log_opened = True
+
+            LOG.info(
+                "%s: started",
+                self.step.human_name,
+                extra={"event": {"type": "%s-start" % self.step.machine_name}},
+            )
 
     def log_error(self):
         self.log_start()
@@ -135,3 +147,35 @@ class StepLogger(object):
         completed.add_done_callback(
             lambda f: self.log_error() if completed.exception() else do_log()
         )
+
+    def with_logs(self, ret):
+        if inspect.isgenerator(ret):
+            return self.wrap_generator_end(ret)
+
+        self.log_return(ret)
+        return ret
+
+    def wrap_generator_start(self, gen):
+        try:
+            first_item = next(gen)
+        except StopIteration:
+            # Generator stopped without yielding anything.
+            self.do_log_start()
+            return
+
+        # Generator yielded first item, then we consider this step as 'started'.
+        self.do_log_start()
+        yield first_item
+
+        # Now pass it through as usual from this point onwards.
+        for item in gen:
+            yield item
+
+    def wrap_generator_end(self, gen):
+        try:
+            for item in gen:
+                yield item
+            self.log_return()
+        except Exception:
+            self.log_error()
+            raise

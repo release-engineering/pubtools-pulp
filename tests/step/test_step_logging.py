@@ -24,6 +24,25 @@ class FakeTask(object):
         if x != y:
             raise SimulatedError()
 
+    @step("gen out")
+    def gen_out(self, n):
+        while n > 0:
+            yield n
+            n = n - 1
+
+    @step("gen in-out")
+    def gen_in_out(self, inputs):
+        for item in inputs:
+            yield item
+        yield "last"
+
+    @step("gen weird")
+    def gen_weird(self, value=False, error=False):
+        if error:
+            raise RuntimeError("whoops")
+        if value:
+            yield value
+
     @step("future in-out")
     def future_in_out(self, f, fail=False):
         if fail:
@@ -181,3 +200,106 @@ def test_exit_fail(caplog):
         task.exit_with_code(123)
 
     assert caplog.messages == ["exit with code: started", "exit with code: failed"]
+
+
+def test_generator_logging(caplog):
+    """A typical generator logs start/stop messages appropriately."""
+
+    caplog.set_level(logging.INFO)
+
+    task = FakeTask()
+
+    # This generator is expected to produce exactly 4 items.
+    items_step1 = task.gen_out(4)
+
+    # The step above counts as immediately started when called, since it doesn't
+    # take any async type as input.
+    assert caplog.messages == ["gen out: started"]
+
+    items_step2 = task.gen_in_out(items_step1)
+
+    # gen_in_out is not immediately considered started, since the first step will
+    # not have yielded anything yet.
+    assert caplog.messages == ["gen out: started"]
+
+    # but if we iterate once...
+    next(items_step2)
+
+    # Now both steps are in progress.
+    assert caplog.messages == ["gen out: started", "gen in-out: started"]
+
+    # If we iterate enough so that the first generator is exhausted...
+    next(items_step2)
+    next(items_step2)
+    next(items_step2)
+    next(items_step2)
+
+    # Then we should see that the first step is finished, while the second is still in progress
+    assert caplog.messages == [
+        "gen out: started",
+        "gen in-out: started",
+        "gen out: finished",
+    ]
+
+    # next one more time should tell us there's nothing more...
+    try:
+        next(items_step2)
+    except StopIteration:
+        pass
+
+    # and that should mark the second step as finished too
+    assert caplog.messages == [
+        "gen out: started",
+        "gen in-out: started",
+        "gen out: finished",
+        "gen in-out: finished",
+    ]
+
+
+def test_generator_noop(caplog):
+    """A generator which returns without yielding anything logs appropriately."""
+
+    caplog.set_level(logging.INFO)
+
+    task = FakeTask()
+
+    # This generator will not produce anything.
+    items_step1 = task.gen_weird()
+    items_step2 = task.gen_in_out(items_step1)
+
+    # step 1 above counts as immediately started when called, since it doesn't
+    # take any async type as input.
+    assert caplog.messages == ["gen weird: started"]
+
+    # iterating once on the second step should mark the first step as done
+    # and second as started
+    next(items_step2)
+    assert caplog.messages == [
+        "gen weird: started",
+        "gen weird: finished",
+        "gen in-out: started",
+    ]
+
+
+def test_generator_failed(caplog):
+    """A generator which raises an exception logs appropriately."""
+
+    caplog.set_level(logging.INFO)
+
+    task = FakeTask()
+
+    # This generator will raise an exception.
+    items = task.gen_weird(error=True)
+
+    # The step above counts as immediately started when called, since it doesn't
+    # take any async type as input.
+    assert caplog.messages == ["gen weird: started"]
+
+    # it should not be possible to do even a single iteration - it should crash
+    try:
+        next(items)
+    except RuntimeError:
+        pass
+
+    # And that should mark the step as failed
+    assert caplog.messages == ["gen weird: started", "gen weird: failed"]
