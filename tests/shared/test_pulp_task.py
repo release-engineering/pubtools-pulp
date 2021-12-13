@@ -113,7 +113,7 @@ def test_pulp_throttle(monkeypatch, throttle):
     correctly promoted to pulp_client.
     """
     pulp_throttle = 7
-    monkeypatch.setenv("PULP_THROTTLE", pulp_throttle)
+    monkeypatch.setenv("PULP_THROTTLE", str(pulp_throttle))
     task = TaskWithPulpClient()
     arg = [
         "",
@@ -130,13 +130,19 @@ def test_pulp_throttle(monkeypatch, throttle):
         )
         pulp_throttle = throttle
 
-    with patch("sys.argv", arg):
+    monkeypatch.setattr(sys, "argv", arg)
+
+    with patch("pubtools._pulp.services.pulp.pulplib.Client") as mock_client:
         with patch("pubtools._pulp.task.PulpTask.run"):
             assert task.main() == 0
             assert task.args.pulp_throttle == throttle
-            assert (
-                task.pulp_client._task_executor._delegate._throttle() == pulp_throttle
-            )
+
+            # Should be able to create a pulp client
+            assert task.pulp_client
+
+            # The client should be created with the specified throttle
+            client_kwargs = mock_client.mock_calls[0].kwargs
+            assert client_kwargs["task_throttle"] == pulp_throttle
 
 
 @pytest.mark.parametrize(
