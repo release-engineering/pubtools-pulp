@@ -187,18 +187,18 @@ pubtools==1.2.1 \
     --hash=sha256:1e882d0bf622617563aa779049cf6513410b599c971240f614415142979c36a8 \
     --hash=sha256:f630cb91b437c69909bbf8a4c797d2afc9b56ad280b07d912f65e702622f6d60
     # via pubtools-pulplib
-pubtools-pulplib==2.18.0 \
-    --hash=sha256:10f94d07d14911a30b83286cfcfbfbc262ae059c3e6193577b8247c76ff8a615 \
-    --hash=sha256:47bdf8aa7c837da64e6bb418eab2e8a1c0616bdb45dc57b7170b89dc9fb86879
+pubtools-pulplib==2.20.0 \
+    --hash=sha256:1c7eb3c2ae8a86b9cb754ffa4a09dedbada973bc7c056014fbd3b9b933e1e370 \
+    --hash=sha256:44871ec54c2d3765b2d474fd0acecc887f7f3b21ae644f5834b046efb92efc1f
     # via -r requirements.in
 pushcollector==1.2.0 \
     --hash=sha256:cd53036c7880957577bc9a2a3b1431e81a5aea10f4b4cbcbf98c3ee40c6f2ea3
     # via
     #   -r requirements.in
     #   pushsource
-pushsource==2.13.2 \
-    --hash=sha256:05a3b3865b47121fff7800a1a0d24486d63781280e72ccabb9f192af045d90d8 \
-    --hash=sha256:c7898b1c0d8098f05228fc9b789580654e4d101382463565b14b8d4da716ec5a
+pushsource==2.13.3 \
+    --hash=sha256:24a34b782f26d03961189a98f31235dabb0a40167151aa1b1c2f0afdc97a87c3 \
+    --hash=sha256:7f57229e4a850b195d8e502357fa580bfa79965b5b60bd18f6709e36af2c5cab
     # via -r requirements.in
 pyasn1==0.4.8 \
     --hash=sha256:39c7e2ec30515947ff4e87fb6f456dfc6e84857d34be479c9d4a4ba4bf46aa5d \
