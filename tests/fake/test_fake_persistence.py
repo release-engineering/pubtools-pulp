@@ -8,8 +8,8 @@ from pubtools._pulp.services.fakepulp import new_fake_client
 
 def test_state_persisted(tmpdir, data_path):
     """Fake client automatically saves/loads state across tasks."""
-    state_path1 = str(tmpdir.join("pulpfake.yaml"))
-    state_path2 = str(tmpdir.join("pulpfake-other.yaml"))
+    state_path1 = str(tmpdir.join("state/pulpfake.yaml"))
+    state_path2 = str(tmpdir.join("state/pulpfake-other.yaml"))
 
     module_file = os.path.join(data_path, "sample-modules.yaml")
 
