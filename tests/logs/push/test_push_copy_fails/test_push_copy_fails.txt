@@ -7,7 +7,7 @@
 [    INFO] Doing Pulp search: ((content_type_id IN ['iso']) AND (sha256sum=='db68c8a70f8383de71c107dca5fcfe53b1132186d1a6681d9ee3f4eea724fabb' AND path=='some-file'))
 [    INFO] Upload items to Pulp: started
 [    INFO] Query items in Pulp: finished
-[    INFO] Upload: 1 item(s) already present, 0 uploading
+[    INFO] Upload items: 1 already present, 0 uploading
 [    INFO] Update items in Pulp: started
 [    INFO] Upload items to Pulp: finished
 [    INFO] Update: 1 item(s) already up-to-date, 0 updating

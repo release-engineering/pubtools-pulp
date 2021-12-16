@@ -76,7 +76,15 @@ class Push(
 
         self.add_publisher_args(self.parser)
 
-        # TODO: --skip
+        self.parser.add_argument(
+            "--pre-push",
+            action="store_true",
+            help=(
+                "Pre-push mode: do as much as possible without making content "
+                "available to end-users, then stop. May be used to improve the "
+                "performance of a subsequent full push."
+            ),
+        )
 
         self.parser.add_argument(
             "--source", action="append", help="Source(s) of content to be pushed"
@@ -155,6 +163,7 @@ class Push(
 
         uploaded = []
         needs_upload = []
+        prepush_skipped = []
 
         upload_context = {}
 
@@ -162,6 +171,9 @@ class Push(
             if item.pulp_state in [State.IN_REPOS, State.PARTIAL, State.NEEDS_UPDATE]:
                 # This item is already in Pulp.
                 uploaded.append(item)
+            elif self.args.pre_push and not item.can_pre_push:
+                # We're doing a pre-push, but this item doesn't support that.
+                prepush_skipped.append(item)
             else:
                 # This item is not in Pulp, or otherwise needs a reupload.
                 item_type = type(item)
@@ -174,14 +186,24 @@ class Push(
 
                 needs_upload.append(item.ensure_uploaded(ctx))
 
-        LOG.info(
-            "Upload: %s item(s) already present, %s uploading",
-            len(uploaded),
-            len(needs_upload),
-        )
+        event = {
+            "type": "uploading-pulp",
+            "items-present": len(uploaded),
+            "items-uploading": len(needs_upload),
+        }
+        messages = [
+            "%s already present" % len(uploaded),
+            "%s uploading" % len(needs_upload),
+        ]
 
-        # Anything already in the system can be immediately yielded.
-        for item in uploaded:
+        if self.args.pre_push:
+            messages.append("%s skipped during pre-push" % len(prepush_skipped))
+            event["items-prepush-skipped"] = len(prepush_skipped)
+
+        LOG.info("Upload items: %s", ", ".join(messages), extra={"event": event})
+
+        # Anything already in the system or being skipped can be immediately yielded.
+        for item in uploaded + prepush_skipped:
             assert item
             yield item
 
@@ -332,6 +354,26 @@ class Push(
             assert item
             yield item
 
+    def end_pre_push(self, items):
+        """Called at end of push in pre-push mode to drain items and log."""
+
+        count_prepush = 0
+        count_other = 0
+
+        for item in items:
+            if item.pulp_state in (State.NEEDS_UPDATE, State.PARTIAL, State.IN_REPOS):
+                # These are the states which mean that the item's content is in Pulp,
+                # which is the extent of what prepush can do.
+                count_prepush += 1
+            else:
+                count_other += 1
+
+        LOG.info(
+            "Ending pre-push. Items in pulp: %s, pending: %s",
+            count_prepush,
+            count_other,
+        )
+
     def run(self):
         # Push workflow.
         #
@@ -355,8 +397,12 @@ class Push(
         # Ensure all items are uploaded to Pulp. This uploads bytes into Pulp
         # but does not guarantee the items are present in each of the desired
         # destination repos.
-        # TODO: pre-push or 'nochannel' support.
         items = self.uploaded_items(items)
+
+        # If we are in pre-push mode then we do not go any further, we just wait
+        # for all previous steps, then log a message and exit.
+        if self.args.pre_push:
+            return self.end_pre_push(items)
 
         # Ensure all items are up-to-date in Pulp. This adjusts any mutable fields
         # whose current value doesn't match the desired value.
@@ -375,7 +421,6 @@ class Push(
         items = list(items)
 
         # Ensure all the uploaded items are present in all the target repos.
-        # TODO: pre-push or 'nochannel' support should avoid doing this.
         items = self.associated_items(items)
 
         # It is now the case that all items exist with the desired state, in the

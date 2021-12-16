@@ -5,9 +5,5 @@
 {"event": {"type": "calculate-checksums-end"}}
 {"event": {"type": "upload-items-to-pulp-start"}}
 {"event": {"type": "query-items-in-pulp-end"}}
-{"event": {"items-present": 1, "items-uploading": 0, "type": "uploading-pulp"}}
-{"event": {"type": "update-items-in-pulp-start"}}
+{"event": {"items-prepush-skipped": 9, "items-present": 0, "items-uploading": 2, "type": "uploading-pulp"}}
 {"event": {"type": "upload-items-to-pulp-end"}}
-{"event": {"type": "update-items-in-pulp-end"}}
-{"event": {"type": "associate-items-in-pulp-start"}}
-{"event": {"type": "associate-items-in-pulp-error"}}
