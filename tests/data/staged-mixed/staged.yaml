@@ -1,0 +1,27 @@
+header:
+    version: "0.2"
+
+payload:
+    files:
+
+    # straightforward example
+    - filename: test.txt
+      relative_path: iso-dest1/ISOS/test.txt
+      sha256sum: d8301c5f72f16455dbc300f3d1bef8972424255caad103cc6c7ba7dc92d90ca8
+
+    # example where dest filename does not match filename under staging area
+    # (this is not a problem)
+    - filename: some-file.txt
+      relative_path: iso-dest2/FILES/some-file
+      sha256sum: 315f5bdb76d078c43b8ac0064e4a0164612b1fce77c869345bfc94c75894edd3
+      version: 1.2.3
+      attributes:
+        # empty description is odd, but accepted
+        description: ""
+
+    # a file with some attributes
+    - filename: some-iso
+      relative_path: iso-dest2/ISOS/some-iso
+      sha256sum: db68c8a70f8383de71c107dca5fcfe53b1132186d1a6681d9ee3f4eea724fabb
+      attributes:
+        description: My wonderful ISO

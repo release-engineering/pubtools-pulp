@@ -1,0 +1,164 @@
+{
+  "type": "security",
+  "release": "0",
+  "status": "final",
+  "pushcount": 3,
+  "reboot_suggested": false,
+  "references": [
+    {
+      "href": "https://access.redhat.com/errata/RHSA-2020:0509",
+      "type": "self",
+      "id": null,
+      "title": null
+    },
+    {
+      "href": "https://bugzilla.redhat.com/show_bug.cgi?id=1796944",
+      "type": "bugzilla",
+      "title": "CVE-2019-18634 sudo: Stack based buffer overflow when pwfeedback is enabled",
+      "id": "1796944"
+    },
+    {
+      "href": "https://www.redhat.com/security/data/cve/CVE-2019-18634.html",
+      "type": "cve",
+      "id": "CVE-2019-18634",
+      "title": "CVE-2019-18634"
+    },
+    {
+      "href": "https://access.redhat.com/security/updates/classification/#important",
+      "type": "other",
+      "id": "classification",
+      "title": "important"
+    }
+  ],
+  "pkglist": [
+    {
+      "name": "RHSA-2020:0509",
+      "packages": [
+        {
+          "name": "sudo",
+          "version": "1.8.25p1",
+          "release": "4.el8_0.3",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "sudo-1.8.25p1-4.el8_0.3.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "0d56f302617696d3511e71e1669e62c0",
+            "sha256",
+            "31c4f73af90c6d267cc5281c59e4a93ae3557b2253d9a8e3fef55f3cafca6e54"
+          ],
+          "src": "sudo-1.8.25p1-4.el8_0.3.src.rpm"
+        },
+        {
+          "name": "sudo",
+          "version": "1.8.25p1",
+          "release": "4.el8_0.3",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "sudo-1.8.25p1-4.el8_0.3.src.rpm",
+          "sum": [
+            "md5",
+            "f94ab3724b498e3faeab643fe2a67c9c",
+            "sha256",
+            "10d7724302a60d0d2ca890fc7834b8143df55ba1ce0176469ea634ac4ab7aa28"
+          ],
+          "src": "sudo-1.8.25p1-4.el8_0.3.src.rpm"
+        },
+        {
+          "name": "sudo",
+          "version": "1.8.25p1",
+          "release": "4.el8_0.3",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "sudo-1.8.25p1-4.el8_0.3.x86_64.rpm",
+          "sum": [
+            "md5",
+            "25e9470c4fe96034fe1d7525c04b5d8e",
+            "sha256",
+            "593f872c1869f7beb963c8df2945fc691a1d999945c8c45c6bc7e02731fa016f"
+          ],
+          "src": "sudo-1.8.25p1-4.el8_0.3.src.rpm"
+        },
+        {
+          "name": "sudo-debuginfo",
+          "version": "1.8.25p1",
+          "release": "4.el8_0.3",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "sudo-debuginfo-1.8.25p1-4.el8_0.3.ppc64le.rpm",
+          "reboot_suggested": false,
+          "sum": [
+            "md5",
+            "e242826fb38f487502cdc1f1a06991d2",
+            "sha256",
+            "04db0c39efb31518ff79bf98d1c27256d46cdc72b967a5b2094a6efec3166df2"
+          ],
+          "src": "sudo-1.8.25p1-4.el8_0.3.src.rpm"
+        },
+        {
+          "name": "sudo-debuginfo",
+          "version": "1.8.25p1",
+          "release": "4.el8_0.3",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "sudo-debuginfo-1.8.25p1-4.el8_0.3.x86_64.rpm",
+          "sum": [
+            "md5",
+            "91126f02975c06015880d6ea99cb2760",
+            "sha256",
+            "1b7d3a7613236ffea7c4553eb9dea69fc19557005ac3a059d7e83efc08c5b754"
+          ],
+          "src": "sudo-1.8.25p1-4.el8_0.3.src.rpm"
+        },
+        {
+          "name": "sudo-debugsource",
+          "version": "1.8.25p1",
+          "release": "4.el8_0.3",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "sudo-debugsource-1.8.25p1-4.el8_0.3.ppc64le.rpm",
+          "reboot_suggested": true,
+          "sum": [
+            "md5",
+            "d6da7e2e3d9efe050fef2e8d047682be",
+            "sha256",
+            "355cbb9dc348b17782cff57120391685d6a1f6884facc54fac4b7fb54abeffba"
+          ],
+          "src": "sudo-1.8.25p1-4.el8_0.3.src.rpm"
+        },
+        {
+          "name": "sudo-debugsource",
+          "version": "1.8.25p1",
+          "release": "4.el8_0.3",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "sudo-debugsource-1.8.25p1-4.el8_0.3.x86_64.rpm",
+          "sum": [
+            "md5",
+            "6b0967941c0caf626c073dc7da0272b6",
+            "sha256",
+            "43e318fa49e4df685ea0d5f0925a00a336236b2e20f27f9365c39a48102c2cf6"
+          ],
+          "src": "sudo-1.8.25p1-4.el8_0.3.src.rpm"
+        }
+      ],
+      "short": ""
+    }
+  ],
+  "from": "release-engineering@redhat.com",
+  "rights": "Copyright 2020 Red Hat Inc",
+  "id": "RHSA-2020:0509",
+  "title": "Important: sudo security update",
+  "description": "The sudo packages contain the sudo utility which allows system administrators to provide certain users with the permission to execute privileged commands, which are used for system management purposes, without having to log in as root.\n\nSecurity Fix(es):\n\n* sudo: Stack based buffer overflow when pwfeedback is enabled (CVE-2019-18634)\n\nFor more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.",
+  "version": "3",
+  "updated": "2020-02-13 19:00:11 UTC",
+  "issued": "2020-02-13 19:00:11 UTC",
+  "severity": "Important",
+  "summary": "An update for sudo is now available for Red Hat Enterprise Linux 8.0 Update Services for SAP Solutions.\n\nRed Hat Product Security has rated this update as having a security impact of Important. A Common Vulnerability Scoring System (CVSS) base score, which gives a detailed severity rating, is available for each vulnerability from the CVE link(s) in the References section.",
+  "solution": "For details on how to apply this update, which includes the changes described in this advisory, refer to:\n\nhttps://access.redhat.com/articles/11258",
+  "pulp_user_metadata": {
+    "content_types": [
+      "rpm"
+    ]
+  }
+}

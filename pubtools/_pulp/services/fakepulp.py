@@ -159,7 +159,10 @@ class PersistentFake(object):
 
         all_units = list(self.ctrl.client.search_content())
         serialized["units"] = serialize(all_units)
-        serialized["units"].sort(key=repr)
+
+        # This sort key is a bit expensive since it means we essentially do yaml dump
+        # twice. On the plus side it ensures a stable order across py2 and py3.
+        serialized["units"].sort(key=lambda x: yaml.dump(x, Dumper=yaml.SafeDumper))
 
         path = self.state_path
 

@@ -4,6 +4,7 @@ import os
 import requests_mock
 import pytest
 
+from pushsource import Source
 from pushcollector import Collector
 
 from .command import CommandTester
@@ -20,6 +21,17 @@ def save_argv():
     orig_argv = sys.argv[:]
     yield
     sys.argv[:] = orig_argv
+
+
+@pytest.fixture(autouse=True)
+def pushsource_reset():
+    """Resets pushsource library after each test.
+
+    Allows tests to adjust pushsource backends without interfering
+    with each other.
+    """
+    yield
+    Source.reset()
 
 
 @pytest.fixture(autouse=True)
@@ -73,8 +85,8 @@ def data_path():
 
 
 @pytest.fixture
-def command_tester(request, caplog):
+def command_tester(request, tmpdir, caplog):
     """Yields a configured instance of CommandTester class for
     running commands and testing output against expected.
     """
-    yield CommandTester(request.node, caplog)
+    yield CommandTester(request.node, tmpdir, caplog)

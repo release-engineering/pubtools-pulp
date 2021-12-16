@@ -6,6 +6,8 @@
 [    INFO] Flush CDN cache: started
 [    INFO] CDN cache flush is not enabled.
 [    INFO] Flush CDN cache: finished
+[    INFO] Set cdn_published: started
+[    INFO] Set cdn_published: finished
 [    INFO] Flush UD cache: started
 [    INFO] UD cache flush is not enabled.
 [    INFO] Flush UD cache: finished

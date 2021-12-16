@@ -11,6 +11,7 @@ import pytest
         "pubtools._pulp.tasks.set_maintenance.set_maintenance_on",
         "pubtools._pulp.tasks.set_maintenance.set_maintenance_off",
         "pubtools._pulp.tasks.publish",
+        "pubtools._pulp.tasks.push",
     ]
 )
 def task_module(request):

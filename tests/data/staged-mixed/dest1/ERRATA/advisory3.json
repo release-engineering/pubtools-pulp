@@ -1,0 +1,3547 @@
+{
+  "type": "bugfix",
+  "release": "0",
+  "status": "final",
+  "pushcount": "5",
+  "reboot_suggested": false,
+  "references": [
+    {
+      "href": "https://access.redhat.com/errata/RHBA-2019:3384",
+      "type": "self",
+      "id": "RHBA-2019:3384",
+      "title": "RHBA-2019:3384"
+    },
+    {
+      "href": "https://bugzilla.redhat.com/show_bug.cgi?id=1719647",
+      "type": "bugzilla",
+      "title": "rdoc gzipped javascript pages are not the same across multilib",
+      "id": "1719647"
+    },
+    {
+      "href": "https://access.redhat.com/security/cve/CVE-2019-8320",
+      "type": "cve",
+      "id": "CVE-2019-8320",
+      "title": "CVE-2019-8320"
+    },
+    {
+      "href": "https://access.redhat.com/security/cve/CVE-2019-8321",
+      "type": "cve",
+      "id": "CVE-2019-8321",
+      "title": "CVE-2019-8321"
+    },
+    {
+      "href": "https://access.redhat.com/security/cve/CVE-2019-8322",
+      "type": "cve",
+      "id": "CVE-2019-8322",
+      "title": "CVE-2019-8322"
+    },
+    {
+      "href": "https://access.redhat.com/security/cve/CVE-2019-8323",
+      "type": "cve",
+      "id": "CVE-2019-8323",
+      "title": "CVE-2019-8323"
+    },
+    {
+      "href": "https://access.redhat.com/security/cve/CVE-2019-8325",
+      "type": "cve",
+      "id": "CVE-2019-8325",
+      "title": "CVE-2019-8325"
+    },
+    {
+      "href": "https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/8.1_release_notes/",
+      "type": "other",
+      "id": "ref_0",
+      "title": "other_reference_0"
+    }
+  ],
+  "pkglist": [
+    {
+      "name": "RHBA-2019:3384-ruby-2.5-cdc1202b-x86_64",
+      "packages": [
+        {
+          "name": "ruby",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "i686",
+          "filename": "ruby-2.5.5-105.module+el8.1.0+3656+f80bfa1d.i686.rpm",
+          "sum": [
+            "md5",
+            "6ea7b135735c83cfc5ee67b8b233fc04",
+            "sha256",
+            "e7abfc09ed5e095bac1a62cf11c24211ec950079a84944d0dfcd0a854a163363"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "ruby-2.5.5-105.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "026b049a21504fc773244164a2d0ff12",
+            "sha256",
+            "2edef90b7b9cf7222d932258d8978e4c7c41bf6eeffdfd5032b01d02e6d50e6d"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "ruby-2.5.5-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "50f28ca87e0aa5a3c2960ce1187ed698",
+            "sha256",
+            "ff5ed92f8e6b898d9edabc8545787a51c67848ae5ae9f611011327c442914230"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-debuginfo",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "i686",
+          "filename": "ruby-debuginfo-2.5.5-105.module+el8.1.0+3656+f80bfa1d.i686.rpm",
+          "sum": [
+            "md5",
+            "f12ec92f06ea542b4c1c8b60df75c4c2",
+            "sha256",
+            "71aae7bdceb18c1409557dc4c777fa9c9b8728cafbb4b4f091ac0f01fc02054f"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-debuginfo",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "ruby-debuginfo-2.5.5-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "611cc3d7943d1b11755c9ed19b4df6d0",
+            "sha256",
+            "93f8f14e52d7ffb788f49bbbf78c7d7e71d7d429164a3361cb7f67679c6c2b1b"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-debugsource",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "i686",
+          "filename": "ruby-debugsource-2.5.5-105.module+el8.1.0+3656+f80bfa1d.i686.rpm",
+          "sum": [
+            "md5",
+            "43fa0635c6d3bd0f1d3e6373f4df7f9a",
+            "sha256",
+            "f0bbbc2a1722cf0563e8bf33b1c98386e3252af41d761976a131ea145793d297"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-debugsource",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "ruby-debugsource-2.5.5-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "3a1982b8b41a64ee71cb9b02fbb83cd4",
+            "sha256",
+            "ef0034ff4df7f5055212beec0fe9b5fd7bec36ce1a6ffc51950431797f8dd645"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-devel",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "i686",
+          "filename": "ruby-devel-2.5.5-105.module+el8.1.0+3656+f80bfa1d.i686.rpm",
+          "sum": [
+            "md5",
+            "82097d4550e67c853adf15722b082025",
+            "sha256",
+            "af024076ea2c878f89f6d77c7bf3abe5e23a8c9410b401533fe1897cad8af355"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-devel",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "ruby-devel-2.5.5-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "26ed8b41246e0a50ade8b3ea948b7e9b",
+            "sha256",
+            "899e3d8b4b3f4b75e77ae9302c999da3b4d37c97ad7fcce8d0f95b077ccffa77"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-doc",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "ruby-doc-2.5.5-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "4542696784ee298fdbe88e6159a46a80",
+            "sha256",
+            "c543f6373a753dde041cc6a6e649e16ec7d4b4260b5b06f6aa62cb3ff5d9c720"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-irb",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "ruby-irb-2.5.5-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "5611cb614525baf20774849e9019c25e",
+            "sha256",
+            "9d6c163678783908a6a6488cc9277a54aba730d93489b0c55294d8ec48606507"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-libs",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "i686",
+          "filename": "ruby-libs-2.5.5-105.module+el8.1.0+3656+f80bfa1d.i686.rpm",
+          "sum": [
+            "md5",
+            "39f9a7c6ae7e9ea03982a9ed6b8eaf2f",
+            "sha256",
+            "eea665a635ae9d41a814b0cca431ff7167da7d5223021400e7c5ae4923e2337d"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-libs",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "ruby-libs-2.5.5-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "ebd4240d00b2c57481862570d641e89d",
+            "sha256",
+            "d12e3dd0fd2a02794538ce4c2c602bd989c52d3d10b7b1cd1adeaa8a1e602ba6"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-libs-debuginfo",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "i686",
+          "filename": "ruby-libs-debuginfo-2.5.5-105.module+el8.1.0+3656+f80bfa1d.i686.rpm",
+          "sum": [
+            "md5",
+            "9ad9009513f75a30b9d98777c2b36341",
+            "sha256",
+            "04fbb31e929b6e9fe1b55a6ad3f61617a53d7f8b926d92f513835ebbfe8eed0a"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-libs-debuginfo",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "ruby-libs-debuginfo-2.5.5-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "1d1a4138cfd8d6e9d3fbd9e772c88622",
+            "sha256",
+            "e0ff098501b1f19d228b7ec071a50a5ecfb393fb8df88f9c1d780c3714e7e320"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-abrt",
+          "version": "0.3.0",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-abrt-0.3.0-4.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "02ddde5ae4c9f4d7563cfd21f13d2a88",
+            "sha256",
+            "2579312600c5f242ff8edbf3b44b3d444962429ad40c17a28ce16500c798d860"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-abrt",
+          "version": "0.3.0",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-abrt-0.3.0-4.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "42a0e559c2bfc475d454cd406ab50331",
+            "sha256",
+            "d92c862b65872af7f701367225dc4c9ea799161e19594a7fbc6fa0e19bd2e667"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-abrt-doc",
+          "version": "0.3.0",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-abrt-doc-0.3.0-4.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "7d714a33d672aaf9b8d975f446bdc5bd",
+            "sha256",
+            "4526c3514005042da89bd0884d0404b154ffba64b54112453269e4369b741d4c"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bigdecimal",
+          "version": "1.3.4",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "i686",
+          "filename": "rubygem-bigdecimal-1.3.4-105.module+el8.1.0+3656+f80bfa1d.i686.rpm",
+          "sum": [
+            "md5",
+            "90199a0c925bbd2a4f17b75dfb9579a6",
+            "sha256",
+            "0296fd2138dca7d44a46a6a34bc8bff528cacd3d331527efacd837654beb560e"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bigdecimal",
+          "version": "1.3.4",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-bigdecimal-1.3.4-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "dab893b351883a5c06553b96c5e8cbcd",
+            "sha256",
+            "26cadb76e788f8623565ffadcf9ee7fcb18b73aabdf6d15bc935c88a980ceeb3"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bigdecimal-debuginfo",
+          "version": "1.3.4",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "i686",
+          "filename": "rubygem-bigdecimal-debuginfo-1.3.4-105.module+el8.1.0+3656+f80bfa1d.i686.rpm",
+          "sum": [
+            "md5",
+            "5fc5966d3d10eb8c0261df39a3d8912d",
+            "sha256",
+            "495eb666be85a5a9b6e9aeeacb2b88c4a54da89836e83044a9046a5232298388"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bigdecimal-debuginfo",
+          "version": "1.3.4",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-bigdecimal-debuginfo-1.3.4-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "e92bfa7c39869c908c64a9b9bd410b6d",
+            "sha256",
+            "3242937b814a5805b524f6817730130e7ee724bde595a7b494ea36f4c4f09bc5"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-bson-4.3.0-2.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "aa443b78952f171bd930d7f2866a8bd0",
+            "sha256",
+            "8abe79db0675e5019fbdffd7aef41e9f09810aa30671c445b75dcce54028661a"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-bson-4.3.0-2.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "af1875082d95142e8d49315e6e365641",
+            "sha256",
+            "4f76f2ea9dc8fffd76a17f020d4bb59ce78adf103f54e6b915f42ae2ff7cb9e4"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson-debuginfo",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-bson-debuginfo-4.3.0-2.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "5ed8dc66d8bf597f510a2b37bb5c251b",
+            "sha256",
+            "d0f9f0a8ba5d97919ab1db49ea0414cb20a11abbcf11e6bd006d7b447230248a"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson-debugsource",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-bson-debugsource-4.3.0-2.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "67d58c76e617700ab76c7b029846d816",
+            "sha256",
+            "d217b074bb416f3896a467c860e3c1bba0308eb5a31b2fb10d07e1161e18a928"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson-doc",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-bson-doc-4.3.0-2.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "d5e07d87425397c127e32cda38937ec9",
+            "sha256",
+            "9e2077a81214adffe1f0df18008e65f1ff10c65d61a11ef221b4ee2c94d4d842"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bundler",
+          "version": "1.16.1",
+          "release": "3.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-bundler-1.16.1-3.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "adef4b585f2875cea6515a94bf8be2ba",
+            "sha256",
+            "fe344ebaa7887d3dc3695b8a5322f8507715d381ea265a7cf737960023471b06"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bundler",
+          "version": "1.16.1",
+          "release": "3.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-bundler-1.16.1-3.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "255642638b99991609b390a955768b2a",
+            "sha256",
+            "32d5ee895ade306fd17a05184b728246cf423c093eeb27d9201f35b3e3c051b4"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bundler-doc",
+          "version": "1.16.1",
+          "release": "3.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-bundler-doc-1.16.1-3.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "b089a978e86c3dbfcc97ca1ba56e4d5e",
+            "sha256",
+            "d507c993e4b5b576ac7a696b129a5236c08f23dc45ea5a6e37b105744831be08"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-did_you_mean",
+          "version": "1.2.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-did_you_mean-1.2.0-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "11562927ab8bd761f5777fb251954631",
+            "sha256",
+            "bb5bd5973be8aa064e1f7d692ec80b89b5668f7723ddcd08f29bd6e7896a63e3"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-io-console",
+          "version": "0.4.6",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "i686",
+          "filename": "rubygem-io-console-0.4.6-105.module+el8.1.0+3656+f80bfa1d.i686.rpm",
+          "sum": [
+            "md5",
+            "7ca9a667aef9a7c28eb6fbdd2fc7825f",
+            "sha256",
+            "fe476371802dfd6098702711f39c2bd8a90864c993b9ee8f5fd288fd928b450b"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-io-console",
+          "version": "0.4.6",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-io-console-0.4.6-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "817f98fdd41c65aab5d57f6b820b5ac0",
+            "sha256",
+            "3fe779e446d0b4b573fe1d6e973c495e6cd084b26cdae62789ed9e70780763a1"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-io-console-debuginfo",
+          "version": "0.4.6",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "i686",
+          "filename": "rubygem-io-console-debuginfo-0.4.6-105.module+el8.1.0+3656+f80bfa1d.i686.rpm",
+          "sum": [
+            "md5",
+            "25ff2e568116386f067c9307b0cfc6a0",
+            "sha256",
+            "b4d7a313aac08fd856bf178908f2476b4c9f050036f8848bb6ff3f619f155f2c"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-io-console-debuginfo",
+          "version": "0.4.6",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-io-console-debuginfo-0.4.6-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "1a73d3afd89687e69093f5abab29f568",
+            "sha256",
+            "4676dbcacee5973adef9fea91ba557518e7a26123eadbc56a8811205b5fa44b9"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-json",
+          "version": "2.1.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "i686",
+          "filename": "rubygem-json-2.1.0-105.module+el8.1.0+3656+f80bfa1d.i686.rpm",
+          "sum": [
+            "md5",
+            "401274eeeffbe6df5b724b0a63bf8a74",
+            "sha256",
+            "05b55ea132bec6490519e21ac0850934b430dee7d534678195d82c2e88062a42"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-json",
+          "version": "2.1.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-json-2.1.0-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "94ede442c53e74597806bf4efdb78482",
+            "sha256",
+            "a3863d120dcfffc46deebcdc8e2926caa7ef6a42933ac72c9d7f8953a279ff7f"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-json-debuginfo",
+          "version": "2.1.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "i686",
+          "filename": "rubygem-json-debuginfo-2.1.0-105.module+el8.1.0+3656+f80bfa1d.i686.rpm",
+          "sum": [
+            "md5",
+            "d4f778382b40bab1dedb3295146ba1af",
+            "sha256",
+            "d77c4dca9713d21119a8368a04e7bc513bbb84eda48653f6f7e831cb6e6d9546"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-json-debuginfo",
+          "version": "2.1.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-json-debuginfo-2.1.0-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "4ffb35bed61b3f6c64f9477304659f53",
+            "sha256",
+            "82ba87ebc5ef0c18b4de252e606ecb890658c276b839284077129a70c3d02346"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-minitest",
+          "version": "5.10.3",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-minitest-5.10.3-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "93df8b3a09f80f449f5c0bd7792de82c",
+            "sha256",
+            "fdb2f2c36da88d7e4b493f248f092e561059a5a53764d3534961006e42b6b063"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mongo",
+          "version": "2.5.1",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "849ed5b828db0f37a1c2edff58eeb363",
+            "sha256",
+            "9b5c365e81f801d82f196b89b60184d6135ecd163611738cc07a8f75f1a9b466"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mongo",
+          "version": "2.5.1",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "1561038e7132203944c9ca13d0617d65",
+            "sha256",
+            "5b8d89427998167d5c2f9e7a546f7c5dde349f97463935bf40e06130e5383b63"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mongo-doc",
+          "version": "2.5.1",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-mongo-doc-2.5.1-2.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "fa4a10ebdb5b964a2d10019b148981e9",
+            "sha256",
+            "cba0a8b1b342a3a11801c21a9c403b4c028a290cf45c1589b16a191c7e8ba90f"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-mysql2-0.4.10-4.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "9e1cd68b55f6e11efe9967dda1f958ae",
+            "sha256",
+            "7bd7206950c3bdbd8c81073410e7912f0dc35fc319fb2ee084786e446056587a"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-mysql2-0.4.10-4.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "da899b92a6a31fb9c1e3d9a91594b24c",
+            "sha256",
+            "a43c894e595f14bdabe42cbc68bdfe3e6a3c63dba941d5b0fcd65f143454d36f"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2-debuginfo",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-mysql2-debuginfo-0.4.10-4.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "46578c87838234d89b0dce425e1bb4ef",
+            "sha256",
+            "e5cf33cab75e90626c7fd72e7e61aa0394111bc2938e2c00b5c30dc44405e80b"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2-debugsource",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-mysql2-debugsource-0.4.10-4.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "353b7f8951e98569bee69068d0f0539b",
+            "sha256",
+            "aef4d0858f00f3a9c9fc606d8d1c4ebfc5fd20668f0614f86cb17a6defa54bc7"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2-doc",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-mysql2-doc-0.4.10-4.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "b58e5ec1fb18490197d60834e5709e80",
+            "sha256",
+            "1d25f8d911a95b4abc5649e738ef1bd649ecf60f1d7fca5f444ec154765620d3"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-net-telnet",
+          "version": "0.1.1",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-net-telnet-0.1.1-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "b2375afcc76507d6feccf12ff75fc49a",
+            "sha256",
+            "e28f21a6f4f141d65cc8bff6e40f179cec29d77ba0e7b7c01943dc23b68d1751"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-openssl",
+          "version": "2.1.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "i686",
+          "filename": "rubygem-openssl-2.1.2-105.module+el8.1.0+3656+f80bfa1d.i686.rpm",
+          "sum": [
+            "md5",
+            "2d6230ce976309ffe28fe3de7cd37be5",
+            "sha256",
+            "d1ce7a54b04c16e0919c13e3514f1d6d612202770f9a870cd58d1ed5ae9d40fe"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-openssl",
+          "version": "2.1.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-openssl-2.1.2-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "c268eb6b8043fed9c26a62943ed851e1",
+            "sha256",
+            "4b725842d8bc92de9670a88313dfde2e74b79adf38ce68f863322aca71875135"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-openssl-debuginfo",
+          "version": "2.1.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "i686",
+          "filename": "rubygem-openssl-debuginfo-2.1.2-105.module+el8.1.0+3656+f80bfa1d.i686.rpm",
+          "sum": [
+            "md5",
+            "72e269cb6dc32298b2a10f5d5cbbb1ce",
+            "sha256",
+            "1055328187cc6a8c0be2ed64a9013dc8ee206ed1291583164eeb4286ab10ff2e"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-openssl-debuginfo",
+          "version": "2.1.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-openssl-debuginfo-2.1.2-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "9dfdf5c8a965af84d52477689d7e6b3f",
+            "sha256",
+            "6f933d143008375cccdeb997a5ec0dddb011d7407719a8503d7c9098a9ef7328"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-pg-1.0.0-2.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "a9bdc2dd5d271638750c1293a875ad77",
+            "sha256",
+            "5e71aa5e93b054478e1f399862d6c8030cd459fe8ff8f5369d5660779efded04"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-pg-1.0.0-2.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "b110a58564378a7f743e2a840ff810df",
+            "sha256",
+            "9020df03432cbbb21021b493d7d73aae008b67254bfc46757a4188c4aa089b53"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg-debuginfo",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-pg-debuginfo-1.0.0-2.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "d18ec9dbe35400c54f198de76d8d1b47",
+            "sha256",
+            "eff0c0ca7f5035bf070ecc7e08e03cfdba3febc340f5e75c0f790eb8dc98fb58"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg-debugsource",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-pg-debugsource-1.0.0-2.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "4e5b1910e4e332a4f716cec457e95ece",
+            "sha256",
+            "68bbc19cffeb612e1fe7a38b07037748364dbed3a2507d8734e8daf9556f7924"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg-doc",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-pg-doc-1.0.0-2.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "6a578f72ba96eca4938404a8449b5f16",
+            "sha256",
+            "9a74af094119652d9ff29127d9aadd9b67a46feb0a0c3102687d43b638a53dce"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-power_assert",
+          "version": "1.1.1",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-power_assert-1.1.1-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "e87bc67208ce3eb03d3abc054017598b",
+            "sha256",
+            "e907b442294a0f7e84cc8e5ac60839c702bae4ad198c208b2870eb0aa35864d1"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-psych",
+          "version": "3.0.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "i686",
+          "filename": "rubygem-psych-3.0.2-105.module+el8.1.0+3656+f80bfa1d.i686.rpm",
+          "sum": [
+            "md5",
+            "29c9f5bf54ac9e37d7f20f6157027fc0",
+            "sha256",
+            "b3761ea9ead6825f5f15dc19996fd72a641527ddc6d4d3de19df5af88760db78"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-psych",
+          "version": "3.0.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-psych-3.0.2-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "f7fd206526a8c954ca8b8b985159f374",
+            "sha256",
+            "0058549549f342904d3f0d1069f3e2080d4e9e1c5c97072a15f2cd05eb1b71ff"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-psych-debuginfo",
+          "version": "3.0.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "i686",
+          "filename": "rubygem-psych-debuginfo-3.0.2-105.module+el8.1.0+3656+f80bfa1d.i686.rpm",
+          "sum": [
+            "md5",
+            "81d43f217b3c2cbe091815d3834f4cb2",
+            "sha256",
+            "b61f25e9db8b2c100355681cb5269b347d5a59d534f50c0105f82a76701ae389"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-psych-debuginfo",
+          "version": "3.0.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "x86_64",
+          "filename": "rubygem-psych-debuginfo-3.0.2-105.module+el8.1.0+3656+f80bfa1d.x86_64.rpm",
+          "sum": [
+            "md5",
+            "d2fa625199732ee002934cd24f3fa62b",
+            "sha256",
+            "b02ea0e2035611368fc1555675de9d8c278211f84b7e6c643aadbd7684b8d442"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-rake",
+          "version": "12.3.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-rake-12.3.0-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "0d536baf5e34db662ccfea564913a30d",
+            "sha256",
+            "36c8e13add7dccc90ccefacc2036da3637c0cf38da33c6379e5e759ec00301b5"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-rdoc",
+          "version": "6.0.1",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-rdoc-6.0.1-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "2943e0d2c8a249abb6a405332cb85c12",
+            "sha256",
+            "5ee36835abbab4fc36ce732191ecb751f89020c92c03b4ed387c1171d4955819"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-test-unit",
+          "version": "3.2.7",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-test-unit-3.2.7-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "1637e066d29aa755d864089dd1f8d1a3",
+            "sha256",
+            "d4df4bad13e2cdeb9cbf022e4989ab940b0dced5b77d68a5ff694710c78d0da7"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-xmlrpc",
+          "version": "0.3.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-xmlrpc-0.3.0-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "d51d3fb7942200cc6b7e409eff96d734",
+            "sha256",
+            "0a245b8c8d2d4f07cf67ccedf9fd64707d2e737e729a75ef933e35a2d323993d"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygems",
+          "version": "2.7.6.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygems-2.7.6.2-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "9e86bdda0538344a6487fe5ffbeb7098",
+            "sha256",
+            "9ef40ee367fc9edd93823856e0716e6a7ee7caebf48a67030e51269adb0cc952"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygems-devel",
+          "version": "2.7.6.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygems-devel-2.7.6.2-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "c7a349bb3056fd730a6828ab695c0531",
+            "sha256",
+            "0018c8abd50ddf6347d8b50a12d28e345cb1e963a825a177ad295cc86fc8406e"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        }
+      ],
+      "short": "",
+      "module": {
+        "name": "ruby",
+        "stream": "2.5",
+        "version": "8010020190711131821",
+        "context": "cdc1202b",
+        "arch": "x86_64"
+      }
+    },
+    {
+      "name": "RHBA-2019:3384-ruby-2.5-cdc1202b-aarch64",
+      "packages": [
+        {
+          "name": "ruby",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "ruby-2.5.5-105.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "ce9d9dde8fd10492f7eec559aad0d548",
+            "sha256",
+            "4390f4ed4aefa2a356b8122576b4b38df33b16a4eb0b46235dd651dcf25c726d"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "ruby-2.5.5-105.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "026b049a21504fc773244164a2d0ff12",
+            "sha256",
+            "2edef90b7b9cf7222d932258d8978e4c7c41bf6eeffdfd5032b01d02e6d50e6d"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-debuginfo",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "ruby-debuginfo-2.5.5-105.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "42e793e8bcab3e1a0287b85e58acd111",
+            "sha256",
+            "857dc3b8427572703a3d53288b2086ddab2e83c3ef017c0f8cd6c5e134cdbe3f"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-debugsource",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "ruby-debugsource-2.5.5-105.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "bc79ecc1b9a6a0957291365679ecbea6",
+            "sha256",
+            "e1a14488e1bd8724cb9af46c0a0b46aadeb1d1ffcede9c2606ffd2369010bd58"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-devel",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "ruby-devel-2.5.5-105.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "6a9e0ef59f50d66809cb92262468e68e",
+            "sha256",
+            "f0f177ddabe07c45ef3afd88443d859dd8abc15529deb97e92c6f855c26ffe9d"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-doc",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "ruby-doc-2.5.5-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "4542696784ee298fdbe88e6159a46a80",
+            "sha256",
+            "c543f6373a753dde041cc6a6e649e16ec7d4b4260b5b06f6aa62cb3ff5d9c720"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-irb",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "ruby-irb-2.5.5-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "5611cb614525baf20774849e9019c25e",
+            "sha256",
+            "9d6c163678783908a6a6488cc9277a54aba730d93489b0c55294d8ec48606507"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-libs",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "ruby-libs-2.5.5-105.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "23862db730fb7bc01c4f4cb31ba91887",
+            "sha256",
+            "465ed7f15873ccfdb04876f1d618872957a3709692b89daeb4a692ea5027bc11"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-libs-debuginfo",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "ruby-libs-debuginfo-2.5.5-105.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "8ec8a13d84c18739c5c21679f8dca340",
+            "sha256",
+            "54f37a98ddecf8400e9d016eac03da171cf049a8b17c4fb89217019aab745063"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-abrt",
+          "version": "0.3.0",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-abrt-0.3.0-4.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "02ddde5ae4c9f4d7563cfd21f13d2a88",
+            "sha256",
+            "2579312600c5f242ff8edbf3b44b3d444962429ad40c17a28ce16500c798d860"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-abrt",
+          "version": "0.3.0",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-abrt-0.3.0-4.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "42a0e559c2bfc475d454cd406ab50331",
+            "sha256",
+            "d92c862b65872af7f701367225dc4c9ea799161e19594a7fbc6fa0e19bd2e667"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-abrt-doc",
+          "version": "0.3.0",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-abrt-doc-0.3.0-4.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "7d714a33d672aaf9b8d975f446bdc5bd",
+            "sha256",
+            "4526c3514005042da89bd0884d0404b154ffba64b54112453269e4369b741d4c"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bigdecimal",
+          "version": "1.3.4",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-bigdecimal-1.3.4-105.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "6a4803b5aade70d2a3e36c462743446f",
+            "sha256",
+            "022fe1b132e52affa0879dbcc400ee000158f65f6f2959a0bb7772634f29846d"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bigdecimal-debuginfo",
+          "version": "1.3.4",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-bigdecimal-debuginfo-1.3.4-105.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "d430fe0f1c0c7a34e6ee1db00c275a57",
+            "sha256",
+            "5c9eaae57ec4e9ac284150ce1eba6c192bb393d233ee6c1a0aafc2f7889bc3ca"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-bson-4.3.0-2.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "d170e6b397ae2f9a1d47eb6c7179014d",
+            "sha256",
+            "1b73e5284bcdc38f504eda5d4be5519d237b622ee2e96c4d341531fef99b370b"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-bson-4.3.0-2.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "aa443b78952f171bd930d7f2866a8bd0",
+            "sha256",
+            "8abe79db0675e5019fbdffd7aef41e9f09810aa30671c445b75dcce54028661a"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson-debuginfo",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-bson-debuginfo-4.3.0-2.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "8854990f398d52c9f8bf228961bb4116",
+            "sha256",
+            "b2ce9ba47728b0fa4d8011a80c9c671cac774bb16414644d12b6d4a30f5c8855"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson-debugsource",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-bson-debugsource-4.3.0-2.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "c9bc6611615bd89437490eaad0f690aa",
+            "sha256",
+            "3c2b0697d504100db0ee48440e008db57105205c81aaa28d443de2d6b96e9811"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson-doc",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-bson-doc-4.3.0-2.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "d5e07d87425397c127e32cda38937ec9",
+            "sha256",
+            "9e2077a81214adffe1f0df18008e65f1ff10c65d61a11ef221b4ee2c94d4d842"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bundler",
+          "version": "1.16.1",
+          "release": "3.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-bundler-1.16.1-3.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "adef4b585f2875cea6515a94bf8be2ba",
+            "sha256",
+            "fe344ebaa7887d3dc3695b8a5322f8507715d381ea265a7cf737960023471b06"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bundler",
+          "version": "1.16.1",
+          "release": "3.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-bundler-1.16.1-3.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "255642638b99991609b390a955768b2a",
+            "sha256",
+            "32d5ee895ade306fd17a05184b728246cf423c093eeb27d9201f35b3e3c051b4"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bundler-doc",
+          "version": "1.16.1",
+          "release": "3.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-bundler-doc-1.16.1-3.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "b089a978e86c3dbfcc97ca1ba56e4d5e",
+            "sha256",
+            "d507c993e4b5b576ac7a696b129a5236c08f23dc45ea5a6e37b105744831be08"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-did_you_mean",
+          "version": "1.2.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-did_you_mean-1.2.0-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "11562927ab8bd761f5777fb251954631",
+            "sha256",
+            "bb5bd5973be8aa064e1f7d692ec80b89b5668f7723ddcd08f29bd6e7896a63e3"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-io-console",
+          "version": "0.4.6",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-io-console-0.4.6-105.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "925401321396461caf9c981d5479bc4b",
+            "sha256",
+            "35bc41f1b4832cbc4e21458e840dd34e97d58a17ca441b0ca33b763809a01163"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-io-console-debuginfo",
+          "version": "0.4.6",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-io-console-debuginfo-0.4.6-105.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "7d0d4e793685cb7481061700de523ffb",
+            "sha256",
+            "b4c69bd4ba9454735fc21e434dce2cbf976598f724b88500df7648fb8881d3c6"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-json",
+          "version": "2.1.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-json-2.1.0-105.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "68e8dce3c7b7898b11218c081e4e7a14",
+            "sha256",
+            "2e919f273a3d6bd61a6af1a81032f0423e57d5ac70648b8ad4871ba4032ab6b6"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-json-debuginfo",
+          "version": "2.1.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-json-debuginfo-2.1.0-105.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "ef2bdc915acf8080e88477235d0d479b",
+            "sha256",
+            "2995e1b6aaadada0c2f48a461992d58019110c419fef179f2dd4102fab10b6ae"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-minitest",
+          "version": "5.10.3",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-minitest-5.10.3-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "93df8b3a09f80f449f5c0bd7792de82c",
+            "sha256",
+            "fdb2f2c36da88d7e4b493f248f092e561059a5a53764d3534961006e42b6b063"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mongo",
+          "version": "2.5.1",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "849ed5b828db0f37a1c2edff58eeb363",
+            "sha256",
+            "9b5c365e81f801d82f196b89b60184d6135ecd163611738cc07a8f75f1a9b466"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mongo",
+          "version": "2.5.1",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "1561038e7132203944c9ca13d0617d65",
+            "sha256",
+            "5b8d89427998167d5c2f9e7a546f7c5dde349f97463935bf40e06130e5383b63"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mongo-doc",
+          "version": "2.5.1",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-mongo-doc-2.5.1-2.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "fa4a10ebdb5b964a2d10019b148981e9",
+            "sha256",
+            "cba0a8b1b342a3a11801c21a9c403b4c028a290cf45c1589b16a191c7e8ba90f"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-mysql2-0.4.10-4.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "fb0b08e0dd09bbdb8abbefa62c96a485",
+            "sha256",
+            "a3f9a7b63374f0637e2ef382c2a83c0be1855b9ca5b4e27ae0237c618a22f4ac"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-mysql2-0.4.10-4.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "9e1cd68b55f6e11efe9967dda1f958ae",
+            "sha256",
+            "7bd7206950c3bdbd8c81073410e7912f0dc35fc319fb2ee084786e446056587a"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2-debuginfo",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-mysql2-debuginfo-0.4.10-4.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "d6d907088e03041cdb89da19603cd55f",
+            "sha256",
+            "16aed670c0c33c0fedadcb1b58776d55868a550fb47f12bcae2c707106dc3cde"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2-debugsource",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-mysql2-debugsource-0.4.10-4.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "1319f1bd44471c3a97daebbce749b8b2",
+            "sha256",
+            "1e200eb70d5e31b1b0db27ab11ceff520fe4834f6ee7fda7b7e97ea6edc78f34"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2-doc",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-mysql2-doc-0.4.10-4.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "b58e5ec1fb18490197d60834e5709e80",
+            "sha256",
+            "1d25f8d911a95b4abc5649e738ef1bd649ecf60f1d7fca5f444ec154765620d3"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-net-telnet",
+          "version": "0.1.1",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-net-telnet-0.1.1-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "b2375afcc76507d6feccf12ff75fc49a",
+            "sha256",
+            "e28f21a6f4f141d65cc8bff6e40f179cec29d77ba0e7b7c01943dc23b68d1751"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-openssl",
+          "version": "2.1.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-openssl-2.1.2-105.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "3bc46292dc856337f224719bcbc90e04",
+            "sha256",
+            "e5d40af915af7950c4b98f0e07bd236208cafe1f0c89d9386906e4b7ea92d7ef"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-openssl-debuginfo",
+          "version": "2.1.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-openssl-debuginfo-2.1.2-105.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "665ea34213ead154cd216a0346998651",
+            "sha256",
+            "646d0ae1d46b5efebfd7e72e1d91246f7e67400537c5a678586c3198abbba61c"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-pg-1.0.0-2.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "716ca498d76bc7940acd81e1b1992b17",
+            "sha256",
+            "16739d6506dc67c579f3d06640538d1e19ca7830e4bda409337f46cf37eb1089"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-pg-1.0.0-2.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "a9bdc2dd5d271638750c1293a875ad77",
+            "sha256",
+            "5e71aa5e93b054478e1f399862d6c8030cd459fe8ff8f5369d5660779efded04"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg-debuginfo",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-pg-debuginfo-1.0.0-2.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "6223868954af3cdf27b4404860272516",
+            "sha256",
+            "7e793b6b49db7d3c1600075b0a675367ec5db392478cdaf2a30ab4b0f721e5a5"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg-debugsource",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-pg-debugsource-1.0.0-2.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "7aae4ec71d5a06cbc988e02048ea8a26",
+            "sha256",
+            "e2ffd500c56946e787175ba71d282bbb866a47ee94dbf807a0499973f989afe0"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg-doc",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-pg-doc-1.0.0-2.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "6a578f72ba96eca4938404a8449b5f16",
+            "sha256",
+            "9a74af094119652d9ff29127d9aadd9b67a46feb0a0c3102687d43b638a53dce"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-power_assert",
+          "version": "1.1.1",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-power_assert-1.1.1-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "e87bc67208ce3eb03d3abc054017598b",
+            "sha256",
+            "e907b442294a0f7e84cc8e5ac60839c702bae4ad198c208b2870eb0aa35864d1"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-psych",
+          "version": "3.0.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-psych-3.0.2-105.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "fc6b6bd3241f7e6f88c92195137a79ad",
+            "sha256",
+            "ad3a54130ca09f14557065fb1d01cb63c37562523eb0a9b45e151ee04bd621e2"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-psych-debuginfo",
+          "version": "3.0.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "aarch64",
+          "filename": "rubygem-psych-debuginfo-3.0.2-105.module+el8.1.0+3656+f80bfa1d.aarch64.rpm",
+          "sum": [
+            "md5",
+            "77ba0dfe031265c31b57f2b85e4d1a11",
+            "sha256",
+            "73209142d99bc550673d87128e7b7af373f0680f309a7e4834970706cfbfda32"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-rake",
+          "version": "12.3.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-rake-12.3.0-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "0d536baf5e34db662ccfea564913a30d",
+            "sha256",
+            "36c8e13add7dccc90ccefacc2036da3637c0cf38da33c6379e5e759ec00301b5"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-rdoc",
+          "version": "6.0.1",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-rdoc-6.0.1-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "2943e0d2c8a249abb6a405332cb85c12",
+            "sha256",
+            "5ee36835abbab4fc36ce732191ecb751f89020c92c03b4ed387c1171d4955819"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-test-unit",
+          "version": "3.2.7",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-test-unit-3.2.7-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "1637e066d29aa755d864089dd1f8d1a3",
+            "sha256",
+            "d4df4bad13e2cdeb9cbf022e4989ab940b0dced5b77d68a5ff694710c78d0da7"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-xmlrpc",
+          "version": "0.3.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-xmlrpc-0.3.0-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "d51d3fb7942200cc6b7e409eff96d734",
+            "sha256",
+            "0a245b8c8d2d4f07cf67ccedf9fd64707d2e737e729a75ef933e35a2d323993d"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygems",
+          "version": "2.7.6.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygems-2.7.6.2-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "9e86bdda0538344a6487fe5ffbeb7098",
+            "sha256",
+            "9ef40ee367fc9edd93823856e0716e6a7ee7caebf48a67030e51269adb0cc952"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygems-devel",
+          "version": "2.7.6.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygems-devel-2.7.6.2-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "c7a349bb3056fd730a6828ab695c0531",
+            "sha256",
+            "0018c8abd50ddf6347d8b50a12d28e345cb1e963a825a177ad295cc86fc8406e"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        }
+      ],
+      "short": "",
+      "module": {
+        "name": "ruby",
+        "stream": "2.5",
+        "version": "8010020190711131821",
+        "context": "cdc1202b",
+        "arch": "aarch64"
+      }
+    },
+    {
+      "name": "RHBA-2019:3384-ruby-2.5-cdc1202b-ppc64le",
+      "packages": [
+        {
+          "name": "ruby",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "ruby-2.5.5-105.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "7fbba11cfca3b2ed81a73a46a4953ead",
+            "sha256",
+            "c74db6d318fd1400bcf867c219c48b3d33e06dedf6771424e2e6057860f12169"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "ruby-2.5.5-105.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "026b049a21504fc773244164a2d0ff12",
+            "sha256",
+            "2edef90b7b9cf7222d932258d8978e4c7c41bf6eeffdfd5032b01d02e6d50e6d"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-debuginfo",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "ruby-debuginfo-2.5.5-105.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "d02b41e1858462c1e6fe6a5e6633bb8f",
+            "sha256",
+            "de5ff2eca35416bc8775a4326861b225c9ebe155984980d4c06b3581e8ba2769"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-debugsource",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "ruby-debugsource-2.5.5-105.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "4a33fb72a9c92da48887249d899af2ad",
+            "sha256",
+            "cc0d5ccfa187722cb048b41d62698c4bd355c99d3e4bcf2b654fe7012b395a55"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-devel",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "ruby-devel-2.5.5-105.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "9b444be378849dc5c59e428e47fd22b9",
+            "sha256",
+            "ef87fc6118e639352ef98967f20728898f52f719f2a769b3264d4eb1fa003c1c"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-doc",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "ruby-doc-2.5.5-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "4542696784ee298fdbe88e6159a46a80",
+            "sha256",
+            "c543f6373a753dde041cc6a6e649e16ec7d4b4260b5b06f6aa62cb3ff5d9c720"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-irb",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "ruby-irb-2.5.5-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "5611cb614525baf20774849e9019c25e",
+            "sha256",
+            "9d6c163678783908a6a6488cc9277a54aba730d93489b0c55294d8ec48606507"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-libs",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "ruby-libs-2.5.5-105.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "c65f19654f8956648309db6dd2e17247",
+            "sha256",
+            "280f3be1f49b818bc774121c2be0f806f1c5c1d024869d9048834f841933685c"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-libs-debuginfo",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "ruby-libs-debuginfo-2.5.5-105.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "96bde21c8d4d7db5bcefe52c56060592",
+            "sha256",
+            "9de6c0790fff8c1bb96ab95141a5d7011b39d6527b78e8ac1b5a6e062be8e751"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-abrt",
+          "version": "0.3.0",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-abrt-0.3.0-4.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "02ddde5ae4c9f4d7563cfd21f13d2a88",
+            "sha256",
+            "2579312600c5f242ff8edbf3b44b3d444962429ad40c17a28ce16500c798d860"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-abrt",
+          "version": "0.3.0",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-abrt-0.3.0-4.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "42a0e559c2bfc475d454cd406ab50331",
+            "sha256",
+            "d92c862b65872af7f701367225dc4c9ea799161e19594a7fbc6fa0e19bd2e667"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-abrt-doc",
+          "version": "0.3.0",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-abrt-doc-0.3.0-4.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "7d714a33d672aaf9b8d975f446bdc5bd",
+            "sha256",
+            "4526c3514005042da89bd0884d0404b154ffba64b54112453269e4369b741d4c"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bigdecimal",
+          "version": "1.3.4",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-bigdecimal-1.3.4-105.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "3eeae3ab8f385e570a43610ac25e71d1",
+            "sha256",
+            "1d144b170887fb59b55b549e2b17f87531090d18622251746b073ade72c7d2ae"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bigdecimal-debuginfo",
+          "version": "1.3.4",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-bigdecimal-debuginfo-1.3.4-105.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "bb86b86c10e3c9e7cae64479195370cd",
+            "sha256",
+            "7f528325fe8a7cba96a986b57a94b30389ebe9d263a890afb143497dd567f1ec"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-bson-4.3.0-2.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "53d7e3f35f8cfe655f1273f71fd1dac0",
+            "sha256",
+            "d8df99841eab3a987776905d4062a402881c346c48033cdda2e539ba15313324"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-bson-4.3.0-2.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "aa443b78952f171bd930d7f2866a8bd0",
+            "sha256",
+            "8abe79db0675e5019fbdffd7aef41e9f09810aa30671c445b75dcce54028661a"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson-debuginfo",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-bson-debuginfo-4.3.0-2.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "f876476fd9a559854430cbb8b62f5e89",
+            "sha256",
+            "53f4b4a1fe0758570ce2407f49dd1081f3451b75cb8cf5956cfd345c3d8298c9"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson-debugsource",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-bson-debugsource-4.3.0-2.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "c8644450009e2aad24e6bba49bf7ac2b",
+            "sha256",
+            "3dbb54e91a58506495d390d302a6c02239877c5fff147065fb12b2df9bc7a3c0"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson-doc",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-bson-doc-4.3.0-2.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "d5e07d87425397c127e32cda38937ec9",
+            "sha256",
+            "9e2077a81214adffe1f0df18008e65f1ff10c65d61a11ef221b4ee2c94d4d842"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bundler",
+          "version": "1.16.1",
+          "release": "3.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-bundler-1.16.1-3.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "adef4b585f2875cea6515a94bf8be2ba",
+            "sha256",
+            "fe344ebaa7887d3dc3695b8a5322f8507715d381ea265a7cf737960023471b06"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bundler",
+          "version": "1.16.1",
+          "release": "3.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-bundler-1.16.1-3.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "255642638b99991609b390a955768b2a",
+            "sha256",
+            "32d5ee895ade306fd17a05184b728246cf423c093eeb27d9201f35b3e3c051b4"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bundler-doc",
+          "version": "1.16.1",
+          "release": "3.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-bundler-doc-1.16.1-3.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "b089a978e86c3dbfcc97ca1ba56e4d5e",
+            "sha256",
+            "d507c993e4b5b576ac7a696b129a5236c08f23dc45ea5a6e37b105744831be08"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-did_you_mean",
+          "version": "1.2.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-did_you_mean-1.2.0-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "11562927ab8bd761f5777fb251954631",
+            "sha256",
+            "bb5bd5973be8aa064e1f7d692ec80b89b5668f7723ddcd08f29bd6e7896a63e3"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-io-console",
+          "version": "0.4.6",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-io-console-0.4.6-105.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "7422f684cbb3de209208852f354c1307",
+            "sha256",
+            "32a36114cc56eb1875e500dca374924379521aeb86ae3c7c63384173fd222cae"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-io-console-debuginfo",
+          "version": "0.4.6",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-io-console-debuginfo-0.4.6-105.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "6dac97f9c7d5dc40379e386c5718834b",
+            "sha256",
+            "a00936bf6ed75c4d5326e9285b3b4595153b2fd1cb62c8dfc0b296f87e994fec"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-json",
+          "version": "2.1.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-json-2.1.0-105.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "cf1f743f0b30a3881e0dbaa07d149ea9",
+            "sha256",
+            "dfdda6252bc2295e375c597a8e0312b7c456d9129df5a34e0705633cd352db8c"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-json-debuginfo",
+          "version": "2.1.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-json-debuginfo-2.1.0-105.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "e65fd5e62836fb2f37c33f9e40bfc102",
+            "sha256",
+            "ca9f78d5d96e08d93642d7bfe51331efcf44e2535f690bf6497459a8490ab02f"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-minitest",
+          "version": "5.10.3",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-minitest-5.10.3-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "93df8b3a09f80f449f5c0bd7792de82c",
+            "sha256",
+            "fdb2f2c36da88d7e4b493f248f092e561059a5a53764d3534961006e42b6b063"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mongo",
+          "version": "2.5.1",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "849ed5b828db0f37a1c2edff58eeb363",
+            "sha256",
+            "9b5c365e81f801d82f196b89b60184d6135ecd163611738cc07a8f75f1a9b466"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mongo",
+          "version": "2.5.1",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "1561038e7132203944c9ca13d0617d65",
+            "sha256",
+            "5b8d89427998167d5c2f9e7a546f7c5dde349f97463935bf40e06130e5383b63"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mongo-doc",
+          "version": "2.5.1",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-mongo-doc-2.5.1-2.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "fa4a10ebdb5b964a2d10019b148981e9",
+            "sha256",
+            "cba0a8b1b342a3a11801c21a9c403b4c028a290cf45c1589b16a191c7e8ba90f"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-mysql2-0.4.10-4.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "2976b470faab9b998a92550a78e9d119",
+            "sha256",
+            "b309b41e65b72b14ab507870c5799c74e8020dd21492532e1713b300cdddf5ed"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-mysql2-0.4.10-4.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "9e1cd68b55f6e11efe9967dda1f958ae",
+            "sha256",
+            "7bd7206950c3bdbd8c81073410e7912f0dc35fc319fb2ee084786e446056587a"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2-debuginfo",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-mysql2-debuginfo-0.4.10-4.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "80540d5b8cd602f1f92b1cddd61f5800",
+            "sha256",
+            "260286051a27b415ee1ef8477b22f7f2be4a86eb7bf55a141ba81bf116fcfe07"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2-debugsource",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-mysql2-debugsource-0.4.10-4.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "835f19932a71e6fb6e8e20dba00ea212",
+            "sha256",
+            "c280a8a9e4c4d8aeeb40d3e415a4c53921138b7a558fd55fc8328ead3fa6ffa5"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2-doc",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-mysql2-doc-0.4.10-4.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "b58e5ec1fb18490197d60834e5709e80",
+            "sha256",
+            "1d25f8d911a95b4abc5649e738ef1bd649ecf60f1d7fca5f444ec154765620d3"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-net-telnet",
+          "version": "0.1.1",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-net-telnet-0.1.1-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "b2375afcc76507d6feccf12ff75fc49a",
+            "sha256",
+            "e28f21a6f4f141d65cc8bff6e40f179cec29d77ba0e7b7c01943dc23b68d1751"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-openssl",
+          "version": "2.1.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-openssl-2.1.2-105.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "14025094cca7b59104a1d72883f07b2e",
+            "sha256",
+            "b0c825b2dfc8f815f57ec5e0fd153a176331ec1c100a12907f6f6e56f0fee332"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-openssl-debuginfo",
+          "version": "2.1.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-openssl-debuginfo-2.1.2-105.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "2a33daa07a524ab86d4b31b8b0c46c9c",
+            "sha256",
+            "7c0f395ca0cae7ac4da151f50d19d4be93c890cdbcae84629b691d270d3d94d2"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-pg-1.0.0-2.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "bd592bec41f953e13ecfab6a1b80599c",
+            "sha256",
+            "9f5ab6effa0a333c0703fee81e65b99749c4c0f506a03de764f81f738ec6acaf"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-pg-1.0.0-2.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "a9bdc2dd5d271638750c1293a875ad77",
+            "sha256",
+            "5e71aa5e93b054478e1f399862d6c8030cd459fe8ff8f5369d5660779efded04"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg-debuginfo",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-pg-debuginfo-1.0.0-2.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "dbb75a8e74e1f3c5b10e3c80891a4725",
+            "sha256",
+            "6b79a8c14be9dee26ef47cd301b7941303964288b2d4e440d56f34220903062f"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg-debugsource",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-pg-debugsource-1.0.0-2.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "788ccd81311033e4c1eee5a228625d73",
+            "sha256",
+            "25575aa839f3603fd0ee3fc1269c4299afd183ad545f46871ff5a5428b5634c8"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg-doc",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-pg-doc-1.0.0-2.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "6a578f72ba96eca4938404a8449b5f16",
+            "sha256",
+            "9a74af094119652d9ff29127d9aadd9b67a46feb0a0c3102687d43b638a53dce"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-power_assert",
+          "version": "1.1.1",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-power_assert-1.1.1-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "e87bc67208ce3eb03d3abc054017598b",
+            "sha256",
+            "e907b442294a0f7e84cc8e5ac60839c702bae4ad198c208b2870eb0aa35864d1"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-psych",
+          "version": "3.0.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-psych-3.0.2-105.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "1f902bab4f863581e02477561cf233f8",
+            "sha256",
+            "deba3587ad5277f79c0e7cb7e4cf5d9aab32a84b3dca313124e94609a3f2cd36"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-psych-debuginfo",
+          "version": "3.0.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "ppc64le",
+          "filename": "rubygem-psych-debuginfo-3.0.2-105.module+el8.1.0+3656+f80bfa1d.ppc64le.rpm",
+          "sum": [
+            "md5",
+            "19f78c650e4e50568224182a8923a496",
+            "sha256",
+            "02efd9869be4901e1f7d5fa26923d4508448c8c97d8f77e9d452d031de1c811e"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-rake",
+          "version": "12.3.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-rake-12.3.0-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "0d536baf5e34db662ccfea564913a30d",
+            "sha256",
+            "36c8e13add7dccc90ccefacc2036da3637c0cf38da33c6379e5e759ec00301b5"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-rdoc",
+          "version": "6.0.1",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-rdoc-6.0.1-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "2943e0d2c8a249abb6a405332cb85c12",
+            "sha256",
+            "5ee36835abbab4fc36ce732191ecb751f89020c92c03b4ed387c1171d4955819"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-test-unit",
+          "version": "3.2.7",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-test-unit-3.2.7-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "1637e066d29aa755d864089dd1f8d1a3",
+            "sha256",
+            "d4df4bad13e2cdeb9cbf022e4989ab940b0dced5b77d68a5ff694710c78d0da7"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-xmlrpc",
+          "version": "0.3.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-xmlrpc-0.3.0-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "d51d3fb7942200cc6b7e409eff96d734",
+            "sha256",
+            "0a245b8c8d2d4f07cf67ccedf9fd64707d2e737e729a75ef933e35a2d323993d"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygems",
+          "version": "2.7.6.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygems-2.7.6.2-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "9e86bdda0538344a6487fe5ffbeb7098",
+            "sha256",
+            "9ef40ee367fc9edd93823856e0716e6a7ee7caebf48a67030e51269adb0cc952"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygems-devel",
+          "version": "2.7.6.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygems-devel-2.7.6.2-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "c7a349bb3056fd730a6828ab695c0531",
+            "sha256",
+            "0018c8abd50ddf6347d8b50a12d28e345cb1e963a825a177ad295cc86fc8406e"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        }
+      ],
+      "short": "",
+      "module": {
+        "name": "ruby",
+        "stream": "2.5",
+        "version": "8010020190711131821",
+        "context": "cdc1202b",
+        "arch": "ppc64le"
+      }
+    },
+    {
+      "name": "RHBA-2019:3384-ruby-2.5-cdc1202b-s390x",
+      "packages": [
+        {
+          "name": "ruby",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "ruby-2.5.5-105.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "50580c7b6b561af7ece067d4fc529a59",
+            "sha256",
+            "073fc5273a19ad8471b296aea8614966c4de04a470c1419176cdc3b0c9c00e6c"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "ruby-2.5.5-105.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "026b049a21504fc773244164a2d0ff12",
+            "sha256",
+            "2edef90b7b9cf7222d932258d8978e4c7c41bf6eeffdfd5032b01d02e6d50e6d"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-debuginfo",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "ruby-debuginfo-2.5.5-105.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "40effb8e14b00209745d96934e83006c",
+            "sha256",
+            "1c9e32448990a6d7b3fecc9843b7968da6c02736f533da619a295323b2c24f04"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-debugsource",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "ruby-debugsource-2.5.5-105.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "a5eb50924a0142f83e44f3c30e03aba3",
+            "sha256",
+            "5044c21a164d200333b3e0a88c14f320c60be552197dca03083966904df8ff34"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-devel",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "ruby-devel-2.5.5-105.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "60e1711ed5ca8d8c66cddd125c0a2bb6",
+            "sha256",
+            "4652464d7faf52197a54d4f6a6b0ab3ac60618428d79475433c080eef8a123aa"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-doc",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "ruby-doc-2.5.5-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "4542696784ee298fdbe88e6159a46a80",
+            "sha256",
+            "c543f6373a753dde041cc6a6e649e16ec7d4b4260b5b06f6aa62cb3ff5d9c720"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-irb",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "ruby-irb-2.5.5-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "5611cb614525baf20774849e9019c25e",
+            "sha256",
+            "9d6c163678783908a6a6488cc9277a54aba730d93489b0c55294d8ec48606507"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-libs",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "ruby-libs-2.5.5-105.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "0af8846e067f63329a3a9c9241f85c5b",
+            "sha256",
+            "24ada355b8f98ecfc9517629d1affd58d3b04083692f16caa659b2149cb3d021"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "ruby-libs-debuginfo",
+          "version": "2.5.5",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "ruby-libs-debuginfo-2.5.5-105.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "473d01a99ce7474a0ba3d702a69052bb",
+            "sha256",
+            "e6be3fba6aa6ff495d5152cad1e79e927ac6fb421192aca8e7c6af52a8ebad4f"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-abrt",
+          "version": "0.3.0",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-abrt-0.3.0-4.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "02ddde5ae4c9f4d7563cfd21f13d2a88",
+            "sha256",
+            "2579312600c5f242ff8edbf3b44b3d444962429ad40c17a28ce16500c798d860"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-abrt",
+          "version": "0.3.0",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-abrt-0.3.0-4.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "42a0e559c2bfc475d454cd406ab50331",
+            "sha256",
+            "d92c862b65872af7f701367225dc4c9ea799161e19594a7fbc6fa0e19bd2e667"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-abrt-doc",
+          "version": "0.3.0",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-abrt-doc-0.3.0-4.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "7d714a33d672aaf9b8d975f446bdc5bd",
+            "sha256",
+            "4526c3514005042da89bd0884d0404b154ffba64b54112453269e4369b741d4c"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bigdecimal",
+          "version": "1.3.4",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-bigdecimal-1.3.4-105.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "a5cdde4f03f4730f02ce1c70f63a6481",
+            "sha256",
+            "b94251a5369f394015c981ab396f51973432bfcf44dfba8a19969aec690a2c88"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bigdecimal-debuginfo",
+          "version": "1.3.4",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-bigdecimal-debuginfo-1.3.4-105.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "64f047423fdda7d2ad82b46ccbd568d6",
+            "sha256",
+            "012a890d40a57e6240f6b89ca1d1a88fb0c627717607cecd8c50820e673027ec"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-bson-4.3.0-2.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "aa304689dc880badd5fa596d81a6f74e",
+            "sha256",
+            "ee9cf16ad55b0d21ad9b89f47908fe5e1064cbe5f3078f7abf864aa0e9751b90"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-bson-4.3.0-2.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "aa443b78952f171bd930d7f2866a8bd0",
+            "sha256",
+            "8abe79db0675e5019fbdffd7aef41e9f09810aa30671c445b75dcce54028661a"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson-debuginfo",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-bson-debuginfo-4.3.0-2.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "4e777a6fec0ffc3e55aab22359070c6b",
+            "sha256",
+            "754a12a567429e355f39249fea46cd9f7f6aae3d93df97edb8ab4e8fa6e469be"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson-debugsource",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-bson-debugsource-4.3.0-2.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "6779a8bd4e951b1ffbf4af5a4a845290",
+            "sha256",
+            "dcc61407d9c6f5ce2a2681585a576bb022d8cb35124f875e62cf679c6842978b"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bson-doc",
+          "version": "4.3.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-bson-doc-4.3.0-2.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "d5e07d87425397c127e32cda38937ec9",
+            "sha256",
+            "9e2077a81214adffe1f0df18008e65f1ff10c65d61a11ef221b4ee2c94d4d842"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bundler",
+          "version": "1.16.1",
+          "release": "3.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-bundler-1.16.1-3.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "adef4b585f2875cea6515a94bf8be2ba",
+            "sha256",
+            "fe344ebaa7887d3dc3695b8a5322f8507715d381ea265a7cf737960023471b06"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bundler",
+          "version": "1.16.1",
+          "release": "3.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-bundler-1.16.1-3.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "255642638b99991609b390a955768b2a",
+            "sha256",
+            "32d5ee895ade306fd17a05184b728246cf423c093eeb27d9201f35b3e3c051b4"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-bundler-doc",
+          "version": "1.16.1",
+          "release": "3.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-bundler-doc-1.16.1-3.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "b089a978e86c3dbfcc97ca1ba56e4d5e",
+            "sha256",
+            "d507c993e4b5b576ac7a696b129a5236c08f23dc45ea5a6e37b105744831be08"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-did_you_mean",
+          "version": "1.2.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-did_you_mean-1.2.0-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "11562927ab8bd761f5777fb251954631",
+            "sha256",
+            "bb5bd5973be8aa064e1f7d692ec80b89b5668f7723ddcd08f29bd6e7896a63e3"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-io-console",
+          "version": "0.4.6",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-io-console-0.4.6-105.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "b80548822e5fc5ac9cbd1820ffa5e2a6",
+            "sha256",
+            "bd0dc1edae49f0f3ce63b77a7ec21fcca876a8aa29b0c3773fb38328ed4d566e"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-io-console-debuginfo",
+          "version": "0.4.6",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-io-console-debuginfo-0.4.6-105.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "faae0ba0ecb4a81e8e3d98d8ca7c195a",
+            "sha256",
+            "36bbf053ea425ddda362cd528d49bf01fa6898936a8e0338b243e9e0f3e66cd1"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-json",
+          "version": "2.1.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-json-2.1.0-105.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "0c6399f03dcdf7c4b02f9d75fe2c7efb",
+            "sha256",
+            "eb14b26d869b2aafa8417c2121357805edfa8956d43b1522797ca020f7cb2b1f"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-json-debuginfo",
+          "version": "2.1.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-json-debuginfo-2.1.0-105.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "e1424ee8bdb040a032ad899dd80f3759",
+            "sha256",
+            "1ab45a53b1fe20af331a5fdcc4139796c8c02e0932d6fe1c83382e43aaf6a440"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-minitest",
+          "version": "5.10.3",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-minitest-5.10.3-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "93df8b3a09f80f449f5c0bd7792de82c",
+            "sha256",
+            "fdb2f2c36da88d7e4b493f248f092e561059a5a53764d3534961006e42b6b063"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mongo",
+          "version": "2.5.1",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "849ed5b828db0f37a1c2edff58eeb363",
+            "sha256",
+            "9b5c365e81f801d82f196b89b60184d6135ecd163611738cc07a8f75f1a9b466"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mongo",
+          "version": "2.5.1",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "1561038e7132203944c9ca13d0617d65",
+            "sha256",
+            "5b8d89427998167d5c2f9e7a546f7c5dde349f97463935bf40e06130e5383b63"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mongo-doc",
+          "version": "2.5.1",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-mongo-doc-2.5.1-2.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "fa4a10ebdb5b964a2d10019b148981e9",
+            "sha256",
+            "cba0a8b1b342a3a11801c21a9c403b4c028a290cf45c1589b16a191c7e8ba90f"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-mysql2-0.4.10-4.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "0b5d2cbd8d5f514d4c0c990c31155498",
+            "sha256",
+            "2e90ff14aeb937067a3ac735a66fa80c2eb00886fb476434772f66cb4faf954b"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-mysql2-0.4.10-4.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "9e1cd68b55f6e11efe9967dda1f958ae",
+            "sha256",
+            "7bd7206950c3bdbd8c81073410e7912f0dc35fc319fb2ee084786e446056587a"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2-debuginfo",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-mysql2-debuginfo-0.4.10-4.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "21ffd4f26ff8651d29ac51a0176e6f69",
+            "sha256",
+            "d58c41cc8c32a5a0806ec4bc4e09347f7510ce2f3e0f506851590ba26fb8fc96"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2-debugsource",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-mysql2-debugsource-0.4.10-4.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "d3cea3259520aaa35645ab0b95234d08",
+            "sha256",
+            "8441b837fda175718f6ded1ce82e5ef8ae5532460e9390451b0ecdcdb9aed6e9"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-mysql2-doc",
+          "version": "0.4.10",
+          "release": "4.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-mysql2-doc-0.4.10-4.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "b58e5ec1fb18490197d60834e5709e80",
+            "sha256",
+            "1d25f8d911a95b4abc5649e738ef1bd649ecf60f1d7fca5f444ec154765620d3"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-net-telnet",
+          "version": "0.1.1",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-net-telnet-0.1.1-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "b2375afcc76507d6feccf12ff75fc49a",
+            "sha256",
+            "e28f21a6f4f141d65cc8bff6e40f179cec29d77ba0e7b7c01943dc23b68d1751"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-openssl",
+          "version": "2.1.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-openssl-2.1.2-105.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "fbf3f9ab2d485228d388e503e9c7c432",
+            "sha256",
+            "4257e40953514e92279d2966c227e0c7ee94b75a2ad71e9f3db25ae1cca42e48"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-openssl-debuginfo",
+          "version": "2.1.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-openssl-debuginfo-2.1.2-105.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "f112b4e3504d9ff930fea8afd4b39a42",
+            "sha256",
+            "ed148c9ff89587280d5dfd8b96bc68d5512222b47ad961ebd2938ff00757c6ab"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-pg-1.0.0-2.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "a958fdf022d065308d5766e443e96fe9",
+            "sha256",
+            "f6260fc572346745bba3fd5b88975123079b14bffbd77e0926f371c692e364bc"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "SRPMS",
+          "filename": "rubygem-pg-1.0.0-2.module+el8.1.0+3656+f80bfa1d.src.rpm",
+          "sum": [
+            "md5",
+            "a9bdc2dd5d271638750c1293a875ad77",
+            "sha256",
+            "5e71aa5e93b054478e1f399862d6c8030cd459fe8ff8f5369d5660779efded04"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg-debuginfo",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-pg-debuginfo-1.0.0-2.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "652a4afd8f7e47699c076abee0a46731",
+            "sha256",
+            "745c21c3ea83a3c8c129d9a33e19d7eb36ffb77b471355dae24ccadd7ae0707a"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg-debugsource",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-pg-debugsource-1.0.0-2.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "379f61b177b784d9ede8aa49b5cd159e",
+            "sha256",
+            "de1bb7e42c36ecfe95c360895c2b600ffb198ae0f9fea14c0e928e188a2af0c7"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-pg-doc",
+          "version": "1.0.0",
+          "release": "2.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-pg-doc-1.0.0-2.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "6a578f72ba96eca4938404a8449b5f16",
+            "sha256",
+            "9a74af094119652d9ff29127d9aadd9b67a46feb0a0c3102687d43b638a53dce"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-power_assert",
+          "version": "1.1.1",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-power_assert-1.1.1-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "e87bc67208ce3eb03d3abc054017598b",
+            "sha256",
+            "e907b442294a0f7e84cc8e5ac60839c702bae4ad198c208b2870eb0aa35864d1"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-psych",
+          "version": "3.0.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-psych-3.0.2-105.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "37e22f5bfb3025d733fb149615d3216d",
+            "sha256",
+            "bb020505e50022404d61584d25d62928876402c46d394de4a4a7646d5be2a47c"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-psych-debuginfo",
+          "version": "3.0.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "s390x",
+          "filename": "rubygem-psych-debuginfo-3.0.2-105.module+el8.1.0+3656+f80bfa1d.s390x.rpm",
+          "sum": [
+            "md5",
+            "5e6d7acc352bf7231c785f5bf2092e84",
+            "sha256",
+            "3390e0fd856a657383cd1cbcfb09d5b61462b1c716a0c2d6e6576af8f74f4967"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-rake",
+          "version": "12.3.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-rake-12.3.0-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "0d536baf5e34db662ccfea564913a30d",
+            "sha256",
+            "36c8e13add7dccc90ccefacc2036da3637c0cf38da33c6379e5e759ec00301b5"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-rdoc",
+          "version": "6.0.1",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-rdoc-6.0.1-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "2943e0d2c8a249abb6a405332cb85c12",
+            "sha256",
+            "5ee36835abbab4fc36ce732191ecb751f89020c92c03b4ed387c1171d4955819"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-test-unit",
+          "version": "3.2.7",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-test-unit-3.2.7-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "1637e066d29aa755d864089dd1f8d1a3",
+            "sha256",
+            "d4df4bad13e2cdeb9cbf022e4989ab940b0dced5b77d68a5ff694710c78d0da7"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygem-xmlrpc",
+          "version": "0.3.0",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygem-xmlrpc-0.3.0-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "d51d3fb7942200cc6b7e409eff96d734",
+            "sha256",
+            "0a245b8c8d2d4f07cf67ccedf9fd64707d2e737e729a75ef933e35a2d323993d"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygems",
+          "version": "2.7.6.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygems-2.7.6.2-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "9e86bdda0538344a6487fe5ffbeb7098",
+            "sha256",
+            "9ef40ee367fc9edd93823856e0716e6a7ee7caebf48a67030e51269adb0cc952"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        },
+        {
+          "name": "rubygems-devel",
+          "version": "2.7.6.2",
+          "release": "105.module+el8.1.0+3656+f80bfa1d",
+          "epoch": "0",
+          "arch": "noarch",
+          "filename": "rubygems-devel-2.7.6.2-105.module+el8.1.0+3656+f80bfa1d.noarch.rpm",
+          "sum": [
+            "md5",
+            "c7a349bb3056fd730a6828ab695c0531",
+            "sha256",
+            "0018c8abd50ddf6347d8b50a12d28e345cb1e963a825a177ad295cc86fc8406e"
+          ],
+          "src": "rubygem-mongo-2.5.1-2.module+el8.1.0+3656+f80bfa1d.src.rpm"
+        }
+      ],
+      "short": "",
+      "module": {
+        "name": "ruby",
+        "stream": "2.5",
+        "version": "8010020190711131821",
+        "context": "cdc1202b",
+        "arch": "s390x"
+      }
+    }
+  ],
+  "from": "release-engineering@redhat.com",
+  "rights": "Copyright 2019 Red Hat Inc",
+  "id": "RHBA-2019:3384",
+  "title": "ruby:2.5 bug fix and enhancement update",
+  "description": "For detailed information on changes in this release, see the Red Hat Enterprise Linux 8.1 Release Notes linked from the References section.",
+  "version": "5",
+  "updated": "2019-11-05 17:38:23 UTC",
+  "issued": "2019-11-05 17:38:32 UTC",
+  "severity": "None",
+  "summary": "An update for the ruby:2.5 module is now available for Red Hat Enterprise Linux 8.",
+  "solution": "Before applying this update, make sure all previously released errata\nrelevant to your system have been applied.\n\nFor details on how to apply this update, refer to:\n\nhttps://access.redhat.com/articles/11258",
+  "pulp_user_metadata": {
+    "content_types": [
+      "module"
+    ]
+  }
+}
