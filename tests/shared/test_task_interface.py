@@ -12,6 +12,7 @@ import pytest
         "pubtools._pulp.tasks.set_maintenance.set_maintenance_off",
         "pubtools._pulp.tasks.publish",
         "pubtools._pulp.tasks.push",
+        "pubtools._pulp.tasks.fix_cves",
     ]
 )
 def task_module(request):

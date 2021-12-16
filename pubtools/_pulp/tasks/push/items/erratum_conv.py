@@ -46,25 +46,32 @@ def unit_for_item(item, old_unit):
 
 
 def unit_erratum_version(item, old_unit):
-    if old_unit:
-        # erratum already exists in Pulp, then the new version must be higher than
-        # the old version.
-        assert isinstance(old_unit, ErratumUnit)
-
-        try:
-            version_int = int(old_unit.version) + 1
-            return str(version_int)
-        except ValueError:
-            LOG.warning(
-                "Erratum %s in Pulp has non-integer version '%s', forcing value to '%s'",
-                old_unit.id,
-                old_unit.version,
-                item.version,
-            )
-
     # The version from the push item is only used if there was no erratum in pulp,
     # or the pulp version couldn't be bumped.
+    if old_unit:
+        return bump_erratum_version(old_unit, item.version)
+
     return item.version
+
+
+def bump_erratum_version(unit, default_version="1"):
+    # if erratum already exists in Pulp, then the new version must be higher than
+    # the old version. If the version can't be bumped, it defaults to the provied
+    # default_version.
+    assert isinstance(unit, ErratumUnit)
+
+    try:
+        version_int = int(unit.version) + 1
+        return str(version_int)
+    except ValueError:
+        LOG.warning(
+            "Erratum %s in Pulp has non-integer version '%s', forcing value to '%s'",
+            unit.id,
+            unit.version,
+            default_version,
+        )
+
+    return str(default_version)
 
 
 def unit_erratum_references(item):
