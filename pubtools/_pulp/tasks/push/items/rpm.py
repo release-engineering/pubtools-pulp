@@ -89,6 +89,11 @@ class PulpRpmPushItem(PulpPushItem):
             client=pulp_client, upload_repo=pulp_client.get_repository(cls.UPLOAD_REPO)
         )
 
+    @property
+    def can_pre_push(self):
+        # We support pre-push by uploading to all-rpm-content first.
+        return True
+
     def ensure_uploaded(self, ctx, repo_f=None):
         # Overridden to force our desired upload repo.
         return super(PulpRpmPushItem, self).ensure_uploaded(ctx, ctx.upload_repo)

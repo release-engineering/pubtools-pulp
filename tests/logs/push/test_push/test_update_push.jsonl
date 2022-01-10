@@ -5,6 +5,7 @@
 {"event": {"type": "calculate-checksums-end"}}
 {"event": {"type": "upload-items-to-pulp-start"}}
 {"event": {"type": "query-items-in-pulp-end"}}
+{"event": {"items-present": 2, "items-uploading": 9, "type": "uploading-pulp"}}
 {"event": {"type": "update-items-in-pulp-start"}}
 {"event": {"type": "upload-items-to-pulp-end"}}
 {"event": {"type": "update-items-in-pulp-end"}}
