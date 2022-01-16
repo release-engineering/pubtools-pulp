@@ -259,6 +259,18 @@ class PulpPushItem(object):
         return f_flat_map(update, lambda _: self.with_pulp_refreshed(client))
 
     @property
+    def can_pre_push(self):
+        """Returns True if items of this type support 'pre-push' functionality,
+        which means uploading content into Pulp in a manner which makes content
+        available on Pulp internal storage but not available to end-users.
+
+        Subclasses MAY override this method to return True. If so, ensure_uploaded
+        MUST be implemented in a manner which does not make content available to
+        end-users.
+        """
+        return False
+
+    @property
     def unit_for_update(self):
         """Desired state of the Pulp unit associated with this item.
 

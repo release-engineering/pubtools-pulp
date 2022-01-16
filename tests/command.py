@@ -23,7 +23,13 @@ class CommandTester(object):
         self._caplog = caplog
 
     def test(
-        self, fn, args, compare_plaintext=True, compare_jsonl=True, compare_extra=None
+        self,
+        fn,
+        args,
+        compare_plaintext=True,
+        compare_jsonl=True,
+        compare_extra=None,
+        allow_raise=None,
     ):
         """Put args into sys.argv, then test the given function.
 
@@ -58,21 +64,37 @@ class CommandTester(object):
                         }
                    }
 
+            allow_raise
+                True if any raised exception should be allowed to propagate.
+
+                By default, if compare_plaintext is True then exceptions are caught
+                and included into the text being compared.
+
+                If compare_plaintext is False, exceptions are instead propagated to
+                ensure they are not missed.
+
         """
         self._caplog.set_level(logging.INFO)
 
+        if allow_raise is None:
+            allow_raise = not compare_plaintext
+
         sys.argv[:] = args
         exception = None
-        try:
+
+        if allow_raise:
             fn()
-        except AssertionError:
-            # Let these raise directly
-            raise
-        except SystemExit as ex:
-            exception = ex
-        except Exception as ex:
-            traceback.print_exc()
-            exception = ex
+        else:
+            try:
+                fn()
+            except AssertionError:
+                # Let these raise directly
+                raise
+            except SystemExit as ex:
+                exception = ex
+            except Exception as ex:
+                traceback.print_exc()
+                exception = ex
 
         records = self._caplog.records
         self._compare_outcome(
@@ -117,7 +139,7 @@ class CommandTester(object):
             if hasattr(record, "event"):
                 out.append({"event": record.event})
 
-        return "\n".join([json.dumps(x) for x in out])
+        return "\n".join([json.dumps(x, sort_keys=True) for x in out])
 
     def _update_baseline(self, filename, content):
         if not content:

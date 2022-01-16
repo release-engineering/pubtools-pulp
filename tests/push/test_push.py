@@ -17,9 +17,7 @@ from pubtools.pulplib import (
 
 from pubtools._pulp.tasks.push import entry_point
 
-
-def hide_unit_ids(text):
-    return re.sub(r" unit_id: [^\n]+", " unit_id: (hidden)", text)
+from .util import hide_unit_ids
 
 
 def test_empty_push(fake_controller, fake_push, fake_state_path, command_tester):
