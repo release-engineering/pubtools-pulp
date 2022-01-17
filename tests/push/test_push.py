@@ -1,9 +1,9 @@
 import os
-import re
 import datetime
 import functools
 
 import attr
+import pytest
 
 from pushsource import Source, PushItem
 
@@ -14,10 +14,26 @@ from pubtools.pulplib import (
     RpmDependency,
     Criteria,
 )
+from pubtools.pluggy import pm
 
 from pubtools._pulp.tasks.push import entry_point
 
 from .util import hide_unit_ids
+
+
+@pytest.fixture
+def hookspy():
+    hooks = []
+
+    def record_hook(hook_name, _hook_impls, kwargs):
+        hooks.append((hook_name, kwargs))
+
+    def do_nothing(*args, **kwargs):
+        pass
+
+    undo = pm.add_hookcall_monitoring(before=record_hook, after=do_nothing)
+    yield hooks
+    undo()
 
 
 def test_empty_push(fake_controller, fake_push, fake_state_path, command_tester):
@@ -56,7 +72,7 @@ def test_empty_push(fake_controller, fake_push, fake_state_path, command_tester)
 
 
 def test_typical_push(
-    fake_controller, data_path, fake_push, fake_state_path, command_tester
+    fake_controller, data_path, fake_push, fake_state_path, command_tester, hookspy
 ):
     """Test a typical case of push using all sorts of content where the content
     is initially not present in Pulp.
@@ -94,6 +110,17 @@ def test_typical_push(
         # This will ensure the Pulp state matches the baseline.
         compare_extra=compare_extra,
     )
+
+    # It should have invoked hook(s).
+    assert len(hookspy) == 6
+    (hook_name, hook_kwargs) = hookspy[0]
+    assert hook_name == "task_start"
+    (hook_name, hook_kwargs) = hookspy[1]
+    assert hook_name == "pulp_repository_published"
+    (hook_name, hook_kwargs) = hookspy[4]
+    assert hook_name == "task_pulp_flush"
+    (hook_name, hook_kwargs) = hookspy[5]
+    assert hook_name == "task_stop"
 
     # Since push is supposed to be idempotent, we should be able to redo
     # the same command and the pulp state should be exactly the same after the
