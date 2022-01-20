@@ -1,4 +1,5 @@
 six
+pubtools>=0.3.0
 pubtools-pulplib>=2.21.0
 fastpurge
 more_executors>=2.7.0

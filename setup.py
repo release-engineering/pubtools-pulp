@@ -48,7 +48,7 @@ setup(
             "pubtools-pulp-maintenance-off = pubtools._pulp.tasks.set_maintenance.set_maintenance_off:entry_point",
             "pubtools-pulp-publish = pubtools._pulp.tasks.publish:entry_point",
             "pubtools-pulp-push = pubtools._pulp.tasks.push:entry_point",
-        ]
+        ],
     },
     project_urls={
         "Documentation": "https://release-engineering.github.io/pubtools-pulp/",

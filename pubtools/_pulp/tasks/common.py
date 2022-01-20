@@ -10,6 +10,8 @@ from pubtools.pulplib import PublishOptions
 from pubtools._pulp.task import PulpTask
 from pubtools._pulp.services import FastPurgeClientService, UdCacheClientService
 
+from ..hooks import pm
+
 LOG = logging.getLogger("pubtools.pulp")
 
 step = PulpTask.step
@@ -141,6 +143,9 @@ class Publisher(CDNCache, UdCache):
         # wait for the publish to complete before
         # flushing caches.
         f_sequence(publish_fs).result()
+
+        # hook implementation(s) may now flush pulp-derived caches and datastores
+        pm.hook.task_pulp_flush()
 
         # flush CDN cache
         out = self.flush_cdn(repos)
