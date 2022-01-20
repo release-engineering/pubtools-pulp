@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.5.0] - 2022-01-21
+
+- Introduced `task_pulp_flush` hook.
+- `pubtools-pulp-push` now accepts a `--pre-push` argument.
+
 ## [1.4.0] - 2021-12-17
 
 - Introduced `pubtools-pulp-push` command.
@@ -51,7 +56,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.1.0...v1.2.0
