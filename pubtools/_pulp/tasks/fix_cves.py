@@ -21,7 +21,9 @@ class FixCves(PulpTask, PulpClientService, Publisher):
     """Command to fix cves"""
 
     def __init__(self, *args, **kwargs):
-        self._random = random.Random(float(os.getenv("PUBTOOLS_SEED") or random.random()))
+        self._random = random.Random(
+            float(os.getenv("PUBTOOLS_SEED") or random.random())
+        )
         super(FixCves, self).__init__(*args, **kwargs)
 
     def fail(self, *args, **kwargs):
