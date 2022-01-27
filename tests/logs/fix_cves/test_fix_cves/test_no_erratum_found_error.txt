@@ -1,0 +1,4 @@
+[    INFO] Get erratum: started
+[   ERROR] No erratum found for RHSA-123:56
+[   ERROR] Get erratum: failed
+# Raised: 30

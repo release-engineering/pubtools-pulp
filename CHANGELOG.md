@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- n/a
+### Added
+
+- Introduced `pubtools-pulp-fix-cves` command
 
 ## [1.5.0] - 2022-01-21
 

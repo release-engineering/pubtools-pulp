@@ -1,0 +1,22 @@
+[    INFO] Get erratum: started
+[    INFO] Get erratum: finished
+[    INFO] Get affected repos: started
+[    INFO] Affected repos: all-rpm-content, repo
+[    INFO] Get affected repos: finished
+[    INFO] Compare CVEs: started
+[    INFO] CVEs from erratum: CVE-123
+[    INFO] CVEs for fix: CVE-123
+[    INFO] New CVEs are same as the ones on the advisory. Nothing to update.
+[    INFO] Compare CVEs: finished
+[    INFO] Publish: started
+[    INFO] Publishing all-rpm-content
+[    INFO] Publishing repo
+[    INFO] Publish: finished
+[    INFO] Flush CDN cache: started
+[    INFO] CDN cache flush is not enabled.
+[    INFO] Flush CDN cache: finished
+[    INFO] Set cdn_published: started
+[    INFO] Set cdn_published: finished
+[    INFO] Flush UD cache: started
+[    INFO] UD cache flush is not enabled.
+[    INFO] Flush UD cache: finished

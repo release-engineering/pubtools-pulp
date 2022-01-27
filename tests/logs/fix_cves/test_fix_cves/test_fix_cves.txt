@@ -1,0 +1,27 @@
+[    INFO] Get erratum: started
+[    INFO] Get erratum: finished
+[    INFO] Get affected repos: started
+[    INFO] Affected repos: all-rpm-content, repo
+[    INFO] Get affected repos: finished
+[    INFO] Compare CVEs: started
+[    INFO] CVEs from erratum: CVE-123
+[    INFO] CVEs for fix: CVE-456, CVE-987
+[    INFO] Compare CVEs: finished
+[    INFO] Process erratum: started
+[    INFO] Process erratum: finished
+[    INFO] Upload erratum: started
+[    INFO] Uploading RHSA-1234:56 to all-rpm-content [82e2e662-f728-b4fa-4248-5e3a0a5d2f34]
+[    INFO] Uploaded to all-rpm-content
+[    INFO] Upload erratum: finished
+[    INFO] Publish: started
+[    INFO] Publishing all-rpm-content
+[    INFO] Publishing repo
+[    INFO] Publish: finished
+[    INFO] Flush CDN cache: started
+[    INFO] CDN cache flush is not enabled.
+[    INFO] Flush CDN cache: finished
+[    INFO] Set cdn_published: started
+[    INFO] Set cdn_published: finished
+[    INFO] Flush UD cache: started
+[    INFO] UD cache flush is not enabled.
+[    INFO] Flush UD cache: finished

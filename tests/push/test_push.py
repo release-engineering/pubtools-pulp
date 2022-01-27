@@ -112,14 +112,16 @@ def test_typical_push(
     )
 
     # It should have invoked hook(s).
-    assert len(hookspy) == 6
+    assert len(hookspy) == 9
     (hook_name, hook_kwargs) = hookspy[0]
     assert hook_name == "task_start"
     (hook_name, hook_kwargs) = hookspy[1]
+    assert hook_name == "pulp_repository_pre_publish"
+    (hook_name, hook_kwargs) = hookspy[2]
     assert hook_name == "pulp_repository_published"
-    (hook_name, hook_kwargs) = hookspy[4]
+    (hook_name, hook_kwargs) = hookspy[7]
     assert hook_name == "task_pulp_flush"
-    (hook_name, hook_kwargs) = hookspy[5]
+    (hook_name, hook_kwargs) = hookspy[8]
     assert hook_name == "task_stop"
 
     # Since push is supposed to be idempotent, we should be able to redo
