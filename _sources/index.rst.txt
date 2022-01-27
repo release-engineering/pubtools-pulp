@@ -15,3 +15,4 @@ content via `Pulp <https://pulpproject.org/>`_.
    publish
    push
    set-maintenance
+   fix-cves
