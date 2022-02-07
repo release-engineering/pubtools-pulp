@@ -23,5 +23,6 @@ payload:
     - filename: some-iso
       relative_path: iso-dest2/ISOS/some-iso
       sha256sum: db68c8a70f8383de71c107dca5fcfe53b1132186d1a6681d9ee3f4eea724fabb
+      order: 3.0
       attributes:
         description: My wonderful ISO

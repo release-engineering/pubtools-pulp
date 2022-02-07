@@ -21,4 +21,4 @@
 [    INFO] Doing Pulp search: ((content_type_id IN ['iso']) AND (sha256sum=='db68c8a70f8383de71c107dca5fcfe53b1132186d1a6681d9ee3f4eea724fabb' AND path=='some-file'))
 [   ERROR] Associate items in Pulp: failed
 [    INFO] Fake pulp state persisted to <tmpdir>/fake-pulp-state.yaml
-# Raised: Fatal error: Pulp unit not present in repo(s) iso-dest2 after copy: FileUnit(path='some-file', size=46, sha256sum='db68c8a70f8383de71c107dca5fcfe53b1132186d1a6681d9ee3f4eea724fabb', description=None, cdn_path=None, cdn_published=None, content_type_id='iso', repository_memberships=['iso-dest1'], unit_id='e3e70682-c209-4cac-629f-6fbed82c07cd')
+# Raised: Fatal error: Pulp unit not present in repo(s) iso-dest2 after copy: FileUnit(path='some-file', size=46, sha256sum='db68c8a70f8383de71c107dca5fcfe53b1132186d1a6681d9ee3f4eea724fabb', description=None, version=None, display_order=None, cdn_path=None, cdn_published=None, content_type_id='iso', repository_memberships=['iso-dest1'], unit_id='e3e70682-c209-4cac-629f-6fbed82c07cd')

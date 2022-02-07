@@ -36,8 +36,9 @@ class PulpFilePushItem(PulpPushItem):
     def unit_for_update(self):
         return attr.evolve(
             self.pulp_unit,
-            # TODO: support other mutable fields too (e.g. content ISO fields)
             description=self.pushsource_item.description,
+            version=self.pushsource_item.version,
+            display_order=self.pushsource_item.display_order,
             # Note: cdn_path is intentionally omitted here as it would not be safe
             # to change that value if the unit was already published, so we only
             # support setting it on upload.
@@ -65,8 +66,9 @@ class PulpFilePushItem(PulpPushItem):
         return repo.upload_file(
             self.pushsource_item.src,
             relative_url=self.pushsource_item.name,
-            # TODO: support other mutable fields too
             description=self.pushsource_item.description,
+            version=self.pushsource_item.version,
+            display_order=self.pushsource_item.display_order,
             cdn_path=self.cdn_path,
             # If there's an existing pulp unit which has already been published to
             # CDN, then cdn_publish is copied across.
