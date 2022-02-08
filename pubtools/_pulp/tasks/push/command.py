@@ -4,6 +4,7 @@ import random
 
 from pushsource import Source
 from pubtools.pulplib import Criteria
+import attr
 
 from .items import PulpPushItem, State
 from .copy import CopyOperation
@@ -110,7 +111,14 @@ class Push(
         """Yields push items with checksums filled in (if they were not already present)."""
         # TODO: improve performance by parallelizing
         for item in items:
-            yield item.with_checksums()
+            with_sums = item.with_checksums()
+
+            # As we figure out checksums for each item we'll record that item,
+            # generally in PENDING state. We treat this as non-blocking and
+            # don't wait on the result before proceeding.
+            self.collector.update_push_items([with_sums.pushsource_item])
+
+            yield with_sums
 
     @step("Query items in Pulp")
     def pushitems_with_pulp_state(self, items):
@@ -360,6 +368,8 @@ class Push(
         count_prepush = 0
         count_other = 0
 
+        pushsource_items = []
+
         for item in items:
             if item.pulp_state in (State.NEEDS_UPDATE, State.PARTIAL, State.IN_REPOS):
                 # These are the states which mean that the item's content is in Pulp,
@@ -367,6 +377,10 @@ class Push(
                 count_prepush += 1
             else:
                 count_other += 1
+            pushsource_items.append(item.pushsource_item)
+
+        # Notify pushcollector of updated item states.
+        self.collector.update_push_items(pushsource_items).result()
 
         LOG.info(
             "Ending pre-push. Items in pulp: %s, pending: %s",
@@ -379,9 +393,6 @@ class Push(
         #
         # Note most of these calls below are generators, so we're not
         # loading all items at once - most steps are pipelined together.
-        #
-        # TODO: insert calls to pushcollector throughout the below to ensure
-        # push item state is updated as the push runs.
 
         # Locate all items for push.
         items = self.all_pushitems()
@@ -420,6 +431,13 @@ class Push(
         # described above without slowing other stuff down?
         items = list(items)
 
+        # Since we've already got a synchronization point, we'll also take the
+        # opportunity to update the push item states in pushcollector as one big
+        # batch.
+        self.collector.update_push_items(
+            [item.pushsource_item for item in items]
+        ).result()
+
         # Ensure all the uploaded items are present in all the target repos.
         items = self.associated_items(items)
 
@@ -437,6 +455,7 @@ class Push(
         # away - the CDN origin supports near-atomic update.
         all_repo_ids = set()
         set_cdn_published = set()
+        pushsource_items = []
         for item in items:
             all_repo_ids.update(item.publish_pulp_repos)
 
@@ -446,6 +465,8 @@ class Push(
             if hasattr(unit, "cdn_published") and unit.cdn_published is None:
                 set_cdn_published.add(unit)
 
+            pushsource_items.append(item.pushsource_item)
+
         # Locate all the repos for publish.
         repo_fs = self.pulp_client.search_repository(
             Criteria.with_id(sorted(all_repo_ids))
@@ -454,6 +475,11 @@ class Push(
         # Start publishing them, including cache flushes.
         publish_fs = self.publish_with_cache_flush(repo_fs, set_cdn_published)
 
-        # Wait for everything to finish.
+        # Then wait for publishes to finish.
         for f in publish_fs:
             f.result()
+
+        # At this stage we consider all items to be fully "pushed".
+        self.collector.update_push_items(
+            [attr.evolve(item, state="PUSHED") for item in pushsource_items]
+        ).result()

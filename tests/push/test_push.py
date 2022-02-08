@@ -36,7 +36,9 @@ def hookspy():
     undo()
 
 
-def test_empty_push(fake_controller, fake_push, fake_state_path, command_tester):
+def test_empty_push(
+    fake_controller, fake_push, fake_state_path, command_tester, stub_collector
+):
     """Test a push with no content."""
 
     # Sanity check that the Pulp server is, initially, empty.
@@ -70,9 +72,18 @@ def test_empty_push(fake_controller, fake_push, fake_state_path, command_tester)
         compare_extra=compare_extra,
     )
 
+    # It should not record any push items at all.
+    assert not stub_collector
+
 
 def test_typical_push(
-    fake_controller, data_path, fake_push, fake_state_path, command_tester, hookspy
+    fake_controller,
+    data_path,
+    fake_push,
+    fake_state_path,
+    command_tester,
+    hookspy,
+    stub_collector,
 ):
     """Test a typical case of push using all sorts of content where the content
     is initially not present in Pulp.
@@ -123,6 +134,44 @@ def test_typical_push(
     assert hook_name == "task_pulp_flush"
     (hook_name, hook_kwargs) = hookspy[8]
     assert hook_name == "task_stop"
+
+    # It should have recorded various push items.
+    # We don't try to verify the entire sequence of items here, it's too
+    # cumbersome. Instead we pick a single item and trace the expected
+    # changes over time:
+
+    # This item should be found in the staging dir, at which point it's PENDING.
+    item = {
+        "build": None,
+        "checksums": {
+            "md5": "6a3eec6d45e0ea80eab05870bf7a8d4b",
+            "sha256": "e837a635cc99f967a70f34b268baa52e0f412c1502e08e924ff5b09f1f9573f2",
+        },
+        "dest": "dest1",
+        "filename": "walrus-5.21-1.noarch.rpm",
+        "origin": stagedir,
+        "signing_key": "F78FB195",
+        "src": "%s/dest1/RPMS/walrus-5.21-1.noarch.rpm" % stagedir,
+        "state": "PENDING",
+    }
+    assert stub_collector.count(item) == 1
+    pending_idx = stub_collector.index(item)
+
+    # Then it should become EXISTS once we've uploaded it to Pulp.
+    item["state"] = "EXISTS"
+    assert stub_collector.count(item) == 1
+    exists_idx = stub_collector.index(item)
+
+    # And finally it should become PUSHED once publishing completes.
+    item["state"] = "PUSHED"
+    assert stub_collector.count(item) == 1
+    pushed_idx = stub_collector.index(item)
+
+    # .index crashes if items are absent, so we already verified that
+    # the item exists with expected states. But let's also verify that
+    # the states occurred in the correct order...
+    assert pending_idx < exists_idx
+    assert exists_idx < pushed_idx
 
     # Since push is supposed to be idempotent, we should be able to redo
     # the same command and the pulp state should be exactly the same after the

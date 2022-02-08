@@ -177,6 +177,12 @@ class PulpPushItem(object):
 
         Subclasses MAY override this to add different logic per content type.
         """
+
+        # The new state of the item for pushsource/pushcollector.
+        # Valid values are documented at:
+        # https://release-engineering.github.io/pushcollector/schema.html
+        pushsource_state = self.pushsource_item.state
+
         if not unit:
             # It's not in Pulp
             state = State.MISSING
@@ -186,11 +192,23 @@ class PulpPushItem(object):
         elif set(self.pushsource_item.dest) - set(unit.repository_memberships):
             # In some repos, but not all desired repos
             state = State.PARTIAL
+
+            # This counts as "existing" in Pulp since upload is not required.
+            pushsource_state = "EXISTS"
         else:
             # It's already present in all the desired repos.
             state = State.IN_REPOS
 
-        out = attr.evolve(self, pulp_unit=unit, pulp_state=state)
+            # Also counts as "existing" in Pulp.
+            # Not quite PUSHED yet as we still want to ensure repos are published.
+            pushsource_state = "EXISTS"
+
+        out = attr.evolve(
+            self,
+            pulp_unit=unit,
+            pulp_state=state,
+            pushsource_item=attr.evolve(self.pushsource_item, state=pushsource_state),
+        )
 
         # If the unit is present, but the state doesn't match what we want, mark it
         # as needing an update.
