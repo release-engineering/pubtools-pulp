@@ -3,6 +3,8 @@ import pytest
 
 from more_executors.futures import f_return
 
+from pushcollector import Collector
+
 from pubtools.pulplib import (
     Client,
     FileRepository,
@@ -53,6 +55,22 @@ class NoCopyClient(object):
         return f_return([Task(id="no-copy-123", completed=True, succeeded=True)])
 
 
+class StubCollector(object):
+    """An instance of pushcollector.Collector which simply records all push items
+    to a specified list.
+    """
+
+    def __init__(self, out):
+        self._out = out
+
+    def update_push_items(self, items):
+        self._out.extend(items)
+
+    def attach_file(self, *_, **__):
+        # don't currently support testing this
+        pass
+
+
 @pytest.fixture
 def fake_state_path(tmpdir):
     """Yields path to a temporary state file used by PersistentFake during each test."""
@@ -88,3 +106,20 @@ def fake_nocopy_push(fake_controller):
     """Yields an instance of a Push task which is connected to fake_controller and
     a client configured such that content copies won't work."""
     yield NoCopyPush(fake_controller)
+
+
+@pytest.fixture
+def stub_collector():
+    """Installs a custom pushcollector backend which records all push items
+    onto a plain old list.
+
+    Yields the list; it can be inspected to see which push items were recorded."""
+    itemlist = []
+
+    Collector.register_backend("pubtools-pulp-test", lambda: StubCollector(itemlist))
+    Collector.set_default_backend("pubtools-pulp-test")
+
+    yield itemlist
+
+    Collector.set_default_backend(None)
+    Collector.register_backend("pubtools-pulp-test", None)
