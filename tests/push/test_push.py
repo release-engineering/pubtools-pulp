@@ -69,6 +69,7 @@ def test_empty_push(
         run,
         args,
         compare_plaintext=False,
+        compare_jsonl=False,
         compare_extra=compare_extra,
     )
 
@@ -116,8 +117,8 @@ def test_typical_push(
     command_tester.test(
         run,
         args,
-        # TODO: find a way to normalize logs such that we can do plaintext compare?
         compare_plaintext=False,
+        compare_jsonl=False,
         # This will ensure the Pulp state matches the baseline.
         compare_extra=compare_extra,
     )
@@ -290,6 +291,7 @@ def test_update_push(
         run,
         args,
         compare_plaintext=False,
+        compare_jsonl=False,
         # This will ensure the Pulp state matches the baseline.
         compare_extra=compare_extra,
     )

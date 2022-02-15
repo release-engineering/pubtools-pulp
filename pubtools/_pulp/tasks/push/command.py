@@ -1,13 +1,20 @@
 import logging
-import concurrent.futures
-import random
+import sys
 
-from pushsource import Source
-from pubtools.pulplib import Criteria
-import attr
 
-from .items import PulpPushItem, State
-from .copy import CopyOperation
+from .contextlib_compat import exitstack
+from .phase import (
+    LoadPushItems,
+    LoadChecksums,
+    QueryPulp,
+    Upload,
+    EndPrePush,
+    Update,
+    Collect,
+    Associate,
+    Publish,
+    Context,
+)
 from ..common import Publisher, PulpTask
 from ...services import (
     CollectorService,
@@ -23,45 +30,6 @@ LOG = logging.getLogger("pubtools.pulp")
 # E1101: Instance of 'CollectorProxy' has no 'search_repository' member (no-member)
 #
 # pylint: disable=no-member
-
-
-def batched_items(items, batchsize=100):
-    # A simplistic batcher for an item generator.
-    #
-    # TODO: this batching should be smarter so that it does not block
-    # the 'items' generator while processing a batch.
-    #
-    # Note: this could have used 'grouper' recipe at
-    # https://docs.python.org/3/library/itertools.html ,
-    # however not all of the dependencies are available in py2.
-
-    it = iter(items)
-    batch = []
-
-    while True:
-        try:
-            item = next(it)
-        except StopIteration:
-            break
-
-        batch.append(item)
-        if len(batch) >= batchsize:
-            yield batch
-            batch = []
-
-    if batch:
-        yield batch
-
-
-def items_by_type(items):
-    # Given an iterable of items, returns an iterable-of-iterable
-    # grouping items by their unit_type.
-    items_by_unit_type = {}
-    for item in items:
-        unit_type = item.unit_type
-        items_by_unit_type.setdefault(unit_type, []).append(item)
-
-    return items_by_unit_type.values()
 
 
 class Push(
@@ -91,395 +59,89 @@ class Push(
             "--source", action="append", help="Source(s) of content to be pushed"
         )
 
-    @step("Load push items")
-    def all_pushitems(self):
-        """Yields all push items found in the requested `--source', wrapped into
-        PulpPushItem instances.
-        """
-        for source_url in self.args.source:
-            with Source.get(source_url) as source:
-                LOG.info("Loading items from %s", source_url)
-                for item in source:
-                    pulp_item = PulpPushItem.for_item(item)
-                    if pulp_item:
-                        yield pulp_item
-                    else:
-                        LOG.info("Skipping unsupported type: %s", item)
-
-    @step("Calculate checksums")
-    def pushitems_with_sums(self, items):
-        """Yields push items with checksums filled in (if they were not already present)."""
-        # TODO: improve performance by parallelizing
-        for item in items:
-            with_sums = item.with_checksums()
-
-            # As we figure out checksums for each item we'll record that item,
-            # generally in PENDING state. We treat this as non-blocking and
-            # don't wait on the result before proceeding.
-            self.collector.update_push_items([with_sums.pushsource_item])
-
-            yield with_sums
-
-    @step("Query items in Pulp")
-    def pushitems_with_pulp_state(self, items):
-        """Yields push items with Pulp state queried/calculated."""
-
-        # We process items in batches so that we can find multiple items per
-        # Pulp search rather than one at a time.
-        for batch in batched_items(items):
-            for items in items_by_type(batch):
-                for item in self.pushitems_with_pulp_state_single_batch(items):
-                    assert item
-                    yield item
-
-    def pushitems_with_pulp_state_single_batch(self, items):
-        # Find Pulp state for a batch of items using a single Pulp query.
-        #
-        # It is mandatory that all provided items are of the same unit_type.
-        if not items:
-            return
-
-        unit_type = items[0].unit_type
-
-        if unit_type is None:
-            # This means that the item doesn't map to a specific single unit type
-            # (e.g. modulemd stream, comps.xml) and we don't support querying the
-            # state at all; such items are simply returned as-is.
-            for item in items:
-                assert item
-                yield item
-            return
-
-        crit = Criteria.and_(
-            Criteria.with_unit_type(unit_type),
-            Criteria.or_(*[item.criteria() for item in items]),
-        )
-        LOG.info("Doing Pulp search: %s", crit)
-
-        units = self.pulp_client.search_content(crit).result()
-        new_items = PulpPushItem.match_items_units(items, units)
-
-        for item in new_items:
-            assert item
-            yield item
-
-    @step("Upload items to Pulp")
-    def uploaded_items(self, items):
-        """Yields push items with item uploaded if needed, such that the item will
-        be present in at least one Pulp repo.
-        """
-
-        uploaded = []
-        needs_upload = []
-        prepush_skipped = []
-
-        upload_context = {}
-
-        for item in items:
-            if item.pulp_state in [State.IN_REPOS, State.PARTIAL, State.NEEDS_UPDATE]:
-                # This item is already in Pulp.
-                uploaded.append(item)
-            elif self.args.pre_push and not item.can_pre_push:
-                # We're doing a pre-push, but this item doesn't support that.
-                prepush_skipped.append(item)
-            else:
-                # This item is not in Pulp, or otherwise needs a reupload.
-                item_type = type(item)
-                if item_type not in upload_context:
-                    upload_context[item_type] = item_type.upload_context(
-                        self.pulp_client
-                    )
-
-                ctx = upload_context[item_type]
-
-                needs_upload.append(item.ensure_uploaded(ctx))
-
-        event = {
-            "type": "uploading-pulp",
-            "items-present": len(uploaded),
-            "items-uploading": len(needs_upload),
-        }
-        messages = [
-            "%s already present" % len(uploaded),
-            "%s uploading" % len(needs_upload),
-        ]
-
-        if self.args.pre_push:
-            messages.append("%s skipped during pre-push" % len(prepush_skipped))
-            event["items-prepush-skipped"] = len(prepush_skipped)
-
-        LOG.info("Upload items: %s", ", ".join(messages), extra={"event": event})
-
-        # Anything already in the system or being skipped can be immediately yielded.
-        for item in uploaded + prepush_skipped:
-            assert item
-            yield item
-
-        # Then wait for the completion of anything we're uploading.
-        # TODO: apply a configurable timeout
-        for item in concurrent.futures.as_completed(needs_upload):
-            out = item.result()
-            assert out
-            yield out
-
-    @step("Update items in Pulp")
-    def uptodate_items(self, items):
-        """Yields push items with item updated if needed, i.e. with any mutable fields
-        set to their desired values.
-        """
-
-        no_update_needed = []
-        update_needed = []
-
-        for item in items:
-            if item.pulp_state not in State.NEEDS_UPDATE:
-                # This item is already up-to-date in Pulp (or just doesn't support
-                # being updated)
-                no_update_needed.append(item)
-            else:
-                # This item needs an update.
-                update_needed.append(item.ensure_uptodate(self.pulp_client))
-
-        LOG.info(
-            "Update: %s item(s) already up-to-date, %s updating",
-            len(no_update_needed),
-            len(update_needed),
-        )
-
-        # Anything already in the system can be immediately yielded.
-        for item in no_update_needed:
-            yield item
-
-        # Then wait for the completion of anything we're uploading.
-        # TODO: apply a configurable timeout
-        for item in concurrent.futures.as_completed(update_needed):
-            out = item.result()
-            assert out
-            yield out
-
-    @step("Associate items in Pulp")
-    def associated_items(self, items):
-        """Yields push items with item associated into target Pulp repos.
-
-        Each yielded item has been placed into all of the desired Pulp repos according
-        to the push item 'dest'.
-        """
-
-        for batch in batched_items(items):
-            for items in items_by_type(batch):
-                for item in self.associated_items_single_batch(items):
-                    assert item
-                    yield item
-
-    def associated_items_single_batch(self, items):
-        # Associate a single batch of items into destination repos.
-        #
-        # All provided items must be of the same unit_type.
-        #
-        # It is guaranteed that every yielded item exists in the desired
-        # target repos in Pulp. A fatal error occurs if this can't be done
-        # for any item in the batch.
-        copy_crit = {}
-        copy_opers = {}
-        copy_results = []
-
-        copy_items = []
-        nocopy_items = []
-
-        unit_type = items[0].unit_type
-
-        base_crit = Criteria.with_unit_type(unit_type) if unit_type else None
-
-        for item in items:
-            if not item.missing_pulp_repos:
-                # Don't need to do anything with this item.
-                nocopy_items.append(item)
-            else:
-                copy_items.append(item)
-                crit = item.criteria()
-                # This item needs to be copied into each of the missing repos.
-                for dest_repo_id in item.missing_pulp_repos:
-                    # The source repo for copy can be anything. However, as copying
-                    # locks both src and dest repo, it's better to select the src
-                    # randomly so the locks tend to be uniformly distributed.
-                    #
-                    # TODO: could be sped up by looking for the repo with the smallest
-                    # available queue.
-                    #
-                    src_repo_id = random.sample(item.in_pulp_repos, 1)[0]
-                    key = (src_repo_id, dest_repo_id)
-                    copy_crit.setdefault(key, []).append(crit)
-
-        for key in copy_crit.keys():
-            (src_repo_id, dest_repo_id) = key
-
-            # TODO: cache repo lookups?
-            src_repo = self.pulp_client.get_repository(src_repo_id)
-            dest_repo = self.pulp_client.get_repository(dest_repo_id)
-
-            crit = Criteria.and_(base_crit, Criteria.or_(*copy_crit[key]))
-
-            oper = CopyOperation(src_repo_id, dest_repo_id, crit)
-            oper.log_copy_start()
-
-            copy_f = self.pulp_client.copy_content(
-                src_repo.result(), dest_repo.result(), crit
-            )
-
-            # Stash the oper for logging later.
-            copy_opers[copy_f] = oper
-
-            copy_results.append(copy_f)
-
-        # Copies have been started.
-        # Any items which didn't need a copy can be immediately yielded now.
-        for item in nocopy_items:
-            assert item
-            yield item
-
-        # Then wait for copies to complete.
-        # TODO: apply a configurable timeout
-        for copy in concurrent.futures.as_completed(copy_results):
-            oper = copy_opers[copy]
-            tasks = copy.result()
-            for t in tasks:
-                oper.log_copy_done(t)
-
-        # All copies succeeded.
-        # Now re-query the same items from Pulp, but this time expecting that
-        # they are in all the repos.
-        for item in self.pushitems_with_pulp_state_single_batch(copy_items):
-            missing_repos = item.missing_pulp_repos
-            if missing_repos:
-                # TODO: consider improving this to add a bit more detail,
-                # e.g. mention which copy operation was expected to cover this item.
-                msg = (
-                    "Fatal error: Pulp unit not present in repo(s) %s after copy: %s"
-                    % (", ".join(missing_repos), item.pulp_unit)
-                )
-                raise RuntimeError(msg)
-
-            assert item
-            yield item
-
-    def end_pre_push(self, items):
-        """Called at end of push in pre-push mode to drain items and log."""
-
-        count_prepush = 0
-        count_other = 0
-
-        pushsource_items = []
-
-        for item in items:
-            if item.pulp_state in (State.NEEDS_UPDATE, State.PARTIAL, State.IN_REPOS):
-                # These are the states which mean that the item's content is in Pulp,
-                # which is the extent of what prepush can do.
-                count_prepush += 1
-            else:
-                count_other += 1
-            pushsource_items.append(item.pushsource_item)
-
-        # Notify pushcollector of updated item states.
-        self.collector.update_push_items(pushsource_items).result()
-
-        LOG.info(
-            "Ending pre-push. Items in pulp: %s, pending: %s",
-            count_prepush,
-            count_other,
-        )
-
     def run(self):
         # Push workflow.
         #
-        # Note most of these calls below are generators, so we're not
-        # loading all items at once - most steps are pipelined together.
+        # Push is separated into various phases. Each phase has one thread
+        # associated with it, and generally is connected to the next phase by
+        # a queue.
+        phases = []
 
-        # Locate all items for push.
-        items = self.all_pushitems()
+        # This is a context object shared by all phases.
+        ctx = Context()
 
-        # Ensure we have checksums for all of them (needed for Pulp search);
-        # this potentially involves slow reading of content, e.g. over NFS.
-        items = self.pushitems_with_sums(items)
+        # Prepare pushcollector 'phase'. This phase is a bit special in that
+        # it runs in parallel to all other phases, and its input queue is written
+        # to by all other phases.
+        collect_phase = Collect(context=ctx, collector=self.collector)
+        phases.append(collect_phase)
 
-        # Get Pulp state for each of these items (e.g. is it already in Pulp; is
-        # it in all the correct repos). This will do batched queries to Pulp.
-        items = self.pushitems_with_pulp_state(items)
+        # A helper to add a phase with consistent initialization.
+        def add_phase(klass, **kwargs):
+            if "in_queue" not in kwargs and phases:
+                # For all phases except the first, the input queue defaults
+                # to the previous phase's output queue, i.e. each phase passes
+                # some items onto the next via the queue.
+                kwargs["in_queue"] = phases[-1].out_queue
+
+            # Provide many default arguments to each phase.
+            # Phases accept any number of keyword arguments, so these aren't
+            # all used by every phase.
+            kwargs.update(
+                context=ctx,
+                pulp_client=self.pulp_client,
+                pre_push=self.args.pre_push,
+                update_push_items=collect_phase.update_push_items,
+                publish_with_cache_flush=self.publish_with_cache_flush,
+            )
+            phases.append(klass(**kwargs))
+
+        # Now proceed with adding the phases which make up a push...
+
+        # Load push items from pushsource library.
+        # As the first phase, this does not have an input queue as it obtains
+        # its inputs from pushsource library.
+        add_phase(LoadPushItems, in_queue=None, source_urls=self.args.source)
+
+        # Ensure we have checksums for each push item. Potentially involves
+        # reading content for push over NFS.
+        add_phase(LoadChecksums)
+
+        # Figure out the current state of each item in Pulp.
+        add_phase(QueryPulp)
 
         # Ensure all items are uploaded to Pulp. This uploads bytes into Pulp
         # but does not guarantee the items are present in each of the desired
         # destination repos.
-        items = self.uploaded_items(items)
+        add_phase(Upload)
 
-        # If we are in pre-push mode then we do not go any further, we just wait
-        # for all previous steps, then log a message and exit.
         if self.args.pre_push:
-            return self.end_pre_push(items)
+            # If we are in pre-push mode then we do not go any further, we just wait
+            # for all previous steps, then log a message and exit.
+            add_phase(EndPrePush)
 
-        # Ensure all items are up-to-date in Pulp. This adjusts any mutable fields
-        # whose current value doesn't match the desired value.
-        items = self.uptodate_items(items)
+        else:
+            # Ensure all items are up-to-date in Pulp. This adjusts any mutable fields
+            # whose current value doesn't match the desired value.
+            add_phase(Update)
 
-        # Synchronization point prior to association.
+            # Ensure all items are associated into the desired target repos.
+            add_phase(Associate)
+
+            # Ensure all repos are published once the desired content is present.
+            add_phase(Publish)
+
+        # We've connected up all phases of the push, now we just need to
+        # start them all.
         #
-        # Why: it is strongly encouraged to ensure all modulemds are put into repos
-        # before we start putting RPMs into them, to reduce the risk that we could
-        # accidentally expose an RPM without the corresponding modulemd. Therefore we
-        # need to ensure any module items are processed by uploaded_items above,
-        # before we can proceed to associate any RPM items.
-        #
-        # TODO: try to make this smarter so it handles only that modulemd/rpm case
-        # described above without slowing other stuff down?
-        items = list(items)
+        # This will start all the phases...
+        with exitstack(phases):
+            LOG.debug("All push phases are now running.")
+            # ...and exiting the 'with' block here will wait for them to
+            # complete.
 
-        # Since we've already got a synchronization point, we'll also take the
-        # opportunity to update the push item states in pushcollector as one big
-        # batch.
-        self.collector.update_push_items(
-            [item.pushsource_item for item in items]
-        ).result()
-
-        # Ensure all the uploaded items are present in all the target repos.
-        items = self.associated_items(items)
-
-        # It is now the case that all items exist with the desired state, in the
-        # desired repos. Now we need to publish affected repos.
-        #
-        # This is also a synchronization point. The idea is that publishing repo
-        # makes content available, and there may be dependencies between the bits
-        # of content we've handled, so we should ensure *all* of them are in correct
-        # repos before we start publish of *any* repos to increase the chance that
-        # all of them land at once.
-        #
-        # TODO: once exodus is live, consider refactoring this to not be a
-        # synchronization point (or make it optional?) as the above motivation goes
-        # away - the CDN origin supports near-atomic update.
-        all_repo_ids = set()
-        set_cdn_published = set()
-        pushsource_items = []
-        for item in items:
-            all_repo_ids.update(item.publish_pulp_repos)
-
-            # any unit which supports cdn_published but hasn't had it set yet should
-            # have it set once the publish completes.
-            unit = item.pulp_unit
-            if hasattr(unit, "cdn_published") and unit.cdn_published is None:
-                set_cdn_published.add(unit)
-
-            pushsource_items.append(item.pushsource_item)
-
-        # Locate all the repos for publish.
-        repo_fs = self.pulp_client.search_repository(
-            Criteria.with_id(sorted(all_repo_ids))
-        )
-
-        # Start publishing them, including cache flushes.
-        publish_fs = self.publish_with_cache_flush(repo_fs, set_cdn_published)
-
-        # Then wait for publishes to finish.
-        for f in publish_fs:
-            f.result()
-
-        # At this stage we consider all items to be fully "pushed".
-        self.collector.update_push_items(
-            [attr.evolve(item, state="PUSHED") for item in pushsource_items]
-        ).result()
+        # If a phase failed, it's communicated back to us through the
+        # context object here. Exit unsuccessfully if so.
+        if ctx.has_error:
+            LOG.error("Push failed with fatal error, see previous logs.")
+            sys.exit(59)

@@ -1,10 +1,15 @@
 import logging
+import random
+import concurrent
 
 from pushsource import PushItem
 from pubtools.pulplib import Unit, Criteria
 
+
 from more_executors.futures import f_map, f_flat_map
 import attr
+
+from ..copy import CopyOperation
 
 
 # A mapping between PushItem classes and the PulpPushItem wrappers
@@ -139,6 +144,146 @@ class PulpPushItem(object):
         (e.g. to cache a value rather than recalculating per upload).
         """
         return UploadContext(client=pulp_client)
+
+    @classmethod
+    def items_by_type(cls, items):
+        """Given an iterable of items, returns an iterable-of-iterable
+        grouping items by their unit_type."""
+        items_by_unit_type = {}
+        for item in items:
+            unit_type = item.unit_type
+            items_by_unit_type.setdefault(unit_type, []).append(item)
+
+        return items_by_unit_type.values()
+
+    @classmethod
+    def items_with_pulp_state_single_batch(cls, pulp_client, items):
+        """Find Pulp state for a batch of items using a single Pulp query.
+        Returns an iterable of updated items.
+
+        It is mandatory that all provided items are of the same unit_type.
+        The caller is responsible for ensuring this.
+        """
+        if not items:
+            return
+
+        unit_type = items[0].unit_type
+
+        if unit_type is None:
+            # This means that the item doesn't map to a specific single unit type
+            # (e.g. modulemd stream, comps.xml) and we don't support querying the
+            # state at all; such items are simply returned as-is.
+            for item in items:
+                assert item
+                yield item
+            return
+
+        crit = Criteria.and_(
+            Criteria.with_unit_type(unit_type),
+            Criteria.or_(*[item.criteria() for item in items]),
+        )
+        LOG.info("Doing Pulp search: %s", crit)
+
+        units = pulp_client.search_content(crit).result()
+        new_items = cls.match_items_units(items, units)
+
+        for item in new_items:
+            assert item
+            yield item
+
+    @classmethod
+    def associated_items_single_batch(cls, pulp_client, items):
+        """Associate a single batch of items into destination repos.
+
+        All provided items must be of the same unit_type.
+
+        It is guaranteed that every yielded item exists in the desired
+        target repos in Pulp. A fatal error occurs if this can't be done
+        for any item in the batch.
+        """
+
+        copy_crit = {}
+        copy_opers = {}
+        copy_results = []
+
+        copy_items = []
+        nocopy_items = []
+
+        unit_type = items[0].unit_type
+
+        base_crit = Criteria.with_unit_type(unit_type) if unit_type else None
+
+        for item in items:
+            if not item.missing_pulp_repos:
+                # Don't need to do anything with this item.
+                nocopy_items.append(item)
+            else:
+                copy_items.append(item)
+                crit = item.criteria()
+                # This item needs to be copied into each of the missing repos.
+                for dest_repo_id in item.missing_pulp_repos:
+                    # The source repo for copy can be anything. However, as copying
+                    # locks both src and dest repo, it's better to select the src
+                    # randomly so the locks tend to be uniformly distributed.
+                    #
+                    # TODO: could be sped up by looking for the repo with the smallest
+                    # available queue.
+                    #
+                    src_repo_id = random.sample(item.in_pulp_repos, 1)[0]
+                    key = (src_repo_id, dest_repo_id)
+                    copy_crit.setdefault(key, []).append(crit)
+
+        for key in copy_crit.keys():
+            (src_repo_id, dest_repo_id) = key
+
+            # TODO: cache repo lookups?
+            src_repo = pulp_client.get_repository(src_repo_id)
+            dest_repo = pulp_client.get_repository(dest_repo_id)
+
+            crit = Criteria.and_(base_crit, Criteria.or_(*copy_crit[key]))
+
+            oper = CopyOperation(src_repo_id, dest_repo_id, crit)
+            oper.log_copy_start()
+
+            copy_f = pulp_client.copy_content(
+                src_repo.result(), dest_repo.result(), crit
+            )
+
+            # Stash the oper for logging later.
+            copy_opers[copy_f] = oper
+
+            copy_results.append(copy_f)
+
+        # Copies have been started.
+        # Any items which didn't need a copy can be immediately yielded now.
+        for item in nocopy_items:
+            assert item
+            yield item
+
+        # Then wait for copies to complete.
+        # TODO: apply a configurable timeout
+        for copy in concurrent.futures.as_completed(copy_results):
+            oper = copy_opers[copy]
+            tasks = copy.result()
+            for t in tasks:
+                oper.log_copy_done(t)
+
+        # All copies succeeded.
+        # Now re-query the same items from Pulp, but this time expecting that
+        # they are in all the repos.
+        for item in cls.items_with_pulp_state_single_batch(pulp_client, copy_items):
+            missing_repos = item.missing_pulp_repos
+            if missing_repos:
+                # TODO: consider improving this to add a bit more detail,
+                # e.g. mention which copy operation was expected to cover this item.
+                msg = (
+                    "Fatal error: Pulp unit not present in repo(s) %s after copy: %s"
+                    % (", ".join(missing_repos), item.pulp_unit)
+                )
+                raise RuntimeError(msg)
+
+            assert item
+            yield item
 
     @property
     def in_pulp_repos(self):
