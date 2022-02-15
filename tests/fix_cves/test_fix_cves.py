@@ -135,23 +135,23 @@ def predictable_random(monkeypatch):
 
 
 def test_fix_cves(command_tester):
-    fake_fix_cves = FakeFixCves()
-    fake_pulp = fake_fix_cves.pulp_client_controller
-    client = fake_pulp.client
-    _setup_controller(fake_pulp)
+    with FakeFixCves() as fake_fix_cves:
+        fake_pulp = fake_fix_cves.pulp_client_controller
+        client = fake_pulp.client
+        _setup_controller(fake_pulp)
 
-    command_tester.test(
-        fake_fix_cves.main,
-        [
-            "test-fix-cves",
-            "--pulp-url",
-            "https://pulp.example.com",
-            "--advisory",
-            "RHSA-1234:56",
-            "--cves",
-            "CVE-987,CVE-456",
-        ],
-    )
+        command_tester.test(
+            fake_fix_cves.main,
+            [
+                "test-fix-cves",
+                "--pulp-url",
+                "https://pulp.example.com",
+                "--advisory",
+                "RHSA-1234:56",
+                "--cves",
+                "CVE-987,CVE-456",
+            ],
+        )
 
     updated_erratum = list(
         client.search_content(Criteria.with_field("id", "RHSA-1234:56"))
@@ -170,73 +170,73 @@ def test_fix_cves(command_tester):
 
 
 def test_fix_cves_with_cache_cleanup(command_tester):
-    fake_fix_cves = FakeFixCves()
-    fake_pulp = fake_fix_cves.pulp_client_controller
-    _setup_controller(fake_pulp)
+    with FakeFixCves() as fake_fix_cves:
+        fake_pulp = fake_fix_cves.pulp_client_controller
+        _setup_controller(fake_pulp)
 
-    command_tester.test(
-        fake_fix_cves.main,
-        [
-            "test-fix-cves",
-            "--pulp-url",
-            "https://pulp.example.com",
-            "--fastpurge-host",
-            "fakehost-xxx.example.net",
-            "--fastpurge-client-secret",
-            "abcdef",
-            "--fastpurge-client-token",
-            "efg",
-            "--fastpurge-access-token",
-            "tok",
-            "--fastpurge-root-url",
-            "https://cdn.example.com/",
-            "--udcache-url",
-            "https://ud.example.com/",
-            "--advisory",
-            "RHSA-1234:56",
-            "--cves",
-            "CVE-987,CVE-456",
-        ],
-    )
+        command_tester.test(
+            fake_fix_cves.main,
+            [
+                "test-fix-cves",
+                "--pulp-url",
+                "https://pulp.example.com",
+                "--fastpurge-host",
+                "fakehost-xxx.example.net",
+                "--fastpurge-client-secret",
+                "abcdef",
+                "--fastpurge-client-token",
+                "efg",
+                "--fastpurge-access-token",
+                "tok",
+                "--fastpurge-root-url",
+                "https://cdn.example.com/",
+                "--udcache-url",
+                "https://ud.example.com/",
+                "--advisory",
+                "RHSA-1234:56",
+                "--cves",
+                "CVE-987,CVE-456",
+            ],
+        )
 
 
 def test_no_erratum_found_error(command_tester):
-    fake_fix_cves = FakeFixCves()
-    fake_pulp = fake_fix_cves.pulp_client_controller
-    _setup_controller(fake_pulp)
+    with FakeFixCves() as fake_fix_cves:
+        fake_pulp = fake_fix_cves.pulp_client_controller
+        _setup_controller(fake_pulp)
 
-    command_tester.test(
-        fake_fix_cves.main,
-        [
-            "test-fix-cves",
-            "--pulp-url",
-            "https://pulp.example.com",
-            "--advisory",
-            "RHSA-123:56",
-            "--cves",
-            "CVE-987,CVE-456",
-        ],
-    )
+        command_tester.test(
+            fake_fix_cves.main,
+            [
+                "test-fix-cves",
+                "--pulp-url",
+                "https://pulp.example.com",
+                "--advisory",
+                "RHSA-123:56",
+                "--cves",
+                "CVE-987,CVE-456",
+            ],
+        )
 
 
 def test_no_update_on_same_cves(command_tester):
-    fake_fix_cves = FakeFixCves()
-    fake_pulp = fake_fix_cves.pulp_client_controller
-    client = fake_pulp.client
-    _setup_controller(fake_pulp)
+    with FakeFixCves() as fake_fix_cves:
+        fake_pulp = fake_fix_cves.pulp_client_controller
+        client = fake_pulp.client
+        _setup_controller(fake_pulp)
 
-    command_tester.test(
-        fake_fix_cves.main,
-        [
-            "test-fix-cves",
-            "--pulp-url",
-            "https://pulp.example.com",
-            "--advisory",
-            "RHSA-1234:56",
-            "--cves",
-            "CVE-123",
-        ],
-    )
+        command_tester.test(
+            fake_fix_cves.main,
+            [
+                "test-fix-cves",
+                "--pulp-url",
+                "https://pulp.example.com",
+                "--advisory",
+                "RHSA-1234:56",
+                "--cves",
+                "CVE-123",
+            ],
+        )
 
     erratum = list(client.search_content(Criteria.with_field("id", "RHSA-1234:56")))
 

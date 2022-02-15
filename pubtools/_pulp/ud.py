@@ -43,6 +43,12 @@ class UdCacheClient(object):
             .with_retry(**retry_args)
         )
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc_details):
+        self._executor.__exit__(*exc_details)
+
     @staticmethod
     def _check_http_response(response):
         response.raise_for_status()

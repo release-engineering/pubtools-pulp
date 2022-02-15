@@ -154,3 +154,9 @@ class PulpTask(object):
 
             self.run()
             return 0
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc_details):
+        pass

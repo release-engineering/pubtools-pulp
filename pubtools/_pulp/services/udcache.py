@@ -5,6 +5,9 @@ from pubtools._pulp.arguments import from_environ
 
 from .base import Service
 
+# Because class is designed as a mix-in...
+# pylint: disable=no-member
+
 
 class UdCacheClientService(Service):
     """A service providing a UD cache flush client.
@@ -59,3 +62,9 @@ class UdCacheClientService(Service):
         return UdCacheClient(
             url=args.udcache_url, auth=(args.udcache_user, args.udcache_password)
         )
+
+    def __exit__(self, *exc_details):
+        if self.__instance:
+            self.__instance.__exit__(*exc_details)
+
+        super(UdCacheClientService, self).__exit__(*exc_details)

@@ -64,7 +64,8 @@ class GarbageCollect(PulpClientService, PulpTask):
 
 
 def entry_point():
-    GarbageCollect().main()
+    with GarbageCollect() as instance:
+        instance.main()
 
 
 def doc_parser():

@@ -2,7 +2,8 @@ from .command import Push
 
 
 def entry_point(cls=Push):
-    cls().main()
+    with cls() as instance:
+        instance.main()
 
 
 def doc_parser():

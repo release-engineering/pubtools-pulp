@@ -48,7 +48,8 @@ class SetMaintenanceOff(SetMaintenance):
 
 
 def entry_point(cls=SetMaintenanceOff):
-    cls().main()
+    with cls() as instance:
+        instance.main()
 
 
 def doc_parser():
