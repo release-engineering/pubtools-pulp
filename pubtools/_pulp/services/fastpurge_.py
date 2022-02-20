@@ -8,6 +8,10 @@ from pubtools._pulp.arguments import from_environ
 from .base import Service
 
 
+# Because class is designed as a mix-in...
+# pylint: disable=no-member
+
+
 class FastPurgeClientService(Service):
     """A service providing a FastPurge client.
 
@@ -88,3 +92,9 @@ class FastPurgeClientService(Service):
         # If there's any argument provided, then we pass args to the client.
         # Otherwise, we pass None and we expect ~/.edgerc to be used.
         return FastPurgeClient(auth=(fastpurge_args or None))
+
+    def __exit__(self, *exc_details):
+        if self.__instance:
+            self.__instance.__exit__(*exc_details)
+
+        super(FastPurgeClientService, self).__exit__(*exc_details)

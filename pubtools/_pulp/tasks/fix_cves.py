@@ -17,7 +17,7 @@ step = PulpTask.step
 LOG = logging.getLogger("pubtools.pulp")
 
 
-class FixCves(PulpTask, PulpClientService, Publisher):
+class FixCves(PulpClientService, Publisher, PulpTask):
     """Command to fix cves"""
 
     def __init__(self, *args, **kwargs):
@@ -167,7 +167,8 @@ class FixCves(PulpTask, PulpClientService, Publisher):
 
 
 def entry_point(cls=FixCves):
-    cls().main()
+    with cls() as instance:
+        instance.main()
 
 
 def doc_parser():

@@ -562,9 +562,14 @@ pytest==7.0.1 \
     # via
     #   -r test-requirements.in
     #   pytest-cov
+    #   pytest-threadleak
 pytest-cov==3.0.0 \
     --hash=sha256:578d5d15ac4a25e5f961c938b85a05b09fdaae9deef3bb6de9a6e766622ca7a6 \
     --hash=sha256:e7f0f5b1617d2210a2cabc266dfe2f4c75a8d32fb89eafb7ad9d06f6d076d470
+    # via -r test-requirements.in
+pytest-threadleak==0.4.0 ; python_version >= "3" \
+    --hash=sha256:266534cdfc43225a795aea106d68ea93402b430a60c17592c26ced033e8fba8f \
+    --hash=sha256:6277f77a1c29c16e7986a1bcc0ee2b8edbcddcade3c9acf7c19ca8e4cf1fcb92
     # via -r test-requirements.in
 python-dateutil==2.8.2 \
     --hash=sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86 \

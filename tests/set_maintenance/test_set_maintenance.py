@@ -89,20 +89,19 @@ def test_maintenance_on(command_tester):
     repo1 = Repository(id="repo1")
     repo2 = Repository(id="repo2")
 
-    task_instance = get_task_instance(True, repo1, repo2)
-
-    command_tester.test(
-        task_instance.main,
-        [
-            "test-maintenance-on",
-            "--pulp-url",
-            "http://some.url",
-            "--repo-ids",
-            "repo1,repo2",
-            "--message",
-            "Now in Maintenance",
-        ],
-    )
+    with get_task_instance(True, repo1, repo2) as task_instance:
+        command_tester.test(
+            task_instance.main,
+            [
+                "test-maintenance-on",
+                "--pulp-url",
+                "http://some.url",
+                "--repo-ids",
+                "repo1,repo2",
+                "--message",
+                "Now in Maintenance",
+            ],
+        )
 
     # It should have set the maintenance report to our requested value.
     assert_expected_report(
@@ -128,18 +127,17 @@ def test_maintenance_on_with_regex(command_tester):
 
     repo2 = Repository(id="repo2", distributors=(dist1,))
 
-    task_instance = get_task_instance(True, repo1, repo2)
-
-    command_tester.test(
-        task_instance.main,
-        [
-            "test-maintenance-on",
-            "--pulp-url",
-            "http://some.url",
-            "--repo-url-regex",
-            "rhel",
-        ],
-    )
+    with get_task_instance(True, repo1, repo2) as task_instance:
+        command_tester.test(
+            task_instance.main,
+            [
+                "test-maintenance-on",
+                "--pulp-url",
+                "http://some.url",
+                "--repo-url-regex",
+                "rhel",
+            ],
+        )
 
     assert_expected_report(["repo2"], task_instance.pulp_client)
 
@@ -148,46 +146,44 @@ def test_maintenance_on_with_repo_not_exists(command_tester):
     """Set maintenance to non-existed repo in server will fail"""
     repo1 = Repository(id="repo1")
 
-    task_instance = get_task_instance(True, repo1)
-
-    command_tester.test(
-        lambda: pubtools._pulp.tasks.set_maintenance.set_maintenance_on.entry_point(
-            lambda: task_instance
-        ),
-        [
-            "test-maintenance-on",
-            "--pulp-url",
-            "http://some.url",
-            "--repo-ids",
-            "repo1,repo2",
-        ],
-    )
+    with get_task_instance(True, repo1) as task_instance:
+        command_tester.test(
+            lambda: pubtools._pulp.tasks.set_maintenance.set_maintenance_on.entry_point(
+                lambda: task_instance
+            ),
+            [
+                "test-maintenance-on",
+                "--pulp-url",
+                "http://some.url",
+                "--repo-ids",
+                "repo1,repo2",
+            ],
+        )
 
 
 def test_maintenance_off(command_tester):
     repo1 = Repository(id="repo1")
     repo2 = Repository(id="repo2")
 
-    task_instance = get_task_instance(False, repo1, repo2)
+    with get_task_instance(False, repo1, repo2) as task_instance:
+        controller = task_instance.pulp_client_controller
 
-    controller = task_instance.pulp_client_controller
+        # Initially, there has already been a publish because get_task_instance already
+        # sets maintenance report to [repo1, repo2] at beginning of this test.
+        assert len(controller.publish_history) == 1
 
-    # Initially, there has already been a publish because get_task_instance already
-    # sets maintenance report to [repo1, repo2] at beginning of this test.
-    assert len(controller.publish_history) == 1
-
-    command_tester.test(
-        lambda: pubtools._pulp.tasks.set_maintenance.set_maintenance_off.entry_point(
-            lambda: task_instance
-        ),
-        [
-            "test-maintenance-off",
-            "--pulp-url",
-            "http://some.url",
-            "--repo-ids",
-            "repo2",
-        ],
-    )
+        command_tester.test(
+            lambda: pubtools._pulp.tasks.set_maintenance.set_maintenance_off.entry_point(
+                lambda: task_instance
+            ),
+            [
+                "test-maintenance-off",
+                "--pulp-url",
+                "http://some.url",
+                "--repo-ids",
+                "repo2",
+            ],
+        )
 
     # It should have taken repo2 out of maintenance, leaving just repo1.
     assert_expected_report(["repo1"], task_instance.pulp_client)
@@ -200,35 +196,34 @@ def test_maintenance_off_with_regex(command_tester):
     repo1 = Repository(id="repo1")
     repo2 = Repository(id="repo2", relative_url="rhel/7/")
 
-    task_instance = get_task_instance(False, repo1, repo2)
+    with get_task_instance(False, repo1, repo2) as task_instance:
+        command_tester.test(
+            task_instance.main,
+            [
+                "test-maintenance-off",
+                "--pulp-url",
+                "http://some.url",
+                "--repo-url-regex",
+                "rhel",
+            ],
+        )
 
-    command_tester.test(
-        task_instance.main,
-        [
-            "test-maintenance-off",
-            "--pulp-url",
-            "http://some.url",
-            "--repo-url-regex",
-            "rhel",
-        ],
-    )
     assert_expected_report(["repo1"], task_instance.pulp_client)
 
 
 def test_maintenance_off_with_repo_not_in_maintenance(command_tester):
     repo1 = Repository(id="repo1")
 
-    task_instance = get_task_instance(False, repo1)
-
-    command_tester.test(
-        task_instance.main,
-        [
-            "test-maintenance-off",
-            "--pulp-url",
-            "http://some.url",
-            "--repo-ids",
-            "repo1,repo2",
-        ],
-    )
+    with get_task_instance(False, repo1) as task_instance:
+        command_tester.test(
+            task_instance.main,
+            [
+                "test-maintenance-off",
+                "--pulp-url",
+                "http://some.url",
+                "--repo-ids",
+                "repo1,repo2",
+            ],
+        )
 
     assert_expected_report([], task_instance.pulp_client)

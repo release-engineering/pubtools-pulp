@@ -19,6 +19,10 @@ def pulp_throttle(str_pulp_throttle):
     return val
 
 
+# Because class is designed as a mix-in...
+# pylint: disable=no-member
+
+
 class PulpClientService(Service):
     """A service providing a Pulp client.
 
@@ -69,6 +73,7 @@ class PulpClientService(Service):
         with self.__lock:
             if not self.__instance:
                 self.__instance = self.__get_instance()
+                self.__instance.__enter__()
         return self.__instance
 
     def __get_instance(self):
@@ -104,3 +109,9 @@ class PulpClientService(Service):
             )
 
         return pulplib.Client(args.pulp_url, **kwargs)
+
+    def __exit__(self, *exc_details):
+        if self.__instance:
+            self.__instance.__exit__(*exc_details)
+
+        super(PulpClientService, self).__exit__(*exc_details)

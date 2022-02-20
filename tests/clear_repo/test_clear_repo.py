@@ -101,16 +101,20 @@ def test_missing_repos(command_tester):
 def test_clear_empty_repo(command_tester, fake_collector):
     """Clearing a repo which is already empty succeeds."""
 
-    task_instance = FakeClearRepo()
+    with FakeClearRepo() as task_instance:
+        repo = FileRepository(id="some-filerepo")
 
-    repo = FileRepository(id="some-filerepo")
+        task_instance.pulp_client_controller.insert_repository(repo)
 
-    task_instance.pulp_client_controller.insert_repository(repo)
-
-    command_tester.test(
-        task_instance.main,
-        ["test-clear-repo", "--pulp-url", "https://pulp.example.com/", "some-filerepo"],
-    )
+        command_tester.test(
+            task_instance.main,
+            [
+                "test-clear-repo",
+                "--pulp-url",
+                "https://pulp.example.com/",
+                "some-filerepo",
+            ],
+        )
 
     # No push items recorded
     assert not fake_collector.items
@@ -118,8 +122,6 @@ def test_clear_empty_repo(command_tester, fake_collector):
 
 def test_clear_file_repo(command_tester, fake_collector):
     """Clearing a repo with file content succeeds."""
-
-    task_instance = FakeClearRepo()
 
     repo = FileRepository(
         id="some-filerepo",
@@ -133,33 +135,34 @@ def test_clear_file_repo(command_tester, fake_collector):
         FileUnit(path="with/subdir.json", size=0, sha256sum="b" * 64),
     ]
 
-    fakepulp = task_instance.pulp_client_controller
-    fakepulp.insert_repository(repo)
-    fakepulp.insert_units(repo, files)
+    with FakeClearRepo() as task_instance:
+        fakepulp = task_instance.pulp_client_controller
+        fakepulp.insert_repository(repo)
+        fakepulp.insert_units(repo, files)
 
-    # It should run with expected output.
-    command_tester.test(
-        task_instance.main,
-        [
-            "test-clear-repo",
-            "--pulp-url",
-            "https://pulp.example.com/",
-            "--pulp-insecure",
-            "--fastpurge-host",
-            "fakehost-xxx.example.net",
-            "--fastpurge-client-secret",
-            "abcdef",
-            "--fastpurge-client-token",
-            "efg",
-            "--fastpurge-access-token",
-            "tok",
-            "--fastpurge-root-url",
-            "https://cdn.example.com/",
-            "--udcache-url",
-            "https://ud.example.com/",
-            "some-filerepo",
-        ],
-    )
+        # It should run with expected output.
+        command_tester.test(
+            task_instance.main,
+            [
+                "test-clear-repo",
+                "--pulp-url",
+                "https://pulp.example.com/",
+                "--pulp-insecure",
+                "--fastpurge-host",
+                "fakehost-xxx.example.net",
+                "--fastpurge-client-secret",
+                "abcdef",
+                "--fastpurge-client-token",
+                "efg",
+                "--fastpurge-access-token",
+                "tok",
+                "--fastpurge-root-url",
+                "https://cdn.example.com/",
+                "--udcache-url",
+                "https://ud.example.com/",
+                "some-filerepo",
+            ],
+        )
 
     # It should record that it removed these push items:
     assert sorted(fake_collector.items, key=lambda pi: pi["filename"]) == [
@@ -204,8 +207,6 @@ def test_clear_file_repo(command_tester, fake_collector):
 def test_clear_file_skip_publish(command_tester):
     """Clearing a repo with file content while skipping publish succeeds."""
 
-    task_instance = FakeClearRepo()
-
     repo = FileRepository(
         id="some-filerepo",
         eng_product_id=123,
@@ -215,21 +216,22 @@ def test_clear_file_skip_publish(command_tester):
 
     files = [FileUnit(path="hello.txt", size=123, sha256sum="a" * 64)]
 
-    task_instance.pulp_client_controller.insert_repository(repo)
-    task_instance.pulp_client_controller.insert_units(repo, files)
+    with FakeClearRepo() as task_instance:
+        task_instance.pulp_client_controller.insert_repository(repo)
+        task_instance.pulp_client_controller.insert_units(repo, files)
 
-    # It should run with expected output.
-    command_tester.test(
-        task_instance.main,
-        [
-            "test-clear-repo",
-            "--pulp-url",
-            "https://pulp.example.com/",
-            "--skip",
-            "foo,publish,bar",
-            "some-filerepo",
-        ],
-    )
+        # It should run with expected output.
+        command_tester.test(
+            task_instance.main,
+            [
+                "test-clear-repo",
+                "--pulp-url",
+                "https://pulp.example.com/",
+                "--skip",
+                "foo,publish,bar",
+                "some-filerepo",
+            ],
+        )
 
     # It should not have published Pulp repos
     assert task_instance.pulp_client_controller.publish_history == []
@@ -237,8 +239,6 @@ def test_clear_file_skip_publish(command_tester):
 
 def test_clear_yum_repo(command_tester, fake_collector, monkeypatch):
     """Clearing a repo with yum content succeeds."""
-
-    task_instance = FakeClearRepo()
 
     repo = YumRepository(
         id="some-yumrepo", relative_url="some/publish/url", mutable_urls=["repomd.xml"]
@@ -259,30 +259,32 @@ def test_clear_yum_repo(command_tester, fake_collector, monkeypatch):
         ),
     ]
 
-    task_instance.pulp_client_controller.insert_repository(repo)
-    task_instance.pulp_client_controller.insert_units(repo, files)
+    with FakeClearRepo() as task_instance:
 
-    # Let's try setting the cache flush root via env.
-    monkeypatch.setenv("FASTPURGE_ROOT_URL", "https://cdn.example2.com/")
+        task_instance.pulp_client_controller.insert_repository(repo)
+        task_instance.pulp_client_controller.insert_units(repo, files)
 
-    # It should run with expected output.
-    command_tester.test(
-        task_instance.main,
-        [
-            "test-clear-repo",
-            "--pulp-url",
-            "https://pulp.example.com/",
-            "--fastpurge-host",
-            "fakehost-xxx.example.net",
-            "--fastpurge-client-secret",
-            "abcdef",
-            "--fastpurge-client-token",
-            "efg",
-            "--fastpurge-access-token",
-            "tok",
-            "some-yumrepo",
-        ],
-    )
+        # Let's try setting the cache flush root via env.
+        monkeypatch.setenv("FASTPURGE_ROOT_URL", "https://cdn.example2.com/")
+
+        # It should run with expected output.
+        command_tester.test(
+            task_instance.main,
+            [
+                "test-clear-repo",
+                "--pulp-url",
+                "https://pulp.example.com/",
+                "--fastpurge-host",
+                "fakehost-xxx.example.net",
+                "--fastpurge-client-secret",
+                "abcdef",
+                "--fastpurge-client-token",
+                "efg",
+                "--fastpurge-access-token",
+                "tok",
+                "some-yumrepo",
+            ],
+        )
 
     # It should record that it removed these push items:
     assert sorted(fake_collector.items, key=lambda pi: pi["filename"]) == [
@@ -317,27 +319,26 @@ def test_clear_yum_repo(command_tester, fake_collector, monkeypatch):
 def test_clear_container_repo(command_tester):
     """Clearing a container image repo is not allowed."""
 
-    task_instance = FakeClearRepo()
+    with FakeClearRepo() as task_instance:
 
-    repo = ContainerImageRepository(id="some-containerrepo")
+        repo = ContainerImageRepository(id="some-containerrepo")
 
-    task_instance.pulp_client_controller.insert_repository(repo)
+        task_instance.pulp_client_controller.insert_repository(repo)
 
-    # It should run with expected output.
-    command_tester.test(
-        task_instance.main,
-        [
-            "test-clear-repo",
-            "--pulp-url",
-            "https://pulp.example.com/",
-            "some-containerrepo",
-        ],
-    )
+        # It should run with expected output.
+        command_tester.test(
+            task_instance.main,
+            [
+                "test-clear-repo",
+                "--pulp-url",
+                "https://pulp.example.com/",
+                "some-containerrepo",
+            ],
+        )
 
 
 def test_clear_repo_multiple_content_types(command_tester, fake_collector, monkeypatch):
     """Test clearing a Yum repo given multiple content type values."""
-    task_instance = FakeClearRepo()
 
     repo = YumRepository(
         id="some-yumrepo", relative_url="some/publish/url", mutable_urls=["repomd.xml"]
@@ -358,25 +359,26 @@ def test_clear_repo_multiple_content_types(command_tester, fake_collector, monke
         ),
     ]
 
-    task_instance.pulp_client_controller.insert_repository(repo)
-    task_instance.pulp_client_controller.insert_units(repo, files)
+    with FakeClearRepo() as task_instance:
+        task_instance.pulp_client_controller.insert_repository(repo)
+        task_instance.pulp_client_controller.insert_units(repo, files)
 
-    # It should run with expected output.
-    command_tester.test(
-        task_instance.main,
-        [
-            "test-clear-repo",
-            "--pulp-url",
-            "https://pulp.example.com/",
-            "--content-type",
-            "rpm",
-            "--content-type",
-            "modulemd",
-            "--content-type",
-            "iso",
-            "some-yumrepo",
-        ],
-    )
+        # It should run with expected output.
+        command_tester.test(
+            task_instance.main,
+            [
+                "test-clear-repo",
+                "--pulp-url",
+                "https://pulp.example.com/",
+                "--content-type",
+                "rpm",
+                "--content-type",
+                "modulemd",
+                "--content-type",
+                "iso",
+                "some-yumrepo",
+            ],
+        )
 
     # test the new ClearRepo argument handling for --content-type
     # produces the expected output

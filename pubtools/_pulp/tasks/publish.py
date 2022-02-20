@@ -25,7 +25,7 @@ def publish_date(str_date):
     return datetime.strptime(str_date, "%Y-%m-%d")
 
 
-class Publish(PulpClientService, PulpTask, Publisher):
+class Publish(PulpClientService, Publisher, PulpTask):
     """Publish one or more Pulp repositories to the endpoints defined by their distributors.
 
     This command will publish the Pulp repositories provided in the request or
@@ -149,7 +149,8 @@ class Publish(PulpClientService, PulpTask, Publisher):
 
 
 def entry_point(cls=Publish):
-    cls().main()
+    with cls() as instance:
+        instance.main()
 
 
 def doc_parser():

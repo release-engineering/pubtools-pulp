@@ -48,7 +48,7 @@ class ClearedRepo(object):
 
 
 class ClearRepo(
-    CollectorService, UdCacheClientService, PulpClientService, PulpTask, CDNCache
+    CollectorService, UdCacheClientService, PulpClientService, CDNCache, PulpTask
 ):
     """Remove all contents from one or more Pulp repositories.
 
@@ -304,7 +304,8 @@ class ClearRepo(
 
 
 def entry_point(cls=ClearRepo):
-    cls().main()
+    with cls() as instance:
+        instance.main()
 
 
 def doc_parser():
