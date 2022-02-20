@@ -95,6 +95,13 @@ class Publish(Phase):
         ]
         self.update_push_items(pushed_items)
 
+        # Mark as done for accurate progress logs.
+        # Note we don't keep track of exactly which items got published through each
+        # repo, so this will simply show that everything moved from in progress to done
+        # at once.
+        for _ in pushed_items:
+            self.in_queue.task_done()
+
         # And we know nothing more happens to the push items, so we can tell
         # collector that we're finished.
         self.update_push_items([self.FINISHED])

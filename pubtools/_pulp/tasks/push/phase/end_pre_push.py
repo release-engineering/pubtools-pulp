@@ -44,6 +44,7 @@ class EndPrePush(Phase):
                 count_other += 1
             # Notify of final push item state.
             self.update_push_items([item])
+            self.in_queue.task_done()
 
         # Notify that there are no more push item updates coming.
         self.update_push_items([self.FINISHED])

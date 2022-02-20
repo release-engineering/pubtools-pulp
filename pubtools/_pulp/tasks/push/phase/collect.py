@@ -17,7 +17,7 @@ class Collect(Phase):
     def __init__(self, context, collector, **_):
         super(Collect, self).__init__(
             context,
-            in_queue=context.new_queue(),
+            in_queue=context.new_queue(counting=False),
             out_queue=False,
             name="Collect push item metadata",
         )
