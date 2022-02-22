@@ -1,9 +1,0 @@
-{"event": {"type": "load-push-items-start"}}
-{"event": {"type": "calculate-checksums-start"}}
-{"event": {"type": "query-items-in-pulp-start"}}
-{"event": {"type": "load-push-items-end"}}
-{"event": {"type": "calculate-checksums-end"}}
-{"event": {"type": "upload-items-to-pulp-start"}}
-{"event": {"type": "query-items-in-pulp-end"}}
-{"event": {"items-prepush-skipped": 9, "items-present": 0, "items-uploading": 2, "type": "uploading-pulp"}}
-{"event": {"type": "upload-items-to-pulp-end"}}

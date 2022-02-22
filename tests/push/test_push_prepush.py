@@ -45,6 +45,7 @@ def test_pre_push(
         run,
         args,
         compare_plaintext=False,
+        compare_jsonl=False,
         compare_extra=compare_extra,
     )
 

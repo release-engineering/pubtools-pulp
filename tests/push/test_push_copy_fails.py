@@ -1,25 +1,15 @@
-import os
-import re
-import datetime
 import functools
 
-import attr
+import pytest
 
 from pushsource import Source, FilePushItem
-
-from pubtools.pulplib import (
-    FileUnit,
-    ErratumUnit,
-    RpmUnit,
-    RpmDependency,
-    Criteria,
-)
+from pubtools.pulplib import FileUnit
 
 from pubtools._pulp.tasks.push import entry_point
 
 
 def test_push_copy_fails(
-    fake_controller, fake_nocopy_push, fake_state_path, command_tester
+    fake_controller, fake_nocopy_push, fake_state_path, command_tester, caplog
 ):
     """Test that push detects and fails in the case where a Pulp content copy
     claims to succeed, but doesn't put expected content in the target repo.
@@ -67,8 +57,22 @@ def test_push_copy_fails(
 
     run = functools.partial(entry_point, cls=lambda: fake_nocopy_push)
 
-    # Ask it to push. The baseline log should show an error message after the copy.
-    command_tester.test(
-        run,
-        args,
+    # Ask it to push.
+    with pytest.raises(SystemExit) as excinfo:
+        command_tester.test(
+            run,
+            args,
+            # Can't guarantee a stable log order.
+            compare_plaintext=False,
+            compare_jsonl=False,
+        )
+
+    # It should have failed.
+    assert excinfo.value.code == 59
+
+    # It should tell us why it failed.
+    msg = (
+        "Fatal error: Pulp unit not present in repo(s) iso-dest2 "
+        "after copy: FileUnit(path='some-file'"
     )
+    assert msg in caplog.text
