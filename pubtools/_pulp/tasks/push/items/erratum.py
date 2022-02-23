@@ -34,8 +34,6 @@ class PulpErratumPushItem(PulpPushItem):
         # repo containing that erratum - whether or not we're trying to push there
         # right now.
         #
-        # TODO: ensure this behavior is covered by a test.
-        #
         out = set(super(PulpErratumPushItem, self).publish_pulp_repos)
         out.update(self.in_pulp_repos)
         return sorted(out)
