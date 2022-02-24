@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.8.0] - 2022-02-25
+
+- `pubtools-pulp-push` now logs detailed progress information periodically.
+
 ## [1.7.1] - 2022-02-23
 
 - Improved performance of `pubtools-pulp-push`.
@@ -70,7 +74,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.7.1...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.8.0...HEAD
+[1.8.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.7.1...v1.8.0
 [1.7.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.5.0...v1.6.0
