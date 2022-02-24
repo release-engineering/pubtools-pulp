@@ -97,6 +97,10 @@ class Phase(object):
         self.out_queue = context.new_queue() if out_queue is True else out_queue
         self.name = name
 
+        # If we have an in_queue, name it after ourselves
+        if in_queue:
+            in_queue.name = name
+
         self.__thread = None
         self.__context = context
         self.__started = False
@@ -166,12 +170,19 @@ class Phase(object):
                 # all done
                 return
 
-    def put_output(self, value):
+    def put_output(self, value, task_done=True):
         """Put a value onto this phase's output queue.
+
+        If task_done is True, also calls task_done on the phase's input queue.
+        This is appropriate for the common case where each item on the input
+        queue is expected to generate exactly one corresponding item on the
+        output queue.
 
         It is a bug to call this method on a phase with no output queue.
         """
         self.out_queue.put(value, block=True, timeout=PHASE_TIMEOUT)
+        if task_done and self.in_queue:
+            self.in_queue.task_done()
 
     def __get_input(self, timeout=PHASE_TIMEOUT):
         # Get a single item from input queue; this is currently private
@@ -244,7 +255,7 @@ class Phase(object):
             self.run()
             self.__log_finished()
             if self.out_queue:
-                self.put_output(Phase.FINISHED)
+                self.put_output(Phase.FINISHED, task_done=False)
         except PhaseInterrupted:
             # When interrupted, we need to stop, but we don't log an exception
             # with stacktrace as the relevant details will have already been

@@ -135,7 +135,7 @@ class Push(
         # start them all.
         #
         # This will start all the phases...
-        with exitstack(phases):
+        with exitstack([ctx.progress_logger()] + phases):
             LOG.debug("All push phases are now running.")
             # ...and exiting the 'with' block here will wait for them to
             # complete.
