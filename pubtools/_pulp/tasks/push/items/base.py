@@ -316,6 +316,14 @@ class PulpPushItem(object):
         """Return a copy of this item with checksums guaranteed to be present."""
         return attr.evolve(self, pushsource_item=self.pushsource_item.with_checksums())
 
+    @property
+    def blocking_checksums(self):
+        """True if it is likely that with_checksums() on this item will block.
+
+        This is a hint, to be used for scheduling purposes only.
+        """
+        return not (self.pushsource_item.md5sum and self.pushsource_item.sha256sum)
+
     def with_unit(self, unit):
         """Returns a copy of this item with state evolved according to the metadata in
         'unit'.

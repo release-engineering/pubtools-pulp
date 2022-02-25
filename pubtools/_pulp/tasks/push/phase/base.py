@@ -1,7 +1,9 @@
 import logging
 import os
+from functools import partial
 from threading import Thread
 
+from more_executors.futures import f_map, f_and, f_return
 from monotonic import monotonic
 from six.moves.queue import Empty
 
@@ -105,6 +107,10 @@ class Phase(object):
         self.__context = context
         self.__started = False
 
+        # future representing the completion of all delayed puts on
+        # the output queue (if any). Must be awaited at the end of the phase.
+        self.__future_puts = f_return(True)
+
     def run(self):
         """The business logic for this phase.
 
@@ -184,6 +190,49 @@ class Phase(object):
         if task_done and self.in_queue:
             self.in_queue.task_done()
 
+    def put_future_output(self, value, task_done=True):
+        """Like put_output, but the given value should be a future.
+
+        Calling this method has the following effects:
+
+        - The given future will have a callback added such that:
+          - when resolved, the future's value will be put onto the output
+            queue (as if put_output were called)
+          - when failed, the context is set to an error state (causing all
+            phases to be interrupted, including this one if possible)
+        - When this phase ends, it will first wait for all futures submitted
+          via this function to be resolved.
+
+        It's recommended to tune each phase's batching so that this is called
+        no more than 100,000 times in a single phase. Beyond that, scaling
+        issues may occur.
+        """
+
+        f = f_map(
+            value,
+            partial(self.__future_output_done, task_done=task_done),
+            error_fn=self.__future_output_failed,
+        )
+        self.__future_puts = f_and(self.__future_puts, f)
+
+    def __future_output_done(self, value, task_done):
+        # Called when a Future[value] has been resolved successfully.
+        # Returns True so that the resulting future can be used with f_and
+        # to indicate success.
+        self.put_output(value, task_done=task_done)
+        return True
+
+    def __future_output_failed(self, exception):
+        # Called when a Future[item] has been resolved unsuccessfully.
+
+        # Immediately set context into error state to interrupt all phases
+        # (including potentially ourselves) as early as possible.
+        self.__context.set_error()
+
+        # re-raising the exception will cause it to propagate up through
+        # __thread_target, where reasonable logging occurs.
+        raise exception
+
     def __get_input(self, timeout=PHASE_TIMEOUT):
         # Get a single item from input queue; this is currently private
         # as it seems like the inheritors ought to always use one of the
@@ -196,11 +245,12 @@ class Phase(object):
             self.__started = True
             self.__log_start()
 
-        if out is Phase.ERROR:
-            # Need to stop immediately
-            raise PhaseInterrupted(
-                "Stopping %s due to error in prior phase" % self.name
-            )
+        # We need to stop immediately if ERROR arrived in the queue
+        # OR if the context is in the error state. The latter case
+        # avoids us continuing to work on our queue for a long time after
+        # we already know there's a fatal error.
+        if out is Phase.ERROR or self.__context.has_error:
+            raise PhaseInterrupted("Stopping %s due to error" % self.name)
 
         return out
 
@@ -253,6 +303,7 @@ class Phase(object):
     def __thread_target(self):
         try:
             self.run()
+            self.__future_puts.result()
             self.__log_finished()
             if self.out_queue:
                 self.put_output(Phase.FINISHED, task_done=False)
