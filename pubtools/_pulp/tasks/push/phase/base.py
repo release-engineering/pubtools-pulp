@@ -204,22 +204,34 @@ class Phase(object):
           via this function to be resolved.
 
         It's recommended to tune each phase's batching so that this is called
-        no more than 100,000 times in a single phase. Beyond that, scaling
-        issues may occur.
+        no more than 100,000 times in a single phase (and use put_future_outputs
+        instead where possible). Beyond that, scaling issues may occur.
+        """
+
+        # Reuse put_future_outputs wrapping the value as a single-element list.
+        self.put_future_outputs(f_map(value, lambda x: [x]), task_done)
+
+    def put_future_outputs(self, values, task_done=True):
+        """Like put_future_output, but works with a list of values rather
+        than a single value.
+
+        It is more efficient to call this function with a list of size N
+        than to call put_future_output N times.
         """
 
         f = f_map(
-            value,
+            values,
             partial(self.__future_output_done, task_done=task_done),
             error_fn=self.__future_output_failed,
         )
         self.__future_puts = f_and(self.__future_puts, f)
 
-    def __future_output_done(self, value, task_done):
-        # Called when a Future[value] has been resolved successfully.
+    def __future_output_done(self, values, task_done):
+        # Called when a Future[list[value]] has been resolved successfully.
         # Returns True so that the resulting future can be used with f_and
         # to indicate success.
-        self.put_output(value, task_done=task_done)
+        for value in values:
+            self.put_output(value, task_done=task_done)
         return True
 
     def __future_output_failed(self, exception):

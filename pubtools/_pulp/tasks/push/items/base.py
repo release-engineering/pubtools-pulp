@@ -1,15 +1,15 @@
 import logging
 import random
-import concurrent
+from functools import partial
 
 from pushsource import PushItem
 from pubtools.pulplib import Unit, Criteria
 
 
-from more_executors.futures import f_map, f_flat_map
+from more_executors.futures import f_map, f_flat_map, f_return, f_sequence
 import attr
 
-from ..copy import CopyOperation
+from ..copy import CopyOperation, asserting_all_copied_ok
 
 
 # A mapping between PushItem classes and the PulpPushItem wrappers
@@ -159,13 +159,13 @@ class PulpPushItem(object):
     @classmethod
     def items_with_pulp_state_single_batch(cls, pulp_client, items):
         """Find Pulp state for a batch of items using a single Pulp query.
-        Returns an iterable of updated items.
+        Returns a Future[list] of updated items.
 
         It is mandatory that all provided items are of the same unit_type.
         The caller is responsible for ensuring this.
         """
         if not items:
-            return
+            return f_return([])
 
         unit_type = items[0].unit_type
 
@@ -173,10 +173,7 @@ class PulpPushItem(object):
             # This means that the item doesn't map to a specific single unit type
             # (e.g. modulemd stream, comps.xml) and we don't support querying the
             # state at all; such items are simply returned as-is.
-            for item in items:
-                assert item
-                yield item
-            return
+            return f_return(items)
 
         crit = Criteria.and_(
             Criteria.with_unit_type(unit_type),
@@ -184,16 +181,15 @@ class PulpPushItem(object):
         )
         LOG.info("Doing Pulp search: %s", crit)
 
-        units = pulp_client.search_content(crit).result()
-        new_items = cls.match_items_units(items, units)
-
-        for item in new_items:
-            assert item
-            yield item
+        units_f = pulp_client.search_content(crit)
+        matcher = partial(cls.match_items_units, items)
+        return f_map(units_f, matcher)
 
     @classmethod
     def associated_items_single_batch(cls, pulp_client, items):
         """Associate a single batch of items into destination repos.
+
+        This generator yields instances of Future[list[<associated-items>]].
 
         All provided items must be of the same unit_type.
 
@@ -256,34 +252,39 @@ class PulpPushItem(object):
 
         # Copies have been started.
         # Any items which didn't need a copy can be immediately yielded now.
-        for item in nocopy_items:
-            assert item
-            yield item
+        if nocopy_items:
+            yield f_return(nocopy_items)
 
-        # Then wait for copies to complete.
-        # TODO: apply a configurable timeout
-        for copy in concurrent.futures.as_completed(copy_results):
-            oper = copy_opers[copy]
-            tasks = copy.result()
-            for t in tasks:
-                oper.log_copy_done(t)
+        # Add some reasonable logging onto the copies...
+        def log_copy_done(f):
+            if not f.exception():
+                tasks = f.result()
+                oper = copy_opers[f]
+                for t in tasks:
+                    oper.log_copy_done(t)
 
-        # All copies succeeded.
-        # Now re-query the same items from Pulp, but this time expecting that
-        # they are in all the repos.
-        for item in cls.items_with_pulp_state_single_batch(pulp_client, copy_items):
-            missing_repos = item.missing_pulp_repos
-            if missing_repos:
-                # TODO: consider improving this to add a bit more detail,
-                # e.g. mention which copy operation was expected to cover this item.
-                msg = (
-                    "Fatal error: Pulp unit not present in repo(s) %s after copy: %s"
-                    % (", ".join(missing_repos), item.pulp_unit)
-                )
-                raise RuntimeError(msg)
+        for f in copy_results:
+            f.add_done_callback(log_copy_done)
 
-            assert item
-            yield item
+        # A helper to refresh the state of each item in Pulp and make sure they
+        # were copied OK.
+        def refresh_after_copy(_):
+            # Get an up-to-date version of all the copy items.
+            f = cls.items_with_pulp_state_single_batch(pulp_client, copy_items)
+
+            # Raise if any still have missing repos.
+            f = f_map(f, asserting_all_copied_ok)
+
+            return f
+
+        # This future completes once *all* copies are done successfully.
+        # TODO: this still could be improved, as not every item needs every copy
+        # before the state could be refreshed.
+        all_copies = f_sequence(copy_results)
+
+        # To finish up: wait for all copies to complete, then refresh item states
+        # and ensure they're no longer missing any repos.
+        yield f_flat_map(all_copies, refresh_after_copy)
 
     @property
     def in_pulp_repos(self):

@@ -1,5 +1,4 @@
 import logging
-import concurrent
 
 from .base import Phase
 from ..items import State
@@ -37,24 +36,32 @@ class Upload(Phase):
         self.pulp_client = pulp_client
         self.pre_push = pre_push
 
+    def _update_after_uploaded(self, item_f):
+        # Callback invoked after an item has been uploaded, to ensure
+        # update_push_items is called (if upload succeeded).
+        if not item_f.exception():
+            self.update_push_items([item_f.result()])
+
     def run(self):
         """Yields push items with item uploaded if needed, such that the item will
         be present in at least one Pulp repo.
         """
 
-        uploaded = []
-        needs_upload = []
-        prepush_skipped = []
+        uploaded = 0
+        uploading = 0
+        prepush_skipped = 0
 
         upload_context = {}
 
         for item in self.iter_input():
             if item.pulp_state in [State.IN_REPOS, State.PARTIAL, State.NEEDS_UPDATE]:
                 # This item is already in Pulp.
-                uploaded.append(item)
+                uploaded += 1
+                self.put_output(item)
             elif self.pre_push and not item.can_pre_push:
                 # We're doing a pre-push, but this item doesn't support that.
-                prepush_skipped.append(item)
+                prepush_skipped += 1
+                self.put_output(item)
             else:
                 # This item is not in Pulp, or otherwise needs a reupload.
                 item_type = type(item)
@@ -65,33 +72,23 @@ class Upload(Phase):
 
                 ctx = upload_context[item_type]
 
-                needs_upload.append(item.ensure_uploaded(ctx))
+                uploading += 1
+                uploaded_f = item.ensure_uploaded(ctx)
+                uploaded_f.add_done_callback(self._update_after_uploaded)
+                self.put_future_output(uploaded_f)
 
         event = {
             "type": "uploading-pulp",
-            "items-present": len(uploaded),
-            "items-uploading": len(needs_upload),
+            "items-present": uploaded,
+            "items-uploading": uploading,
         }
         messages = [
-            "%s already present" % len(uploaded),
-            "%s uploading" % len(needs_upload),
+            "%s already present" % uploaded,
+            "%s uploading" % uploading,
         ]
 
         if self.pre_push:
-            messages.append("%s skipped during pre-push" % len(prepush_skipped))
-            event["items-prepush-skipped"] = len(prepush_skipped)
+            messages.append("%s skipped during pre-push" % prepush_skipped)
+            event["items-prepush-skipped"] = prepush_skipped
 
         LOG.info("Upload items: %s", ", ".join(messages), extra={"event": event})
-
-        # Anything already in the system or being skipped can be immediately yielded.
-        for item in uploaded + prepush_skipped:
-            assert item
-            self.put_output(item)
-
-        # Then wait for the completion of anything we're uploading.
-        # TODO: apply a configurable timeout
-        for item in concurrent.futures.as_completed(needs_upload):
-            out = item.result()
-            assert out
-            self.update_push_items([out])
-            self.put_output(out)

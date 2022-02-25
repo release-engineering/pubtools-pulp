@@ -39,10 +39,8 @@ class Associate(Phase):
             batch = remaining[:BATCH_SIZE]
             remaining = remaining[BATCH_SIZE:]
 
-            # TODO: this could be parallelized further.
             for items in PulpPushItem.items_by_type(batch):
-                for item in PulpPushItem.associated_items_single_batch(
+                for associated_f in PulpPushItem.associated_items_single_batch(
                     self.pulp_client, items
                 ):
-                    assert item
-                    self.put_output(item)
+                    self.put_future_outputs(associated_f)
