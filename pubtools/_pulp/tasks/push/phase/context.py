@@ -133,7 +133,7 @@ class Context(object):
         """
 
         if width is None:
-            width = 80
+            width = int(os.environ.get("COLUMNS") or "80")
 
             # Conditional due to py2
             if hasattr(shutil, "get_terminal_size"):
