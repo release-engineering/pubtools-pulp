@@ -98,13 +98,13 @@ class Phase(object):
         self.in_queue = in_queue
         self.out_queue = context.new_queue() if out_queue is True else out_queue
         self.name = name
+        self.context = context
 
         # If we have an in_queue, name it after ourselves
         if in_queue:
             in_queue.name = name
 
         self.__thread = None
-        self.__context = context
         self.__started = False
 
         # future representing the completion of all delayed puts on
@@ -227,7 +227,7 @@ class Phase(object):
 
         # Immediately set context into error state to interrupt all phases
         # (including potentially ourselves) as early as possible.
-        self.__context.set_error()
+        self.context.set_error()
 
         # re-raising the exception will cause it to propagate up through
         # __thread_target, where reasonable logging occurs.
@@ -249,7 +249,7 @@ class Phase(object):
         # OR if the context is in the error state. The latter case
         # avoids us continuing to work on our queue for a long time after
         # we already know there's a fatal error.
-        if out is Phase.ERROR or self.__context.has_error:
+        if out is Phase.ERROR or self.context.has_error:
             raise PhaseInterrupted("Stopping %s due to error" % self.name)
 
         return out
@@ -320,4 +320,4 @@ class Phase(object):
             # Put the context into error state. This will inform all other
             # phases (at least those with an input queue) that we've hit an
             # error, and so they will be interrupted.
-            self.__context.set_error()
+            self.context.set_error()

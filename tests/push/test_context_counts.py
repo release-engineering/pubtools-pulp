@@ -112,6 +112,8 @@ def test_context_counts(caplog):
             ctx.dump_progress(width=70)
 
             # When visualized, this is what it should look like.
+            # Note the ??? because the total number of items hasn't been set on
+            # the context.
             assert (
                 caplog.messages[-1].strip()
                 # to allow u string literal... (FIXME: remove when py2 dropped)
@@ -119,9 +121,9 @@ def test_context_counts(caplog):
                 == textwrap.dedent(
                     u"""
                     Progress:
-                      [ phase 1 | ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▁▁▁▁▁▁▁  ]
-                      [ phase 2 | ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▄▄▄▄▄▄▄                         ]
-                      [ phase 3 | ▇▇▇▇▇▇▇▄▄▄▄▄▄▄▁▁▁▁▁▁▁                                 ]
+                      [ phase 1 | ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▁▁▁▁ ??? ]
+                      [ phase 2 | ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▄▄▄▄▄▄▄                     ??? ]
+                      [ phase 3 | ▇▇▇▇▇▇▇▄▄▄▄▄▄▄▁▁▁▁▁▁▁                             ??? ]
                     """
                 ).strip()
                 # fmt: on
@@ -156,6 +158,31 @@ def test_context_counts(caplog):
                     },
                 ],
             }
+
+            # Let's try logging again but this time after setting up
+            # a known item count.
+            ctx.items_count = 100
+            ctx.items_known.set()
+            ctx.dump_progress(width=70)
+
+            # Now it should look like this. Compare to previously:
+            # - bars have shrunk since actual item count (100) is larger than the
+            #   previously estimated 35
+            # - ??? is gone since the item count is no longer an estimate.
+            assert (
+                caplog.messages[-1].strip()
+                # to allow u string literal... (FIXME: remove when py2 dropped)
+                # fmt: off
+                == textwrap.dedent(
+                    u"""
+                    Progress:
+                      [ phase 1 | ▇▇▇▇▇▇▇▇▇▇▄▄▄▄▄▁▁                                     ]
+                      [ phase 2 | ▇▇▇▇▇▇▇▄▄                                             ]
+                      [ phase 3 | ▇▇▄▄▁▁                                                ]
+                    """
+                ).strip()
+                # fmt: on
+            )
 
         finally:
             # Whether test passes or fails, release all the semaphores to avoid deadlock.

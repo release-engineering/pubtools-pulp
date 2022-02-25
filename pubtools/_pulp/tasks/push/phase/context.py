@@ -91,6 +91,19 @@ class Context(object):
         self._queues = []
         self._error = False
 
+        """An event which becomes True during push only after all push
+        items have been encountered (so that the total number of push items
+        is known).
+        """
+        self.items_known = Event()
+
+        """Total number of push items.
+
+        This value is only valid after self.items_known has been set to True.
+        Prior to that, it is possible that more items are still being loaded.
+        """
+        self.items_count = None
+
     @property
     def has_error(self):
         """True if and only if the context is in the error state.
@@ -142,6 +155,7 @@ class Context(object):
         snapshot = []
         max_namelen = 0
         max_count = 1
+        items_known = self.items_known.is_set()
 
         for queue in self._queues:
             if not isinstance(queue, CountingQueue):
@@ -154,8 +168,14 @@ class Context(object):
             snapshot.append((queue.name, counts))
             max_count = max(max_count, *counts)
 
+        # When reporting progress, we may or may not know exactly how many
+        # items we're dealing with, depending how far we are in the push.
+        # If we know the exact count, use it.
+        if items_known:
+            max_count = self.items_count or 1
+
         template_str = "[ %%%ds | %%s%%s%%s%%s ]" % max_namelen
-        bar_width = width - max_namelen - 10
+        bar_width = max(width - max_namelen - 10, 10)
 
         # We will create both human-oriented strings and machine-oriented
         # structured metrics (logged via 'extra'). In practice this can be
@@ -202,7 +222,15 @@ class Context(object):
             while len(bar1 + bar2 + bar3 + bar4) < bar_width:
                 bar4 = bar4 + " "
 
-            formatted_strs.append(template_str % (name, bar1, bar2, bar3, bar4))
+            bar_str = template_str % (name, bar1, bar2, bar3, bar4)
+
+            # If we don't know the exact item counts, we'd better indicate this
+            # since the progress bar can otherwise be rather misleading. We do
+            # this by pasting '???' near the end.
+            if not items_known:
+                bar_str = bar_str[:-6] + " ??? ]"
+
+            formatted_strs.append(bar_str)
 
             # Add counts to the structured event as well.
             event["phases"].append(
