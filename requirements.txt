@@ -151,6 +151,10 @@ gssapi==1.7.3 \
     --hash=sha256:ec25bfa506dbf82e0471f9ffce198b10da8f4b787f1779d52dbe514eb2cda999 \
     --hash=sha256:ee76851059aecfcf2927ae991d74bd8c635de3e958d8e1cd3cd213d566ec7911
     # via requests-gssapi
+humanize==4.0.0 \
+    --hash=sha256:8d86333b8557dacffd4dce1dbe09c81c189e2caf7bb17a970b2212f0f58f10f2 \
+    --hash=sha256:ee1f872fdfc7d2ef4a28d4f80ddde9f96d36955b5d6b0dac4bdeb99502bddb00
+    # via pubtools-pulplib
 idna==3.3 \
     --hash=sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff \
     --hash=sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d
@@ -168,10 +172,10 @@ jsonschema==4.4.0 \
 kobo==0.20.2 \
     --hash=sha256:4ba3c507beb843966509aa2229d3b5d7e17a7511750f56e918a609ae774b4532
     # via pushsource
-koji==1.27.1 \
-    --hash=sha256:2eb84ad075cfdaabd6520bf69ab01c217d18551cd200132a15f0441b45bc2a4c \
-    --hash=sha256:518a09a10f802ec5635978800d0ff0ab17d57aa31f369c01c93efcf9b9c9e61a \
-    --hash=sha256:b3db519db7bbb07edaef28d281ea463deb9b3998008e7bb47ef702e4cc871748
+koji==1.28.0 \
+    --hash=sha256:33adbd99cad9354f20e853414ddff482dbc1a5706439db81e123d64570f0abc3 \
+    --hash=sha256:54196a71e7f246727779ea941871b9ac78d6903962e76cba6dae517da6f5cfae \
+    --hash=sha256:ecea250efd07307a17ee933476a6eb9790ab49b38c8d4a2fca06119bbb6c1c27
     # via pushsource
 monotonic==1.6 \
     --hash=sha256:3a55207bcfed53ddd5c5bae174524062935efed17792e9de2ad0205ce9ad63f7 \
@@ -179,9 +183,9 @@ monotonic==1.6 \
     # via
     #   fastpurge
     #   more-executors
-more-executors==2.8.2 \
-    --hash=sha256:6e19e7155335fe15beeebdaad9a4ef6af089b137edc103ed75c3dd7e8c0d0833 \
-    --hash=sha256:b20b1ee7be21a765d622ef0388ed880c1f00999cec6a7e5f134b391303212b3d
+more-executors==2.10.0 \
+    --hash=sha256:170cdf50289f33e75379e79b1b68a0121be860a79f272d8d372c9cedeae1eb15 \
+    --hash=sha256:b65e77c07d4eec046f6872e314670fc8192106ce1f47c9bd23570af609c29de4
     # via
     #   -r requirements.in
     #   fastpurge
@@ -203,9 +207,9 @@ pubtools==1.2.1 \
     # via
     #   -r requirements.in
     #   pubtools-pulplib
-pubtools-pulplib==2.24.0 \
-    --hash=sha256:c6af9f51e5325974fca011f5eca9a88468b158bfda8710c5f1d99b4f5641271c \
-    --hash=sha256:fea6f1a05985ff453c1effb9d364a540ee2905fb898d8b088bb1ba51ff459bd6
+pubtools-pulplib==2.25.0 \
+    --hash=sha256:d996b523188bf1e3a90e7cf30d5dee9c89af3d87bd75d9ae396dcb97e2e50724 \
+    --hash=sha256:fad7eaf456ecf5de1e458786b548392706d938d183571333f8cb2107d98983c8
     # via -r requirements.in
 pushcollector==1.2.0 \
     --hash=sha256:cd53036c7880957577bc9a2a3b1431e81a5aea10f4b4cbcbf98c3ee40c6f2ea3
