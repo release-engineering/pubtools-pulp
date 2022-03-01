@@ -1,9 +1,14 @@
+import os
 import logging
+
+from more_executors import Executors
 
 from .base import Phase
 
 
 LOG = logging.getLogger("pubtools.pulp")
+
+CHECKSUM_THREADS = int(os.getenv("PUBTOOLS_PULP_CHECKSUM_THREADS") or "4")
 
 
 class LoadChecksums(Phase):
@@ -34,13 +39,41 @@ class LoadChecksums(Phase):
         )
         self.update_push_items = update_push_items
 
+    def _get_sums(self, item):
+        with_sums = item.with_checksums()
+
+        # As we figure out checksums for each item we'll record that item,
+        # generally in PENDING state.
+        self.update_push_items([with_sums])
+
+        return with_sums
+
     def run(self):
-        for item in self.iter_input():
-            # TODO: parallelize this
-            with_sums = item.with_checksums()
+        with Executors.thread_pool(
+            max_workers=CHECKSUM_THREADS, name="checksummer"
+        ) as exc:
 
-            # As we figure out checksums for each item we'll record that item,
-            # generally in PENDING state.
-            self.update_push_items([with_sums])
+            for item in self.iter_input():
+                # Use a heuristic to try to hand off the item onto the next
+                # phase as quickly as possible.
+                #
+                # - in general we use a thread pool to do calculations in parallel.
+                #
+                # - but if we probably already have sums, we don't want to put
+                #   that item onto the back of a potentially long queue where it
+                #   may have to wait a long time, when it could be passsed on
+                #   immediately.
+                #
+                # Hence we handle some items synchronously and others not.
 
-            self.put_output(with_sums)
+                if not item.blocking_checksums:
+                    # with_checksums (probably) won't block so just do
+                    # it immediately, thus letting the next phase get hold
+                    # of the item more quickly.
+                    self.put_output(self._get_sums(item))
+
+                else:
+                    # with_checksums (probably) will block so put it onto
+                    # the thread pool's queue.
+                    f = exc.submit(self._get_sums, item)
+                    self.put_future_output(f)
