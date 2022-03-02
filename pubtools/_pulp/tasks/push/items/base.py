@@ -410,8 +410,21 @@ class PulpPushItem(object):
 
         upload_tasks = f_flat_map(repo_f, self.upload_to_repo)
 
-        # TODO: should we check here and raise if refresh didn't find that we're present?
-        return f_flat_map(upload_tasks, lambda _: self.with_pulp_refreshed(ctx.client))
+        # Helper to verify that we've really got into at least one repo as a result
+        # of the upload.
+        def asserting_uploaded_ok(item):
+            if not item.in_pulp_repos:
+                msg = (
+                    "Fatal error: item supposedly uploaded successfully, "
+                    "but remains missing from Pulp: %s"
+                ) % item.pushsource_item
+                raise RuntimeError(msg)
+            return item
+
+        updated_f = f_flat_map(
+            upload_tasks, lambda _: self.with_pulp_refreshed(ctx.client)
+        )
+        return f_map(updated_f, asserting_uploaded_ok)
 
     def ensure_uptodate(self, client):
         """Ensure that this item is up-to-date in Pulp.
@@ -426,9 +439,21 @@ class PulpPushItem(object):
         LOG.info("Updating fields on %s", self.pushsource_item.name)
         update = client.update_content(self.unit_for_update)
 
-        # TODO: should we check after the refresh that we now consider ourselves
-        # to be up-to-date?
-        return f_flat_map(update, lambda _: self.with_pulp_refreshed(client))
+        # Helper to verify that our update really did make the item up-to-date.
+        def asserting_updated_ok(item):
+            if item.pulp_state not in (State.PARTIAL, State.IN_REPOS):
+                msg = (
+                    "Fatal error: item supposedly updated successfully, "
+                    "but actual and desired state still differ:\n"
+                    "  item:         %s\n"
+                    "  current unit: %s\n"
+                    "  desired unit: %s"
+                ) % (item.pushsource_item, item.pulp_unit, item.unit_for_update)
+                raise RuntimeError(msg)
+            return item
+
+        updated_f = f_flat_map(update, lambda _: self.with_pulp_refreshed(client))
+        return f_map(updated_f, asserting_updated_ok)
 
     @property
     def can_pre_push(self):
