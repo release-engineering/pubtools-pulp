@@ -298,7 +298,6 @@ class Phase(object):
             target=self.__thread_target, name="phase-%s" % self.__machine_name
         )
         self.__thread.daemon = True
-        self.__thread.start()
 
         # If there's no in queue then we treat the phase as immediately started
         # for logging purposes. Otherwise, we'll wait until we see at least one
@@ -306,6 +305,8 @@ class Phase(object):
         if self.in_queue is None:
             self.__started = True
             self.__log_start()
+
+        self.__thread.start()
 
     def __exit__(self, *_):
         LOG.debug("%s: joining", self.name)
