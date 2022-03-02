@@ -25,13 +25,9 @@ class QueryPulp(Phase):
         self.pulp_client = pulp_client
 
     def run(self):
-        # TODO: this could be parallelized further. There's no reason we need to
-        # wait for one batch to complete before starting the search for the next
-        # one.
         for batch in self.iter_input_batched():
             for items in PulpPushItem.items_by_type(batch):
-                for item in PulpPushItem.items_with_pulp_state_single_batch(
+                updated_items_f = PulpPushItem.items_with_pulp_state_single_batch(
                     self.pulp_client, items
-                ):
-                    assert item
-                    self.put_output(item)
+                )
+                self.put_future_outputs(updated_items_f)

@@ -52,3 +52,24 @@ class CopyOperation(object):
         )
 
         log_fn(msg)
+
+
+def asserting_copied_ok(item):
+    """Given an item which has allegedly just been copied to all desired target repos:
+
+    - raises if the item is still missing any repos, or...
+    - returns the item if it's not missing any repos
+    """
+    missing_repos = item.missing_pulp_repos
+    if missing_repos:
+        msg = "Fatal error: Pulp unit not present in repo(s) %s after copy: %s" % (
+            ", ".join(missing_repos),
+            item.pulp_unit,
+        )
+        raise RuntimeError(msg)
+    return item
+
+
+def asserting_all_copied_ok(items):
+    """Like asserting_copied_ok, but for a list of items."""
+    return [asserting_copied_ok(item) for item in items]
