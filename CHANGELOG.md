@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.8.2] - 2022-03-03
+
+- `pubtools-pulp-push`: improved the pipelining of each push phase.
+- `pubtools-pulp-push`: improved the accuracy of progress logging.
+- `pubtools-pulp-push`: fix: progress logs did not respect `COLUMNS` environment
+                        variable when running on python2
+
 ## [1.8.1] - 2022-03-02
 
 - `pubtools-pulp-push`: improved the performance of the checksum calculation step.
@@ -78,7 +85,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.8.1...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.8.2...HEAD
+[1.8.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.8.1...v1.8.2
 [1.8.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.7.1...v1.8.0
 [1.7.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.7.0...v1.7.1
