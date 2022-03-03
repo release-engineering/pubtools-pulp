@@ -107,6 +107,13 @@ class Phase(object):
         self.__thread = None
         self.__started = False
 
+        # This string is used in logs produced if the phase is interrupted.
+        # By default, if this happens we simply say the phase is "interrupted"
+        # with no further details. However, when the phase interrupts itself
+        # it can update this string to "failed" (or something else) to indicate
+        # that the interruption comes from within rather than another source.
+        self.__interrupt_reason = "interrupted"
+
         # future representing the completion of all delayed puts on
         # the output queue (if any). Must be awaited at the end of the phase.
         self.__future_puts = f_return(True)
@@ -237,13 +244,27 @@ class Phase(object):
     def __future_output_failed(self, exception):
         # Called when a Future[item] has been resolved unsuccessfully.
 
+        # Mark that this phase is being interrupted due to a failure within
+        # the phase itself (and not due to an earlier phase).
+        self.__interrupt_reason = "failed"
+
+        # The responsibility for logging the exception is here as we can't
+        # ensure anyone else will catch it if we re-raise.
+        try:
+            # raising to immediately catch for py2, which does not
+            # support passing the exception directly to log record's exc_info
+            raise exception
+        except Exception:  # pylint: disable=broad-except
+            LOG.exception("%s: fatal error occurred", self.name)
+
         # Immediately set context into error state to interrupt all phases
         # (including potentially ourselves) as early as possible.
         self.context.set_error()
 
-        # re-raising the exception will cause it to propagate up through
-        # __thread_target, where reasonable logging occurs.
-        raise exception
+        # set_error above will already interrupt this phase if we're still
+        # reading the input queue. Raise an explicit interruption as well to
+        # cover the scenario where we're not reading the input queue.
+        raise PhaseInterrupted()
 
     def __get_input(self, timeout=PHASE_TIMEOUT):
         # Get a single item from input queue; this is currently private
@@ -322,8 +343,9 @@ class Phase(object):
         except PhaseInterrupted:
             # When interrupted, we need to stop, but we don't log an exception
             # with stacktrace as the relevant details will have already been
-            # logged by whichever phase hit the initial error.
-            self.__log_error("interrupted")
+            # logged by whichever phase hit the initial error (including
+            # ourselves if interrupted via put_future_output).
+            self.__log_error(self.__interrupt_reason)
         except Exception:  # pylint: disable=broad-except
             # In any other case we must log this as a fatal error.
             LOG.exception("%s: fatal error occurred", self.name)
