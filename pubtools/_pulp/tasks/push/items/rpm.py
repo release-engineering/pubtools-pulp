@@ -3,6 +3,7 @@ import os
 from pubtools.pulplib import RpmUnit, Criteria
 from pushsource import RpmPushItem
 import attr
+import six
 
 from .base import supports_type, PulpPushItem
 
@@ -34,27 +35,37 @@ class PulpRpmPushItem(PulpPushItem):
     def rpm_nvr(self):
         # (n, v, r) tuple derived from filename, used in cdn_path calculation
 
-        # TODO: handle the case where below code crashes because the RPM filename
-        # is invalid. Just make it raise a more useful error message in that case
-        # so it's clear what the problem is.
+        # Filename convention can be found at:
+        # http://ftp.rpm.org/max-rpm/ch-rpm-file-format.html
 
-        # ipa-admintools-4.4.0-14.el7_3.1.1.noarch.rpm
-        filename = self.pushsource_item.name
+        try:
+            # ipa-admintools-4.4.0-14.el7_3.1.1.noarch.rpm
+            filename = self.pushsource_item.name
 
-        # mpr.hcraon.1.1.3_7le.41-0.4.4-slootnimda-api
-        filename_rev = "".join(reversed(filename))
+            # mpr.hcraon.1.1.3_7le.41-0.4.4-slootnimda-api
+            filename_rev = "".join(reversed(filename))
 
-        # 1.1.3_7le.41-0.4.4-slootnimda-api
-        nvr_rev = filename_rev.split(".", 2)[2]
+            # 1.1.3_7le.41-0.4.4-slootnimda-api
+            nvr_rev = filename_rev.split(".", 2)[2]
 
-        # ('1.1.3_7le.41', '0.4.4', 'slootnimda-api')
-        components_revrev = nvr_rev.split("-", 2)
+            # ('1.1.3_7le.41', '0.4.4', 'slootnimda-api')
+            components_revrev = nvr_rev.split("-", 2)
 
-        # ['14.el7_3.1.1', '4.4.0', 'ipa-admintools']
-        components_rev = ["".join(reversed(c)) for c in components_revrev]
+            # ['14.el7_3.1.1', '4.4.0', 'ipa-admintools']
+            components_rev = ["".join(reversed(c)) for c in components_revrev]
 
-        # ('ipa-admintools', '4.4.0', '14.el7_3.1.1')
-        return tuple(reversed(components_rev))
+            # ('ipa-admintools', '4.4.0', '14.el7_3.1.1')
+            return tuple(reversed(components_rev))
+        except Exception as exc:  # pylint: disable=broad-except
+            # Crashes above may be a bit hard to understand, so we raise with
+            # a more self-explanatory message.
+            six.raise_from(
+                ValueError(
+                    "Invalid RPM filename %s (expected: "
+                    "[name]-[version]-[release].[arch].rpm)" % self.pushsource_item.name
+                ),
+                exc,
+            )
 
     @property
     def cdn_path(self):
