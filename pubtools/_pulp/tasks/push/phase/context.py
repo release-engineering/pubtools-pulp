@@ -21,6 +21,13 @@ LOG = logging.getLogger("pubtools.pulp")
 # How long, in seconds, between our logging of current phase progress.
 PROGRESS_INTERVAL = int(os.getenv("PUBTOOLS_PULP_PROGRESS_INTERVAL") or "600")
 
+# The default max size of each phase's item queue.
+#
+# This value may need tuning per the following:
+# - if too small, pushes will slow down as phases won't be pipelined as much
+# - if too large, memory usage may be too high on pushes with large numbers
+#   of items as queues fill up
+QUEUE_SIZE = int(os.getenv("PUBTOOLS_PULP_QUEUE_SIZE") or "10000")
 
 QueueCounts = namedtuple("QueueCounts", ["put", "get", "done"])
 
@@ -130,6 +137,9 @@ class Context(object):
         and the queue will participate in progress logging. This should be
         disabled for unusual cases.
         """
+        if "maxsize" not in kwargs:
+            kwargs["maxsize"] = QUEUE_SIZE
+
         if counting:
             out = CountingQueue(**kwargs)
         else:
