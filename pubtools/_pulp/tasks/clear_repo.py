@@ -36,7 +36,7 @@ LOG = logging.getLogger("pubtools.pulp")
 # pylint: disable=no-member
 
 
-@attr.s
+@attr.s(slots=True)
 class ClearedRepo(object):
     """Represents a single repo which has been cleared."""
 

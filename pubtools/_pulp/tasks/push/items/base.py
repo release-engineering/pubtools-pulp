@@ -67,12 +67,12 @@ class State(object):
     IN_REPOS = "IN_REPOS"
 
 
-@attr.s(frozen=True)
+@attr.s(frozen=True, slots=True)
 class UploadContext(object):
     client = attr.ib(default=None)
 
 
-@attr.s(frozen=True)
+@attr.s(frozen=True, slots=True)
 class PulpPushItem(object):
     """Wraps a pushitem with additional info for Pulp push.
 

@@ -8,7 +8,7 @@ from .base import supports_type, PulpPushItem
 
 
 @supports_type(FilePushItem)
-@attr.s(frozen=True)
+@attr.s(frozen=True, slots=True)
 class PulpFilePushItem(PulpPushItem):
     """Handler for generic files (in Pulp2 terms, "iso" units)."""
 

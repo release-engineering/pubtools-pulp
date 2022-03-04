@@ -15,7 +15,7 @@ LOG = logging.getLogger("pubtools.pulp")
 
 
 @supports_type(ErratumPushItem)
-@attr.s(frozen=True)
+@attr.s(frozen=True, slots=True)
 class PulpErratumPushItem(PulpPushItem):
     """Handler for errata."""
 

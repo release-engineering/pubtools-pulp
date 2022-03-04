@@ -7,7 +7,7 @@ import attr
 from .base import supports_type, PulpPushItem
 
 
-@attr.s(frozen=True)
+@attr.s(frozen=True, slots=True)
 class RpmUploader(object):
     """A custom context for RPM uploads.
 
@@ -19,7 +19,7 @@ class RpmUploader(object):
 
 
 @supports_type(RpmPushItem)
-@attr.s(frozen=True)
+@attr.s(frozen=True, slots=True)
 class PulpRpmPushItem(PulpPushItem):
     """Handler for RPMs."""
 

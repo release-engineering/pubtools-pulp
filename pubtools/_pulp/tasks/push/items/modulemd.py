@@ -6,7 +6,7 @@ from .direct import PulpDirectUploadPushItem
 
 
 @supports_type(ModuleMdPushItem)
-@attr.s(frozen=True)
+@attr.s(frozen=True, slots=True)
 class PulpModuleMdPushItem(PulpDirectUploadPushItem):
     """Handler for modulemd YAML files which are uploaded directly to each dest repo."""
 

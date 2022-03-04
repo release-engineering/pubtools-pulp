@@ -6,7 +6,7 @@ from .direct import PulpDirectUploadPushItem
 
 
 @supports_type(ProductIdPushItem)
-@attr.s(frozen=True)
+@attr.s(frozen=True, slots=True)
 class PulpProductIdPushItem(PulpDirectUploadPushItem):
     """Handler for productids which are uploaded directly to each dest repo."""
 

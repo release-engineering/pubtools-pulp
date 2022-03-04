@@ -9,7 +9,7 @@ import attr
 LOG = logging.getLogger("pubtools.pulp")
 
 
-@attr.s(frozen=True)
+@attr.s(frozen=True, slots=True)
 class CopyOperation(object):
     # Represents a single copy operation between one repo and another.
     src_repo_id = attr.ib(type=str)
