@@ -17,6 +17,7 @@ from pubtools.pulplib import (
 from pubtools.pluggy import pm
 
 from pubtools._pulp.tasks.push import entry_point
+from pubtools._pulp.tasks.push.phase import context
 
 from .util import hide_unit_ids
 
@@ -187,11 +188,16 @@ def test_typical_push(
 
 
 def test_update_push(
-    fake_controller, data_path, fake_push, fake_state_path, command_tester
+    fake_controller, data_path, fake_push, fake_state_path, command_tester, monkeypatch
 ):
     """Test a more complex push where items already exist in Pulp in a variety of
     different states.
     """
+
+    # For this test we'll force an abnormally small queue size.
+    # This will verify that nothing breaks in edge cases such as the queue size
+    # being smaller than the batch size.
+    monkeypatch.setattr(context, "QUEUE_SIZE", 2)
 
     # Sanity check that the Pulp server is, initially, empty.
     client = fake_controller.client
