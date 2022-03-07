@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.9.0] - 2022-03-08
+
+- Reduced memory usage by using slotted classes
+- `pubtools-pulp-push`: minor performance improvements
+- `pubtools-pulp-push`: minor logging improvements in some error handling scenarios
+
 ## [1.8.2] - 2022-03-03
 
 - `pubtools-pulp-push`: improved the pipelining of each push phase.
@@ -85,7 +91,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.8.2...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.0...HEAD
+[1.9.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.8.2...v1.9.0
 [1.8.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.8.1...v1.8.2
 [1.8.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.7.1...v1.8.0
