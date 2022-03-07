@@ -10,7 +10,7 @@ from .base import PulpPushItem, State
 # pylint:disable=abstract-method
 
 
-@attr.s(frozen=True)
+@attr.s(frozen=True, slots=True)
 class PulpDirectUploadPushItem(PulpPushItem):
     """A specialization of PulpPushItems for content types with the following behavior:
 

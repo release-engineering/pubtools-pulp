@@ -6,7 +6,7 @@ from .direct import PulpDirectUploadPushItem
 
 
 @supports_type(CompsXmlPushItem)
-@attr.s(frozen=True)
+@attr.s(frozen=True, slots=True)
 class PulpCompsXmlPushItem(PulpDirectUploadPushItem):
     """Handler for comps.xml files which are uploaded directly to each dest repo."""
 
