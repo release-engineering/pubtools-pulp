@@ -1,5 +1,6 @@
 import logging
 import random
+import os
 from functools import partial
 
 from pushsource import PushItem
@@ -70,6 +71,7 @@ class State(object):
 @attr.s(frozen=True)
 class UploadContext(object):
     client = attr.ib(default=None)
+    random = attr.ib(default=None)
 
 
 @attr.s(frozen=True)
@@ -143,7 +145,10 @@ class PulpPushItem(object):
         Subclasses MAY override this to provide their own context
         (e.g. to cache a value rather than recalculating per upload).
         """
-        return UploadContext(client=pulp_client)
+        return UploadContext(
+            client=pulp_client,
+            random=random.Random(float(os.getenv("PUBTOOLS_SEED") or random.random())),
+        )
 
     @classmethod
     def items_by_type(cls, items):
@@ -401,11 +406,15 @@ class PulpPushItem(object):
         """
         # In order to get the unit into Pulp, we must first upload it into some
         # (any) repo from dest.
-        #
-        # TODO: consider picking the upload repo differently here (e.g. randomly) to
-        # make repo contention less likely.
         if repo_f is None:
-            repo_id = self.pushsource_item.dest[0]
+            # Because uploading to a repo will lock the repo (during import task),
+            # for the most possible concurrency it's best to try to uniformly
+            # distribute the repos used for upload. For example if we receive
+            # 100 items all for repos [a, b, c, d], we will get the best
+            # performance if each repo is used for roughly 25 uploads.
+            #
+            # Hence the random choice of a target repo.
+            repo_id = ctx.random.choice(self.pushsource_item.dest)
             repo_f = ctx.client.get_repository(repo_id)
 
         upload_tasks = f_flat_map(repo_f, self.upload_to_repo)
