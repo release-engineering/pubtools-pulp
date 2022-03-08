@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.9.1] - 2022-03-09
+
+- Added some caching of Pulp repo lookups to improve performance
+- `pubtools-pulp-push`: fixed attempts to flush UD cache for all-rpm-content
+- `pubtools-pulp-push`: fixed a scaling issue which could lead to stack overflow on
+  pushes with large numbers of items
+
 ## [1.9.0] - 2022-03-08
 
 - Reduced memory usage by using slotted classes
@@ -91,7 +98,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.0...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.1...HEAD
+[1.9.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.8.2...v1.9.0
 [1.8.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.8.1...v1.8.2
 [1.8.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.8.0...v1.8.1
