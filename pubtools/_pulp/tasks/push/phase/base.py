@@ -1,9 +1,10 @@
 import logging
 import os
+from collections import deque
 from functools import partial
 from threading import Thread
 
-from more_executors.futures import f_map, f_and, f_return
+from more_executors.futures import f_map, f_sequence
 from monotonic import monotonic
 from six.moves.queue import Empty
 
@@ -114,9 +115,9 @@ class Phase(object):
         # that the interruption comes from within rather than another source.
         self.__interrupt_reason = "interrupted"
 
-        # future representing the completion of all delayed puts on
+        # futures representing the completion of all delayed puts on
         # the output queue (if any). Must be awaited at the end of the phase.
-        self.__future_puts = f_return(True)
+        self.__future_puts = deque()
 
     def run(self):
         """The business logic for this phase.
@@ -231,7 +232,7 @@ class Phase(object):
             partial(self.__future_output_done, task_done=task_done),
             error_fn=self.__future_output_failed,
         )
-        self.__future_puts = f_and(self.__future_puts, f)
+        self.__future_puts.append(f)
 
     def __future_output_done(self, values, task_done):
         # Called when a Future[list[value]] has been resolved successfully.
@@ -261,10 +262,35 @@ class Phase(object):
         # (including potentially ourselves) as early as possible.
         self.context.set_error()
 
+        # If we have any other pending future outputs, cancel them if possible
+        # since we know they're no longer useful.
+        self.__future_puts_cancel()
+
         # set_error above will already interrupt this phase if we're still
         # reading the input queue. Raise an explicit interruption as well to
         # cover the scenario where we're not reading the input queue.
         raise PhaseInterrupted()
+
+    def __future_puts_await(self):
+        # Wait for all future puts to complete.
+        # Should be called at the end of a phase which has not (yet) failed.
+        f_sequence(self.__future_puts).result()
+        self.__future_puts.clear()
+
+    def __future_puts_cancel(self):
+        # Attempt to cancel all future puts.
+        # Should be called if this phase has failed.
+
+        # Note, this method can be called from multiple threads at once,
+        # hence the slightly odd style as we want to rely only on
+        # the thread-safe deque operations.
+        try:
+            while True:
+                f = self.__future_puts.popleft()
+                f.cancel()
+        except IndexError:
+            # last future handled
+            pass
 
     def __get_input(self, timeout=PHASE_TIMEOUT):
         # Get a single item from input queue; this is currently private
@@ -337,7 +363,7 @@ class Phase(object):
     def __thread_target(self):
         try:
             self.run()
-            self.__future_puts.result()
+            self.__future_puts_await()
             self.__log_finished()
             if self.out_queue:
                 self.put_output(Phase.FINISHED, task_done=False)
@@ -347,10 +373,12 @@ class Phase(object):
             # logged by whichever phase hit the initial error (including
             # ourselves if interrupted via put_future_output).
             self.__log_error(self.__interrupt_reason)
+            self.__future_puts_cancel()
         except Exception:  # pylint: disable=broad-except
             # In any other case we must log this as a fatal error.
             LOG.exception("%s: fatal error occurred", self.name)
             self.__log_error()
+            self.__future_puts_cancel()
 
             # Put the context into error state. This will inform all other
             # phases (at least those with an input queue) that we've hit an
