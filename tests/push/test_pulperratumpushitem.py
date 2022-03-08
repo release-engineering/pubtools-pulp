@@ -15,7 +15,12 @@ def test_erratum_publishes_all_repos():
             id="abc123",
             # ...and the advisory already exists in some Pulp, repos, maybe with
             # some overlap
-            repository_memberships=["existing1", "existing2"],
+            repository_memberships=[
+                "all-rpm-content",
+                "all-rpm-content-ff",
+                "existing1",
+                "existing2",
+            ],
         ),
     )
 
@@ -23,4 +28,5 @@ def test_erratum_publishes_all_repos():
     # it should always include both the new repo(s) we're pushing to and also the
     # existing repos, as any mutation of the erratum requires metadata to be
     # republished for all of them.
+    # all-rpm-content is an exception given that those repos don't get published.
     assert item.publish_pulp_repos == ["existing1", "existing2", "new1", "new2"]

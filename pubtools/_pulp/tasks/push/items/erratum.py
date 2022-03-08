@@ -35,7 +35,18 @@ class PulpErratumPushItem(PulpPushItem):
         # right now.
         #
         out = set(super(PulpErratumPushItem, self).publish_pulp_repos)
-        out.update(self.in_pulp_repos)
+
+        for repo_id in self.in_pulp_repos:
+            # Though the existing code doesn't push errata to all-rpm-content,
+            # historically advisories have been pushed there. We shouldn't return
+            # this from publish_pulp_repos as there's no point in trying to publish
+            # it, and worse, UD cache flush on this repo gives a fatal error.
+            #
+            # Also note that there's an entire family of these repos, hence the
+            # startswith rather than plain equality check.
+            if not repo_id.startswith("all-rpm-content"):
+                out.add(repo_id)
+
         return sorted(out)
 
     def with_unit(self, unit):
