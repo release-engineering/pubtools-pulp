@@ -237,7 +237,6 @@ class PulpPushItem(object):
         for key in copy_crit.keys():
             (src_repo_id, dest_repo_id) = key
 
-            # TODO: cache repo lookups?
             src_repo = pulp_client.get_repository(src_repo_id)
             dest_repo = pulp_client.get_repository(dest_repo_id)
 

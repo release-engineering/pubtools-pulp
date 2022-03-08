@@ -18,7 +18,7 @@ from .phase import (
 from ..common import Publisher, PulpTask
 from ...services import (
     CollectorService,
-    PulpClientService,
+    CachingPulpClientService,
 )
 
 step = PulpTask.step
@@ -34,7 +34,7 @@ LOG = logging.getLogger("pubtools.pulp")
 
 class Push(
     CollectorService,
-    PulpClientService,
+    CachingPulpClientService,
     Publisher,
     PulpTask,
 ):
@@ -89,7 +89,7 @@ class Push(
             # all used by every phase.
             kwargs.update(
                 context=ctx,
-                pulp_client=self.pulp_client,
+                pulp_client=self.caching_pulp_client,
                 pre_push=self.args.pre_push,
                 update_push_items=collect_phase.update_push_items,
                 publish_with_cache_flush=self.publish_with_cache_flush,

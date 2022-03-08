@@ -48,8 +48,10 @@ class NoCopyClient(object):
     """
 
     def __init__(self, delegate):
-        self.search_content = delegate.search_content
         self.get_repository = delegate.get_repository
+        self.search_repository = delegate.search_repository
+        self.search_content = delegate.search_content
+        self.update_content = delegate.update_content
 
     def copy_content(self, *_args, **_kwargs):
         return f_return([Task(id="no-copy-123", completed=True, succeeded=True)])
