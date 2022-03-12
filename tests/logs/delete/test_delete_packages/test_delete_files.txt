@@ -1,0 +1,25 @@
+[    INFO] Delete files: started
+[    INFO] Get files: started
+[ WARNING] Requested unit(s) don't exist as file: random.txt
+[    INFO] 3 unit(s) found for deletion
+[    INFO] Get files: finished
+[ WARNING] other.iso is not present in some-filerepo
+[    INFO] Deleting hello.iso from some-filerepo
+[    INFO] Deleting some.iso from some-filerepo
+[ WARNING] Unit(s) don't belong to any requested repos some-filerepo: other.iso
+[    INFO] Unassociate files: started
+[    INFO] some-filerepo: removed 2 iso(s), tasks: e3e70682-c209-4cac-629f-6fbed82c07cd
+[    INFO] Unassociate files: finished
+[    INFO] Record push items: started
+[    INFO] Record push items: finished
+[    INFO] Delete files: finished
+[    INFO] Publish: started
+[    INFO] Publishing some-filerepo
+[    INFO] Publish: finished
+[    INFO] Flush CDN cache: started
+[    INFO] Flush CDN cache: finished
+[    INFO] Set cdn_published: started
+[    INFO] Set cdn_published: finished
+[    INFO] Flush UD cache: started
+[    INFO] UD cache flush is not enabled.
+[    INFO] Flush UD cache: finished

@@ -1,0 +1,60 @@
+[    INFO] Delete advisories: started
+[    INFO] Get advisories: started
+[    INFO] Get advisories: finished
+[ WARNING] Advisory RHBA-1001:22 is not in repo some-yumrepo
+[ WARNING] Advisory RHBA-1001:22 is not in repo other-yumrepo
+[ WARNING] Advisory RHBA-1001:22 doesn't belong to any of the repos other-yumrepo, some-yumrepo
+[ WARNING] Advisory RHSA-1111:22 is not in repo other-yumrepo
+[    INFO] 2 packages and 1 modules found from the advisory RHSA-1111:22 in repos some-yumrepo
+[    INFO] RPMs:
+[    INFO] - bash-1.23-1.test8_x86_64.rpm
+[    INFO] - dash-1.23-1.test8_x86_64.rpm
+[    INFO] Modules:
+[    INFO] - mymod:s1:123:a1c2:s390x
+[    INFO] Delete RPMs: started
+[    INFO] Get RPMs: started
+[    INFO] 2 unit(s) found for deletion
+[    INFO] Get RPMs: finished
+[    INFO] Deleting bash-1.23-1.test8_x86_64.rpm from some-yumrepo
+[    INFO] Deleting dash-1.23-1.test8_x86_64.rpm from some-yumrepo
+[    INFO] Unassociate RPMs: started
+[    INFO] some-yumrepo: removed 2 rpm(s), tasks: e3e70682-c209-4cac-629f-6fbed82c07cd
+[    INFO] Unassociate RPMs: finished
+[    INFO] Record push items: started
+[    INFO] Record push items: finished
+[    INFO] Delete RPMs: finished
+[    INFO] Delete modules: started
+[    INFO] Get modules: started
+[    INFO] 1 unit(s) found for deletion
+[    INFO] Get modules: finished
+[    INFO] Deleting mymod:s1:123:a1c2:s390x from some-yumrepo
+[    INFO] Remove artifacts from modules: started
+[    INFO] Delete RPMs: started
+[    INFO] Get RPMs: started
+[    INFO] 1 unit(s) found for deletion
+[    INFO] Get RPMs: finished
+[    INFO] Deleting crash-1.23-1.test8.module+el8.0.0+3049+59fd2bba.x86_64.rpm from some-yumrepo
+[    INFO] Unassociate RPMs: started
+[    INFO] some-yumrepo: removed 1 rpm(s), tasks: 82e2e662-f728-b4fa-4248-5e3a0a5d2f34
+[    INFO] Unassociate RPMs: finished
+[    INFO] Record push items: started
+[    INFO] Record push items: finished
+[    INFO] Delete RPMs: finished
+[    INFO] Remove artifacts from modules: finished
+[    INFO] Unassociate modules: started
+[    INFO] some-yumrepo: removed 1 modulemd(s), tasks: d4713d60-c8a7-0639-eb11-67b367a9c378
+[    INFO] Unassociate modules: finished
+[    INFO] Record push items: started
+[    INFO] Record push items: finished
+[    INFO] Delete modules: finished
+[    INFO] Delete advisories: finished
+[    INFO] Publish: started
+[    INFO] Publishing some-yumrepo
+[    INFO] Publish: finished
+[    INFO] Flush CDN cache: started
+[    INFO] Flush CDN cache: finished
+[    INFO] Set cdn_published: started
+[    INFO] Set cdn_published: finished
+[    INFO] Flush UD cache: started
+[    INFO] UD cache flush is not enabled.
+[    INFO] Flush UD cache: finished
