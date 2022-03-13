@@ -24,14 +24,27 @@ LOG = logging.getLogger("pubtools.pulp")
 #   on py2 works around it.
 PHASE_TIMEOUT = int(os.getenv("PUBTOOLS_PULP_PHASE_TIMEOUT") or "200000")
 
+# The default max size of each phase's item queue.
+#
+# This value may need tuning per the following:
+# - if too small, pushes will slow down as phases won't be pipelined as much
+# - if too large, memory usage may be too high on pushes with large numbers
+#   of items as queues fill up
+QUEUE_SIZE = int(os.getenv("PUBTOOLS_PULP_QUEUE_SIZE") or "10000")
+
 # Max number of items processed in a batch, for phases designed to use batching.
 # Generally should be the max number of items we're willing to fetch in a single
 # Pulp query.
 BATCH_SIZE = int(os.getenv("PUBTOOLS_PULP_BATCH_SIZE") or "1000")
 
-# How long, in seconds, we're willing to wait for more items to fill up a batch
-# before proceeding with what we have.
+# Minimum for how long, in seconds, we're willing to wait for more items to fill
+# up a batch before proceeding with what we have.
 BATCH_TIMEOUT = float(os.getenv("PUBTOOLS_PULP_BATCH_TIMEOUT") or "0.1")
+
+# Maximum counterpart to BATCH_TIMEOUT.
+# Actual timeout will fall between BATCH_TIMEOUT..BATCH_MAX_TIMEOUT depending on
+# the state of the phase's output queue.
+BATCH_MAX_TIMEOUT = float(os.getenv("PUBTOOLS_PULP_BATCH_MAX_TIMEOUT") or "60.0")
 
 
 class PhaseInterrupted(RuntimeError):
@@ -140,7 +153,7 @@ class Phase(object):
         for items in self.iter_input_batched(batch_size=1):
             yield items[0]
 
-    def iter_input_batched(self, batch_size=BATCH_SIZE, batch_timeout=BATCH_TIMEOUT):
+    def iter_input_batched(self, batch_size=BATCH_SIZE):
         """Get an iterable over this phase's input queue, yielding items in batches
         of the specified size.
 
@@ -155,11 +168,12 @@ class Phase(object):
             this_batch = []
 
             start_time = monotonic()
+            timeout = self.__batch_timeout
 
             def batch_ready():
                 return (
                     (len(this_batch) >= batch_size)
-                    or (monotonic() - start_time > batch_timeout)
+                    or (monotonic() - start_time > timeout)
                     or (this_batch[-1] in (Phase.FINISHED, Phase.ERROR))
                 )
 
@@ -167,7 +181,7 @@ class Phase(object):
 
             while not batch_ready():
                 try:
-                    this_batch.append(self.__get_input(timeout=batch_timeout))
+                    this_batch.append(self.__get_input(timeout=timeout))
                 except Empty:
                     # batch_ready() will now be true
                     pass
@@ -311,6 +325,29 @@ class Phase(object):
         if out is Phase.ERROR or self.context.has_error:
             raise PhaseInterrupted("Stopping %s due to error" % self.name)
 
+        return out
+
+    @property
+    def __batch_timeout(self):
+        # How long iter_input_batched should wait for a full batch before
+        # proceeding with what we already have.
+        #
+        # Returns a value in seconds scaled between BATCH_TIMEOUT and
+        # BATCH_MAX_TIMEOUT scaled according to the current size of the output
+        # queue. The reasoning here is:
+        #
+        # - if output queue is empty, we should try to get some new work items
+        #   ASAP to put something on the queue so the next phase has something
+        #   to do.
+        #
+        # - if output queue is full, there is no point in rushing to get more
+        #   items, since anything we process now will have to wait in the output
+        #   queue anyway; so it's more efficient to wait for a larger batch.
+        #
+        out_queue_size = 0 if not self.out_queue else self.out_queue.qsize()
+        out_queue_fraction = out_queue_size / float(QUEUE_SIZE)
+        timeout = out_queue_fraction * BATCH_MAX_TIMEOUT
+        out = max(min(timeout, BATCH_MAX_TIMEOUT), BATCH_TIMEOUT)
         return out
 
     @property
