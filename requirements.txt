@@ -169,8 +169,8 @@ jsonschema==4.4.0 \
     # via
     #   pubtools-pulplib
     #   pushcollector
-kobo==0.20.2 \
-    --hash=sha256:4ba3c507beb843966509aa2229d3b5d7e17a7511750f56e918a609ae774b4532
+kobo==0.20.3 \
+    --hash=sha256:e10486b7092a0ef3513df66db60d5344ee3ff709c3096010ba35ecf1d401dbeb
     # via pushsource
 koji==1.28.0 \
     --hash=sha256:33adbd99cad9354f20e853414ddff482dbc1a5706439db81e123d64570f0abc3 \
@@ -207,18 +207,18 @@ pubtools==1.2.1 \
     # via
     #   -r requirements.in
     #   pubtools-pulplib
-pubtools-pulplib==2.25.1 \
-    --hash=sha256:2ea79fa22188d17490dfebd39b2524de3f8e5564b472081218db48ecce113122 \
-    --hash=sha256:7f7886895ca76001bc77a142d00f7dfa391579e5b6632ddea5d10eee59de9ba9
+pubtools-pulplib==2.27.0 \
+    --hash=sha256:010aae6e42c76b2f65b4ade977987e646a094b39deae69277b607ce50bef0aac \
+    --hash=sha256:2749817da62a4859a810b0df581cf1e84bb99d07ea322a6494c18a2fca71f0c4
     # via -r requirements.in
 pushcollector==1.2.0 \
     --hash=sha256:cd53036c7880957577bc9a2a3b1431e81a5aea10f4b4cbcbf98c3ee40c6f2ea3
     # via
     #   -r requirements.in
     #   pushsource
-pushsource==2.14.0 \
-    --hash=sha256:18a3f18e9ca4e444eb97abf3fced0c3ba58b1ea1e0d1717512df43a097893c41 \
-    --hash=sha256:5619f3039f456794b38abd0564803d4015457ae4fb49a1a97da31a37f8439eaf
+pushsource==2.16.0 \
+    --hash=sha256:ac9774be9cad88480832ac8457b00413d00e54fc6db9a8361baa1290b1ee6a7e \
+    --hash=sha256:c9ca25fb668b6ff77941c16655e707c6334990b3b3a4da1d6bd5b8c07c80b791
     # via -r requirements.in
 pyasn1==0.4.8 \
     --hash=sha256:39c7e2ec30515947ff4e87fb6f456dfc6e84857d34be479c9d4a4ba4bf46aa5d \
