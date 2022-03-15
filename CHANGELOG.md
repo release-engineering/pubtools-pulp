@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.9.2] - 2022-03-15
+
+- `pubtools-pulp-push`: improved pipelining behavior for larger pushes
+- `pubtools-pulp-push`: fixed duplicate push item metadata
+
 ## [1.9.1] - 2022-03-09
 
 - Added some caching of Pulp repo lookups to improve performance
@@ -98,7 +103,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.1...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.2...HEAD
+[1.9.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.1...v1.9.2
 [1.9.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.8.2...v1.9.0
 [1.8.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.8.1...v1.8.2
