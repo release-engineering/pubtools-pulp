@@ -5,18 +5,17 @@ from pushsource import RpmPushItem
 import attr
 import six
 
-from .base import supports_type, PulpPushItem
+from .base import supports_type, PulpPushItem, UploadContext
 
 
 @attr.s(frozen=True, slots=True)
-class RpmUploader(object):
+class RpmUploadContext(UploadContext):
     """A custom context for RPM uploads.
 
     This context object avoids having to query the all-rpm-content repo repeatedly.
     """
 
     upload_repo = attr.ib(default=None)
-    client = attr.ib(default=None)
 
 
 @supports_type(RpmPushItem)
@@ -96,14 +95,20 @@ class PulpRpmPushItem(PulpPushItem):
 
     @classmethod
     def upload_context(cls, pulp_client):
-        return RpmUploader(
-            client=pulp_client, upload_repo=pulp_client.get_repository(cls.UPLOAD_REPO)
+        return RpmUploadContext(
+            client=pulp_client,
+            upload_repo=pulp_client.get_repository(cls.UPLOAD_REPO),
         )
 
     @property
     def can_pre_push(self):
         # We support pre-push by uploading to all-rpm-content first.
         return True
+
+    @property
+    def upload_key(self):
+        # Any prior upload of identical content can be reused.
+        return self.pushsource_item.sha256sum
 
     def ensure_uploaded(self, ctx, repo_f=None):
         # Overridden to force our desired upload repo.

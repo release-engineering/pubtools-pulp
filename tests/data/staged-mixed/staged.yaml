@@ -9,6 +9,11 @@ payload:
       relative_path: iso-dest1/ISOS/test.txt
       sha256sum: d8301c5f72f16455dbc300f3d1bef8972424255caad103cc6c7ba7dc92d90ca8
 
+    # same file in iso-dest2, will trigger upload de-dupe
+    - filename: test.txt
+      relative_path: iso-dest2/FILES/test.txt
+      sha256sum: d8301c5f72f16455dbc300f3d1bef8972424255caad103cc6c7ba7dc92d90ca8
+
     # example where dest filename does not match filename under staging area
     # (this is not a problem)
     - filename: some-file.txt

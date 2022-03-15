@@ -62,6 +62,14 @@ class PulpFilePushItem(PulpPushItem):
         for item in items:
             yield item.with_unit(units_by_key.get(item.file_key))
 
+    @property
+    def upload_key(self):
+        # We can reuse prior uploads if they use an identical name & content.
+        # (It's a bit weird that you need to upload a file multiple times if you
+        # want it to appear with different names in different repos, but it's
+        # just the way Pulp works.)
+        return (self.pushsource_item.name, self.pushsource_item.sha256sum)
+
     def upload_to_repo(self, repo):
         return repo.upload_file(
             self.pushsource_item.src,
