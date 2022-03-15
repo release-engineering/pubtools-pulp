@@ -156,24 +156,36 @@ def test_typical_push(
         "src": "%s/dest1/RPMS/walrus-5.21-1.noarch.rpm" % stagedir,
         "state": "PENDING",
     }
-    assert stub_collector.count(item) == 1
-    pending_idx = stub_collector.index(item)
+
+    # For the first two item states, we can't guarantee that the item ever
+    # makes it to the collector - it depends how fast we run. If we are
+    # able to run to completion faster than the collect phase can grab items
+    # from its queue, it will de-duplicate items and keep only later states.
+    # All we can say is that the non-terminal states should appear 0 or 1
+    # times.
+    pending_count = stub_collector.count(item)
+    assert pending_count in (0, 1)
+    pending_idx = None if not pending_count else stub_collector.index(item)
 
     # Then it should become EXISTS once we've uploaded it to Pulp.
     item["state"] = "EXISTS"
-    assert stub_collector.count(item) == 1
-    exists_idx = stub_collector.index(item)
+    exists_count = stub_collector.count(item)
+    assert exists_count in (0, 1)
+    exists_idx = None if not exists_count else stub_collector.index(item)
 
     # And finally it should become PUSHED once publishing completes.
+    # This is the only state we know *must* make it into the collector,
+    # since it's the terminal state and no de-duplication can occur.
     item["state"] = "PUSHED"
     assert stub_collector.count(item) == 1
     pushed_idx = stub_collector.index(item)
 
-    # .index crashes if items are absent, so we already verified that
-    # the item exists with expected states. But let's also verify that
-    # the states occurred in the correct order...
-    assert pending_idx < exists_idx
-    assert exists_idx < pushed_idx
+    # If the item was indeed recorded at multiple states, those states
+    # must have occurred in the correct order...
+    if pending_idx is not None and exists_idx is not None:
+        assert pending_idx < exists_idx
+    if exists_idx is not None:
+        assert exists_idx < pushed_idx
 
     # Since push is supposed to be idempotent, we should be able to redo
     # the same command and the pulp state should be exactly the same after the
