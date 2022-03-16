@@ -21,7 +21,7 @@ def get_requirements():
 
 setup(
     name="pubtools-pulp",
-    version="1.9.2",
+    version="1.9.3",
     packages=find_packages(exclude=["tests"]),
     url="https://github.com/release-engineering/pubtools-pulp",
     license="GNU General Public License",

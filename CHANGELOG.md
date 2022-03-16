@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.9.3] - 2022-03-17
+
+- `pubtools-pulp-push`: when the same file exists multiple times in a push, it will no
+  longer be uploaded to Pulp more than once.
+
 ## [1.9.2] - 2022-03-15
 
 - `pubtools-pulp-push`: improved pipelining behavior for larger pushes
@@ -103,7 +108,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.2...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.3...HEAD
+[1.9.3]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.2...v1.9.3
 [1.9.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.1...v1.9.2
 [1.9.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.0...v1.9.1
 [1.9.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.8.2...v1.9.0
