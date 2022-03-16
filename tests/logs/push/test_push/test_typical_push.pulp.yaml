@@ -2922,6 +2922,7 @@ units:
   path: test.txt
   repository_memberships:
   - iso-dest1
+  - iso-dest2
   sha256sum: d8301c5f72f16455dbc300f3d1bef8972424255caad103cc6c7ba7dc92d90ca8
   size: 33
   unit_id: (hidden)
@@ -7860,6 +7861,7 @@ units:
   repository_memberships:
   - all-rpm-content
   - dest1
+  - dest2
   requires:
   - _class: RpmDependency
     epoch: '0'

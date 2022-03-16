@@ -72,6 +72,7 @@ class State(object):
 class UploadContext(object):
     client = attr.ib(default=None)
     random = attr.ib(default=None)
+    uploads_by_key = attr.ib(default=attr.Factory(dict))
 
 
 @attr.s(frozen=True, slots=True)
@@ -391,32 +392,10 @@ class PulpPushItem(object):
 
         return f_map(pulp_client.search_content(crit), handle_result)
 
-    def ensure_uploaded(self, ctx, repo_f=None):
-        """Ensure that this item is uploaded into at least one Pulp repo.
-
-        Returns a Future with an updated copy of this item, resolved after
-        upload succeeds.
-
-        Should be called only if the caller has determined that the item needs
-        an upload (e.g. because the item is missing).
-
-        Subclasses MAY override this to customize upload behavior, however in
-        most cases it makes more sense to override only `upload_to_repo`.
+    def with_pulp_refreshed_after_upload(self, pulp_client):
+        """Like with_pulp_refreshed, but additionally asserts that the item exists in
+        at least one Pulp repo, as expected after a successful upload.
         """
-        # In order to get the unit into Pulp, we must first upload it into some
-        # (any) repo from dest.
-        if repo_f is None:
-            # Because uploading to a repo will lock the repo (during import task),
-            # for the most possible concurrency it's best to try to uniformly
-            # distribute the repos used for upload. For example if we receive
-            # 100 items all for repos [a, b, c, d], we will get the best
-            # performance if each repo is used for roughly 25 uploads.
-            #
-            # Hence the random choice of a target repo.
-            repo_id = ctx.random.choice(self.pushsource_item.dest)
-            repo_f = ctx.client.get_repository(repo_id)
-
-        upload_tasks = f_flat_map(repo_f, self.upload_to_repo)
 
         # Helper to verify that we've really got into at least one repo as a result
         # of the upload.
@@ -429,10 +408,54 @@ class PulpPushItem(object):
                 raise RuntimeError(msg)
             return item
 
-        updated_f = f_flat_map(
-            upload_tasks, lambda _: self.with_pulp_refreshed(ctx.client)
+        out = self.with_pulp_refreshed(pulp_client)
+        return f_map(out, asserting_uploaded_ok)
+
+    def ensure_uploaded(self, ctx, repo_f=None):
+        """Ensure that this item is uploaded into at least one Pulp repo.
+
+        Returns a Future with an updated copy of this item, resolved after
+        upload succeeds.
+
+        Should be called only if the caller has determined that the item needs
+        an upload (e.g. because the item is missing).
+
+        Subclasses MAY override this to customize upload behavior, however in
+        most cases it makes more sense to override only `upload_to_repo`.
+        """
+
+        upload_f = None
+
+        upload_key = self.upload_key
+        if upload_key:
+            # It might be possible to reuse an earlier upload.
+            upload_f = ctx.uploads_by_key.get(upload_key)
+
+        if upload_f:
+            LOG.info("Upload shared for %s", self.pushsource_item.src)
+        else:
+            # In order to get the unit into Pulp, we must first upload it into some
+            # (any) repo from dest.
+            if repo_f is None:
+                # Because uploading to a repo will lock the repo (during import task),
+                # for the most possible concurrency it's best to try to uniformly
+                # distribute the repos used for upload. For example if we receive
+                # 100 items all for repos [a, b, c, d], we will get the best
+                # performance if each repo is used for roughly 25 uploads.
+                #
+                # Hence the random choice of a target repo.
+                repo_id = ctx.random.choice(self.pushsource_item.dest)
+                repo_f = ctx.client.get_repository(repo_id)
+
+            upload_f = f_flat_map(repo_f, self.upload_to_repo)
+
+            if upload_key:
+                # Cache this for later uploads having the same key
+                ctx.uploads_by_key[upload_key] = upload_f
+
+        return f_flat_map(
+            upload_f, lambda _: self.with_pulp_refreshed_after_upload(ctx.client)
         )
-        return f_map(updated_f, asserting_uploaded_ok)
 
     def ensure_uptodate(self, client):
         """Ensure that this item is up-to-date in Pulp.
@@ -519,3 +542,13 @@ class PulpPushItem(object):
         appropriate for the handled content type.
         """
         raise NotImplementedError()
+
+    @property
+    def upload_key(self):
+        """A key which can be associated with upload of this item to enable the
+        caching and reusing of upload futures.
+
+        Subclasses SHOULD override this to return a non-None hashable value for
+        content types which can safely reuse uploads.
+        """
+        return None

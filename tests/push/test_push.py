@@ -125,16 +125,16 @@ def test_typical_push(
     )
 
     # It should have invoked hook(s).
-    assert len(hookspy) == 9
+    assert len(hookspy) == 11
     (hook_name, hook_kwargs) = hookspy[0]
     assert hook_name == "task_start"
     (hook_name, hook_kwargs) = hookspy[1]
     assert hook_name == "pulp_repository_pre_publish"
     (hook_name, hook_kwargs) = hookspy[2]
     assert hook_name == "pulp_repository_published"
-    (hook_name, hook_kwargs) = hookspy[7]
+    (hook_name, hook_kwargs) = hookspy[-2]
     assert hook_name == "task_pulp_flush"
-    (hook_name, hook_kwargs) = hookspy[8]
+    (hook_name, hook_kwargs) = hookspy[-1]
     assert hook_name == "task_stop"
 
     # It should have recorded various push items.
@@ -354,7 +354,7 @@ def test_update_push(
     # Orphaned file after push should be as it was before except no longer an orphan.
     assert updated_orphan_file == attr.evolve(
         orphan_file,
-        repository_memberships=["iso-dest1"],
+        repository_memberships=["iso-dest1", "iso-dest2"],
     )
 
     # Erratum after push should be updated. The full update will not be tested here
