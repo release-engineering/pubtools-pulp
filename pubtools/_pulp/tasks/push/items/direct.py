@@ -1,5 +1,5 @@
 import attr
-from more_executors.futures import f_map, f_sequence
+from more_executors.futures import f_map, f_flat_map, f_sequence
 
 from .base import PulpPushItem, State
 
@@ -50,7 +50,7 @@ class PulpDirectUploadPushItem(PulpPushItem):
 
         repo_fs = [ctx.client.get_repository(repo_id) for repo_id in repo_ids]
 
-        upload_fs = [f_map(f, self.upload_to_repo) for f in repo_fs]
+        upload_fs = [f_flat_map(f, self.upload_to_repo) for f in repo_fs]
         all_uploaded_f = f_sequence(upload_fs)
 
         # Once uploaded to all repos, as long as those uploads were successful, we'll
