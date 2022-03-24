@@ -1,4 +1,5 @@
 import logging
+import attr
 
 from pushsource import Source
 
@@ -30,19 +31,40 @@ class LoadPushItems(Phase):
         super(LoadPushItems, self).__init__(context, name="Load push items")
         self._source_urls = source_urls
 
-    def run(self):
-        count = 0
-
+    @property
+    def raw_items(self):
         for source_url in self._source_urls:
             with Source.get(source_url) as source:
                 LOG.info("Loading items from %s", source_url)
                 for item in source:
-                    pulp_item = PulpPushItem.for_item(item)
-                    if pulp_item:
-                        self.put_output(pulp_item)
-                        count += 1
-                    else:
-                        LOG.info("Skipping unsupported type: %s", item)
+                    yield item
+
+    @property
+    def filtered_items(self):
+        for item in self.raw_items:
+            # The destination can possibly contain a mix of Pulp repo IDs
+            # and absolute paths. Paths occur at least in the Errata Tool
+            # case, as used for FTP push.
+            #
+            # In this command we only want to deal with repo IDs, so we'll
+            # filter out the rest.
+            dest = [val for val in item.dest if "/" not in val]
+
+            # Note, dest could now be empty, but if so we still yield the
+            # item because an upload of item with no dest still makes sense
+            # at least in the pre-push case.
+            yield attr.evolve(item, dest=dest)
+
+    def run(self):
+        count = 0
+
+        for item in self.filtered_items:
+            pulp_item = PulpPushItem.for_item(item)
+            if pulp_item:
+                self.put_output(pulp_item)
+                count += 1
+            else:
+                LOG.info("Skipping unsupported type: %s", item)
 
         # We know exactly how many items we're dealing with now.
         # Set this on the context, which allows for more accurate progress
