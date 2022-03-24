@@ -5,3 +5,4 @@ fastpurge
 more_executors>=2.7.0
 pushcollector>=1.2.0
 pushsource>=2.14.0
+rhsm

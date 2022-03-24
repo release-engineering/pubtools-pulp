@@ -90,8 +90,12 @@ def fake_controller(fake_state_path):
 
     # Add the repositories which are referenced from the staging area.
     controller.insert_repository(FileRepository(id="iso-dest1"))
-    controller.insert_repository(FileRepository(id="iso-dest2"))
-    controller.insert_repository(YumRepository(id="dest1"))
+    controller.insert_repository(
+        FileRepository(id="iso-dest2", arch="x86_64", eng_product_id=123)
+    )
+    controller.insert_repository(
+        YumRepository(id="dest1", arch="x86_64", eng_product_id=123)
+    )
     controller.insert_repository(YumRepository(id="dest2"))
 
     yield controller
