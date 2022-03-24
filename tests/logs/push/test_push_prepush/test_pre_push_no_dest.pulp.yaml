@@ -1,0 +1,51 @@
+repos:
+- _class: FileRepository
+  id: all-iso-content
+- _class: YumRepository
+  id: all-rpm-content
+- _class: YumRepository
+  id: dest1
+- _class: YumRepository
+  id: dest2
+- _class: FileRepository
+  id: iso-dest1
+- _class: FileRepository
+  id: iso-dest2
+- _class: FileRepository
+  id: redhat-maintenance
+units:
+- _class: RpmUnit
+  arch: noarch
+  cdn_path: /content/origin/rpms/walrus/5.21/1/none/walrus-5.21-1.noarch.rpm
+  filename: walrus-5.21-1.noarch.rpm
+  md5sum: 6a3eec6d45e0ea80eab05870bf7a8d4b
+  name: walrus
+  provides:
+  - _class: RpmDependency
+    epoch: '0'
+    flags: EQ
+    name: walrus
+    release: '1'
+    version: '5.21'
+  release: '1'
+  repository_memberships:
+  - all-rpm-content
+  requires:
+  - _class: RpmDependency
+    epoch: '0'
+    flags: LE
+    name: rpmlib(CompressedFileNames)
+    release: '1'
+    version: 3.0.4
+  - _class: RpmDependency
+    epoch: '0'
+    flags: LE
+    name: rpmlib(PayloadFilesHavePrefix)
+    release: '1'
+    version: '4.0'
+  sha1sum: 8dea2b64fc52062d79d5f96ba6415bffae4d2153
+  sha256sum: e837a635cc99f967a70f34b268baa52e0f412c1502e08e924ff5b09f1f9573f2
+  signing_key: f78fb195
+  sourcerpm: walrus-5.21-1.src.rpm
+  unit_id: (hidden)
+  version: '5.21'
