@@ -5,7 +5,7 @@ import functools
 import attr
 import pytest
 
-from pushsource import Source, PushItem
+from pushsource import Source, PushItem, RpmPushItem
 
 from pubtools.pulplib import (
     FileUnit,
@@ -108,6 +108,10 @@ def test_typical_push(
         "",
         "--source",
         "staged:%s" % stagedir,
+        # This push needs to allow unsigned since some of the test RPMs
+        # are not signed. There is a separate case covering the behavior
+        # when --allow-unsigned is omitted.
+        "--allow-unsigned",
         "--pulp-url",
         "https://pulp.example.com/",
     ]
@@ -197,6 +201,45 @@ def test_typical_push(
         compare_jsonl=False,
         compare_extra=compare_extra,
     )
+
+
+def test_unsigned_failure(
+    fake_push,
+    command_tester,
+    caplog,
+):
+    """Test that a failure occurs if an unsigned RPM is encountered without
+    the --allow-unsigned option.
+    """
+
+    Source.register_backend(
+        "unsigned", lambda: [RpmPushItem(name="quux", src="/some/unsigned.rpm")]
+    )
+
+    args = [
+        "",
+        "--source",
+        "unsigned:",
+        "--pulp-url",
+        "https://pulp.example.com/",
+    ]
+
+    run = functools.partial(entry_point, cls=lambda: fake_push)
+
+    # It should exit...
+    with pytest.raises(SystemExit) as excinfo:
+        command_tester.test(
+            run,
+            args,
+            compare_plaintext=False,
+            compare_jsonl=False,
+        )
+
+    # ...unsuccessfully
+    assert excinfo.value.code != 0
+
+    # And it should tell us what went wrong
+    assert "Unsigned content is not permitted: /some/unsigned.rpm" in caplog.text
 
 
 def test_update_push(
@@ -298,6 +341,7 @@ def test_update_push(
         "",
         "--source",
         "staged:%s" % stagedir,
+        "--allow-unsigned",
         "--pulp-url",
         "https://pulp.example.com/",
     ]

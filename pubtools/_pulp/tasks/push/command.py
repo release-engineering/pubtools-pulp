@@ -56,6 +56,12 @@ class Push(
         )
 
         self.parser.add_argument(
+            "--allow-unsigned",
+            action="store_true",
+            help="Allow pushing unsigned RPMs (forbidden by default)",
+        )
+
+        self.parser.add_argument(
             "--source", action="append", help="Source(s) of content to be pushed"
         )
 
@@ -91,6 +97,7 @@ class Push(
                 context=ctx,
                 pulp_client=self.caching_pulp_client,
                 pre_push=self.args.pre_push,
+                allow_unsigned=self.args.allow_unsigned,
                 update_push_items=collect_phase.update_push_items,
                 publish_with_cache_flush=self.publish_with_cache_flush,
             )

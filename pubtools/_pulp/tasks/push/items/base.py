@@ -192,7 +192,7 @@ class PulpPushItem(object):
         return f_map(units_f, matcher)
 
     @classmethod
-    def associated_items_single_batch(cls, pulp_client, items):
+    def associated_items_single_batch(cls, pulp_client, items, copy_options):
         """Associate a single batch of items into destination repos.
 
         This generator yields instances of Future[list[<associated-items>]].
@@ -247,7 +247,7 @@ class PulpPushItem(object):
             oper.log_copy_start()
 
             copy_f = pulp_client.copy_content(
-                src_repo.result(), dest_repo.result(), crit
+                src_repo.result(), dest_repo.result(), crit, options=copy_options
             )
 
             # Stash the oper for logging later.
@@ -523,6 +523,19 @@ class PulpPushItem(object):
           the item
         """
         raise NotImplementedError()
+
+    @property
+    def supports_signing(self):
+        """True if this item supports signing.
+
+        This does not necessarily mean the item is signed, see `is_signed`.
+        """
+        return False
+
+    @property
+    def is_signed(self):
+        """True if this item is signed."""
+        return False
 
     def criteria(self):
         """Returns a Criteria object capable of finding this item in Pulp.

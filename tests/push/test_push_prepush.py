@@ -34,6 +34,7 @@ def test_pre_push(
         "--pre-push",
         "--source",
         "staged:%s" % stagedir,
+        "--allow-unsigned",
         "--pulp-url",
         "https://pulp.example.com/",
     ]
@@ -79,7 +80,9 @@ def test_pre_push_no_dest(
     rpm_src = os.path.join(
         data_path, "staged-mixed/dest1/RPMS/walrus-5.21-1.noarch.rpm"
     )
-    rpm_item = RpmPushItem(name=os.path.basename(rpm_src), src=rpm_src)
+    rpm_item = RpmPushItem(
+        name=os.path.basename(rpm_src), src=rpm_src, signing_key="a1b2c3"
+    )
 
     # Set up a pushsource backend to return just that item.
     Source.register_backend("fake", lambda: [rpm_item])

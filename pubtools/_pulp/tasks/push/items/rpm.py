@@ -106,6 +106,16 @@ class PulpRpmPushItem(PulpPushItem):
         return True
 
     @property
+    def supports_signing(self):
+        # It is possible for RPMs to be signed.
+        return True
+
+    @property
+    def is_signed(self):
+        # The RPM is signed if signing_key is non-empty.
+        return self.pushsource_item and bool(self.pushsource_item.signing_key)
+
+    @property
     def upload_key(self):
         # Any prior upload of identical content can be reused.
         return self.pushsource_item.sha256sum

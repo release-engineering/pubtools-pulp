@@ -62,3 +62,5 @@ def test_abstract_methods():
         item.upload_to_repo(object())
 
     assert item.criteria() is None
+    assert not item.supports_signing
+    assert not item.is_signed

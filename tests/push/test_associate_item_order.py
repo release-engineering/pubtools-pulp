@@ -11,7 +11,13 @@ def test_associate_order():
 
     ctx = Context()
     queue = ctx.new_queue()
-    phase = Associate(context=ctx, pulp_client=None, pre_push=None, in_queue=queue)
+    phase = Associate(
+        context=ctx,
+        pulp_client=None,
+        pre_push=None,
+        allow_unsigned=True,
+        in_queue=queue,
+    )
 
     # Arrange for various items coming into the associate phase noting that
     # RPMs are not last.
