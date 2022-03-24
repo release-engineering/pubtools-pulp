@@ -41,8 +41,13 @@ def test_pulp_client():
     assert isinstance(client, Client)
 
 
-def test_pulp_fake_client():
+def test_pulp_fake_client(monkeypatch, tmpdir):
     """Checks that a fake client is created if --pulp-fake is given"""
+
+    # Ensure we use a clean home dir so the fake can't be affected by
+    # any of the caller's persisted state.
+    monkeypatch.setenv("HOME", str(tmpdir))
+
     with TaskWithPulpClient() as task:
         arg = ["", "--pulp-fake"]
         with patch("sys.argv", arg):
