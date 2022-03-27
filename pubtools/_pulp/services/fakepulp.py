@@ -182,7 +182,7 @@ class PersistentFake(object):
         self.save()
 
 
-def new_fake_client(state_path=os.path.expanduser("~/.config/pubtools-pulp/fake.yaml")):
+def new_fake_client(state_path=None):
     """Create and return a new fake Pulp client.
 
     On top of the fake built in to pulplib library, this adds persistent state
@@ -191,6 +191,7 @@ def new_fake_client(state_path=os.path.expanduser("~/.config/pubtools-pulp/fake.
     The state is persisted in a somewhat human-accessible form; the idea is that
     you can manually view and edit the YAML to see how the commands behave.
     """
+    state_path = state_path or os.path.expanduser("~/.config/pubtools-pulp/fake.yaml")
     fake = PersistentFake(state_path)
     fake.load()
     return fake.ctrl.client
