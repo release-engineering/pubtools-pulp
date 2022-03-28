@@ -16,7 +16,7 @@ repos:
 units:
 - _class: RpmUnit
   arch: noarch
-  cdn_path: /content/origin/rpms/walrus/5.21/1/none/walrus-5.21-1.noarch.rpm
+  cdn_path: /content/origin/rpms/walrus/5.21/1/a1b2c3/walrus-5.21-1.noarch.rpm
   filename: walrus-5.21-1.noarch.rpm
   md5sum: 6a3eec6d45e0ea80eab05870bf7a8d4b
   name: walrus

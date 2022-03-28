@@ -1,3 +1,5 @@
+from pubtools.pulplib import CopyOptions
+
 from .base import Phase, BATCH_SIZE
 from ..items import PulpPushItem, PulpRpmPushItem
 
@@ -15,12 +17,13 @@ class Associate(Phase):
     - executes Pulp association (copy) tasks.
     """
 
-    def __init__(self, context, pulp_client, pre_push, in_queue, **_):
+    def __init__(self, context, pulp_client, pre_push, allow_unsigned, in_queue, **_):
         super(Associate, self).__init__(
             context, in_queue=in_queue, name="Associate items in Pulp"
         )
         self.pulp_client = pulp_client
         self.pre_push = pre_push
+        self.copy_options = CopyOptions(require_signed_rpms=not allow_unsigned)
 
     def iter_for_associate(self):
         """A special batched iterator for this phase which reorders all RPMs
@@ -70,6 +73,6 @@ class Associate(Phase):
         for batch in self.iter_for_associate():
             for items in PulpPushItem.items_by_type(batch):
                 for associated_f in PulpPushItem.associated_items_single_batch(
-                    self.pulp_client, items
+                    self.pulp_client, items, self.copy_options
                 ):
                     self.put_future_outputs(associated_f)

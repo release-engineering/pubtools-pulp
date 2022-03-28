@@ -27,9 +27,16 @@ class LoadPushItems(Phase):
     - populates items_known, items_count on the context.
     """
 
-    def __init__(self, context, source_urls, **_):
+    def __init__(self, context, source_urls, allow_unsigned, **_):
         super(LoadPushItems, self).__init__(context, name="Load push items")
         self._source_urls = source_urls
+        self._allow_unsigned = allow_unsigned
+
+    def check_signed(self, item):
+        if item.supports_signing and not item.is_signed and not self._allow_unsigned:
+            raise RuntimeError(
+                "Unsigned content is not permitted: %s" % item.pushsource_item.src
+            )
 
     @property
     def raw_items(self):
@@ -61,6 +68,7 @@ class LoadPushItems(Phase):
         for item in self.filtered_items:
             pulp_item = PulpPushItem.for_item(item)
             if pulp_item:
+                self.check_signed(pulp_item)
                 self.put_output(pulp_item)
                 count += 1
             else:
