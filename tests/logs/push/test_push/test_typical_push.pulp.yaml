@@ -4,13 +4,21 @@ repos:
 - _class: YumRepository
   id: all-rpm-content
 - _class: YumRepository
+  arch: x86_64
+  eng_product_id: 123
   id: dest1
+  product_versions:
+  - '6.10'
 - _class: YumRepository
   id: dest2
 - _class: FileRepository
   id: iso-dest1
 - _class: FileRepository
+  arch: x86_64
+  eng_product_id: 123
   id: iso-dest2
+  product_versions:
+  - '6.10'
 - _class: FileRepository
   id: redhat-maintenance
 units:

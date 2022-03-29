@@ -34,6 +34,17 @@ class CachingPulpClient(object):
 
         return out
 
+    def _invalidate(self, repo_id):
+        with self._lock:
+            self._repo_cache.pop(repo_id, None)
+
+    def update_repository(self, repo):
+        # update_repository needs a simple wrapper to ensure our
+        # cache becomes invalidated.
+        out = self._delegate.update_repository(repo)
+        out.add_done_callback(lambda _: self._invalidate(repo.id))
+        return out
+
 
 # Because class is designed as a mix-in...
 # pylint: disable=no-member
