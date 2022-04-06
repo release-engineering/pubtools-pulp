@@ -213,7 +213,8 @@ def test_unsigned_failure(
     """
 
     Source.register_backend(
-        "unsigned", lambda: [RpmPushItem(name="quux", src="/some/unsigned.rpm")]
+        "unsigned",
+        lambda: [RpmPushItem(name="quux", src="/some/unsigned.rpm", dest=["repo1"])],
     )
 
     args = [
