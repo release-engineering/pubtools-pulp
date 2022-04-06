@@ -444,6 +444,13 @@ class PulpPushItem(object):
                 # performance if each repo is used for roughly 25 uploads.
                 #
                 # Hence the random choice of a target repo.
+                #
+                # Note, it is a bug if we get here with an empty dest, as either
+                # the item should have been filtered already or if using pre-push,
+                # repo_f should have been provided to us.
+                assert self.pushsource_item.dest, (
+                    "BUG! Missing dest on item: %s" % self.pushsource_item
+                )
                 repo_id = ctx.random.choice(self.pushsource_item.dest)
                 repo_f = ctx.client.get_repository(repo_id)
 
