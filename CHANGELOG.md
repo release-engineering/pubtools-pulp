@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.10.1] - 2022-04-07
+
+- `pubtools-pulp-push`: push items with no destination are now skipped
+  rather than triggering a crash
+
 ## [1.10.0] - 2022-03-30
 
 - `pubtools-pulp-push`: fixed uploads of productid and similar content not
@@ -119,7 +124,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.10.0...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.10.1...HEAD
+[1.10.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.10.0...v1.10.1
 [1.10.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.3...v1.10.0
 [1.9.3]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.2...v1.9.3
 [1.9.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.1...v1.9.2
