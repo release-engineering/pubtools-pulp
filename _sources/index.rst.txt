@@ -11,8 +11,9 @@ content via `Pulp <https://pulpproject.org/>`_.
    :caption: Command Reference:
 
    clear-repo
+   delete
+   fix-cves
    garbage-collect
    publish
    push
    set-maintenance
-   fix-cves
