@@ -1,0 +1,4 @@
+{"event": {"type": "delete-advisories-start"}}
+{"event": {"type": "get-advisories-start"}}
+{"event": {"type": "get-advisories-error"}}
+{"event": {"type": "delete-advisories-error"}}

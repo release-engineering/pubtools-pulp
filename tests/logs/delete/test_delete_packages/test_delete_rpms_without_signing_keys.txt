@@ -1,0 +1,2 @@
+[   ERROR] One of --signing-key or --allow-unsigned is required to delete RPMs
+# Raised: 30

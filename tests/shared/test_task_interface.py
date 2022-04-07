@@ -13,6 +13,7 @@ import pytest
         "pubtools._pulp.tasks.publish",
         "pubtools._pulp.tasks.push",
         "pubtools._pulp.tasks.fix_cves",
+        "pubtools._pulp.tasks.delete",
     ]
 )
 def task_module(request):

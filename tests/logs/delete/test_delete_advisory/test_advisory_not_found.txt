@@ -1,0 +1,6 @@
+[    INFO] Delete advisories: started
+[    INFO] Get advisories: started
+[   ERROR] Advisory(ies) not found: RHSA-1111:22
+[   ERROR] Get advisories: failed
+[   ERROR] Delete advisories: failed
+# Raised: 30
