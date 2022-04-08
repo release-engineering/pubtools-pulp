@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- n/a
+
+## [1.11.0] - 2022-04-08
+
 - Introduced `pubtools-pulp-delete` command
 
 ## [1.10.1] - 2022-04-07
@@ -124,7 +128,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.10.1...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.11.0...HEAD
+[1.11.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.10.1...v1.11.0
 [1.10.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.10.0...v1.10.1
 [1.10.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.3...v1.10.0
 [1.9.3]: https://github.com/release-engineering/pubtools-pulp/compare/v1.9.2...v1.9.3
