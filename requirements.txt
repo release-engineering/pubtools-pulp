@@ -177,10 +177,10 @@ jsonschema==4.4.0 \
 kobo==0.22.0 \
     --hash=sha256:0ddde47130232758ddd069320ed590e3a4d054732a6ce673ca118220f802e70a
     # via pushsource
-koji==1.28.0 \
-    --hash=sha256:33adbd99cad9354f20e853414ddff482dbc1a5706439db81e123d64570f0abc3 \
-    --hash=sha256:54196a71e7f246727779ea941871b9ac78d6903962e76cba6dae517da6f5cfae \
-    --hash=sha256:ecea250efd07307a17ee933476a6eb9790ab49b38c8d4a2fca06119bbb6c1c27
+koji==1.28.1 \
+    --hash=sha256:1e8bb3ada29772971ef526fac41d53c2723e81d9c4f0a8c850bcf6df3d4a1a5a \
+    --hash=sha256:7f02d416901b056b76eb0b03439ac49e3b850c7029601d3cad7893357c1b28b7 \
+    --hash=sha256:943ffe37f22faa5d9f16ea434309d71a1a8e4952f540072e62d00bead5a32ffa
     # via pushsource
 monotonic==1.6 \
     --hash=sha256:3a55207bcfed53ddd5c5bae174524062935efed17792e9de2ad0205ce9ad63f7 \
@@ -212,18 +212,18 @@ pubtools==1.2.1 \
     # via
     #   -r requirements.in
     #   pubtools-pulplib
-pubtools-pulplib==2.29.0 \
-    --hash=sha256:49c1da87ab72ffcdff385c41b75e10b6abf6bf5f3b0dda2bb7c23e19fc8dd5da \
-    --hash=sha256:fe0ca074ecbc7b42738d4698f073b3c63009c8faf46f7b9315ffdd5545d1f5f2
+pubtools-pulplib==2.30.0 \
+    --hash=sha256:b2faf6afa55f5a47e13ea134f092bf0033a955f6219fc7d864d57f8b53c177fd \
+    --hash=sha256:bde202e1cd4280a43f2a054c6af25af6ac0248dfe6cfc632638d9ca4858aa845
     # via -r requirements.in
 pushcollector==1.2.0 \
     --hash=sha256:cd53036c7880957577bc9a2a3b1431e81a5aea10f4b4cbcbf98c3ee40c6f2ea3
     # via
     #   -r requirements.in
     #   pushsource
-pushsource==2.18.1 \
-    --hash=sha256:9be8efb44cab87fad8c46455d9efefd93727237eb3cd5b51443d53b3012b8ebc \
-    --hash=sha256:d58cc30d6ffe7b4eccd43fb810c1968747b9899e048a56c44af60a3d79873196
+pushsource==2.18.2 \
+    --hash=sha256:0342bdd955df595d17dca79a5b85722c71140dae03ad0b089a920e8cf69b9ed0 \
+    --hash=sha256:6d57984bc8cb996e1d83abba78185aca1df887299f7e380e168d71cfa14d8b30
     # via -r requirements.in
 pyasn1==0.4.8 \
     --hash=sha256:39c7e2ec30515947ff4e87fb6f456dfc6e84857d34be479c9d4a4ba4bf46aa5d \
