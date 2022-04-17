@@ -287,9 +287,9 @@ importlib-metadata==4.11.3 \
     --hash=sha256:1208431ca90a8cca1a6b8af391bb53c1a2db74e5d1cef6ddced95d4b2062edc6 \
     --hash=sha256:ea4c597ebf37142f827b8f39299579e31685c31d3a438b59f469406afd0f2539
     # via sphinx
-importlib-resources==5.6.0 \
-    --hash=sha256:1b93238cbf23b4cde34240dd8321d99e9bf2eb4bc91c0c99b2886283e7baad85 \
-    --hash=sha256:a9dd72f6cc106aeb50f6e66b86b69b454766dd6e39b69ac68450253058706bcc
+importlib-resources==5.7.1 \
+    --hash=sha256:b6062987dfc51f0fcb809187cffbd60f35df7acb4589091f154214af6d0d49d3 \
+    --hash=sha256:e447dc01619b1e951286f3929be820029d48c75eb25d265c28b92a16548212b8
     # via jsonschema
 iniconfig==1.1.1 \
     --hash=sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3 \
@@ -314,8 +314,8 @@ jsonschema==4.4.0 \
     # via
     #   pubtools-pulplib
     #   pushcollector
-kobo==0.22.0 \
-    --hash=sha256:0ddde47130232758ddd069320ed590e3a4d054732a6ce673ca118220f802e70a
+kobo==0.23.0 \
+    --hash=sha256:7d7c99e74702930edc2d556172caea45dea5d9b5876e178dbb4070d546bc4fa0
     # via pushsource
 koji==1.28.1 \
     --hash=sha256:1e8bb3ada29772971ef526fac41d53c2723e81d9c4f0a8c850bcf6df3d4a1a5a \
@@ -707,9 +707,9 @@ urllib3==1.26.9 \
     # via
     #   edgegrid-python
     #   requests
-virtualenv==20.14.0 \
-    --hash=sha256:1e8588f35e8b42c6ec6841a13c5e88239de1e6e4e4cedfd3916b306dc826ec66 \
-    --hash=sha256:8e5b402037287126e81ccde9432b95a8be5b19d36584f64957060a3488c11ca8
+virtualenv==20.14.1 \
+    --hash=sha256:e617f16e25b42eb4f6e74096b9c9e37713cf10bf30168fb4a739f3fa8f898a3a \
+    --hash=sha256:ef589a79795589aada0c1c5b319486797c03b67ac3984c48c669c0e4f50df3a5
     # via pre-commit
 wrapt==1.14.0 \
     --hash=sha256:00108411e0f34c52ce16f81f1d308a571df7784932cc7491d1e94be2ee93374b \
