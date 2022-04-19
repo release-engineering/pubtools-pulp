@@ -159,9 +159,9 @@ idna==3.3 \
     --hash=sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff \
     --hash=sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d
     # via requests
-importlib-resources==5.6.0 \
-    --hash=sha256:1b93238cbf23b4cde34240dd8321d99e9bf2eb4bc91c0c99b2886283e7baad85 \
-    --hash=sha256:a9dd72f6cc106aeb50f6e66b86b69b454766dd6e39b69ac68450253058706bcc
+importlib-resources==5.7.1 \
+    --hash=sha256:b6062987dfc51f0fcb809187cffbd60f35df7acb4589091f154214af6d0d49d3 \
+    --hash=sha256:e447dc01619b1e951286f3929be820029d48c75eb25d265c28b92a16548212b8
     # via jsonschema
 iniparse==0.5 \
     --hash=sha256:88ca60473b1637055a937933d48840be1b1b6835f381a6158ef118a532583675 \
@@ -174,8 +174,8 @@ jsonschema==4.4.0 \
     # via
     #   pubtools-pulplib
     #   pushcollector
-kobo==0.22.0 \
-    --hash=sha256:0ddde47130232758ddd069320ed590e3a4d054732a6ce673ca118220f802e70a
+kobo==0.23.0 \
+    --hash=sha256:7d7c99e74702930edc2d556172caea45dea5d9b5876e178dbb4070d546bc4fa0
     # via pushsource
 koji==1.28.1 \
     --hash=sha256:1e8bb3ada29772971ef526fac41d53c2723e81d9c4f0a8c850bcf6df3d4a1a5a \
