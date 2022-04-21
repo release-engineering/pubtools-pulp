@@ -1,0 +1,30 @@
+[    INFO] Delete advisories: started
+[    INFO] Get advisories: started
+[    INFO] Get advisories: finished
+[    INFO] 2 packages and 0 modules found from the advisory RHBA-1001:22 in repos some-yumrepo
+[    INFO] RPMs:
+[    INFO] - bash-1.23-1.test8_x86_64.rpm
+[    INFO] - dash-1.23-1.test8_x86_64.rpm
+[    INFO] Delete RPMs: started
+[    INFO] Get RPMs: started
+[    INFO] 2 unit(s) found for deletion
+[    INFO] Get RPMs: finished
+[    INFO] Deleting bash-1.23-1.test8_x86_64.rpm from some-yumrepo
+[    INFO] Deleting dash-1.23-1.test8_x86_64.rpm from some-yumrepo
+[    INFO] Unassociate RPMs: started
+[    INFO] some-yumrepo: removed 2 rpm(s), tasks: e3e70682-c209-4cac-629f-6fbed82c07cd
+[    INFO] Unassociate RPMs: finished
+[    INFO] Record push items: started
+[    INFO] Record push items: finished
+[    INFO] Delete RPMs: finished
+[    INFO] Delete advisories: finished
+[    INFO] Publish: started
+[    INFO] Publishing some-yumrepo
+[    INFO] Publish: finished
+[    INFO] Flush CDN cache: started
+[    INFO] Flush CDN cache: finished
+[    INFO] Set cdn_published: started
+[    INFO] Set cdn_published: finished
+[    INFO] Flush UD cache: started
+[    INFO] UD cache flush is not enabled.
+[    INFO] Flush UD cache: finished

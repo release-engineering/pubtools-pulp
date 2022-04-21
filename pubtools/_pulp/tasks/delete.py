@@ -137,7 +137,7 @@ class Delete(PulpClientService, CollectorService, Publisher, PulpTask):
         if not (self.args.file or self.args.advisory):
             self.fail("One of --file or --advisory is required")
 
-        if not self.args.repo:
+        if self.args.file and not self.args.repo:
             self.fail("Repository names in --repo is required")
 
         if not signing_keys and self.args.allow_unsigned:
@@ -381,6 +381,11 @@ class Delete(PulpClientService, CollectorService, Publisher, PulpTask):
     def verify_repos_from_advisory(self, advisory, repos):
         verified_repos = []
         repo_membership = advisory.repository_memberships
+
+        # return all the repos the advisory is part of if
+        # repos are not specified in the request
+        if not repos:
+            return repo_membership
 
         for repo_name in repos:
             if repo_name not in repo_membership:
