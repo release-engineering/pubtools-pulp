@@ -82,7 +82,7 @@ class FakeDeleteAdvisory(Delete):
         return self._fastpurge_client if from_super else None
 
 
-def test_delete_advisory(fake_source, command_tester, fake_collector, monkeypatch):
+def test_delete_advisory(command_tester, fake_collector, monkeypatch):
     """Deletion of packages and modules in advisories from provided repos succeeds"""
 
     repo1 = YumRepository(
@@ -299,7 +299,370 @@ def test_delete_advisory(fake_source, command_tester, fake_collector, monkeypatc
         assert len(files_search) == 4
 
 
-def test_advisory_not_found(fake_source, command_tester):
+def test_delete_advisory_in_multiple_repos(command_tester, fake_collector, monkeypatch):
+    """Deletion of packages succeeds only in the requested repos when the same advisory
+    is present in multiple repos"""
+
+    repo1 = YumRepository(
+        id="some-yumrepo", relative_url="some/publish/url", mutable_urls=["repomd.xml"]
+    )
+    repo2 = YumRepository(
+        id="other-yumrepo",
+        relative_url="other/publish/url",
+        mutable_urls=["repomd.xml"],
+    )
+
+    pkglist = [
+        ErratumPackageCollection(
+            name="collection-1",
+            packages=[
+                ErratumPackage(
+                    name="bash",
+                    version="1.23",
+                    release="1.test8",
+                    arch="x86_64",
+                    filename="bash-1.23-1.test8_x86_64.rpm",
+                    sha256sum="a" * 64,
+                    md5sum="b" * 32,
+                ),
+                ErratumPackage(
+                    name="dash",
+                    version="1.23",
+                    release="1.test8",
+                    arch="x86_64",
+                    filename="dash-1.23-1.test8_x86_64.rpm",
+                    sha256sum="a" * 64,
+                    md5sum="b" * 32,
+                ),
+            ],
+            short="",
+            module=None,
+        ),
+    ]
+
+    files = [
+        RpmUnit(
+            name="bash",
+            version="1.23",
+            release="1.test8",
+            arch="x86_64",
+            filename="bash-1.23-1.test8_x86_64.rpm",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+            unit_id="files1_rpm1",
+        ),
+        RpmUnit(
+            name="dash",
+            version="1.23",
+            release="1.test8",
+            arch="x86_64",
+            filename="dash-1.23-1.test8_x86_64.rpm",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+            unit_id="files1_rpm2",
+        ),
+        RpmUnit(
+            name="crash",
+            version="1.23",
+            release="1.test8",
+            arch="x86_64",
+            filename="crash-1.23-1.test8.module+el8.0.0+3049+59fd2bba.x86_64.rpm",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+            unit_id="files1_rpm3",
+        ),
+        ErratumUnit(
+            unit_id="x4e73262-e239-44ac-629f-6fbed82c07cd",
+            id="RHBA-1001:22",
+            summary="Other erratum",
+            content_type_id="erratum",
+            repository_memberships=["some-yumrepo", "other-yumrepo"],
+            pkglist=pkglist,
+        ),
+    ]
+
+    with FakeDeleteAdvisory() as task_instance:
+
+        task_instance.pulp_client_controller.insert_repository(repo1)
+        task_instance.pulp_client_controller.insert_repository(repo2)
+        task_instance.pulp_client_controller.insert_units(repo1, files)
+        task_instance.pulp_client_controller.insert_units(repo2, files)
+
+        # Let's try setting the cache flush root via env.
+        monkeypatch.setenv("FASTPURGE_ROOT_URL", "https://cdn.example2.com/")
+
+        # It should run with expected output.
+        command_tester.test(
+            task_instance.main,
+            [
+                "test-delete",
+                "--pulp-url",
+                "https://pulp.example.com/",
+                "--fastpurge-host",
+                "fakehost-xxx.example.net",
+                "--fastpurge-client-secret",
+                "abcdef",
+                "--fastpurge-client-token",
+                "efg",
+                "--fastpurge-access-token",
+                "tok",
+                "--repo",
+                "some-yumrepo",
+                "--advisory",
+                "RHBA-1001:22",
+            ],
+        )
+
+        assert sorted(fake_collector.items, key=lambda pi: pi["filename"]) == [
+            {
+                "build": None,
+                "checksums": {"sha256": "a" * 64},
+                "dest": "some-yumrepo",
+                "filename": "bash-1.23-1.test8.x86_64.rpm",
+                "origin": "pulp",
+                "signing_key": None,
+                "src": None,
+                "state": "DELETED",
+            },
+            {
+                "build": None,
+                "checksums": {"sha256": "a" * 64},
+                "dest": "some-yumrepo",
+                "filename": "dash-1.23-1.test8.x86_64.rpm",
+                "origin": "pulp",
+                "signing_key": None,
+                "src": None,
+                "state": "DELETED",
+            },
+        ]
+
+        # verify whether the rpms were deleted from the repo on Pulp
+        client = task_instance.pulp_client
+
+        # get all the repos
+        repos = list(
+            client.search_repository(Criteria.with_id("some-yumrepo")).result()
+        )
+        assert len(repos) == 1
+        repo1 = repos[0]
+
+        repos = list(
+            client.search_repository(Criteria.with_id("other-yumrepo")).result()
+        )
+        assert len(repos) == 1
+        repo2 = repos[0]
+
+        # list the removed unit's unit_id
+        # RPMs from the erratum package list
+        unit_ids = ["files1_rpm1", "files1_rpm2"]
+        criteria = Criteria.with_field("unit_id", Matcher.in_(unit_ids))
+
+        # deleted packages from the advisory are not in the requested repo
+        files = list(repo1.search_content(criteria).result())
+        assert len(files) == 0
+
+        # packages from the advisory still exist in the other repo
+        files = list(repo2.search_content(criteria).result())
+        assert len(files) == 2
+
+
+def test_delete_advisory_no_repos_provided(command_tester, fake_collector, monkeypatch):
+    """Deletion of packages succeeds in all the repos when the same advisory is
+    present in multiple repos and repos are not provided in the request"""
+
+    repo1 = YumRepository(
+        id="some-yumrepo", relative_url="some/publish/url", mutable_urls=["repomd.xml"]
+    )
+    repo2 = YumRepository(
+        id="other-yumrepo",
+        relative_url="other/publish/url",
+        mutable_urls=["repomd.xml"],
+    )
+
+    pkglist = [
+        ErratumPackageCollection(
+            name="collection-1",
+            packages=[
+                ErratumPackage(
+                    name="bash",
+                    version="1.23",
+                    release="1.test8",
+                    arch="x86_64",
+                    filename="bash-1.23-1.test8_x86_64.rpm",
+                    sha256sum="a" * 64,
+                    md5sum="b" * 32,
+                ),
+                ErratumPackage(
+                    name="dash",
+                    version="1.23",
+                    release="1.test8",
+                    arch="x86_64",
+                    filename="dash-1.23-1.test8_x86_64.rpm",
+                    sha256sum="a" * 64,
+                    md5sum="b" * 32,
+                ),
+            ],
+            short="",
+            module=None,
+        ),
+    ]
+
+    files = [
+        RpmUnit(
+            name="bash",
+            version="1.23",
+            release="1.test8",
+            arch="x86_64",
+            filename="bash-1.23-1.test8_x86_64.rpm",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+            unit_id="files1_rpm1",
+        ),
+        RpmUnit(
+            name="dash",
+            version="1.23",
+            release="1.test8",
+            arch="x86_64",
+            filename="dash-1.23-1.test8_x86_64.rpm",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+            unit_id="files1_rpm2",
+        ),
+        RpmUnit(
+            name="crash",
+            version="1.23",
+            release="1.test8",
+            arch="x86_64",
+            filename="crash-1.23-1.test8.module+el8.0.0+3049+59fd2bba.x86_64.rpm",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+            unit_id="files1_rpm3",
+        ),
+        ErratumUnit(
+            unit_id="x4e73262-e239-44ac-629f-6fbed82c07cd",
+            id="RHBA-1001:22",
+            summary="Other erratum",
+            content_type_id="erratum",
+            repository_memberships=["some-yumrepo", "other-yumrepo"],
+            pkglist=pkglist,
+        ),
+    ]
+
+    with FakeDeleteAdvisory() as task_instance:
+
+        task_instance.pulp_client_controller.insert_repository(repo1)
+        task_instance.pulp_client_controller.insert_repository(repo2)
+        task_instance.pulp_client_controller.insert_units(repo1, files)
+        task_instance.pulp_client_controller.insert_units(repo2, files)
+
+        # Let's try setting the cache flush root via env.
+        monkeypatch.setenv("FASTPURGE_ROOT_URL", "https://cdn.example2.com/")
+
+        # It should run with expected output.
+        command_tester.test(
+            task_instance.main,
+            [
+                "test-delete",
+                "--pulp-url",
+                "https://pulp.example.com/",
+                "--fastpurge-host",
+                "fakehost-xxx.example.net",
+                "--fastpurge-client-secret",
+                "abcdef",
+                "--fastpurge-client-token",
+                "efg",
+                "--fastpurge-access-token",
+                "tok",
+                "--advisory",
+                "RHBA-1001:22",
+            ],
+        )
+
+        assert sorted(
+            fake_collector.items, key=lambda pi: (pi["filename"], pi["dest"])
+        ) == [
+            {
+                "build": None,
+                "checksums": {"sha256": "a" * 64},
+                "dest": "other-yumrepo",
+                "filename": "bash-1.23-1.test8.x86_64.rpm",
+                "origin": "pulp",
+                "signing_key": None,
+                "src": None,
+                "state": "DELETED",
+            },
+            {
+                "build": None,
+                "checksums": {"sha256": "a" * 64},
+                "dest": "some-yumrepo",
+                "filename": "bash-1.23-1.test8.x86_64.rpm",
+                "origin": "pulp",
+                "signing_key": None,
+                "src": None,
+                "state": "DELETED",
+            },
+            {
+                "build": None,
+                "checksums": {"sha256": "a" * 64},
+                "dest": "other-yumrepo",
+                "filename": "dash-1.23-1.test8.x86_64.rpm",
+                "origin": "pulp",
+                "signing_key": None,
+                "src": None,
+                "state": "DELETED",
+            },
+            {
+                "build": None,
+                "checksums": {"sha256": "a" * 64},
+                "dest": "some-yumrepo",
+                "filename": "dash-1.23-1.test8.x86_64.rpm",
+                "origin": "pulp",
+                "signing_key": None,
+                "src": None,
+                "state": "DELETED",
+            },
+        ]
+
+        # verify whether the rpms were deleted from the repo on Pulp
+        client = task_instance.pulp_client
+
+        # get all the repos
+        repos = list(
+            client.search_repository(Criteria.with_id("some-yumrepo")).result()
+        )
+        assert len(repos) == 1
+        repo1 = repos[0]
+
+        repos = list(
+            client.search_repository(Criteria.with_id("other-yumrepo")).result()
+        )
+        assert len(repos) == 1
+        repo2 = repos[0]
+
+        # list the removed unit's unit_id
+        # RPMs from the erratum package list
+        unit_ids = ["files1_rpm1", "files1_rpm2"]
+        criteria = Criteria.with_field("unit_id", Matcher.in_(unit_ids))
+
+        # deleted packages from the advisory are not in both the repos
+        files = list(repo1.search_content(criteria).result())
+        assert len(files) == 0
+
+        files = list(repo2.search_content(criteria).result())
+        assert len(files) == 0
+
+        # same files exist on Pulp as orphans
+        files_search = list(client.search_content(criteria).result())
+        assert len(files_search) == 2
+
+
+def test_advisory_not_found(command_tester):
     """Fails if the advisory is not found on Pulp"""
 
     with FakeDeleteAdvisory() as task_instance:
