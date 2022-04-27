@@ -49,6 +49,7 @@ weekly scheduled trigger.</p>
                                      <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">throttle</span> <span class="n">PULP_THROTTLE</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">fake</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">gc</span><span class="o">-</span><span class="n">threshold</span> <span class="n">GC_THRESHOLD</span><span class="p">]</span>
+                                     <span class="p">[</span><span class="o">--</span><span class="n">arc</span><span class="o">-</span><span class="n">threshold</span> <span class="n">ARC_THRESHOLD</span><span class="p">]</span>
 </pre></div>
 </div>
 <section id="Named Arguments">
@@ -61,6 +62,10 @@ weekly scheduled trigger.</p>
 <dt><kbd>--gc-threshold</kbd></dt>
 <dd><p>delete repos older than this many days</p>
 <p>Default: 5</p>
+</dd>
+<dt><kbd>--arc-threshold</kbd></dt>
+<dd><p>delete all-rpm-content older than this many days</p>
+<p>Default: 30</p>
 </dd>
 </dl>
 </section>
