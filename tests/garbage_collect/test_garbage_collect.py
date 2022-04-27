@@ -6,6 +6,8 @@ from more_executors.futures import f_return
 from pubtools.pulplib import (
     FakeController,
     Repository,
+    RpmUnit,
+    RpmDependency,
     YumRepository,
     Task,
     InvalidDataException,
@@ -49,13 +51,23 @@ def _run_test(*repos):
 def test_add_args():
     """adds the arg to the PulpTask parser"""
     gc = GarbageCollect()
-    arg = ["", "--pulp-url", "http://some.url", "--gc-threshold", "7"]
+    arg = [
+        "",
+        "--pulp-url",
+        "http://some.url",
+        "--gc-threshold",
+        "7",
+        "--arc-threshold",
+        "90",
+    ]
 
     with patch("sys.argv", arg):
         gc_args = gc.args
 
     assert hasattr(gc_args, "gc_threshold")
     assert gc_args.gc_threshold == 7
+    assert hasattr(gc_args, "arc_threshold")
+    assert gc_args.arc_threshold == 90
 
 
 def test_garbage_collect():
@@ -151,3 +163,105 @@ def test_entry_point(mock_logger):
         created_time,
     )
     mock_logger.info.assert_any_call("Temporary repo(s) deletion completed")
+
+
+def test_add_arc_args():
+    """adds the arg to the PulpTask parser"""
+    gc = GarbageCollect()
+    arg = ["", "--pulp-url", "http://some.url", "--arc-threshold", "7"]
+
+    with patch("sys.argv", arg):
+        gc_args = gc.args
+
+    assert hasattr(gc_args, "arc_threshold")
+    assert gc_args.arc_threshold == 7
+
+
+def test_arc_garbage_collect(mock_logger):
+    """deletes all-rpm-content content that confirms to garbage collect criteria"""
+    repo = Repository(
+        id="all-rpm-content",
+        created=_get_created(7),
+    )
+    controller = _get_fake_controller(repo)
+    client = controller.client
+    assert list(client.search_content()) == []
+
+    all_rpm_content = client.get_repository("all-rpm-content").result()
+    rpm1 = RpmUnit(
+        cdn_published=datetime.datetime.utcnow(),
+        arch="src",
+        filename="test-arc01-1.0-1.src.rpm",
+        name="test-arc01",
+        version="1.0",
+        release="1",
+        content_type_id="rpm",
+        unit_id="gc_arc_01",
+    )
+    rpm2 = RpmUnit(
+        cdn_published=datetime.datetime.utcnow() - datetime.timedelta(days=190),
+        arch="src",
+        filename="test-arc02-1.0-1.src.rpm",
+        name="test-arc02",
+        version="1.0",
+        release="1",
+        content_type_id="rpm",
+        unit_id="gc_arc_02",
+    )
+    rpm3 = RpmUnit(
+        cdn_published=datetime.datetime.utcnow() - datetime.timedelta(days=195),
+        arch="src",
+        filename="test-arc03-1.0-1.src.rpm",
+        name="test-arc03",
+        version="1.0",
+        release="1",
+        content_type_id="rpm",
+        unit_id="gc_arc_03",
+    )
+    controller.insert_units(all_rpm_content, [rpm1, rpm2, rpm3])
+    updated_rpm = list(client.get_repository("all-rpm-content").search_content())
+    assert len(updated_rpm) == 3
+    gc = GarbageCollect()
+    arg = ["", "--pulp-url", "http://some.url"]
+
+    with patch("sys.argv", arg):
+        with _patch_pulp_client(controller.client):
+            gc.main()
+    updated_rpm = list(client.get_repository("all-rpm-content").search_content())
+    assert len(updated_rpm) == 1
+    mock_logger.info.assert_any_call("Old all-rpm-content deleted: %s", rpm2.name)
+
+
+def test_arc_garbage_collect_0items(mock_logger):
+    """no content deleted from all-rpm-content"""
+    repo = Repository(
+        id="all-rpm-content",
+        created=_get_created(7),
+    )
+    controller = _get_fake_controller(repo)
+    client = controller.client
+    assert list(client.search_content()) == []
+
+    all_rpm_content = client.get_repository("all-rpm-content").result()
+    existing_rpm1 = RpmUnit(
+        cdn_published=datetime.datetime.utcnow(),
+        arch="src",
+        filename="test-arc01-1.0-1.src.rpm",
+        name="test-arc01",
+        version="1.0",
+        release="1",
+        content_type_id="rpm",
+        unit_id="gc_arc_01",
+    )
+    controller.insert_units(all_rpm_content, [existing_rpm1])
+    updated_rpm = list(client.get_repository("all-rpm-content").search_content())
+    assert len(updated_rpm) == 1
+    gc = GarbageCollect()
+    arg = ["", "--pulp-url", "http://some.url"]
+
+    with patch("sys.argv", arg):
+        with _patch_pulp_client(controller.client):
+            gc.main()
+    updated_rpm = list(client.get_repository("all-rpm-content").search_content())
+    assert len(updated_rpm) == 1
+    mock_logger.info.assert_any_call("No all-rpm-content found older than %s", 30)

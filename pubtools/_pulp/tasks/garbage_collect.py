@@ -1,13 +1,14 @@
 import logging
 from datetime import datetime, timedelta
 
-from pubtools.pulplib import Criteria, Matcher
+from pubtools.pulplib import Criteria, Matcher, RpmUnit
 
 from pubtools._pulp.task import PulpTask
 from pubtools._pulp.services import PulpClientService
 
 
 LOG = logging.getLogger("pubtools.pulp")
+step = PulpTask.step
 
 
 class GarbageCollect(PulpClientService, PulpTask):
@@ -31,7 +32,19 @@ class GarbageCollect(PulpClientService, PulpTask):
             default=5,
         )
 
+        self.parser.add_argument(
+            "--arc-threshold",
+            help="delete all-rpm-content older than this many days",
+            type=int,
+            default=30,
+        )
+
     def run(self):
+        self.delete_temp_repos()
+        self.clean_all_rpm_content()
+
+    @step("Delete temporary repos")
+    def delete_temp_repos(self):
         LOG.debug("Garbage collection begins")
         criteria = Criteria.and_(
             Criteria.with_field("notes.created", Matcher.exists()),
@@ -61,6 +74,37 @@ class GarbageCollect(PulpClientService, PulpTask):
                 LOG.error(out.error_details or out.error_summary)
 
         LOG.info("Temporary repo(s) deletion completed")
+
+    @step("Clean all-rpm-content")
+    def clean_all_rpm_content(self):
+        # Clear out old all-rpm-content
+        LOG.info("Start old all-rpm-content deletion")
+        arc_threshold = self.args.arc_threshold
+        criteria = Criteria.and_(
+            Criteria.with_unit_type(RpmUnit),
+            Criteria.with_field(
+                "cdn_published",
+                Matcher.less_than(datetime.utcnow() - timedelta(days=arc_threshold)),
+            ),
+        )
+        clean_repos = list(
+            self.pulp_client.search_repository(
+                Criteria.with_field("id", "all-rpm-content")
+            )
+        )
+        if not clean_repos:
+            LOG.info("No repos found for cleaning.")
+            return
+        arc_repo = clean_repos[0]
+        deleted_arc = list(arc_repo.remove_content(criteria=criteria))
+        deleted_content = []
+        for task in deleted_arc:
+            if task.repo_id == "all-rpm-content":
+                for unit in task.units:
+                    LOG.info("Old all-rpm-content deleted: %s", unit.name)
+                    deleted_content.append(unit)
+        if not deleted_content:
+            LOG.info("No all-rpm-content found older than %s", arc_threshold)
 
 
 def entry_point():
