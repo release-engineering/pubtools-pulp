@@ -10,7 +10,7 @@ def test_associate_order():
     """Associate phase reorders items so that RPMs are processed last."""
 
     ctx = Context()
-    queue = ctx.new_queue()
+    queue = ctx.new_queue(maxsize=10000)
     phase = Associate(
         context=ctx,
         pulp_client=None,
