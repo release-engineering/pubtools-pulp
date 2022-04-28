@@ -17,11 +17,13 @@ class Associate(Phase):
     - executes Pulp association (copy) tasks.
     """
 
-    def __init__(self, context, pulp_client, pre_push, allow_unsigned, in_queue, **_):
+    def __init__(
+        self, context, pulp_client_factory, pre_push, allow_unsigned, in_queue, **_
+    ):
         super(Associate, self).__init__(
             context, in_queue=in_queue, name="Associate items in Pulp"
         )
-        self.pulp_client = pulp_client
+        self.pulp_client_factory = pulp_client_factory
         self.pre_push = pre_push
         self.copy_options = CopyOptions(require_signed_rpms=not allow_unsigned)
 
@@ -70,9 +72,10 @@ class Associate(Phase):
             yield batch
 
     def run(self):
-        for batch in self.iter_for_associate():
-            for items in PulpPushItem.items_by_type(batch):
-                for associated_f in PulpPushItem.associated_items_single_batch(
-                    self.pulp_client, items, self.copy_options
-                ):
-                    self.put_future_outputs(associated_f)
+        with self.pulp_client_factory() as client:
+            for batch in self.iter_for_associate():
+                for items in PulpPushItem.items_by_type(batch):
+                    for associated_f in PulpPushItem.associated_items_single_batch(
+                        client, items, self.copy_options
+                    ):
+                        self.put_future_outputs(associated_f)

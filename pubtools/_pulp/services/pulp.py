@@ -7,7 +7,7 @@ import warnings
 from pubtools import pulplib
 
 from .base import Service
-from .fakepulp import new_fake_client
+from .fakepulp import new_fake_controller
 
 LOG = logging.getLogger("pubtools.pulp")
 
@@ -31,8 +31,9 @@ class PulpClientService(Service):
     """
 
     def __init__(self, *args, **kwargs):
-        self.__lock = threading.Lock()
+        self.__lock = threading.RLock()
         self.__instance = None
+        self.__fake_controller = None
         super(PulpClientService, self).__init__(*args, **kwargs)
 
     def add_service_args(self, parser):
@@ -69,14 +70,23 @@ class PulpClientService(Service):
 
     @property
     def pulp_client(self):
-        """A Pulp client used during task, instantiated on demand."""
+        """A shared Pulp client used during task, instantiated on demand."""
         with self.__lock:
             if not self.__instance:
-                self.__instance = self.__get_instance()
+                self.__instance = self.new_pulp_client()
                 self.__instance.__enter__()
         return self.__instance
 
-    def __get_instance(self):
+    @property
+    def pulp_fake_controller(self):
+        """A Pulp fake controller used during task, instantiated on demand."""
+        with self.__lock:
+            if not self.__fake_controller:
+                self.__fake_controller = new_fake_controller()
+        return self.__fake_controller
+
+    def new_pulp_client(self, **kwargs):
+        """Creates and returns a new Pulp client with appropriate config."""
         auth = None
         args = self._service_args
 
@@ -86,7 +96,7 @@ class PulpClientService(Service):
 
         if args.pulp_fake:
             LOG.warning("Using a fake Pulp client, no changes will be made to Pulp!")
-            return new_fake_client()
+            return self.pulp_fake_controller.new_client()
 
         # checks if pulp password is available as environment variable
         if args.pulp_user:
@@ -95,7 +105,8 @@ class PulpClientService(Service):
                 LOG.warning("No pulp password provided for %s", args.pulp_user)
             auth = (args.pulp_user, pulp_password)
 
-        kwargs = {"auth": auth}
+        kwargs = kwargs.copy()
+        kwargs["auth"] = auth
 
         if args.pulp_insecure:
             kwargs["verify"] = False

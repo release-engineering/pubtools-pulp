@@ -3,7 +3,11 @@ import os
 from pubtools.pluggy import task_context
 from pubtools.pulplib import ModulemdDefaultsUnit, ModulemdUnit
 
-from pubtools._pulp.services.fakepulp import new_fake_client
+from pubtools._pulp.services.fakepulp import new_fake_controller
+
+
+def new_fake_client(state_path):
+    return new_fake_controller(state_path).client
 
 
 def test_state_persisted(tmpdir, data_path):

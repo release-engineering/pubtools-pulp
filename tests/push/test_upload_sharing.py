@@ -29,6 +29,13 @@ class ClientWrapper(object):
         self.search_content = delegate.search_content
         self.uploads = []
 
+    def __enter__(self):
+        self.delegate.__enter__()
+        return self
+
+    def __exit__(self, *args, **kwargs):
+        self.delegate.__exit__(*args, **kwargs)
+
     def get_repository(self, *args, **kwargs):
         wrapper = partial(RepoWrapper, uploads=self.uploads)
         return f_map(self.delegate.get_repository(*args, **kwargs), wrapper)
@@ -50,7 +57,7 @@ def test_uploads_shared(data_path):
     queue = ctx.new_queue()
     phase = Upload(
         context=ctx,
-        pulp_client=client_wrapper,
+        pulp_client_factory=lambda: client_wrapper,
         pre_push=None,
         in_queue=queue,
         update_push_items=lambda _: None,

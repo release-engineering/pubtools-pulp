@@ -6,7 +6,6 @@ from more_executors.futures import f_return
 from pushcollector import Collector
 
 from pubtools.pulplib import (
-    Client,
     FileRepository,
     YumRepository,
     Task,
@@ -14,6 +13,7 @@ from pubtools.pulplib import (
 
 from pubtools._pulp.tasks.push import Push
 from pubtools._pulp.services.fakepulp import PersistentFake
+from pubtools._pulp.services.cachingpulp import CachingPulpClient
 
 
 class FakePush(Push):
@@ -27,17 +27,23 @@ class FakePush(Push):
 
     @property
     def pulp_client(self):
+        # If we get here it means something has gone wrong, as Push task is
+        # strictly expected to obtain clients via pulp_client_for_phase.
+        raise AssertionError("pulp_client called unexpectedly during Push")
+
+    def pulp_client_for_phase(self):
         # Super should give a Pulp client
-        assert isinstance(super(FakePush, self).pulp_client, Client)
+        assert isinstance(
+            super(FakePush, self).pulp_client_for_phase(), CachingPulpClient
+        )
 
         # But we'll substitute our own
-        return self.controller.client
+        return self.controller.new_client()
 
 
 class NoCopyPush(FakePush):
-    @property
-    def pulp_client(self):
-        return NoCopyClient(super(NoCopyPush, self).pulp_client)
+    def pulp_client_for_phase(self):
+        return NoCopyClient(super(NoCopyPush, self).pulp_client_for_phase())
 
 
 class NoCopyClient(object):
@@ -52,6 +58,14 @@ class NoCopyClient(object):
         self.search_repository = delegate.search_repository
         self.search_content = delegate.search_content
         self.update_content = delegate.update_content
+        self.__delegate = delegate
+
+    def __enter__(self):
+        self.__delegate.__enter__()
+        return self
+
+    def __exit__(self, *args, **kwargs):
+        self.__delegate.__exit__(*args, **kwargs)
 
     def copy_content(self, *_args, **_kwargs):
         return f_return([Task(id="no-copy-123", completed=True, succeeded=True)])

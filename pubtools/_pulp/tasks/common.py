@@ -113,13 +113,11 @@ class Publisher(CDNCache, UdCache):
         return datetime.datetime.utcnow()
 
     @step("Set cdn_published")
-    def set_cdn_published(self, units):
+    def set_cdn_published(self, units, pulp_client):
         now = self.cdn_published_value()
         out = []
         for unit in units or []:
-            out.append(
-                self.pulp_client.update_content(attr.evolve(unit, cdn_published=now))
-            )
+            out.append(pulp_client.update_content(attr.evolve(unit, cdn_published=now)))
 
         if out:
             LOG.info(
@@ -129,13 +127,14 @@ class Publisher(CDNCache, UdCache):
             )
         return out
 
-    def publish_with_cache_flush(self, repos, units=None):
+    def publish_with_cache_flush(self, repos, units=None, pulp_client=None):
         # Ensure all repos in 'repos' are fully published, and CDN/UD caches are flushed.
         #
         # If 'units' are provided, ensures those units have cdn_published field set after
         # the publish and before the UD cache flush.
         #
         units = units or []
+        pulp_client = pulp_client or self.pulp_client
 
         # publish the repos found
         publish_fs = self.publish(repos)
@@ -151,7 +150,7 @@ class Publisher(CDNCache, UdCache):
         out = self.flush_cdn(repos)
 
         # set units as published
-        set_published = f_sequence(self.set_cdn_published(units))
+        set_published = f_sequence(self.set_cdn_published(units, pulp_client))
 
         # flush UD cache only after cdn_published is set (if applicable)
         flush_ud = f_flat_map(set_published, lambda _: f_sequence(self.flush_ud(repos)))
