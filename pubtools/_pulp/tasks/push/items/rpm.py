@@ -120,6 +120,22 @@ class PulpRpmPushItem(PulpPushItem):
         # Any prior upload of identical content can be reused.
         return self.pushsource_item.sha256sum
 
+    def thin_unit(self, unit):
+        # RpmUnits contain some complex fields but only a minority
+        # are relevant to us. Here we keep only those fields we
+        # need to operate successfully.
+        return RpmUnit(
+            name=unit.name,
+            version=unit.version,
+            release=unit.release,
+            arch=unit.arch,
+            sha256sum=unit.sha256sum,
+            repository_memberships=unit.repository_memberships,
+            cdn_path=unit.cdn_path,
+            cdn_published=unit.cdn_published,
+            unit_id=unit.unit_id,
+        )
+
     def ensure_uploaded(self, ctx, repo_f=None):
         # Overridden to force our desired upload repo.
         return super(PulpRpmPushItem, self).ensure_uploaded(ctx, ctx.upload_repo)
