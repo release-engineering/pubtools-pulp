@@ -362,6 +362,11 @@ class PulpPushItem(object):
             # Not quite PUSHED yet as we still want to ensure repos are published.
             pushsource_state = "EXISTS"
 
+        # Get a more lean version of the unit with only needed fields,
+        # if possible
+        if unit:
+            unit = self.thin_unit(unit)
+
         out = attr.evolve(
             self,
             pulp_unit=unit,
@@ -530,6 +535,17 @@ class PulpPushItem(object):
           the item
         """
         raise NotImplementedError()
+
+    def thin_unit(self, unit):
+        """Given a unit, returns the same unit with irrelevant fields discarded.
+
+        The sole purpose of this method is to reduce memory usage for pushes
+        dealing with a lot of units. The default implementation does nothing.
+
+        Subclasses SHOULD override this method where applicable to discard
+        irrelevant fields on units.
+        """
+        return unit
 
     @property
     def supports_signing(self):
