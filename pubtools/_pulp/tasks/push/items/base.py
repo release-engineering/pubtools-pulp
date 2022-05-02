@@ -185,7 +185,7 @@ class PulpPushItem(object):
             Criteria.with_unit_type(unit_type),
             Criteria.or_(*[item.criteria() for item in items]),
         )
-        LOG.info("Doing Pulp search: %s", crit)
+        LOG.debug("Doing Pulp search: %s", crit)
 
         units_f = pulp_client.search_content(crit)
         matcher = partial(cls.match_items_units, items)
