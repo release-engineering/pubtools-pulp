@@ -174,6 +174,7 @@ class PulpPushItem(object):
             return f_return([])
 
         unit_type = items[0].unit_type
+        unit_fields = items[0].unit_fields
 
         if unit_type is None:
             # This means that the item doesn't map to a specific single unit type
@@ -182,7 +183,7 @@ class PulpPushItem(object):
             return f_return(items)
 
         crit = Criteria.and_(
-            Criteria.with_unit_type(unit_type),
+            Criteria.with_unit_type(unit_type, unit_fields=unit_fields),
             Criteria.or_(*[item.criteria() for item in items]),
         )
         LOG.debug("Doing Pulp search: %s", crit)
@@ -362,11 +363,6 @@ class PulpPushItem(object):
             # Not quite PUSHED yet as we still want to ensure repos are published.
             pushsource_state = "EXISTS"
 
-        # Get a more lean version of the unit with only needed fields,
-        # if possible
-        if unit:
-            unit = self.thin_unit(unit)
-
         out = attr.evolve(
             self,
             pulp_unit=unit,
@@ -536,16 +532,18 @@ class PulpPushItem(object):
         """
         raise NotImplementedError()
 
-    def thin_unit(self, unit):
-        """Given a unit, returns the same unit with irrelevant fields discarded.
+    @property
+    def unit_fields(self):
+        """Field name(s) required when searching for units. By default, all fields
+        will be queried from Pulp.
 
-        The sole purpose of this method is to reduce memory usage for pushes
-        dealing with a lot of units. The default implementation does nothing.
+        Subclasses MAY override this method to return a specific list of fields.
 
-        Subclasses SHOULD override this method where applicable to discard
-        irrelevant fields on units.
+        This may improve performance by avoiding the query of unnecessary fields,
+        but care must be taken to include the full list of required fields needed
+        in order to push content of this type.
         """
-        return unit
+        return None
 
     @property
     def supports_signing(self):
