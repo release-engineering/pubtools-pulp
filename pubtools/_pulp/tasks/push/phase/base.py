@@ -30,7 +30,7 @@ PHASE_TIMEOUT = int(os.getenv("PUBTOOLS_PULP_PHASE_TIMEOUT") or "200000")
 # - if too small, pushes will slow down as phases won't be pipelined as much
 # - if too large, memory usage may be too high on pushes with large numbers
 #   of items as queues fill up
-QUEUE_SIZE = int(os.getenv("PUBTOOLS_PULP_QUEUE_SIZE") or "10000")
+QUEUE_SIZE = int(os.getenv("PUBTOOLS_PULP_QUEUE_SIZE") or "200")
 
 # Max number of items processed in a batch, for phases designed to use batching.
 # Generally should be the max number of items we're willing to fetch in a single
