@@ -125,7 +125,9 @@ frozendict==2.3.2 \
     --hash=sha256:c0a3640e9d7533d164160b758351aa49d9e85bbe0bd76d219d4021e90ffa6a52 \
     --hash=sha256:c1c70826aa4a50fa283fe161834ac4a3ac7c753902c980bb8b595b0998a38ddb \
     --hash=sha256:fb09761e093cfabb2f179dbfdb2521e1ec5701df714d1eb5c51fa7849027be19
-    # via pushsource
+    # via
+    #   pubtools-pulplib
+    #   pushsource
 frozenlist2==1.0.0 \
     --hash=sha256:33f6c6bb2c7d38524ec3c2d6f2d8a3ee2625a9e13096d8bc64db012b516a95e0 \
     --hash=sha256:caffe66813e42de320b10d08b8c0604c7eb3f142a8482ad3130243e084f37a2f
@@ -214,9 +216,9 @@ pubtools==1.2.1 \
     # via
     #   -r requirements.in
     #   pubtools-pulplib
-pubtools-pulplib==2.30.0 \
-    --hash=sha256:b2faf6afa55f5a47e13ea134f092bf0033a955f6219fc7d864d57f8b53c177fd \
-    --hash=sha256:bde202e1cd4280a43f2a054c6af25af6ac0248dfe6cfc632638d9ca4858aa845
+pubtools-pulplib==2.32.0 \
+    --hash=sha256:6628a1fce79229a34fe1695e9807efc9d728e2dff425452286a5dd913b1b65ca \
+    --hash=sha256:6b257f8ae7c1059f52a73239912dba5993e7d854e7614c9d1bf36b907f1dc649
     # via -r requirements.in
 pushcollector==1.3.0 \
     --hash=sha256:18281fcd4247ca8b668c25348bbc2f9cc032912cecc7037824a74ad8adcbb1c3 \

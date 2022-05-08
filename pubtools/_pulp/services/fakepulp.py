@@ -182,8 +182,8 @@ class PersistentFake(object):
         self.save()
 
 
-def new_fake_client(state_path=None):
-    """Create and return a new fake Pulp client.
+def new_fake_controller(state_path=None):
+    """Create and return a new fake Pulp controller.
 
     On top of the fake built in to pulplib library, this adds persistent state
     stored under ~/.config/pubtools-pulp by default.
@@ -194,4 +194,4 @@ def new_fake_client(state_path=None):
     state_path = state_path or os.path.expanduser("~/.config/pubtools-pulp/fake.yaml")
     fake = PersistentFake(state_path)
     fake.load()
-    return fake.ctrl.client
+    return fake.ctrl

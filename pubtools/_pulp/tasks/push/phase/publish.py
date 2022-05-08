@@ -35,7 +35,7 @@ class Publish(Phase):
         self,
         context,
         update_push_items,
-        pulp_client,
+        pulp_client_factory,
         publish_with_cache_flush,
         in_queue,
         **_
@@ -44,10 +44,14 @@ class Publish(Phase):
             context, in_queue=in_queue, out_queue=False, name="Publish and cache flush"
         )
         self.update_push_items = update_push_items
-        self.pulp_client = pulp_client
+        self.pulp_client_factory = pulp_client_factory
         self.publish_with_cache_flush = publish_with_cache_flush
 
     def run(self):
+        with self.pulp_client_factory() as client:
+            return self.run_with_client(client)
+
+    def run_with_client(self, client):
         # At the time we run, it is the case that all items exist with the desired
         # state, in the desired repos. Now we need to publish affected repos.
         #
@@ -75,12 +79,10 @@ class Publish(Phase):
             all_items.append(item)
 
         # Locate all the repos for publish.
-        repo_fs = self.pulp_client.search_repository(
-            Criteria.with_id(sorted(all_repo_ids))
-        )
+        repo_fs = client.search_repository(Criteria.with_id(sorted(all_repo_ids)))
 
         # Start publishing them, including cache flushes.
-        publish_fs = self.publish_with_cache_flush(repo_fs, set_cdn_published)
+        publish_fs = self.publish_with_cache_flush(repo_fs, set_cdn_published, client)
 
         # Then wait for publishes to finish.
         for f in publish_fs:

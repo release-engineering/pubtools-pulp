@@ -27,13 +27,13 @@ class Upload(Phase):
     """
 
     def __init__(
-        self, context, update_push_items, pulp_client, pre_push, in_queue, **_
+        self, context, update_push_items, pulp_client_factory, pre_push, in_queue, **_
     ):
         super(Upload, self).__init__(
             context, in_queue=in_queue, name="Upload items to Pulp"
         )
         self.update_push_items = update_push_items
-        self.pulp_client = pulp_client
+        self.pulp_client_factory = pulp_client_factory
         self.pre_push = pre_push
 
     def _update_after_uploaded(self, item_f):
@@ -47,6 +47,10 @@ class Upload(Phase):
         be present in at least one Pulp repo.
         """
 
+        with self.pulp_client_factory() as client:
+            return self.run_with_client(client)
+
+    def run_with_client(self, client):
         uploaded = 0
         uploading = 0
         prepush_skipped = 0
@@ -66,9 +70,7 @@ class Upload(Phase):
                 # This item is not in Pulp, or otherwise needs a reupload.
                 item_type = type(item)
                 if item_type not in upload_context:
-                    upload_context[item_type] = item_type.upload_context(
-                        self.pulp_client
-                    )
+                    upload_context[item_type] = item_type.upload_context(client)
 
                 ctx = upload_context[item_type]
 

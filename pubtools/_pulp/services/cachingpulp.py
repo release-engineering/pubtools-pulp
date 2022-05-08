@@ -45,6 +45,16 @@ class CachingPulpClient(object):
         out.add_done_callback(lambda _: self._invalidate(repo.id))
         return out
 
+    def __enter__(self):
+        # CachingPulpClient satisfies the context manager protocol to be
+        # API-compatible with client, but it does not shut down the delegate
+        # as the delegate and cache do not necessarily have the same
+        # lifecycle.
+        return self
+
+    def __exit__(self, *_args, **_kwargs):
+        pass
+
 
 # Because class is designed as a mix-in...
 # pylint: disable=no-member
@@ -66,8 +76,14 @@ class CachingPulpClientService(PulpClientService):
 
     @property
     def caching_pulp_client(self):
-        """A caching Pulp client used during task, instantiated on demand."""
+        """A shared caching Pulp client used during task, instantiated on demand."""
         with self.__lock:
             if not self.__instance:
-                self.__instance = CachingPulpClient(self.pulp_client)
+                self.__instance = self.new_caching_pulp_client(self.pulp_client)
         return self.__instance
+
+    def new_caching_pulp_client(self, pulp_client=None, **kwargs):
+        """Returns a new caching Pulp client with appropriate configuration,
+        wrapping the specified client if given or a new client otherwise.
+        """
+        return CachingPulpClient(pulp_client or self.new_pulp_client(**kwargs))
