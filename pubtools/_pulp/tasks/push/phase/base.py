@@ -1,8 +1,7 @@
 import logging
 import os
-from collections import deque
 from functools import partial
-from threading import Thread
+from threading import Thread, Lock, BoundedSemaphore
 
 from more_executors.futures import f_map, f_sequence
 from monotonic import monotonic
@@ -130,7 +129,11 @@ class Phase(object):
 
         # futures representing the completion of all delayed puts on
         # the output queue (if any). Must be awaited at the end of the phase.
-        self.__future_puts = deque()
+        self.__future_puts = {}
+        self.__future_puts_lock = Lock()
+
+        # This semaphore is used to constrain the size of future_puts.
+        self.__future_puts_sem = BoundedSemaphore(value=QUEUE_SIZE)
 
     def run(self):
         """The business logic for this phase.
@@ -225,6 +228,9 @@ class Phase(object):
         - When this phase ends, it will first wait for all futures submitted
           via this function to be resolved.
 
+        This method may block if there are already many futures waiting to
+        put a value on the output queue.
+
         It's recommended to tune each phase's batching so that this is called
         no more than 100,000 times in a single phase (and use put_future_outputs
         instead where possible). Beyond that, scaling issues may occur.
@@ -240,13 +246,27 @@ class Phase(object):
         It is more efficient to call this function with a list of size N
         than to call put_future_output N times.
         """
-
         f = f_map(
             values,
             partial(self.__future_output_done, task_done=task_done),
             error_fn=self.__future_output_failed,
         )
-        self.__future_puts.append(f)
+        self.__add_future_puts(f)
+
+    def __add_future_puts(self, f):
+        self.__future_puts_sem.acquire()
+        with self.__future_puts_lock:
+            self.__future_puts[f] = f
+        f.add_done_callback(self.__pop_future_puts)
+
+    def __pop_future_puts(self, f):
+        with self.__future_puts_lock:
+            popped = self.__future_puts.pop(f, None)
+
+        # The conditional here is because we might already have
+        # been removed if futures are being cancelled due to error.
+        if popped:
+            self.__future_puts_sem.release()
 
     def __future_output_done(self, values, task_done):
         # Called when a Future[list[value]] has been resolved successfully.
@@ -288,23 +308,22 @@ class Phase(object):
     def __future_puts_await(self):
         # Wait for all future puts to complete.
         # Should be called at the end of a phase which has not (yet) failed.
-        f_sequence(self.__future_puts).result()
+        f_sequence(self.__future_puts.keys()).result()
         self.__future_puts.clear()
 
     def __future_puts_cancel(self):
         # Attempt to cancel all future puts.
         # Should be called if this phase has failed.
+        to_cancel = []
 
-        # Note, this method can be called from multiple threads at once,
-        # hence the slightly odd style as we want to rely only on
-        # the thread-safe deque operations.
-        try:
-            while True:
-                f = self.__future_puts.popleft()
-                f.cancel()
-        except IndexError:
-            # last future handled
-            pass
+        with self.__future_puts_lock:
+            for f in self.__future_puts.keys():
+                to_cancel.append(f)
+                self.__future_puts_sem.release()
+            self.__future_puts.clear()
+
+        for f in to_cancel:
+            f.cancel()
 
     def __get_input(self, timeout=PHASE_TIMEOUT):
         # Get a single item from input queue; this is currently private
