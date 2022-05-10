@@ -4,7 +4,7 @@ from .load_sums import LoadChecksums
 from .query_pulp import QueryPulp
 from .upload import Upload
 from .update import Update
-from .end_pre_push import EndPrePush
+from .end_push import EndPush
 from .collect import Collect
 from .associate import Associate
 from .publish import Publish

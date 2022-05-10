@@ -9,7 +9,7 @@ from .phase import (
     LoadChecksums,
     QueryPulp,
     Upload,
-    EndPrePush,
+    EndPush,
     Update,
     Collect,
     Associate,
@@ -21,6 +21,7 @@ from ...services import (
     CollectorService,
     CachingPulpClientService,
 )
+from ...arguments import SplitAndExtend
 
 step = PulpTask.step
 
@@ -45,6 +46,15 @@ class Push(
         super(Push, self).add_args()
 
         self.add_publisher_args(self.parser)
+
+        self.parser.add_argument(
+            "--skip",
+            help="skip given comma-separated sub-steps",
+            type=str,
+            action=SplitAndExtend,
+            split_on=",",
+            default=[],
+        )
 
         self.parser.add_argument(
             "--pre-push",
@@ -151,7 +161,7 @@ class Push(
         if self.args.pre_push:
             # If we are in pre-push mode then we do not go any further, we just wait
             # for all previous steps, then log a message and exit.
-            add_phase(EndPrePush)
+            add_phase(EndPush)
 
         else:
             # Ensure all items are up-to-date in Pulp. This adjusts any mutable fields
@@ -161,8 +171,14 @@ class Push(
             # Ensure all items are associated into the desired target repos.
             add_phase(Associate)
 
-            # Ensure all repos are published once the desired content is present.
-            add_phase(Publish)
+            if "publish" in self.args.skip:
+                # Caller doesn't want to publish, then we just wait for prior phases
+                # to complete.
+                add_phase(EndPush)
+
+            else:
+                # Ensure all repos are published once the desired content is present.
+                add_phase(Publish)
 
         # We've connected up all phases of the push, now we just need to
         # start them all.
