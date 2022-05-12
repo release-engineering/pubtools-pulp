@@ -48,8 +48,8 @@
                           <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
                           <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span>
                           <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">throttle</span> <span class="n">PULP_THROTTLE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">fake</span><span class="p">]</span>
-                          <span class="p">[</span><span class="o">--</span><span class="n">clean</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">force</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pre</span><span class="o">-</span><span class="n">push</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">allow</span><span class="o">-</span><span class="n">unsigned</span><span class="p">]</span>
-                          <span class="p">[</span><span class="o">--</span><span class="n">source</span> <span class="n">SOURCE</span><span class="p">]</span>
+                          <span class="p">[</span><span class="o">--</span><span class="n">clean</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">force</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">skip</span> <span class="n">SKIP</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pre</span><span class="o">-</span><span class="n">push</span><span class="p">]</span>
+                          <span class="p">[</span><span class="o">--</span><span class="n">allow</span><span class="o">-</span><span class="n">unsigned</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">source</span> <span class="n">SOURCE</span><span class="p">]</span>
 </pre></div>
 </div>
 <section id="Named Arguments">
@@ -58,6 +58,10 @@
 <dt><kbd>--debug, -d</kbd></dt>
 <dd><p>Show debug logs; can be provided up to three times to enable more logs</p>
 <p>Default: 0</p>
+</dd>
+<dt><kbd>--skip</kbd></dt>
+<dd><p>skip given comma-separated sub-steps</p>
+<p>Default: []</p>
 </dd>
 <dt><kbd>--pre-push</kbd></dt>
 <dd><p>Pre-push mode: do as much as possible without making content available to end-users, then stop. May be used to improve the performance of a subsequent full push.</p>
