@@ -203,6 +203,65 @@ def test_typical_push(
     )
 
 
+def test_nopublish_push(
+    fake_controller,
+    data_path,
+    fake_push,
+    fake_state_path,
+    command_tester,
+    stub_collector,
+):
+    """A push with `--skip publish' should complete successfully but not
+    publish any Pulp repos.
+    """
+
+    # Sanity check that the Pulp server is, initially, empty.
+    client = fake_controller.client
+    assert list(client.search_content()) == []
+
+    # Set it up to find content from our staging dir, which contains a mixture
+    # of just about every content type
+    stagedir = os.path.join(data_path, "staged-mixed")
+
+    compare_extra = {
+        "pulp.yaml": {
+            "filename": fake_state_path,
+            "normalize": hide_unit_ids,
+        }
+    }
+    args = [
+        "",
+        "--skip",
+        "publish",
+        "--source",
+        "staged:%s" % stagedir,
+        "--allow-unsigned",
+        "--pulp-url",
+        "https://pulp.example.com/",
+    ]
+
+    run = functools.partial(entry_point, cls=lambda: fake_push)
+
+    # It should be able to run without crashing.
+    command_tester.test(
+        run,
+        args,
+        compare_plaintext=False,
+        compare_jsonl=False,
+        # This will ensure the Pulp state matches the baseline.
+        compare_extra=compare_extra,
+    )
+
+    # We can determine that publish didn't occur by checking all
+    # encountered states of push items.
+    all_states = set([item["state"] for item in stub_collector])
+
+    # Everything should be either PENDING (before upload to Pulp)
+    # or EXISTS (after upload), but nothing should be PUSHED since
+    # publish didn't happen.
+    assert all_states == set(["PENDING", "EXISTS"])
+
+
 def test_unsigned_failure(
     fake_push,
     command_tester,
