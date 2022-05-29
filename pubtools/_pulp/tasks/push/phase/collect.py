@@ -1,4 +1,6 @@
 from .base import Phase
+from .errors import PhaseInterrupted
+from . import constants
 
 
 class Collect(Phase):
@@ -14,18 +16,16 @@ class Collect(Phase):
     - uses pushcollector library to record the current state of a push item.
     """
 
+    PROGRESS_TYPE = constants.PROGRESS_TYPE_NONE
+
     def __init__(self, context, collector, **_):
         super(Collect, self).__init__(
             context,
-            in_queue=context.new_queue(counting=False),
+            in_queue=context.new_queue(),
             out_queue=False,
             name="Collect push item metadata",
         )
         self.collector = collector
-
-    def update_push_items(self, items):
-        for item in items:
-            self.in_queue.put(item)
 
     def item_key(self, item):
         # Given an item, return a key which should be comparable between items
@@ -71,3 +71,17 @@ class Collect(Phase):
         for item_batch in self.iter_for_collect():
             pushsource_items = [item.pushsource_item for item in item_batch]
             self.collector.update_push_items(pushsource_items).result()
+
+    def __exit__(self, *args):
+        # This phase is unusual in that it shuts down its own input queue during __exit__,
+        # rather than expecting someone else to shut it down.
+        # NOTE: in order for this to work properly and not shut down too early, it's critical
+        # that __exit__ on this phase is called after all other phases.
+        try:
+            self.in_queue.put(constants.FINISHED)
+        except PhaseInterrupted:
+            # this is fine since it means the phase is already exiting,
+            # which is what we want.
+            pass
+
+        return super(Collect, self).__exit__(*args)

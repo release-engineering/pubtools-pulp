@@ -33,20 +33,15 @@ class LoadChecksums(Phase):
       are known.
     """
 
-    def __init__(self, context, update_push_items, in_queue, **_):
+    # Outputs of this phase should update push items since this is the first
+    # point during a push where we know what the items actually are (in terms
+    # of the bytes being pushed...)
+    UPDATES_PUSH_ITEMS = True
+
+    def __init__(self, context, in_queue, **kwargs):
         super(LoadChecksums, self).__init__(
-            context, in_queue=in_queue, name="Calculate checksums"
+            context, in_queue=in_queue, name="Calculate checksums", **kwargs
         )
-        self.update_push_items = update_push_items
-
-    def _get_sums(self, item):
-        with_sums = item.with_checksums()
-
-        # As we figure out checksums for each item we'll record that item,
-        # generally in PENDING state.
-        self.update_push_items([with_sums])
-
-        return with_sums
 
     def run(self):
         with Executors.thread_pool(
@@ -66,14 +61,20 @@ class LoadChecksums(Phase):
                 #
                 # Hence we handle some items synchronously and others not.
 
+                LOG.debug(
+                    "Calculating checksums (blocking: %s): %s",
+                    item.blocking_checksums,
+                    item.pushsource_item.name,
+                )
+
                 if not item.blocking_checksums:
                     # with_checksums (probably) won't block so just do
                     # it immediately, thus letting the next phase get hold
                     # of the item more quickly.
-                    self.put_output(self._get_sums(item))
+                    self.put_output(item.with_checksums())
 
                 else:
                     # with_checksums (probably) will block so put it onto
                     # the thread pool's queue.
-                    f = exc.submit(self._get_sums, item)
+                    f = exc.submit(item.with_checksums)
                     self.put_future_output(f)

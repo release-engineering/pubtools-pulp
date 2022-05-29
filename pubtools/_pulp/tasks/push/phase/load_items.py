@@ -24,11 +24,21 @@ class LoadPushItems(Phase):
       checksums and will definitely be missing any info regarding the Pulp state.
 
     Side-effects:
-    - populates items_known, items_count on the context.
+    - populates item_info on the context.
     """
 
     def __init__(self, context, source_urls, allow_unsigned, pre_push, **_):
-        super(LoadPushItems, self).__init__(context, name="Load push items")
+        super(LoadPushItems, self).__init__(
+            context,
+            name="Load push items",
+            # This phase needs to customize output queue generation to remove any max size.
+            #
+            # Reasoning: as the very first phase, we are responsible for calculating some
+            # important info about the push (e.g. total number of items). We want to calculate
+            # that as soon as we possibly can. So we don't want any backpressure from later
+            # phases here.
+            out_queue=context.new_queue(maxsize=0),
+        )
         self._source_urls = source_urls
         self._allow_unsigned = allow_unsigned
         self._pre_push = pre_push
@@ -81,15 +91,17 @@ class LoadPushItems(Phase):
             yield pulp_item
 
     def run(self):
-        count = 0
-
         for pulp_item in self.filtered_items:
+            # Since there is no input queue, increment our input count explicitly.
+            self.progress_info.incr_in()
+
+            # Also record the item on the context.
+            self.context.item_info.add_item(pulp_item)
+
             self.check_signed(pulp_item)
             self.put_output(pulp_item)
-            count += 1
 
-        # We know exactly how many items we're dealing with now.
-        # Set this on the context, which allows for more accurate progress
-        # info.
-        self.context.items_count = count
-        self.context.items_known.set()
+            LOG.debug("Loaded item: %s", pulp_item)
+
+        # We know by now that there are no more items to add onto the context.
+        self.context.item_info.items_known.set()

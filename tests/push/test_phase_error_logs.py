@@ -5,6 +5,13 @@ from more_executors.futures import f_return_error
 from pubtools._pulp.tasks.push.phase import Context, Phase
 
 
+class EmptyPhase(Phase):
+    # A Phase implementation which doesn't do anything.
+
+    def run(self):
+        pass
+
+
 class ImmediateErrorPhase(Phase):
     # A Phase implementation which always raises some error directly
     # from within run().
@@ -62,3 +69,31 @@ def test_async_raise(caplog):
     # It should have logged the exception
     assert "test-phase: fatal error occurred" in caplog.text
     assert "simulated async error" in caplog.text
+
+
+def test_raise_in_with_block(caplog):
+    """Immediate raise within phase's with block will set context failed."""
+
+    caplog.set_level(logging.INFO)
+
+    ctx = Context()
+
+    phase = EmptyPhase(ctx, name="test-phase")
+    error = RuntimeError("error from within")
+
+    # Let it run
+    try:
+        with phase:
+            # Now raise from within.
+            #
+            # It might seem like this can't happen in practice because the with block
+            # in the push command is empty. Actually, it can happen e.g. due to
+            # KeyboardInterrupt or other signals.
+            raise error
+    except RuntimeError:
+        pass
+
+    # It should have flagged an error on the context
+    assert ctx.has_error
+    assert ctx.error_phase == "test-phase"
+    assert ctx.error_exception is error
