@@ -15,6 +15,7 @@ from .phase import (
     Associate,
     Publish,
     Context,
+    ProgressLogger,
 )
 from ..common import Publisher, PulpTask
 from ...services import (
@@ -184,7 +185,7 @@ class Push(
         # start them all.
         #
         # This will start all the phases...
-        with exitstack([ctx.progress_logger()] + phases):
+        with exitstack([ProgressLogger.for_context(ctx)] + phases):
             LOG.debug("All push phases are now running.")
             # ...and exiting the 'with' block here will wait for them to
             # complete.

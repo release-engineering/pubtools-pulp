@@ -6,7 +6,7 @@ import threading
 
 from threading import Semaphore
 
-from pubtools._pulp.tasks.push.phase import Context, Phase
+from pubtools._pulp.tasks.push.phase import Context, Phase, ProgressLogger
 from pubtools._pulp.tasks.push.contextlib_compat import exitstack
 
 
@@ -36,6 +36,7 @@ def test_context_counts(caplog):
     by dump_progress."""
 
     ctx = Context()
+    progress = ProgressLogger(ctx)
     queues = ctx._queues
 
     in_sem1 = Semaphore(0)
@@ -109,7 +110,7 @@ def test_context_counts(caplog):
             assert c3 == (15, 10, 5)
 
             caplog.set_level(logging.INFO)
-            ctx.dump_progress(width=70)
+            progress.dump_progress(width=70)
 
             # When visualized, this is what it should look like.
             # Note the ??? because the total number of items hasn't been set on
@@ -163,7 +164,7 @@ def test_context_counts(caplog):
             # a known item count.
             ctx.items_count = 100
             ctx.items_known.set()
-            ctx.dump_progress(width=70)
+            progress.dump_progress(width=70)
 
             # Now it should look like this. Compare to previously:
             # - bars have shrunk since actual item count (100) is larger than the
@@ -201,6 +202,6 @@ def test_context_progress_logger_disabled():
     # nothing happens by checking that the thread count is stable.
     threadcount = len(threading.enumerate())
 
-    with ctx.progress_logger(interval=0):
+    with ProgressLogger.for_context(ctx, interval=0):
         # Should not have spawned a new thread.
         assert len(threading.enumerate()) == threadcount
