@@ -172,9 +172,9 @@ iniparse==0.5 \
     --hash=sha256:932e5239d526e7acb504017bb707be67019ac428a6932368e6851691093aa842 \
     --hash=sha256:db6ef1d8a02395448e0e7b17ac0aa28b8d338b632bbd1ffca08c02ddae32cf97
     # via rhsm
-jsonschema==4.5.1 \
-    --hash=sha256:71b5e39324422543546572954ce71c67728922c104902cb7ce252e522235b33f \
-    --hash=sha256:7c6d882619340c3347a1bf7315e147e6d3dae439033ae6383d6acb908c101dfc
+jsonschema==4.6.0 \
+    --hash=sha256:1c92d2db1900b668201f1797887d66453ab1fbfea51df8e4b46236689c427baf \
+    --hash=sha256:9d6397ba4a6c0bf0300736057f649e3e12ecbc07d3e81a0dacb72de4e9801957
     # via
     #   pubtools-pulplib
     #   pushcollector
