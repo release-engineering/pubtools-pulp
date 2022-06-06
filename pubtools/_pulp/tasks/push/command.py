@@ -1,6 +1,5 @@
 import logging
 import sys
-import os
 
 
 from .contextlib_compat import exitstack
@@ -15,6 +14,7 @@ from .phase import (
     Associate,
     Publish,
     Context,
+    ProgressLogger,
 )
 from ..common import Publisher, PulpTask
 from ...services import (
@@ -76,31 +76,6 @@ class Push(
             "--source", action="append", help="Source(s) of content to be pushed"
         )
 
-    def pulp_client_for_phase(self):
-        """Returns a Pulp client for use within a single phase."""
-
-        if self.args.pulp_fake:
-            return self.pulp_fake_controller.new_client()
-
-        # When using a real server we want to use a separate client per phase.
-        # The reason is that clients under the hood have some fixed size thread pools
-        # for certain things (e.g. number of requests in flight at once). If the same
-        # client is used by multiple phases, this means one phase can block another
-        # since both compete for the same resources.
-        #
-        # The worst-case scenario can trigger a deadlock: all of the client's request
-        # threads can be blocked trying to put an item onto a phase's output queue,
-        # while the next phase can't consume from its input queue because it's blocked
-        # on a Pulp request using the same client.
-        #
-        # We will tune thread counts a bit because if we are creating more clients,
-        # we should probably use fewer threads per client to avoid overwhelming the
-        # system... there is not really a perfect way to do this, let's just cut
-        # the count in half somewhat arbitrarily.
-        threads = int(os.environ.get("PUBTOOLS_PULPLIB_REQUEST_THREADS") or "4")
-        threads = max(1, int(threads / 2.0))
-        return self.new_caching_pulp_client(pulp_client=None, threads=threads)
-
     def run(self):
         # Push workflow.
         #
@@ -131,10 +106,10 @@ class Push(
             # all used by every phase.
             kwargs.update(
                 context=ctx,
-                pulp_client_factory=self.pulp_client_for_phase,
+                pulp_client=self.caching_pulp_client,
                 pre_push=self.args.pre_push,
                 allow_unsigned=self.args.allow_unsigned,
-                update_push_items=collect_phase.update_push_items,
+                update_push_items=collect_phase.in_queue.put,
                 publish_with_cache_flush=self.publish_with_cache_flush,
             )
             phases.append(klass(**kwargs))
@@ -184,7 +159,7 @@ class Push(
         # start them all.
         #
         # This will start all the phases...
-        with exitstack([ctx.progress_logger()] + phases):
+        with exitstack([ProgressLogger.for_context(ctx)] + phases):
             LOG.debug("All push phases are now running.")
             # ...and exiting the 'with' block here will wait for them to
             # complete.
@@ -192,5 +167,10 @@ class Push(
         # If a phase failed, it's communicated back to us through the
         # context object here. Exit unsuccessfully if so.
         if ctx.has_error:
-            LOG.error("Push failed with fatal error, see previous logs.")
+            LOG.error(
+                'Push failed with fatal error in "%s": %s: %s',
+                ctx.error_phase,
+                type(ctx.error_exception).__name__,
+                ctx.error_exception,
+            )
             sys.exit(59)

@@ -25,30 +25,29 @@ class Update(Phase):
     - mutates unit fields (under pulp_user_metadata) in Pulp.
     """
 
-    def __init__(self, context, pulp_client_factory, in_queue, **_):
+    def __init__(self, context, pulp_client, in_queue, **_):
         super(Update, self).__init__(
             context, in_queue=in_queue, name="Update items in Pulp"
         )
-        self.pulp_client_factory = pulp_client_factory
+        self.pulp_client = pulp_client
 
     def run(self):
         no_update_needed = 0
         update_needed = 0
 
-        with self.pulp_client_factory() as client:
-            for item in self.iter_input():
-                if item.pulp_state not in State.NEEDS_UPDATE:
-                    # This item is already up-to-date in Pulp (or just doesn't support
-                    # being updated)
-                    no_update_needed += 1
-                    self.put_output(item)
-                else:
-                    # This item needs an update.
-                    update_needed += 1
-                    self.put_future_output(item.ensure_uptodate(client))
+        for item in self.iter_input():
+            if item.pulp_state not in State.NEEDS_UPDATE:
+                # This item is already up-to-date in Pulp (or just doesn't support
+                # being updated)
+                no_update_needed += 1
+                self.put_output(item)
+            else:
+                # This item needs an update.
+                update_needed += 1
+                self.put_future_output(item.ensure_uptodate(self.pulp_client))
 
-            LOG.info(
-                "Update: %s item(s) already up-to-date, %s updating",
-                no_update_needed,
-                update_needed,
-            )
+        LOG.info(
+            "Update: %s item(s) already up-to-date, %s updating",
+            no_update_needed,
+            update_needed,
+        )

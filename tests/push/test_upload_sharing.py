@@ -10,7 +10,7 @@ from pushsource import RpmPushItem
 from pubtools._pulp.tasks.push.items import (
     PulpRpmPushItem,
 )
-from pubtools._pulp.tasks.push.phase import Context, Upload, Phase
+from pubtools._pulp.tasks.push.phase import Context, Upload, Phase, constants
 
 # Wrap Pulp client/repo objects to spy on uploads.
 class RepoWrapper(object):
@@ -28,13 +28,6 @@ class ClientWrapper(object):
         self.delegate = delegate
         self.search_content = delegate.search_content
         self.uploads = []
-
-    def __enter__(self):
-        self.delegate.__enter__()
-        return self
-
-    def __exit__(self, *args, **kwargs):
-        self.delegate.__exit__(*args, **kwargs)
 
     def get_repository(self, *args, **kwargs):
         wrapper = partial(RepoWrapper, uploads=self.uploads)
@@ -57,7 +50,7 @@ def test_uploads_shared(data_path):
     queue = ctx.new_queue()
     phase = Upload(
         context=ctx,
-        pulp_client_factory=lambda: client_wrapper,
+        pulp_client=client_wrapper,
         pre_push=None,
         in_queue=queue,
         update_push_items=lambda _: None,
@@ -85,11 +78,10 @@ def test_uploads_shared(data_path):
     ]
 
     # Shove 'em into the queue
-    for item in inputs:
-        queue.put(item)
+    queue.put(inputs)
 
     # Put this so that iteration will end
-    queue.put(Phase.FINISHED)
+    queue.put(constants.FINISHED)
 
     # Let the phase run
     with phase:
@@ -107,10 +99,11 @@ def test_uploads_shared(data_path):
     # Look at the pulp units created.
     outputs = {}
     while True:
-        item = phase.out_queue.get()
-        if item is phase.FINISHED:
+        items = phase.out_queue.get()
+        if items is constants.FINISHED:
             break
-        outputs.setdefault(item.pushsource_item.name, []).append(item.pulp_unit)
+        for item in items:
+            outputs.setdefault(item.pushsource_item.name, []).append(item.pulp_unit)
 
     # Although there were two items dealing with this RPM...
     assert len(outputs["walrus-5.21-1.noarch.rpm"]) == 2

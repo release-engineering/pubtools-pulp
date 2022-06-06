@@ -2,7 +2,7 @@ import logging
 
 from pushsource import Source, FilePushItem, PushItem, RpmPushItem
 
-from pubtools._pulp.tasks.push.phase import Context, Phase, LoadPushItems
+from pubtools._pulp.tasks.push.phase import Context, Phase, LoadPushItems, constants
 
 
 def test_load_filters():
@@ -36,10 +36,10 @@ def test_load_filters():
     # Now let's get everything from the output queue.
     all_outputs = []
     while True:
-        item = phase.out_queue.get()
-        if item is Phase.FINISHED:
+        items = phase.out_queue.get()
+        if items is constants.FINISHED:
             break
-        all_outputs.append(item.pushsource_item)
+        all_outputs.extend([item.pushsource_item for item in items])
 
     # We should have got this:
     assert all_outputs == [
@@ -78,10 +78,10 @@ def test_keep_prepush_no_dest_items():
     # Now let's get everything from the output queue.
     all_outputs = []
     while True:
-        item = phase.out_queue.get()
-        if item is Phase.FINISHED:
+        items = phase.out_queue.get()
+        if items is constants.FINISHED:
             break
-        all_outputs.append(item.pushsource_item)
+        all_outputs.extend([item.pushsource_item for item in items])
 
     # We should have got this:
     assert all_outputs == [

@@ -1,54 +1,16 @@
 import logging
 import os
-from functools import partial
-from threading import Thread, Lock, BoundedSemaphore
-
-from more_executors.futures import f_map, f_sequence
+from threading import Thread
 from monotonic import monotonic
 from six.moves.queue import Empty
 
+from .buffer import OutputBuffer
+from .errors import PhaseInterrupted
+from .progress import ProgressInfo
+
+from . import constants
 
 LOG = logging.getLogger("pubtools.pulp")
-
-# How long, in seconds, we're willing to wait while joining phase threads.
-#
-# Should be a large value. In fact, the code should strictly speaking not
-# require a timeout at all. We mainly set a timeout for reasons:
-#
-# - mitigate the risk of coding errors which lead to e.g. a deadlock
-#
-# - on python2, if you don't specify *some* timeout for APIs like thread.join,
-#   the process will do an uninterruptible sleep and cannot be woken even by
-#   SIGINT or SIGTERM. Fixed on python3; supplying any arbitrary timeout value
-#   on py2 works around it.
-PHASE_TIMEOUT = int(os.getenv("PUBTOOLS_PULP_PHASE_TIMEOUT") or "200000")
-
-# The default max size of each phase's item queue.
-#
-# This value may need tuning per the following:
-# - if too small, pushes will slow down as phases won't be pipelined as much
-# - if too large, memory usage may be too high on pushes with large numbers
-#   of items as queues fill up
-QUEUE_SIZE = int(os.getenv("PUBTOOLS_PULP_QUEUE_SIZE") or "200")
-
-# Max number of items processed in a batch, for phases designed to use batching.
-# Generally should be the max number of items we're willing to fetch in a single
-# Pulp query.
-BATCH_SIZE = int(os.getenv("PUBTOOLS_PULP_BATCH_SIZE") or "1000")
-
-# Minimum for how long, in seconds, we're willing to wait for more items to fill
-# up a batch before proceeding with what we have.
-BATCH_TIMEOUT = float(os.getenv("PUBTOOLS_PULP_BATCH_TIMEOUT") or "0.1")
-
-# Maximum counterpart to BATCH_TIMEOUT.
-# Actual timeout will fall between BATCH_TIMEOUT..BATCH_MAX_TIMEOUT depending on
-# the state of the phase's output queue.
-BATCH_MAX_TIMEOUT = float(os.getenv("PUBTOOLS_PULP_BATCH_MAX_TIMEOUT") or "60.0")
-
-
-class PhaseInterrupted(RuntimeError):
-    """The exception raised when a phase needs to stop because an earlier phase
-    has encountered a fatal error."""
 
 
 class Phase(object):
@@ -67,22 +29,20 @@ class Phase(object):
     method to implement the desired behavior for that phase.
     """
 
-    FINISHED = object()
-    """Sentinel representing normal completion of a phase.
+    # Subclasses are intended to override the following class constants where needed.
 
-    If this object is received on the input queue, it means that there will be no
-    more items arriving in the queue.
-    """
+    STARTUP_TYPE = constants.DEFAULT_STARTUP_TYPE
+    """When should the phase be considered started?"""
 
-    ERROR = object()
-    """Sentinel representing abnormal completion of a phase.
+    PROGRESS_TYPE = constants.DEFAULT_PROGRESS_TYPE
+    """Should the phase appear in progress logger?"""
 
-    If this object is received on the input queue, it means that a fatal error has
-    occurred and the phase should stop processing ASAP (e.g. by raising
-    PhaseInterrupted).
-    """
+    UPDATES_PUSH_ITEMS = False
+    """Should the phase's output items automatically be sent to pushcollector?"""
 
-    def __init__(self, context, in_queue=None, out_queue=True, name="<unknown phase>"):
+    def __init__(
+        self, context, in_queue=None, out_queue=True, name="<unknown phase>", **kwargs
+    ):
         """Construct a new phase.
 
         Arguments:
@@ -108,16 +68,58 @@ class Phase(object):
         to be constructed in a consistent manner without the caller having to
         know the arguments associated with each phase.
         """
-        self.in_queue = in_queue
-        self.out_queue = context.new_queue() if out_queue is True else out_queue
         self.name = name
+        self.in_queue = in_queue
+        self.out_queue_size = self.__tunable("QUEUE_SIZE")
+        self.out_queue = (
+            context.new_queue(maxsize=self.out_queue_size)
+            if out_queue is True
+            else out_queue
+        )
         self.context = context
 
-        # If we have an in_queue, name it after ourselves
-        if in_queue:
-            in_queue.name = name
+        # Save some tunables now at time of construction to avoid repeatedly
+        # querying the environment variables.
+        self.default_batch_size = self.__tunable("BATCH_SIZE")
+        self.batch_timeout = self.__tunable("BATCH_TIMEOUT", float)
+        self.batch_max_timeout = self.__tunable("BATCH_MAX_TIMEOUT", float)
 
-        self.__thread = None
+        self.progress_info = None
+
+        if self.PROGRESS_TYPE is constants.PROGRESS_TYPE_QUEUE:
+            # Arrange for updating progress automatically as queues
+            # are accessed.
+            self.progress_info = ProgressInfo(self.name)
+            self.context.progress_infos.append(self.progress_info)
+
+            if self.in_queue:
+                self.in_queue.after_get.append(self.__progress_queue_get)
+            if self.out_queue:
+                self.out_queue.after_put.append(self.__progress_queue_put)
+
+        self.update_push_items = kwargs.get("update_push_items", lambda _: ())
+
+        if self.UPDATES_PUSH_ITEMS:
+            assert self.out_queue, (
+                "BUG: phase %s declares UPDATE_PUSH_ITEMS=True but "
+                "has no output queue" % self.name
+            )
+            self.out_queue.before_put.append(self.__update_push_items_from_queue)
+
+        self.__thread = Thread(
+            target=self.__thread_target, name="phase-%s" % self.__machine_name
+        )
+        self.__thread.daemon = True
+
+        self.out_writer = OutputBuffer(
+            self.out_queue,
+            self.context,
+            self.__thread,
+            self.__tunable("OUT_BATCH_SIZE"),
+            self.__tunable("OUT_BATCH_TIMEOUT", float),
+            self.__tunable("OUT_MAX_FUTURES"),
+        )
+
         self.__started = False
 
         # This string is used in logs produced if the phase is interrupted.
@@ -127,14 +129,6 @@ class Phase(object):
         # that the interruption comes from within rather than another source.
         self.__interrupt_reason = "interrupted"
 
-        # futures representing the completion of all delayed puts on
-        # the output queue (if any). Must be awaited at the end of the phase.
-        self.__future_puts = {}
-        self.__future_puts_lock = Lock()
-
-        # This semaphore is used to constrain the size of future_puts.
-        self.__future_puts_sem = BoundedSemaphore(value=QUEUE_SIZE)
-
     def run(self):
         """The business logic for this phase.
 
@@ -143,6 +137,29 @@ class Phase(object):
         and writing to the output queue.
         """
         raise NotImplementedError()  # pragma: no cover
+
+    def notify_started(self):
+        """By default, each phase is considered 'started' as soon as the phase's queue
+        has received any data.
+
+        In some cases that does not make sense from the end-user's point of view, and
+        more fine-grained control is useful. In that case, a subclasses may set their
+        STARTUP_TYPE to STARTUP_TYPE_NOTIFY and explicitly invoke this method at the
+        point at which the phase is considered to have started. It is safe to invoke
+        the method multiple times.
+
+        It's a bug to invoke this method if STARTUP_TYPE is not STARTUP_TYPE_NOTIFY.
+        """
+        assert (
+            self.STARTUP_TYPE is constants.STARTUP_TYPE_NOTIFY
+        ), "BUG: notify_started() on phase %s with startup type %s" % (
+            self.name,
+            self.STARTUP_TYPE,
+        )
+
+        if not self.__started:
+            self.__started = True
+            self.__log_start()
 
     def iter_input(self):
         """Get an iterable over this phase's input queue, one item at a time.
@@ -156,7 +173,7 @@ class Phase(object):
         for items in self.iter_input_batched(batch_size=1):
             yield items[0]
 
-    def iter_input_batched(self, batch_size=BATCH_SIZE):
+    def iter_input_batched(self, batch_size=None):
         """Get an iterable over this phase's input queue, yielding items in batches
         of the specified size.
 
@@ -167,165 +184,77 @@ class Phase(object):
 
         It is a bug to call this method on a phase with no input queue.
         """
-        while True:
-            this_batch = []
+        batch_size = batch_size or self.default_batch_size
+        next_batch = []
 
+        while True:
             start_time = monotonic()
             timeout = self.__batch_timeout
 
             def batch_ready():
                 return (
-                    (len(this_batch) >= batch_size)
+                    (len(next_batch) >= batch_size)
                     or (monotonic() - start_time > timeout)
-                    or (this_batch[-1] in (Phase.FINISHED, Phase.ERROR))
+                    or (next_batch and next_batch[-1] is constants.FINISHED)
                 )
 
-            this_batch.append(self.__get_input())
+            def extend_batch(get_timeout=constants.PHASE_TIMEOUT):
+                got = self.__get_input(timeout=get_timeout)
+                if got is constants.FINISHED:
+                    next_batch.append(got)
+                else:
+                    next_batch.extend(got)
+
+            extend_batch()
 
             while not batch_ready():
                 try:
-                    this_batch.append(self.__get_input(timeout=timeout))
+                    extend_batch(timeout)
                 except Empty:
                     # batch_ready() will now be true
                     pass
 
             stop = False
-            if this_batch[-1] is Phase.FINISHED:
+            if next_batch and next_batch[-1] is constants.FINISHED:
                 stop = True
-                this_batch.pop(-1)
+                next_batch.pop(-1)
 
-            if this_batch:
-                yield this_batch
+            while next_batch and batch_ready():
+                yield next_batch[:batch_size]
+                next_batch[:] = next_batch[batch_size:]
 
             if stop:
-                # all done
+                # all done - yield last batch as well
+                if next_batch:
+                    yield next_batch
                 return
 
-    def put_output(self, value, task_done=True):
-        """Put a value onto this phase's output queue.
+    def put_output(self, value):
+        """Output a value from this phase.
 
-        If task_done is True, also calls task_done on the phase's input queue.
-        This is appropriate for the common case where each item on the input
-        queue is expected to generate exactly one corresponding item on the
-        output queue.
+        Output is buffered and might not be sent until the next call to
+        self.out_writer.flush().
 
         It is a bug to call this method on a phase with no output queue.
         """
-        self.out_queue.put(value, block=True, timeout=PHASE_TIMEOUT)
-        if task_done and self.in_queue:
-            self.in_queue.task_done()
+        self.out_writer.write(value)
 
-    def put_future_output(self, value, task_done=True):
-        """Like put_output, but the given value should be a future.
+    def put_future_output(self, value_f):
+        """Like put_output, but the given value should be a future returning
+        a single item.
 
-        Calling this method has the following effects:
-
-        - The given future will have a callback added such that:
-          - when resolved, the future's value will be put onto the output
-            queue (as if put_output were called)
-          - when failed, the context is set to an error state (causing all
-            phases to be interrupted, including this one if possible)
-        - When this phase ends, it will first wait for all futures submitted
-          via this function to be resolved.
-
-        This method may block if there are already many futures waiting to
-        put a value on the output queue.
-
-        It's recommended to tune each phase's batching so that this is called
-        no more than 100,000 times in a single phase (and use put_future_outputs
-        instead where possible). Beyond that, scaling issues may occur.
+        This method will block if the output buffer already contains the maximum
+        number of futures.
         """
+        self.out_writer.write_future(value_f)
 
-        # Reuse put_future_outputs wrapping the value as a single-element list.
-        self.put_future_outputs(f_map(value, lambda x: [x]), task_done)
-
-    def put_future_outputs(self, values, task_done=True):
-        """Like put_future_output, but works with a list of values rather
-        than a single value.
-
-        It is more efficient to call this function with a list of size N
-        than to call put_future_output N times.
+    def put_future_outputs(self, values_f):
+        """Like put_future_output, but the given future should return a list of
+        items.
         """
-        f = f_map(
-            values,
-            partial(self.__future_output_done, task_done=task_done),
-            error_fn=self.__future_output_failed,
-        )
-        self.__add_future_puts(f)
+        self.out_writer.write_future_batch(values_f)
 
-    def __add_future_puts(self, f):
-        self.__future_puts_sem.acquire()
-        with self.__future_puts_lock:
-            self.__future_puts[f] = f
-        f.add_done_callback(self.__pop_future_puts)
-
-    def __pop_future_puts(self, f):
-        with self.__future_puts_lock:
-            popped = self.__future_puts.pop(f, None)
-
-        # The conditional here is because we might already have
-        # been removed if futures are being cancelled due to error.
-        if popped:
-            self.__future_puts_sem.release()
-
-    def __future_output_done(self, values, task_done):
-        # Called when a Future[list[value]] has been resolved successfully.
-        # Returns True so that the resulting future can be used with f_and
-        # to indicate success.
-        for value in values:
-            self.put_output(value, task_done=task_done)
-        return True
-
-    def __future_output_failed(self, exception):
-        # Called when a Future[item] has been resolved unsuccessfully.
-
-        # Mark that this phase is being interrupted due to a failure within
-        # the phase itself (and not due to an earlier phase).
-        self.__interrupt_reason = "failed"
-
-        # The responsibility for logging the exception is here as we can't
-        # ensure anyone else will catch it if we re-raise.
-        try:
-            # raising to immediately catch for py2, which does not
-            # support passing the exception directly to log record's exc_info
-            raise exception
-        except Exception:  # pylint: disable=broad-except
-            LOG.exception("%s: fatal error occurred", self.name)
-
-        # Immediately set context into error state to interrupt all phases
-        # (including potentially ourselves) as early as possible.
-        self.context.set_error()
-
-        # If we have any other pending future outputs, cancel them if possible
-        # since we know they're no longer useful.
-        self.__future_puts_cancel()
-
-        # set_error above will already interrupt this phase if we're still
-        # reading the input queue. Raise an explicit interruption as well to
-        # cover the scenario where we're not reading the input queue.
-        raise PhaseInterrupted()
-
-    def __future_puts_await(self):
-        # Wait for all future puts to complete.
-        # Should be called at the end of a phase which has not (yet) failed.
-        f_sequence(self.__future_puts.keys()).result()
-        self.__future_puts.clear()
-
-    def __future_puts_cancel(self):
-        # Attempt to cancel all future puts.
-        # Should be called if this phase has failed.
-        to_cancel = []
-
-        with self.__future_puts_lock:
-            for f in self.__future_puts.keys():
-                to_cancel.append(f)
-                self.__future_puts_sem.release()
-            self.__future_puts.clear()
-
-        for f in to_cancel:
-            f.cancel()
-
-    def __get_input(self, timeout=PHASE_TIMEOUT):
+    def __get_input(self, timeout=constants.PHASE_TIMEOUT):
         # Get a single item from input queue; this is currently private
         # as it seems like the inheritors ought to always use one of the
         # iterable forms.
@@ -333,16 +262,9 @@ class Phase(object):
 
         out = self.in_queue.get(block=True, timeout=timeout)
 
-        if not self.__started:
+        if not self.__started and self.STARTUP_TYPE is constants.STARTUP_TYPE_QUEUE:
             self.__started = True
             self.__log_start()
-
-        # We need to stop immediately if ERROR arrived in the queue
-        # OR if the context is in the error state. The latter case
-        # avoids us continuing to work on our queue for a long time after
-        # we already know there's a fatal error.
-        if out is Phase.ERROR or self.context.has_error:
-            raise PhaseInterrupted("Stopping %s due to error" % self.name)
 
         return out
 
@@ -364,14 +286,24 @@ class Phase(object):
         #   queue anyway; so it's more efficient to wait for a larger batch.
         #
         out_queue_size = 0 if not self.out_queue else self.out_queue.qsize()
-        out_queue_fraction = out_queue_size / float(QUEUE_SIZE)
-        timeout = out_queue_fraction * BATCH_MAX_TIMEOUT
-        out = max(min(timeout, BATCH_MAX_TIMEOUT), BATCH_TIMEOUT)
+        out_queue_fraction = out_queue_size / float(self.out_queue_size)
+        timeout = out_queue_fraction * self.batch_max_timeout
+        out = max(min(timeout, self.batch_max_timeout), self.batch_timeout)
         return out
 
     @property
     def __machine_name(self):
         return self.name.replace(" ", "-").lower()
+
+    def __tunable(self, key, converter=int):
+        """Get value of some tunable which can be controlled by an
+        environment variable.
+        """
+        # Look for a phase-specific env var. Allows fine-grained tuning of each phase.
+        # If not present, the value of same name from constants is used.
+        env_var = "PUBTOOLS_PULP_%s__%s" % (key, self.name.replace(" ", "_").upper())
+        value = os.getenv(env_var, str(getattr(constants, key)))
+        return converter(value)
 
     def __log_start(self):
         LOG.info(
@@ -395,48 +327,71 @@ class Phase(object):
             extra={"event": {"type": "%s-end" % self.__machine_name}},
         )
 
-    def __enter__(self):
-        # entering our context means starting our phase's thread.
-        self.__thread = Thread(
-            target=self.__thread_target, name="phase-%s" % self.__machine_name
-        )
-        self.__thread.daemon = True
+    # Callbacks installed on queue to take some actions around get/put:
+    def __progress_queue_get(self, item):
+        if isinstance(item, list):
+            self.progress_info.in_count += len(item)
 
+    def __progress_queue_put(self, item):
+        if isinstance(item, list):
+            self.progress_info.out_count += len(item)
+
+    def __update_push_items_from_queue(self, item):
+        if isinstance(item, list):
+            self.update_push_items(item)
+
+    def __enter__(self):
         # If there's no in queue then we treat the phase as immediately started
         # for logging purposes. Otherwise, we'll wait until we see at least one
         # item arrive in the queue.
-        if self.in_queue is None:
+        if self.in_queue is None and self.STARTUP_TYPE is constants.STARTUP_TYPE_QUEUE:
             self.__started = True
             self.__log_start()
 
         self.__thread.start()
 
-    def __exit__(self, *_):
+    def __exit__(self, exc_type, exc_val, _exc_tb):
+        if exc_type and not self.context.has_error:
+            # If there is any exception and the context isn't yet failed, mark it
+            # failed to interrupt everything.
+            #
+            # Shouldn't really happen due to failures coming from within a phase run()
+            # as those will have already been caught.
+            # However we can get here if for example someone hits CTRL+C to generate
+            # a KeyboardInterrupt.
+            if not self.context.has_error:
+                LOG.debug(
+                    "%s: marking context failed due to exception",
+                    self.name,
+                    exc_info=exc_val,
+                )
+                self.context.set_error(self.name, exc_val)
+
         LOG.debug("%s: joining", self.name)
-        self.__thread.join(timeout=PHASE_TIMEOUT)
+        self.__thread.join(timeout=constants.PHASE_TIMEOUT)
         LOG.debug("%s: joined, is_alive %s", self.name, self.__thread.is_alive())
 
     def __thread_target(self):
         try:
             self.run()
-            self.__future_puts_await()
+            self.out_writer.flush()
             self.__log_finished()
             if self.out_queue:
-                self.put_output(Phase.FINISHED, task_done=False)
+                self.out_queue.put(constants.FINISHED)
         except PhaseInterrupted:
             # When interrupted, we need to stop, but we don't log an exception
             # with stacktrace as the relevant details will have already been
             # logged by whichever phase hit the initial error (including
             # ourselves if interrupted via put_future_output).
             self.__log_error(self.__interrupt_reason)
-            self.__future_puts_cancel()
-        except Exception:  # pylint: disable=broad-except
+            self.out_writer.cancel()
+        except Exception as exc:  # pylint: disable=broad-except
             # In any other case we must log this as a fatal error.
             LOG.exception("%s: fatal error occurred", self.name)
             self.__log_error()
-            self.__future_puts_cancel()
+            self.out_writer.cancel()
 
             # Put the context into error state. This will inform all other
             # phases (at least those with an input queue) that we've hit an
             # error, and so they will be interrupted.
-            self.context.set_error()
+            self.context.set_error(phase=self.name, exception=exc)

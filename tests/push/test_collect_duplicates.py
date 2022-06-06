@@ -7,7 +7,7 @@ from pubtools._pulp.tasks.push.items import (
     PulpModuleMdPushItem,
     PulpRpmPushItem,
 )
-from pubtools._pulp.tasks.push.phase import Context, Collect, Phase
+from pubtools._pulp.tasks.push.phase import Context, Collect, Phase, constants
 
 
 def test_collect_dupes():
@@ -54,11 +54,10 @@ def test_collect_dupes():
     assert len(files) == 13
 
     # Put everything on the queue...
-    for item in files:
-        phase.in_queue.put(item)
+    phase.in_queue.put(files)
 
     # Put this so that iteration will end
-    phase.in_queue.put(Phase.FINISHED)
+    phase.in_queue.put(constants.FINISHED)
 
     # Now let's see how iteration over it will work out
     got_items = []
