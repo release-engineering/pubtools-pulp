@@ -39,10 +39,7 @@ class Publish(Phase):
         self, context, pulp_client, publish_with_cache_flush, in_queue, **kwargs
     ):
         super(Publish, self).__init__(
-            context,
-            in_queue=in_queue,
-            name="Publish and cache flush",
-            **kwargs
+            context, in_queue=in_queue, name="Publish and cache flush", **kwargs
         )
         self.pulp_client = pulp_client
         self.publish_with_cache_flush = publish_with_cache_flush
