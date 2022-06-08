@@ -1,7 +1,7 @@
 import logging
 
-from pubtools.pulplib import Criteria
 import attr
+from pubtools.pulplib import Criteria
 
 from .base import Phase
 from . import constants
@@ -21,7 +21,7 @@ class Publish(Phase):
     - items which exist in Pulp in all the desired target repos.
 
     Output queue:
-    - none.
+    - Updated pulp push items
 
     Side-effects:
     - sets cdn_published field on all relevant Pulp units.
@@ -41,7 +41,6 @@ class Publish(Phase):
         super(Publish, self).__init__(
             context,
             in_queue=in_queue,
-            out_queue=False,
             name="Publish and cache flush",
             **kwargs
         )
@@ -105,5 +104,6 @@ class Publish(Phase):
         # Note we don't keep track of exactly which items got published through each
         # repo, so this will simply show that everything moved from in progress to done
         # at once.
-        for _ in pushed_items:
+        for item in pushed_items:
             self.progress_info.incr_out()
+            self.put_output(item)

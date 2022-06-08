@@ -1,9 +1,9 @@
 import os
 
-from pubtools.pulplib import RpmUnit, Criteria
 from pushsource import RpmPushItem
 import attr
 import six
+from pubtools.pulplib import RpmUnit, Criteria
 
 from .base import supports_type, PulpPushItem, UploadContext
 
@@ -22,6 +22,7 @@ class RpmUploadContext(UploadContext):
 @attr.s(frozen=True, slots=True)
 class PulpRpmPushItem(PulpPushItem):
     """Handler for RPMs."""
+    extra_export_fields = ["cdn_path", "upload_key", "rpm_nvr"]
 
     # RPMs are always uploaded to this repo first.
     UPLOAD_REPO = "all-rpm-content"

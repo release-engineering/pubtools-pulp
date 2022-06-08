@@ -3,12 +3,10 @@ import random
 import os
 from functools import partial
 
-from pushsource import PushItem
-from pubtools.pulplib import Unit, Criteria
-
-
-from more_executors.futures import f_map, f_flat_map, f_return, f_sequence
 import attr
+from pushsource import PushItem
+from more_executors.futures import f_map, f_flat_map, f_return, f_sequence
+from pubtools.pulplib import Unit, Criteria
 
 from ..copy import CopyOperation, asserting_all_copied_ok
 
@@ -94,6 +92,9 @@ class PulpPushItem(object):
     This value is always ``None`` for the push items which don't directly map
     to a single unit (e.g. modulemd YAML files; comps.xml files).
     """
+
+    extra_export_fields = None
+    """Extra fields to export together with attr fields in asdict method."""
 
     @classmethod
     def for_item(cls, pushsource_item, **kwargs):
@@ -586,3 +587,9 @@ class PulpPushItem(object):
         content types which can safely reuse uploads.
         """
         return None
+
+    def asdict(self):
+        ret = attr.asdict(self)
+        for field in self.extra_export_fields or []:
+            ret[field] = str(getattr(self, field))
+        return ret

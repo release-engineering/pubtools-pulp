@@ -14,4 +14,13 @@ def task_pulp_flush():
     Pulp content may have recently changed."""
 
 
+@hookspec
+def pulp_item_finished(item_metadata=None): # pylint: disable=unused-argument
+
+    """Invoked when PulpPushItem is pushed to a pulp target
+
+    This hook should be invoked per every pub push item after end of push
+    process."""
+
+
 pm.add_hookspecs(sys.modules[__name__])

@@ -129,15 +129,18 @@ def test_typical_push(
     )
 
     # It should have invoked hook(s).
-    assert len(hookspy) == 11
+    assert len(hookspy) == 24
     (hook_name, hook_kwargs) = hookspy[0]
     assert hook_name == "task_start"
     (hook_name, hook_kwargs) = hookspy[1]
     assert hook_name == "pulp_repository_pre_publish"
     (hook_name, hook_kwargs) = hookspy[2]
     assert hook_name == "pulp_repository_published"
-    (hook_name, hook_kwargs) = hookspy[-2]
+    # after pulp_repository_published there's 13 calls of pulp_item_finished
+    (hook_name, hook_kwargs) = hookspy[-15]
     assert hook_name == "task_pulp_flush"
+    (hook_name, hook_kwargs) = hookspy[-2]
+    assert hook_name == "pulp_item_finished"
     (hook_name, hook_kwargs) = hookspy[-1]
     assert hook_name == "task_stop"
 

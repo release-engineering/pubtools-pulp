@@ -1,8 +1,8 @@
 import os
 
-from pubtools.pulplib import FileUnit, Criteria
-from pushsource import FilePushItem
 import attr
+from pushsource import FilePushItem
+from pubtools.pulplib import FileUnit, Criteria
 
 from .base import supports_type, PulpPushItem
 
@@ -11,6 +11,7 @@ from .base import supports_type, PulpPushItem
 @attr.s(frozen=True, slots=True)
 class PulpFilePushItem(PulpPushItem):
     """Handler for generic files (in Pulp2 terms, "iso" units)."""
+    extra_export_fields = ["cdn_path", "upload_key"]
 
     @property
     def file_key(self):
