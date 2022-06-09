@@ -1,6 +1,7 @@
 import os
 import datetime
 import functools
+import mock
 
 import attr
 import pytest
@@ -140,6 +141,7 @@ def test_typical_push(
     (hook_name, hook_kwargs) = hookspy[-15]
     assert hook_name == "task_pulp_flush"
     (hook_name, hook_kwargs) = hookspy[-2]
+    assert hook_kwargs == {"item_metadata": mock.ANY, "push_item": mock.ANY}
     assert hook_name == "pulp_item_finished"
     (hook_name, hook_kwargs) = hookspy[-1]
     assert hook_name == "task_stop"

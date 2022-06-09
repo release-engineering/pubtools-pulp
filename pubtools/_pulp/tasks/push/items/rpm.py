@@ -23,7 +23,6 @@ class RpmUploadContext(UploadContext):
 class PulpRpmPushItem(PulpPushItem):
     """Handler for RPMs."""
 
-    extra_export_fields = ["cdn_path", "upload_key", "rpm_nvr"]
 
     # RPMs are always uploaded to this repo first.
     UPLOAD_REPO = "all-rpm-content"

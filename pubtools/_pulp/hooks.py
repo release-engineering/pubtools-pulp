@@ -15,7 +15,7 @@ def task_pulp_flush():
 
 
 @hookspec
-def pulp_item_finished(item_metadata=None):  # pylint: disable=unused-argument
+def pulp_item_finished(item_metadata=None, push_item=None):  # pylint: disable=unused-argument
 
     """Invoked when PulpPushItem is pushed to a pulp target
 

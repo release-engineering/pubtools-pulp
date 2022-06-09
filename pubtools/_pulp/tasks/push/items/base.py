@@ -587,9 +587,3 @@ class PulpPushItem(object):
         content types which can safely reuse uploads.
         """
         return None
-
-    def asdict(self):
-        ret = attr.asdict(self)
-        for field in self.extra_export_fields or []:
-            ret[field] = str(getattr(self, field))
-        return ret
