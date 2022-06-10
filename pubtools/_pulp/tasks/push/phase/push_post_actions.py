@@ -32,5 +32,10 @@ class PostPushActions(Phase):
     def run(self):
         for item_batch in self.iter_input_batched():
             for item in item_batch:
-                pm.hook.pulp_item_finished(item_metadata=attrs.asdict(item.pulp_unit) if item.pulp_unit else None, push_item=item.pushsource_item) # pylint: disable=no-member
+                pm.hook.pulp_item_finished(
+                    item_metadata=attrs.asdict(item.pulp_unit)
+                    if item.pulp_unit
+                    else None,
+                    push_item=item.pushsource_item,
+                )  # pylint: disable=no-member
                 self.put_output(item)

@@ -23,7 +23,6 @@ class RpmUploadContext(UploadContext):
 class PulpRpmPushItem(PulpPushItem):
     """Handler for RPMs."""
 
-
     # RPMs are always uploaded to this repo first.
     UPLOAD_REPO = "all-rpm-content"
 

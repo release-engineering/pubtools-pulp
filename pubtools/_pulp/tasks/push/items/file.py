@@ -12,7 +12,6 @@ from .base import supports_type, PulpPushItem
 class PulpFilePushItem(PulpPushItem):
     """Handler for generic files (in Pulp2 terms, "iso" units)."""
 
-
     @property
     def file_key(self):
         """A key which (should) uniquely identify this item in Pulp."""
