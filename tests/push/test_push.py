@@ -141,7 +141,11 @@ def test_typical_push(
     (hook_name, hook_kwargs) = hookspy[-15]
     assert hook_name == "task_pulp_flush"
     (hook_name, hook_kwargs) = hookspy[-2]
-    assert hook_kwargs == {"item_metadata": mock.ANY, "push_item": mock.ANY}
+    assert set(["item_metadata","push_item"]) == set(hook_kwargs.keys())
+    assert isinstance(hook_kwargs['item_metadata'], dict)
+    assert 'cdn_path' in  hook_kwargs['item_metadata']
+    assert isinstance(hook_kwargs["push_item"], PushItem)
+
     assert hook_name == "pulp_item_finished"
     (hook_name, hook_kwargs) = hookspy[-1]
     assert hook_name == "task_stop"
