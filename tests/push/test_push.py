@@ -137,16 +137,16 @@ def test_typical_push(
     assert hook_name == "pulp_repository_pre_publish"
     (hook_name, hook_kwargs) = hookspy[2]
     assert hook_name == "pulp_repository_published"
-    # after pulp_repository_published there's 13 calls of pulp_item_finished
+    # after pulp_repository_published there's 13 calls of pulp_item_push_finished
     (hook_name, hook_kwargs) = hookspy[-15]
     assert hook_name == "task_pulp_flush"
-    (hook_name, hook_kwargs) = hookspy[-2]
+    (hook_name, hook_kwargs) = hookspy[-3]
     assert set(["item_metadata","push_item"]) == set(hook_kwargs.keys())
     assert isinstance(hook_kwargs['item_metadata'], dict)
     assert 'cdn_path' in  hook_kwargs['item_metadata']
     assert isinstance(hook_kwargs["push_item"], PushItem)
 
-    assert hook_name == "pulp_item_finished"
+    assert hook_name == "pulp_item_push_finished"
     (hook_name, hook_kwargs) = hookspy[-1]
     assert hook_name == "task_stop"
 

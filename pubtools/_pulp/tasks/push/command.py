@@ -113,9 +113,7 @@ class Push(
                 update_push_items=collect_phase.in_queue.put,
                 publish_with_cache_flush=self.publish_with_cache_flush,
             )
-            phase_inst = klass(**kwargs)
-            phases.append(phase_inst)
-            return phase_inst
+            phases.append(klass(**kwargs))
 
         # Now proceed with adding the phases which make up a push...
 
@@ -139,7 +137,6 @@ class Push(
         if self.args.pre_push:
             # If we are in pre-push mode then we do not go any further, we just wait
             # for all previous steps, do post actions for push items, then log a message and exit.
-            add_phase(PostPushActions)
             add_phase(EndPush)
 
         else:
@@ -153,7 +150,6 @@ class Push(
             if "publish" in self.args.skip:
                 # Caller doesn't want to publish, then we just do post push actions
                 # for push items and wait for prior phases to complete.
-                add_phase(PostPushActions)
                 add_phase(EndPush)
 
             else:
