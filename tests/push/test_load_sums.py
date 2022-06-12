@@ -1,9 +1,17 @@
 import time
 
 import attr
+import pytest
 from pushsource import FilePushItem
 
-from pubtools._pulp.tasks.push.phase import LoadChecksums, Context, Phase
+from pubtools._pulp.tasks.push.phase import (
+    LoadChecksums,
+    Context,
+    Phase,
+    buffer,
+    errors,
+    constants,
+)
 from pubtools._pulp.tasks.push.items import PulpFilePushItem
 
 # arbitrary fake checksum values
@@ -34,6 +42,7 @@ def test_load_blocking_vs_nonblocking(tmpdir):
     """
     ctx = Context()
     in_queue = ctx.new_queue()
+    in_queue_writer = buffer.OutputBuffer(in_queue, ctx)
 
     # Add various push items onto the queue.
     all_filenames = []
@@ -55,9 +64,10 @@ def test_load_blocking_vs_nonblocking(tmpdir):
         else:
             item = SlowFilePushItem(name=filename, src=str(filepath))
 
-        in_queue.put(PulpFilePushItem(pushsource_item=item))
+        in_queue_writer.write(PulpFilePushItem(pushsource_item=item))
 
-    in_queue.put(Phase.FINISHED)
+    in_queue_writer.flush()
+    in_queue.put(constants.FINISHED)
 
     # Prepare the phase for loading checksums.
     phase = LoadChecksums(
@@ -66,6 +76,11 @@ def test_load_blocking_vs_nonblocking(tmpdir):
         # Don't care about update_push_items for this test
         update_push_items=lambda *_: (),
     )
+
+    # Tweak phase write behavior to ensure that all items handled synchronously
+    # will be flushed before items handled asynchronously.
+    phase.out_writer.flush_threshold = 1
+    phase.out_writer.max_futures = 8
 
     # Let it run...
     with phase:
@@ -77,10 +92,10 @@ def test_load_blocking_vs_nonblocking(tmpdir):
     # Now let's get everything from the output queue.
     all_outputs = []
     while True:
-        item = phase.out_queue.get()
-        if item is Phase.FINISHED:
+        items = phase.out_queue.get()
+        if items is constants.FINISHED:
             break
-        all_outputs.append(item)
+        all_outputs.extend(items)
 
     # Check the order of the files we've got:
     names = [i.pushsource_item.name for i in all_outputs]
@@ -109,6 +124,7 @@ def test_load_async_error(tmpdir, caplog):
     """
     ctx = Context()
     in_queue = ctx.new_queue()
+    in_queue_writer = buffer.OutputBuffer(in_queue, ctx)
 
     # Add various push items onto the queue:
     spied_calls = []
@@ -120,7 +136,7 @@ def test_load_async_error(tmpdir, caplog):
         filepath = tmpdir.join(filename)
         filepath.write(str(i))
         item = SlowFilePushItem(name=filename, src=str(filepath))
-        in_queue.put(PulpFilePushItem(pushsource_item=item))
+        in_queue_writer.write(PulpFilePushItem(pushsource_item=item))
 
     # Now let's throw in some files which don't exist and
     # therefore an error will occur when processing them
@@ -128,7 +144,7 @@ def test_load_async_error(tmpdir, caplog):
         filename = "notexist%s" % i
         filepath = tmpdir.join(filename)
         item = SlowFilePushItem(name=filename, src=str(filepath))
-        in_queue.put(PulpFilePushItem(pushsource_item=item))
+        in_queue_writer.write(PulpFilePushItem(pushsource_item=item))
 
     # And finally a few more files at the end just to spy on
     # whether processing reaches that point
@@ -136,9 +152,10 @@ def test_load_async_error(tmpdir, caplog):
         filename = "spy%s" % i
         filepath = tmpdir.join(filename)
         item = SpyingFilePushItem(spy=spied_calls, name=filename, src=str(filepath))
-        in_queue.put(PulpFilePushItem(pushsource_item=item))
+        in_queue_writer.write(PulpFilePushItem(pushsource_item=item))
 
-    in_queue.put(Phase.FINISHED)
+    in_queue_writer.flush()
+    in_queue.put(constants.FINISHED)
 
     # Prepare the phase for loading checksums.
     phase = LoadChecksums(
@@ -148,6 +165,10 @@ def test_load_async_error(tmpdir, caplog):
         update_push_items=lambda *_: (),
     )
 
+    # Ensure max futures is small with respect to the number of files we've
+    # set up in test data
+    phase.out_writer.max_futures = 4
+
     # Let it run...
     with phase:
         pass
@@ -155,27 +176,9 @@ def test_load_async_error(tmpdir, caplog):
     # There should have been an error
     assert ctx.has_error
 
-    # Now let's get everything from the output queue.
-    all_outputs = []
-    while True:
-        item = phase.out_queue.get()
-        # terminal state should have been ERROR rather than finished.
-        if item is Phase.ERROR:
-            break
-        all_outputs.append(item)
-
-    # Check the files we've got:
-    names = [i.pushsource_item.name for i in all_outputs]
-
-    # We don't have any guarantees exactly when the error occurred, but
-    # it should at least have been able to process the first couple of files...
-    assert "file0" in names
-    assert "file1" in names
-
-    # However it should NOT have managed to get up to the last files.
+    # It should NOT have managed to get up to the last files.
     # This is important to verify that the phase didn't continue running
     # after a fatal error occurred.
-    assert "spy0" not in names
     assert len(spied_calls) == 0
 
     # It should have logged the failure details.

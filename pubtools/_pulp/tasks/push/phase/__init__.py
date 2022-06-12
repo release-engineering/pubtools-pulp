@@ -9,3 +9,4 @@ from .collect import Collect
 from .associate import Associate
 from .publish import Publish
 from .context import Context
+from .progress import ProgressLogger

@@ -26,31 +26,22 @@ class Upload(Phase):
     - uploads content to Pulp, creating various units in repos.
     """
 
-    def __init__(
-        self, context, update_push_items, pulp_client_factory, pre_push, in_queue, **_
-    ):
-        super(Upload, self).__init__(
-            context, in_queue=in_queue, name="Upload items to Pulp"
-        )
-        self.update_push_items = update_push_items
-        self.pulp_client_factory = pulp_client_factory
-        self.pre_push = pre_push
+    # Outputs of this phase should update push items since an upload is
+    # a significant event.
+    UPDATES_PUSH_ITEMS = True
 
-    def _update_after_uploaded(self, item_f):
-        # Callback invoked after an item has been uploaded, to ensure
-        # update_push_items is called (if upload succeeded).
-        if not item_f.exception():
-            self.update_push_items([item_f.result()])
+    def __init__(self, context, pulp_client, pre_push, in_queue, **kwargs):
+        super(Upload, self).__init__(
+            context, in_queue=in_queue, name="Upload items to Pulp", **kwargs
+        )
+        self.pulp_client = pulp_client
+        self.pre_push = pre_push
 
     def run(self):
         """Yields push items with item uploaded if needed, such that the item will
         be present in at least one Pulp repo.
         """
 
-        with self.pulp_client_factory() as client:
-            return self.run_with_client(client)
-
-    def run_with_client(self, client):
         uploaded = 0
         uploading = 0
         prepush_skipped = 0
@@ -70,14 +61,14 @@ class Upload(Phase):
                 # This item is not in Pulp, or otherwise needs a reupload.
                 item_type = type(item)
                 if item_type not in upload_context:
-                    upload_context[item_type] = item_type.upload_context(client)
+                    upload_context[item_type] = item_type.upload_context(
+                        self.pulp_client
+                    )
 
                 ctx = upload_context[item_type]
 
                 uploading += 1
-                uploaded_f = item.ensure_uploaded(ctx)
-                uploaded_f.add_done_callback(self._update_after_uploaded)
-                self.put_future_output(uploaded_f)
+                self.put_future_output(item.ensure_uploaded(ctx))
 
         event = {
             "type": "uploading-pulp",

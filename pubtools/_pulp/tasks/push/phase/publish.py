@@ -4,6 +4,7 @@ from pubtools.pulplib import Criteria
 import attr
 
 from .base import Phase
+from . import constants
 
 
 LOG = logging.getLogger("pubtools.pulp")
@@ -28,30 +29,26 @@ class Publish(Phase):
     - purges CDN cache.
     - purges UD cache.
     - sends all items to Collect phase, with state="PUSHED".
-    - instructs Collect phase to shut down.
     """
 
+    # publish phase waits a long time before doing anything, so delay
+    # startup notification until we're ready
+    STARTUP_TYPE = constants.STARTUP_TYPE_NOTIFY
+
     def __init__(
-        self,
-        context,
-        update_push_items,
-        pulp_client_factory,
-        publish_with_cache_flush,
-        in_queue,
-        **_
+        self, context, pulp_client, publish_with_cache_flush, in_queue, **kwargs
     ):
         super(Publish, self).__init__(
-            context, in_queue=in_queue, out_queue=False, name="Publish and cache flush"
+            context,
+            in_queue=in_queue,
+            out_queue=False,
+            name="Publish and cache flush",
+            **kwargs
         )
-        self.update_push_items = update_push_items
-        self.pulp_client_factory = pulp_client_factory
+        self.pulp_client = pulp_client
         self.publish_with_cache_flush = publish_with_cache_flush
 
     def run(self):
-        with self.pulp_client_factory() as client:
-            return self.run_with_client(client)
-
-    def run_with_client(self, client):
         # At the time we run, it is the case that all items exist with the desired
         # state, in the desired repos. Now we need to publish affected repos.
         #
@@ -67,6 +64,7 @@ class Publish(Phase):
         all_repo_ids = set()
         set_cdn_published = set()
         all_items = []
+
         for item in self.iter_input():
             all_repo_ids.update(item.publish_pulp_repos)
 
@@ -78,11 +76,17 @@ class Publish(Phase):
 
             all_items.append(item)
 
+        # From a user's point of view, this is the point at which we are
+        # starting publishes.
+        self.notify_started()
+
         # Locate all the repos for publish.
-        repo_fs = client.search_repository(Criteria.with_id(sorted(all_repo_ids)))
+        repo_fs = self.pulp_client.search_repository(
+            Criteria.with_id(sorted(all_repo_ids))
+        )
 
         # Start publishing them, including cache flushes.
-        publish_fs = self.publish_with_cache_flush(repo_fs, set_cdn_published, client)
+        publish_fs = self.publish_with_cache_flush(repo_fs, set_cdn_published)
 
         # Then wait for publishes to finish.
         for f in publish_fs:
@@ -102,8 +106,4 @@ class Publish(Phase):
         # repo, so this will simply show that everything moved from in progress to done
         # at once.
         for _ in pushed_items:
-            self.in_queue.task_done()
-
-        # And we know nothing more happens to the push items, so we can tell
-        # collector that we're finished.
-        self.update_push_items([self.FINISHED])
+            self.progress_info.incr_out()

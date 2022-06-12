@@ -6,7 +6,7 @@ import threading
 
 from threading import Semaphore
 
-from pubtools._pulp.tasks.push.phase import Context, Phase
+from pubtools._pulp.tasks.push.phase import Context, Phase, ProgressLogger, constants
 from pubtools._pulp.tasks.push.contextlib_compat import exitstack
 
 
@@ -21,6 +21,9 @@ class SynchronizedPhase(Phase):
         self.batch_size = batch_size
         super(SynchronizedPhase, self).__init__(*args, **kwargs)
 
+        # Arrange for a flush on every write.
+        self.out_writer.flush_threshold = 1
+
     def run(self):
         for items in self.iter_input_batched(
             batch_size=self.batch_size,
@@ -32,11 +35,11 @@ class SynchronizedPhase(Phase):
 
 
 def test_context_counts(caplog):
-    """Context object counts events on queues, which can be logged
-    by dump_progress."""
+    """Progress info is registered with context by default, using queue operations."""
 
     ctx = Context()
-    queues = ctx._queues
+    progress_infos = ctx.progress_infos
+    progress_logger = ProgressLogger(ctx)
 
     in_sem1 = Semaphore(0)
     in_sem2 = Semaphore(0)
@@ -48,8 +51,7 @@ def test_context_counts(caplog):
     q1 = ctx.new_queue()
     q2 = ctx.new_queue()
     q3 = ctx.new_queue()
-    # last queue does not use counting since nothing consumes from it.
-    q4 = ctx.new_queue(counting=False)
+    q4 = ctx.new_queue()
 
     p1 = SynchronizedPhase(
         in_sem1, out_sem1, 10, context=ctx, in_queue=q1, out_queue=q2, name="phase 1"
@@ -61,20 +63,17 @@ def test_context_counts(caplog):
         in_sem3, out_sem3, 10, context=ctx, in_queue=q3, out_queue=q4, name="phase 3"
     )
 
-    # Nothing has started yet, so all queues should have zero counts.
-    # Note: there are 4 queues since the last phase also has an output queue, but
-    # since counting is not enabled for that one, we ignore it when checking counts.
-    assert len(queues) == 4
-    for q in queues[:3]:
-        assert q.counts == (0, 0, 0)
+    # This should have already attached some ProgressInfo onto the context.
+    assert [pi.name for pi in progress_infos] == ["phase 1", "phase 2", "phase 3"]
 
     # Now allow all the phases to start.
     with exitstack([p1, p2, p3]):
-        # Fill up the first queue with 35 items (3.5 batches) and then an item
-        # informing that we're done.
-        for i in range(0, 35):
-            q1.put(i)
-        q1.put(Phase.FINISHED)
+        # Put a few batches onto the first queue, 35 items in total.
+        q1.put(list(range(0, 10)))
+        q1.put(list(range(10, 20)))
+        q1.put(list(range(20, 30)))
+        q1.put(list(range(30, 35)))
+        q1.put(constants.FINISHED)
 
         # Allow phases to make progress:
         # - p1 send 20 items
@@ -92,24 +91,18 @@ def test_context_counts(caplog):
 
         # We know exactly how much progress has been made, so check the queues now.
         try:
-            assert queues[0].name == "phase 1"
-            c1 = queues[0].counts
-
-            assert queues[1].name == "phase 2"
-            c2 = queues[1].counts
-
-            assert queues[2].name == "phase 3"
-            c3 = queues[2].counts
-
-            # (put, get, done) counts should match exactly the progress
-            # that we've allowed. Keep in mind that gets always happen
-            # in multiples of 10 since that's our batch size.
-            assert c1 == (35, 30, 20)
-            assert c2 == (20, 20, 15)
-            assert c3 == (15, 10, 5)
+            # in, out should match exactly the progress that we've allowed.
+            assert progress_infos[0].in_count == 30
+            assert progress_infos[0].out_count == 20
+            assert progress_infos[1].in_count == 20
+            assert progress_infos[1].out_count == 15
+            # in_count below is 10 because we still haven't finished processing
+            # the first batch of 10.
+            assert progress_infos[2].in_count == 10
+            assert progress_infos[2].out_count == 5
 
             caplog.set_level(logging.INFO)
-            ctx.dump_progress(width=70)
+            progress_logger.dump_progress(width=70)
 
             # When visualized, this is what it should look like.
             # Note the ??? because the total number of items hasn't been set on
@@ -121,9 +114,9 @@ def test_context_counts(caplog):
                 == textwrap.dedent(
                     u"""
                     Progress:
-                      [ phase 1 | ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▁▁▁▁ ??? ]
-                      [ phase 2 | ▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▄▄▄▄▄▄▄                     ??? ]
-                      [ phase 3 | ▇▇▇▇▇▇▇▄▄▄▄▄▄▄▁▁▁▁▁▁▁                             ??? ]
+                      [ phase 1 | ███████████████████████████████████▒▒▒▒▒▒▒▒▒▒▒▒▒▒ ??? ]
+                      [ phase 2 | ██████████████████████████▒▒▒▒▒▒▒▒                ??? ]
+                      [ phase 3 | ████████▒▒▒▒▒▒▒▒                                  ??? ]
                     """
                 ).strip()
                 # fmt: on
@@ -135,35 +128,17 @@ def test_context_counts(caplog):
             assert rec.event == {
                 "type": "progress-report",
                 "phases": [
-                    {
-                        "name": "phase 1",
-                        "in-queue": 5,
-                        "in-progress": 10,
-                        "done": 20,
-                        "total": 35,
-                    },
-                    {
-                        "name": "phase 2",
-                        "in-queue": 0,
-                        "in-progress": 5,
-                        "done": 15,
-                        "total": 35,
-                    },
-                    {
-                        "name": "phase 3",
-                        "in-queue": 5,
-                        "in-progress": 5,
-                        "done": 5,
-                        "total": 35,
-                    },
+                    {"name": "phase 1", "done": 20, "in-progress": 10, "total": 30},
+                    {"name": "phase 2", "done": 15, "in-progress": 5, "total": 30},
+                    {"name": "phase 3", "done": 5, "in-progress": 5, "total": 30},
                 ],
             }
 
             # Let's try logging again but this time after setting up
             # a known item count.
-            ctx.items_count = 100
-            ctx.items_known.set()
-            ctx.dump_progress(width=70)
+            ctx.item_info.items_count = 100
+            ctx.item_info.items_known.set()
+            progress_logger.dump_progress(width=70)
 
             # Now it should look like this. Compare to previously:
             # - bars have shrunk since actual item count (100) is larger than the
@@ -176,9 +151,9 @@ def test_context_counts(caplog):
                 == textwrap.dedent(
                     u"""
                     Progress:
-                      [ phase 1 | ▇▇▇▇▇▇▇▇▇▇▄▄▄▄▄▁▁                                     ]
-                      [ phase 2 | ▇▇▇▇▇▇▇▄▄                                             ]
-                      [ phase 3 | ▇▇▄▄▁▁                                                ]
+                      [ phase 1 | ██████████▒▒▒▒▒                                       ]
+                      [ phase 2 | ███████▒▒                                             ]
+                      [ phase 3 | ██▒▒                                                  ]
                     """
                 ).strip()
                 # fmt: on
@@ -201,6 +176,6 @@ def test_context_progress_logger_disabled():
     # nothing happens by checking that the thread count is stable.
     threadcount = len(threading.enumerate())
 
-    with ctx.progress_logger(interval=0):
+    with ProgressLogger.for_context(ctx, interval=0):
         # Should not have spawned a new thread.
         assert len(threading.enumerate()) == threadcount

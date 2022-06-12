@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.16.0] - 2022-06-07
+
+- Internal refactoring of `pubtools-pulp-push` to improve memory usage, error handling and
+  miscellaneous issues.
+
 ## [1.15.0] - 2022-05-13
 
 - `pubtools-pulp-push` now supports a `--skip` argument.
@@ -146,7 +151,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.15.0...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.16.0...HEAD
+[1.16.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.15.0...v1.16.0
 [1.15.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.14.0...v1.15.0
 [1.14.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.13.0...v1.14.0
 [1.13.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.12.0...v1.13.0

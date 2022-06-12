@@ -1,81 +1,91 @@
-# -*- coding: utf-8 -*-
-
-import os
 import logging
-import shutil
-from collections import namedtuple
 
-from contextlib import contextmanager
+from pushsource import ModuleMdPushItem
+from threading import Event
+from monotonic import monotonic
+import concurrent.futures
+from collections import defaultdict
+from six.moves.queue import Queue, Full, Empty
 
-from threading import Lock, Thread, Event
 
-from six.moves.queue import Queue
-
-from .base import Phase, QUEUE_SIZE
-
-# u here is not redundant since we still support py2...
-# pylint: disable=redundant-u-string-prefix
+from .errors import PhaseInterrupted
 
 LOG = logging.getLogger("pubtools.pulp")
 
-# How long, in seconds, between our logging of current phase progress.
-PROGRESS_INTERVAL = int(os.getenv("PUBTOOLS_PULP_PROGRESS_INTERVAL") or "600")
 
-QueueCounts = namedtuple("QueueCounts", ["put", "get", "done"])
+class ContextQueue(object):
+    """A Queue wrapper integrating with some Context features:
 
+    - makes get() and put() interruptible if context has failed
+    - can have callbacks installed to monitor put & get
+      (e.g. for progress tracking)
+    """
 
-class CountingQueue(object):
-    """A Queue wrapper adding some counting & progress reporting features."""
-
-    def __init__(self, **kwargs):
-        # Name is expected to be set after construction, as phases are wired together.
-        self.name = "<unknown queue>"
-        self._get_count = 0
-        self._put_count = 0
-        self._done_count = 0
-        self._lock = Lock()
+    def __init__(self, context, **kwargs):
         self._delegate = Queue(**kwargs)
         self.qsize = self._delegate.qsize
 
-    def _incr_get(self):
-        with self._lock:
-            self._get_count += 1
+        self.before_put = []
+        """Callbacks invoked prior to any put()."""
 
-    def _incr_put(self):
-        with self._lock:
-            self._put_count += 1
+        self.after_put = []
+        """Callbacks invoked after a successful put()."""
 
-    def _incr_done(self):
-        with self._lock:
-            self._done_count += 1
+        self.after_get = []
+        """Callbacks invoked after a successful get()."""
 
-    @property
-    def counts(self):
-        """Returns a QueueCounts tuple for the current state of this queue.
+        self.__interruptible_put = context.interruptible(
+            self._delegate.put, msg="writing to queue"
+        )
+        self.__interruptible_get = context.interruptible(
+            self._delegate.get, msg="reading from queue"
+        )
 
-        Can be used to estimate the progress of a phase reading from this
-        queue.
-        """
-        with self._lock:
-            return QueueCounts(self._put_count, self._get_count, self._done_count)
+    def put(self, item, block=True, timeout=None):
+        for cb in self.before_put:
+            cb(item)
+        self.__interruptible_put(item, block=block, timeout=timeout)
+        for cb in self.after_put:
+            cb(item)
 
-    # The following methods are API-compatible with the standard Queue
-    # methods, but simultaneously update our counts.
-
-    def put(self, item, *args, **kwargs):
-        self._delegate.put(item, *args, **kwargs)
-        if item not in (Phase.ERROR, Phase.FINISHED):
-            self._incr_put()
-
-    def get(self, *args, **kwargs):
-        out = self._delegate.get(*args, **kwargs)
-        if out not in (Phase.ERROR, Phase.FINISHED):
-            self._incr_get()
+    def get(self, block=True, timeout=None):
+        out = self.__interruptible_get(block=block, timeout=timeout)
+        for cb in self.after_get:
+            cb(out)
         return out
 
-    def task_done(self):
-        self._delegate.task_done()
-        self._incr_done()
+
+class ItemInfo(object):
+    """Holds aggregate info on all push items involved in the context.
+
+    This object is used to make out-of-band info available across phases
+    beyond just the items passed via queues.
+    """
+
+    def __init__(self):
+        self.items_known = Event()
+        """An event which becomes True during push only after all push
+        items have been encountered. Other attributes on this object may
+        represent incomplete information until this event becomes True.
+        """
+
+        self.items_count = 0
+        """How many items are in the push, in total."""
+
+        self.modulemd_count_per_dest = defaultdict(int)
+        """How many modulemd items exist per destination in the push."""
+
+    def add_item(self, item):
+        """Record an item on this object.
+
+        This should be done only once per item (i.e. do not re-add items
+        as state is updated).
+        """
+        self.items_count += 1
+
+        if isinstance(item.pushsource_item, ModuleMdPushItem):
+            for dest in item.pushsource_item.dest:
+                self.modulemd_count_per_dest[dest] += 1
 
 
 class Context(object):
@@ -88,21 +98,29 @@ class Context(object):
     """
 
     def __init__(self):
-        self._queues = []
-        self._error = False
+        self._error = Event()
 
-        """An event which becomes True during push only after all push
-        items have been encountered (so that the total number of push items
-        is known).
+        self.error_phase = None
+        """Name of phase which encountered a fatal error, if one has occurred."""
+
+        self.error_exception = None
+        """The exception causing a fatal error, if one has occurred."""
+
+        self.item_info = ItemInfo()
+        """Records aggregate info on items in the push."""
+
+        self.interrupt_interval = 5.0
+        """Default value of 'interval' for interruptible method.
+
+        This exists only so that it can be overridden from tests.
         """
-        self.items_known = Event()
 
-        """Total number of push items.
+        self.progress_infos = []
+        """All ProgressInfo objects participating in progress tracking for this
+        context.
 
-        This value is only valid after self.items_known has been set to True.
-        Prior to that, it is possible that more items are still being loaded.
+        These should be arranged in display order.
         """
-        self.items_count = None
 
     @property
     def has_error(self):
@@ -110,171 +128,95 @@ class Context(object):
 
         If `has_error` is true, phases should stop processing ASAP.
         """
-        return self._error
+        return self._error.is_set()
 
-    def set_error(self):
+    def set_error(
+        self, phase="<unknown phase>", exception=RuntimeError("unknown error")
+    ):
         """Set the context into the error state, indicating that a fatal
         error has occurred.
         """
-        self._error = True
-        for queue in self._queues:
-            queue.put(Phase.ERROR)
+        if not self.has_error:
+            self.error_phase = phase
+            self.error_exception = exception
+            self._error.set()
 
-    def new_queue(self, counting=True, **kwargs):
+    def raise_if_interrupted(self, msg):
+        """A convenience method to raise an exception if the context has an error.
+
+        'msg' should mention the operation currently being attempted.
+        """
+        if self.has_error:
+            raise PhaseInterrupted("Interrupted while %s" % msg)
+
+    def new_queue(self, **kwargs):
         """Create and return a new Queue.
 
         The Queue is associated with this context such that, if the context
-        enters the error state, the queue will receive an ERROR object.
-
-        If counting is True, get/put counts will be recorded for the queue
-        and the queue will participate in progress logging. This should be
-        disabled for unusual cases.
+        enters the error state, any queue operations will be interrupted.
         """
-        if "maxsize" not in kwargs:
-            kwargs["maxsize"] = QUEUE_SIZE
+        return ContextQueue(context=self, **kwargs)
 
-        if counting:
-            out = CountingQueue(**kwargs)
-        else:
-            out = Queue(**kwargs)
-        self._queues.append(out)
+    def interruptible(
+        self,
+        fn,
+        msg="performing a blocking operation",
+        interval=None,
+        timeout_exceptions=(Full, Empty, concurrent.futures.TimeoutError),
+    ):
+        """Wraps a blocking timeout-accepting function to be interruptible.
+
+        Given a blocking function with a timeout (e.g. queue.put, future.result),
+        this method will return a new function with the added behavior that the
+        operation can be interrupted if this context enters the error state.
+
+        Under the hood, this works by calling the given function in a loop with
+        a smaller timeout than that provided by the caller. This is not ideal
+        for efficiency or latency, but is a necessary workaround for the lack of
+        an API for a python thread to wait on multiple locks at once.
+
+        Arguments:
+
+            fn (callable)
+                Any callable which accepts a 'timeout' argument.
+
+            msg (str)
+                Optional message to be included in any raised exceptions on interrupt.
+                Use this to provide a bit of context on what the callable is doing.
+
+            interval (float)
+                How much time between checks for interruption.
+
+            timeout_exceptions (tuple)
+                Exception class(es) to be interpreted as a timeout from fn().
+        """
+        interval = interval or self.interrupt_interval
+
+        def out(*args, **kwargs):
+            self.raise_if_interrupted(msg)
+
+            timeout = kwargs.get("timeout")
+            inner_interval = interval
+            if timeout is not None:
+                inner_interval = min(interval, timeout)
+
+            start_oper = monotonic()
+
+            kwargs["timeout"] = inner_interval
+
+            while True:
+                try:
+                    # Try the operation for a few seconds.
+                    return fn(*args, **kwargs)
+                except timeout_exceptions:
+                    # interrupted => give up
+                    self.raise_if_interrupted(msg)
+
+                    # past the deadline => give up
+                    if timeout is not None and monotonic() - start_oper > timeout:
+                        # re-raise whatever exception we already got.
+                        raise
+
+                    # In any other case we spin and try again soon.
+
         return out
-
-    def dump_progress(self, width=None):
-        """Output a log with progress info for each queue associated with the
-        context.
-
-        The log has a visual component (progress bars) and also a structured
-        event logged via 'extra'.
-        """
-
-        if width is None:
-            width = int(os.environ.get("COLUMNS") or "80")
-
-            # Conditional due to py2
-            if hasattr(shutil, "get_terminal_size"):
-                (width, _) = shutil.get_terminal_size()
-
-        snapshot = []
-        max_namelen = 0
-        max_count = 1
-        items_known = self.items_known.is_set()
-
-        for queue in self._queues:
-            if not isinstance(queue, CountingQueue):
-                # A queue which does not make sense for counting/progress,
-                # such as the one used by Collect phase.
-                continue
-
-            max_namelen = max(max_namelen, len(queue.name))
-            counts = queue.counts
-            snapshot.append((queue.name, counts))
-            max_count = max(max_count, *counts)
-
-        # When reporting progress, we may or may not know exactly how many
-        # items we're dealing with, depending how far we are in the push.
-        # If we know the exact count, use it.
-        if items_known:
-            max_count = self.items_count or 1
-
-        template_str = "[ %%%ds | %%s%%s%%s%%s ]" % max_namelen
-        bar_width = max(width - max_namelen - 10, 10)
-
-        # We will create both human-oriented strings and machine-oriented
-        # structured metrics (logged via 'extra'). In practice this can be
-        # gathered into JSONL logs.
-        formatted_strs = []
-        event = {"type": "progress-report", "phases": []}
-
-        for (name, counts) in snapshot:
-            # We want to draw a progress bar like this:
-            #
-            # "▇▇▇▇▄▄▄▄▄▁▁▁▁              "
-            #
-            # The bar fills in from left to right.
-            #
-            # '▇' => done processing
-            # '▄' => currently in progress
-            # '▁' => waiting in queue
-            # ' ' => items not yet arrived in queue (estimated)
-            #
-
-            # Proportions of the bar from left to right
-            part1 = float(counts.done) / max_count
-            part2 = float(counts.get - counts.done) / max_count
-            part3 = float(counts.put - counts.get) / max_count
-            part4 = 1.0 - part3 - part2 - part1
-
-            # How much is that in character count?
-            part1 = int(part1 * bar_width)
-            part2 = int(part2 * bar_width)
-            part3 = int(part3 * bar_width)
-            part4 = int(part4 * bar_width)
-
-            # FIXME: code below uses fmt off/on to allow u string literals
-            # with black. Drop this when python2 support goes away!
-            # fmt: off
-            bar1 = u"▇" * part1
-            bar2 = u"▄" * part2
-            bar3 = u"▁" * part3
-            bar4 = u" " * part4
-            # fmt: on
-
-            # Seeing as we've truncated downwards to get integers, we may
-            # need to pad a few more spaces to fill out the bar
-            while len(bar1 + bar2 + bar3 + bar4) < bar_width:
-                bar4 = bar4 + " "
-
-            bar_str = template_str % (name, bar1, bar2, bar3, bar4)
-
-            # If we don't know the exact item counts, we'd better indicate this
-            # since the progress bar can otherwise be rather misleading. We do
-            # this by pasting '???' near the end.
-            if not items_known:
-                bar_str = bar_str[:-6] + " ??? ]"
-
-            formatted_strs.append(bar_str)
-
-            # Add counts to the structured event as well.
-            event["phases"].append(
-                {
-                    "name": name,
-                    "in-queue": counts.put - counts.get,
-                    "in-progress": counts.get - counts.done,
-                    "done": counts.done,
-                    "total": max_count,
-                }
-            )
-
-        LOG.info("Progress:\n  %s", "\n  ".join(formatted_strs), extra={"event": event})
-
-    @contextmanager
-    def progress_logger(self, interval=PROGRESS_INTERVAL):
-        """A context manager for periodically logging the progress of all queues.
-
-        While the context is open, progress will be logged periodically via
-        dump_progress. This logging ends once the context is closed.
-        """
-
-        if interval <= 0:
-            # Allows the feature to be entirely disabled.
-            yield
-            return
-
-        stop_logging = Event()
-
-        def loop():
-            while not stop_logging.is_set():
-                self.dump_progress()
-                stop_logging.wait(timeout=interval)
-
-        thread = Thread(name="progress-logger", target=loop)
-        thread.daemon = True
-
-        thread.start()
-        try:
-            yield
-        finally:
-            stop_logging.set()
-            thread.join()
-            self.dump_progress()

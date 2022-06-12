@@ -18,17 +18,16 @@ class QueryPulp(Phase):
     - none.
     """
 
-    def __init__(self, context, pulp_client_factory, in_queue, **_):
+    def __init__(self, context, pulp_client, in_queue, **_):
         super(QueryPulp, self).__init__(
             context, in_queue=in_queue, name="Query items in Pulp"
         )
-        self.pulp_client_factory = pulp_client_factory
+        self.pulp_client = pulp_client
 
     def run(self):
-        with self.pulp_client_factory() as client:
-            for batch in self.iter_input_batched():
-                for items in PulpPushItem.items_by_type(batch):
-                    updated_items_f = PulpPushItem.items_with_pulp_state_single_batch(
-                        client, items
-                    )
-                    self.put_future_outputs(updated_items_f)
+        for batch in self.iter_input_batched():
+            for items in PulpPushItem.items_by_type(batch):
+                updated_items_f = PulpPushItem.items_with_pulp_state_single_batch(
+                    self.pulp_client, items
+                )
+                self.put_future_outputs(updated_items_f)

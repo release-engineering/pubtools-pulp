@@ -312,7 +312,7 @@ def test_update_push(
     # For this test we'll force an abnormally small queue size.
     # This will verify that nothing breaks in edge cases such as the queue size
     # being smaller than the batch size.
-    monkeypatch.setattr(context, "QUEUE_SIZE", 2)
+    monkeypatch.setenv("PUBTOOLS_PULP_QUEUE_SIZE", "1")
 
     # Sanity check that the Pulp server is, initially, empty.
     client = fake_controller.client
