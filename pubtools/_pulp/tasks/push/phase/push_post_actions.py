@@ -26,7 +26,11 @@ class PostPushActions(Phase):
 
     def __init__(self, context, in_queue, **kwargs):
         super(PostPushActions, self).__init__(
-            context, out_queue=None, in_queue=in_queue, name="Post Push Actions", **kwargs
+            context,
+            out_queue=None,
+            in_queue=in_queue,
+            name="Post Push Actions",
+            **kwargs
         )
 
     def run(self):

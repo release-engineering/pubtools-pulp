@@ -20,7 +20,7 @@ def pulp_item_push_finished(
 ):  # pylint: disable=unused-argument
 
     """Invoked during push tasks after each item has been processed fully.
-    
+
     By the time this hook is invoked, the referenced item and unit is expected
     to be fully uploaded into Pulp and published onto the CDN.
     Args:
