@@ -14,7 +14,7 @@ from pubtools.pulplib import (
     RpmUnit,
     RpmDependency,
     Criteria,
-    Unit
+    Unit,
 )
 from pubtools.pluggy import pm
 
@@ -144,12 +144,12 @@ def test_typical_push(
     (hook_name, hook_kwargs) = hookspy[-4]
     for hook_called in hookspy[15:-4]:
         (hook_name, hook_kwargs) = hook_called
-        if hook_kwargs['pulp_units']:
+        if hook_kwargs["pulp_units"]:
             break
 
-    assert set(["pulp_units","push_item"]) == set(hook_kwargs.keys())
-    assert isinstance(hook_kwargs['pulp_units'], list)
-    assert isinstance(hook_kwargs['pulp_units'][0], Unit)
+    assert set(["pulp_units", "push_item"]) == set(hook_kwargs.keys())
+    assert isinstance(hook_kwargs["pulp_units"], list)
+    assert isinstance(hook_kwargs["pulp_units"][0], Unit)
     assert isinstance(hook_kwargs["push_item"], PushItem)
 
     assert hook_name == "pulp_item_push_finished"
