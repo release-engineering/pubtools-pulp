@@ -145,7 +145,7 @@ class Push(
             add_phase(Update)
 
             # Ensure all items are associated into the desired target repos.
-            associate_phase = add_phase(Associate)
+            add_phase(Associate)
 
             if "publish" in self.args.skip:
                 # Caller doesn't want to publish, then we just do post push actions

@@ -1,5 +1,4 @@
 import logging
-import attrs
 
 from .base import Phase
 from . import constants
