@@ -23,6 +23,7 @@ def pulp_item_push_finished(
 
     By the time this hook is invoked, the referenced item and unit is expected
     to be fully uploaded into Pulp and published onto the CDN.
+
     Args:
         pulp_units (list[:class:`~pubtools.pulplib.Unit`])
             A list of zero or more Pulp unit(s) created/updated for this item.
