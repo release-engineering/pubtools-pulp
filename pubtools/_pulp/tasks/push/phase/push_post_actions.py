@@ -36,6 +36,6 @@ class PostPushActions(Phase):
         for item_batch in self.iter_input_batched():
             for item in item_batch:
                 pm.hook.pulp_item_push_finished(  # pylint: disable=no-member
-                    pulp_units=[item.pulp_unit] if item.pulp_unit else None,
+                    pulp_units=[item.pulp_unit] if item.pulp_unit else [],
                     push_item=item.pushsource_item,
                 )

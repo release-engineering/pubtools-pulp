@@ -93,9 +93,6 @@ class PulpPushItem(object):
     to a single unit (e.g. modulemd YAML files; comps.xml files).
     """
 
-    extra_export_fields = None
-    """Extra fields to export together with attr fields in asdict method."""
-
     @classmethod
     def for_item(cls, pushsource_item, **kwargs):
         """Given a pushsource.PushItem, returns an instance of a PulpPushItem wrapper

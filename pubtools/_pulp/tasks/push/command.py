@@ -148,8 +148,8 @@ class Push(
             add_phase(Associate)
 
             if "publish" in self.args.skip:
-                # Caller doesn't want to publish, then we just do post push actions
-                # for push items and wait for prior phases to complete.
+                # Caller doesn't want to publish, then we just wait for prior phases
+                # to complete
                 add_phase(EndPush)
 
             else:

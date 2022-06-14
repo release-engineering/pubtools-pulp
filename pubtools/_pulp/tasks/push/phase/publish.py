@@ -102,5 +102,4 @@ class Publish(Phase):
         # repo, so this will simply show that everything moved from in progress to done
         # at once.
         for item in pushed_items:
-            self.progress_info.incr_out()
             self.put_output(item)
