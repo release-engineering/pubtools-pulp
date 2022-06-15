@@ -136,7 +136,7 @@ class Push(
 
         if self.args.pre_push:
             # If we are in pre-push mode then we do not go any further, we just wait
-            # for all previous steps, do post actions for push items, then log a message and exit.
+            # for all previous steps, then log a message and exit.
             add_phase(EndPush)
 
         else:
