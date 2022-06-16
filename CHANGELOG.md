@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.17.0] - 2022-06-16
+
+- Introduced `pulp_item_push_finished`
+  [pubtools hook](https://release-engineering.github.io/pubtools/hooks.html#hook-reference).
+
 ## [1.16.0] - 2022-06-07
 
 - Internal refactoring of `pubtools-pulp-push` to improve memory usage, error handling and
@@ -151,7 +156,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.16.0...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.17.0...HEAD
+[1.17.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.16.0...v1.17.0
 [1.16.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.15.0...v1.16.0
 [1.15.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.14.0...v1.15.0
 [1.14.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.13.0...v1.14.0
