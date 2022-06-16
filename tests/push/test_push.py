@@ -1,6 +1,7 @@
 import os
 import datetime
 import functools
+import mock
 
 import attr
 import pytest
@@ -13,6 +14,7 @@ from pubtools.pulplib import (
     RpmUnit,
     RpmDependency,
     Criteria,
+    Unit,
 )
 from pubtools.pluggy import pm
 
@@ -129,15 +131,28 @@ def test_typical_push(
     )
 
     # It should have invoked hook(s).
-    assert len(hookspy) == 11
+    assert len(hookspy) == 24
     (hook_name, hook_kwargs) = hookspy[0]
     assert hook_name == "task_start"
     (hook_name, hook_kwargs) = hookspy[1]
     assert hook_name == "pulp_repository_pre_publish"
     (hook_name, hook_kwargs) = hookspy[2]
     assert hook_name == "pulp_repository_published"
-    (hook_name, hook_kwargs) = hookspy[-2]
+    # after pulp_repository_published there's 13 calls of pulp_item_push_finished
+    (hook_name, hook_kwargs) = hookspy[-15]
     assert hook_name == "task_pulp_flush"
+    (hook_name, hook_kwargs) = hookspy[-4]
+    for hook_called in hookspy[15:-4]:
+        (hook_name, hook_kwargs) = hook_called
+        if hook_kwargs["pulp_units"]:
+            break
+
+    assert set(["pulp_units", "push_item"]) == set(hook_kwargs.keys())
+    assert isinstance(hook_kwargs["pulp_units"], list)
+    assert isinstance(hook_kwargs["pulp_units"][0], Unit)
+    assert isinstance(hook_kwargs["push_item"], PushItem)
+
+    assert hook_name == "pulp_item_push_finished"
     (hook_name, hook_kwargs) = hookspy[-1]
     assert hook_name == "task_stop"
 

@@ -1,11 +1,11 @@
 import logging
 from threading import Lock
 
-from pubtools.pulplib import Criteria
+import attr
 from more_executors.futures import f_flat_map, f_map, f_sequence
 from pushsource import ProductIdPushItem
-import attr
 import rhsm.certificate
+from pubtools.pulplib import Criteria
 
 from .base import supports_type
 from .direct import PulpDirectUploadPushItem

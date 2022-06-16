@@ -1,11 +1,11 @@
 import logging
 
+import attr
+from pushsource import ErratumPushItem
 from pubtools.pulplib import (
     ErratumUnit,
     Criteria,
 )
-from pushsource import ErratumPushItem
-import attr
 
 from .base import supports_type, PulpPushItem, State
 from . import erratum_conv

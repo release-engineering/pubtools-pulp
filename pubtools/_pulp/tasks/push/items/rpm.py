@@ -1,9 +1,9 @@
 import os
 
-from pubtools.pulplib import RpmUnit, Criteria
 from pushsource import RpmPushItem
 import attr
 import six
+from pubtools.pulplib import RpmUnit, Criteria
 
 from .base import supports_type, PulpPushItem, UploadContext
 

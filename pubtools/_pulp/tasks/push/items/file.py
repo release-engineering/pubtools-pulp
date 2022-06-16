@@ -1,8 +1,8 @@
 import os
 
-from pubtools.pulplib import FileUnit, Criteria
-from pushsource import FilePushItem
 import attr
+from pushsource import FilePushItem
+from pubtools.pulplib import FileUnit, Criteria
 
 from .base import supports_type, PulpPushItem
 

@@ -3,12 +3,10 @@ import random
 import os
 from functools import partial
 
-from pushsource import PushItem
-from pubtools.pulplib import Unit, Criteria
-
-
-from more_executors.futures import f_map, f_flat_map, f_return, f_sequence
 import attr
+from pushsource import PushItem
+from more_executors.futures import f_map, f_flat_map, f_return, f_sequence
+from pubtools.pulplib import Unit, Criteria
 
 from ..copy import CopyOperation, asserting_all_copied_ok
 

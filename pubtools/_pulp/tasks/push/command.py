@@ -15,6 +15,7 @@ from .phase import (
     Publish,
     Context,
     ProgressLogger,
+    PostPushActions,
 )
 from ..common import Publisher, PulpTask
 from ...services import (
@@ -148,12 +149,14 @@ class Push(
 
             if "publish" in self.args.skip:
                 # Caller doesn't want to publish, then we just wait for prior phases
-                # to complete.
+                # to complete
                 add_phase(EndPush)
 
             else:
-                # Ensure all repos are published once the desired content is present.
+                # Ensure all repos are published once the desired content is present
+                # and do any post push pushitems actions.
                 add_phase(Publish)
+                add_phase(PostPushActions)
 
         # We've connected up all phases of the push, now we just need to
         # start them all.
