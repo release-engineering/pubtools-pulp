@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>delete &#8212; pubtools-pulp  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -12,6 +12,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -34,7 +35,7 @@
           <div class="body" role="main">
             
   <section id="delete">
-<h1>delete<a class="headerlink" href="#delete" title="Permalink to this headline">¶</a></h1>
+<h1>delete<a class="headerlink" href="#delete" title="Permalink to this heading">¶</a></h1>
 <p><p>Remove specific content from one or more Pulp repository</p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">delete</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">url</span> <span class="n">UDCACHE_URL</span><span class="p">]</span>
@@ -55,7 +56,7 @@
 </pre></div>
 </div>
 <section id="Named Arguments">
-<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this heading">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>--debug, -d</kbd></dt>
 <dd><p>Show debug logs; can be provided up to three times to enable more logs</p>
@@ -83,7 +84,7 @@
 </dl>
 </section>
 <section id="Unified Downloads Cache environment">
-<h2>Unified Downloads Cache environment<a class="headerlink" href="#Unified Downloads Cache environment" title="Permalink to this headline">¶</a></h2>
+<h2>Unified Downloads Cache environment<a class="headerlink" href="#Unified Downloads Cache environment" title="Permalink to this heading">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>--udcache-url</kbd></dt>
 <dd><p>Base URL of UD cache flush API; if omitted, UD cache flush features are disabled.</p>
@@ -98,7 +99,7 @@
 </dl>
 </section>
 <section id="Akamai FastPurge environment">
-<h2>Akamai FastPurge environment<a class="headerlink" href="#Akamai FastPurge environment" title="Permalink to this headline">¶</a></h2>
+<h2>Akamai FastPurge environment<a class="headerlink" href="#Akamai FastPurge environment" title="Permalink to this heading">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>--fastpurge-host</kbd></dt>
 <dd><p>FastPurge hostname (xxx.purge.akamaiapis.net)</p>
@@ -120,7 +121,7 @@
 </dl>
 </section>
 <section id="Pulp environment">
-<h2>Pulp environment<a class="headerlink" href="#Pulp environment" title="Permalink to this headline">¶</a></h2>
+<h2>Pulp environment<a class="headerlink" href="#Pulp environment" title="Permalink to this heading">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>--pulp-url</kbd></dt>
 <dd><p>Pulp server URL</p>
@@ -145,7 +146,7 @@
 </dl>
 </section>
 <section id="Publish options">
-<h2>Publish options<a class="headerlink" href="#Publish options" title="Permalink to this headline">¶</a></h2>
+<h2>Publish options<a class="headerlink" href="#Publish options" title="Permalink to this heading">¶</a></h2>
 <p>Options affecting the behavior of Pulp repo publishes.</p>
 <dl class="option-list">
 <dt><kbd>--clean</kbd></dt>
@@ -159,7 +160,7 @@
 </dl>
 </section>
 <section id="example-file">
-<h2>Example: File<a class="headerlink" href="#example-file" title="Permalink to this headline">¶</a></h2>
+<h2>Example: File<a class="headerlink" href="#example-file" title="Permalink to this heading">¶</a></h2>
 <p>A typical invocation of delete file would look like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">delete</span> \
   <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pulp</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span> \
@@ -176,7 +177,7 @@ be removed from the repos they belong to. All those repos will
 then be published.</p>
 </section>
 <section id="example-mix-file-types">
-<h2>Example: Mix file types<a class="headerlink" href="#example-mix-file-types" title="Permalink to this headline">¶</a></h2>
+<h2>Example: Mix file types<a class="headerlink" href="#example-mix-file-types" title="Permalink to this heading">¶</a></h2>
 <p>File provided in <code class="docutils literal notranslate"><span class="pre">`--file`</span></code> could either be a RPM(rpm name),
 ISO(filename) or ModuleMD(N:S:V:C:A) file. Different file types
 could be included in the same command.</p>
@@ -194,7 +195,7 @@ could be included in the same command.</p>
 <p>Signing key will be used wherever applicable.</p>
 </section>
 <section id="example-advisory">
-<h2>Example: Advisory<a class="headerlink" href="#example-advisory" title="Permalink to this headline">¶</a></h2>
+<h2>Example: Advisory<a class="headerlink" href="#example-advisory" title="Permalink to this heading">¶</a></h2>
 <p>Packages from an advisory could be removed by providing the advisory ID and the
 repos to be removed from. All the packages and the modules that were pushed to
 the provided repos as part of the advisory will be removed.</p>
@@ -209,7 +210,7 @@ the provided repos as part of the advisory will be removed.</p>
 </div>
 </section>
 <section id="example-mix-files-and-advisory">
-<h2>Example: Mix files and advisory<a class="headerlink" href="#example-mix-files-and-advisory" title="Permalink to this headline">¶</a></h2>
+<h2>Example: Mix files and advisory<a class="headerlink" href="#example-mix-files-and-advisory" title="Permalink to this heading">¶</a></h2>
 <p>Removing files and packages from the advisory could be requested in the same request.
 They will be removed from the provided applicable repos.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">delete</span> \
@@ -226,7 +227,7 @@ They will be removed from the provided applicable repos.</p>
 </div>
 </section>
 <section id="example-with-cache-flush">
-<h2>Example: With cache flush<a class="headerlink" href="#example-with-cache-flush" title="Permalink to this headline">¶</a></h2>
+<h2>Example: With cache flush<a class="headerlink" href="#example-with-cache-flush" title="Permalink to this heading">¶</a></h2>
 <p>If the Pulp server is configured to publish to an Akamai CDN,
 usage of the Akamai FastPurge API for cache flushing may be enabled
 to flush cache after publishing repositories.</p>
@@ -247,7 +248,7 @@ file for authentication.</p>
 </div>
 </section>
 <section id="example-skip-publish">
-<h2>Example: Skip publish<a class="headerlink" href="#example-skip-publish" title="Permalink to this headline">¶</a></h2>
+<h2>Example: Skip publish<a class="headerlink" href="#example-skip-publish" title="Permalink to this heading">¶</a></h2>
 <p>The repos are published and the caches are cleaned(provided required arguments)
 by default. This can skipped by providing <code class="docutils literal notranslate"><span class="pre">`--skip`</span></code> option with the publish
 step name i.e. <code class="docutils literal notranslate"><span class="pre">`--skip</span> <span class="pre">publish`</span></code></p>
@@ -325,7 +326,7 @@ step name i.e. <code class="docutils literal notranslate"><span class="pre">`--s
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -342,7 +343,7 @@ step name i.e. <code class="docutils literal notranslate"><span class="pre">`--s
       &copy;2019, Red Hat.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

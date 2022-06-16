@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>set-maintenance &#8212; pubtools-pulp  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -12,6 +12,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -33,9 +34,9 @@
           <div class="body" role="main">
             
   <section id="set-maintenance">
-<h1>set-maintenance<a class="headerlink" href="#set-maintenance" title="Permalink to this headline">¶</a></h1>
+<h1>set-maintenance<a class="headerlink" href="#set-maintenance" title="Permalink to this heading">¶</a></h1>
 <section id="set-maintenance-on">
-<h2>Set Maintenance On<a class="headerlink" href="#set-maintenance-on" title="Permalink to this headline">¶</a></h2>
+<h2>Set Maintenance On<a class="headerlink" href="#set-maintenance-on" title="Permalink to this heading">¶</a></h2>
 <p><p>Sets repositories into ‘maintenance mode’.</p>
 <p>When a repository is in maintenance mode, publishing onto customer-
 visible locations should be forbidden.</p>
@@ -51,7 +52,7 @@ visible locations should be forbidden.</p>
 </pre></div>
 </div>
 <section id="Named Arguments">
-<h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h3>
+<h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this heading">¶</a></h3>
 <dl class="option-list">
 <dt><kbd>--debug, -d</kbd></dt>
 <dd><p>Show debug logs; can be provided up to three times to enable more logs</p>
@@ -72,7 +73,7 @@ visible locations should be forbidden.</p>
 </dl>
 </section>
 <section id="Pulp environment">
-<h3>Pulp environment<a class="headerlink" href="#Pulp environment" title="Permalink to this headline">¶</a></h3>
+<h3>Pulp environment<a class="headerlink" href="#Pulp environment" title="Permalink to this heading">¶</a></h3>
 <dl class="option-list">
 <dt><kbd>--pulp-url</kbd></dt>
 <dd><p>Pulp server URL</p>
@@ -97,7 +98,7 @@ visible locations should be forbidden.</p>
 </dl>
 </section>
 <section id="example">
-<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this heading">¶</a></h3>
 <p>A typical invocation of set maintenance would look like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">maintenance</span><span class="o">-</span><span class="n">on</span> \
   <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pulp</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span> \
@@ -111,7 +112,7 @@ maintenance mode.</p>
 </section>
 </section>
 <section id="set-maintenance-off">
-<h2>Set Maintenance Off<a class="headerlink" href="#set-maintenance-off" title="Permalink to this headline">¶</a></h2>
+<h2>Set Maintenance Off<a class="headerlink" href="#set-maintenance-off" title="Permalink to this heading">¶</a></h2>
 <p><p>Unset repositories maintenance mode.</p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">maintenance</span><span class="o">-</span><span class="n">off</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span><span class="p">]</span>
@@ -125,7 +126,7 @@ maintenance mode.</p>
 </pre></div>
 </div>
 <section id="Named Arguments">
-<h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h3>
+<h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this heading">¶</a></h3>
 <dl class="option-list">
 <dt><kbd>--debug, -d</kbd></dt>
 <dd><p>Show debug logs; can be provided up to three times to enable more logs</p>
@@ -143,7 +144,7 @@ maintenance mode.</p>
 </dl>
 </section>
 <section id="Pulp environment">
-<h3>Pulp environment<a class="headerlink" href="#Pulp environment" title="Permalink to this headline">¶</a></h3>
+<h3>Pulp environment<a class="headerlink" href="#Pulp environment" title="Permalink to this heading">¶</a></h3>
 <dl class="option-list">
 <dt><kbd>--pulp-url</kbd></dt>
 <dd><p>Pulp server URL</p>
@@ -168,7 +169,7 @@ maintenance mode.</p>
 </dl>
 </section>
 <section id="id1">
-<h3>Example<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3>Example<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
 <p>A typical invocation of unset maintenance would look like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">maintenance</span><span class="o">-</span><span class="n">off</span> \
   <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pulp</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span> \
@@ -243,7 +244,7 @@ from maintenance mode.</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -260,7 +261,7 @@ from maintenance mode.</p>
       &copy;2019, Red Hat.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
