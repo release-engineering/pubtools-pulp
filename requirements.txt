@@ -11,9 +11,9 @@ attrs==21.4.0 \
     #   jsonschema
     #   pubtools-pulplib
     #   pushsource
-certifi==2022.5.18.1 \
-    --hash=sha256:9c5705e395cd70084351dd8ad5c41e65655e08ce46f2ec9cf6c2c08390f71eb7 \
-    --hash=sha256:f1d53542ee8cbedbe2118b5686372fb33c297fcd6379b050cca0ef13a597382a
+certifi==2022.6.15 \
+    --hash=sha256:84c85a9078b11105f04f3036a9482ae10e4621616db313fe045dd24743a0820d \
+    --hash=sha256:fe86415d55e84719d75f8b69414f6438ac3547d2078ab91b67e779ef69378412
     # via requests
 cffi==1.15.0 \
     --hash=sha256:00c878c90cb53ccfaae6b8bc18ad05d2036553e6d9d1d9dbcf323bbe83854ca3 \
@@ -155,17 +155,17 @@ gssapi==1.7.3 \
     --hash=sha256:ec25bfa506dbf82e0471f9ffce198b10da8f4b787f1779d52dbe514eb2cda999 \
     --hash=sha256:ee76851059aecfcf2927ae991d74bd8c635de3e958d8e1cd3cd213d566ec7911
     # via requests-gssapi
-humanize==4.1.0 \
-    --hash=sha256:3a119b242ec872c029d8b7bf8435a61a5798f124b244a08013aec5617302f80e \
-    --hash=sha256:953b393f5bd67e19d47a4c0fd20c3a3537853967b307e49729c4755d3551753c
+humanize==4.2.0 \
+    --hash=sha256:b79797c101f274a19ed7b5f0cd3aa65e1aa379868b974692a9d3129ccc311be2 \
+    --hash=sha256:f5f34d4a1112b5e3ce9a2cc674e606e3e1fc07a1a0f185444a1e5fe826264b01
     # via pubtools-pulplib
 idna==3.3 \
     --hash=sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff \
     --hash=sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d
     # via requests
-importlib-resources==5.7.1 \
-    --hash=sha256:b6062987dfc51f0fcb809187cffbd60f35df7acb4589091f154214af6d0d49d3 \
-    --hash=sha256:e447dc01619b1e951286f3929be820029d48c75eb25d265c28b92a16548212b8
+importlib-resources==5.8.0 \
+    --hash=sha256:568c9f16cb204f9decc8d6d24a572eeea27dacbb4cee9e6b03a8025736769751 \
+    --hash=sha256:7952325ffd516c05a8ad0858c74dff2c3343f136fe66a6002b2623dd1d43f223
     # via jsonschema
 iniparse==0.5 \
     --hash=sha256:88ca60473b1637055a937933d48840be1b1b6835f381a6158ef118a532583675 \
@@ -178,8 +178,8 @@ jsonschema==4.6.0 \
     # via
     #   pubtools-pulplib
     #   pushcollector
-kobo==0.24.0 \
-    --hash=sha256:d08f3f67441676a9fb297e12205ebd04ce59509bae8e50aaec2b2ffd86c4dabd
+kobo==0.24.1 \
+    --hash=sha256:d5a30cc20c323f3e9d9b4b2e511650c4b98929b88859bd8cf57463876686e407
     # via pushsource
 koji==1.29.0 \
     --hash=sha256:7a24bc9e9c7508ded2e174f243780c57562422b8c7320714cff839b841b79b7a \
