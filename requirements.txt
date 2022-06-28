@@ -155,9 +155,9 @@ gssapi==1.7.3 \
     --hash=sha256:ec25bfa506dbf82e0471f9ffce198b10da8f4b787f1779d52dbe514eb2cda999 \
     --hash=sha256:ee76851059aecfcf2927ae991d74bd8c635de3e958d8e1cd3cd213d566ec7911
     # via requests-gssapi
-humanize==4.2.0 \
-    --hash=sha256:b79797c101f274a19ed7b5f0cd3aa65e1aa379868b974692a9d3129ccc311be2 \
-    --hash=sha256:f5f34d4a1112b5e3ce9a2cc674e606e3e1fc07a1a0f185444a1e5fe826264b01
+humanize==4.2.1 \
+    --hash=sha256:895af56cfc63e1d453df6899d3f13861ecdef23e02407d2a84741561210416da \
+    --hash=sha256:c8caa86a3e35fa60a6f31674bed2dcaf3a8495958880a00ad836226e0e6755b3
     # via pubtools-pulplib
 idna==3.3 \
     --hash=sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff \
@@ -226,9 +226,9 @@ pushcollector==1.3.0 \
     # via
     #   -r requirements.in
     #   pushsource
-pushsource==2.21.0 \
-    --hash=sha256:369d4afb88dd783a326d44f181ef46dfa55209b88881c5bfa8609f77716bdb5d \
-    --hash=sha256:6cc87b9f29d5b6891dc623f0e0863a86a758b71ef5b783ca0e497a946fb9706c
+pushsource==2.22.0 \
+    --hash=sha256:8e2bc69f2bb57588fdb57d788510d5180ced163c4f850a407487ba064743ad43 \
+    --hash=sha256:a0ddcbc10651694ee177dfe1b4c187f0b3819a56b105f441b1a42687c3573c7f
     # via -r requirements.in
 pyasn1==0.4.8 \
     --hash=sha256:39c7e2ec30515947ff4e87fb6f456dfc6e84857d34be479c9d4a4ba4bf46aa5d \
