@@ -129,7 +129,9 @@ class Publisher(CDNCache, UdCache):
             )
         return out
 
-    def publish_with_cache_flush(self, repos, units=None, pulp_client=None, errata=None):
+    def publish_with_cache_flush(
+        self, repos, units=None, pulp_client=None, errata=None
+    ):
         # Ensure all repos in 'repos' are fully published, and CDN/UD caches are flushed.
         #
         # If 'units' are provided, ensures those units have cdn_published field set after
@@ -155,7 +157,9 @@ class Publisher(CDNCache, UdCache):
         set_published = f_sequence(self.set_cdn_published(units, pulp_client))
 
         # flush UD cache only after cdn_published is set (if applicable)
-        flush_ud = f_flat_map(set_published, lambda _: f_sequence(self.flush_ud(repos, errata)))
+        flush_ud = f_flat_map(
+            set_published, lambda _: f_sequence(self.flush_ud(repos, errata))
+        )
         out.append(flush_ud)
 
         return out

@@ -32,7 +32,7 @@ def test_flush(requests_mock, caplog):
     assert caplog.messages == [
         "Invalidating eng-product 1234",
         "Invalidating repo some-repo",
-        "Invalidating erratum RHBA-1234"
+        "Invalidating erratum RHBA-1234",
     ]
 
 

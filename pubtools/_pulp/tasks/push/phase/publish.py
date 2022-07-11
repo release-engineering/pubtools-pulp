@@ -86,7 +86,9 @@ class Publish(Phase):
         )
 
         # Start publishing them, including cache flushes.
-        publish_fs = self.publish_with_cache_flush(repo_fs, set_cdn_published, errata=errata_units)
+        publish_fs = self.publish_with_cache_flush(
+            repo_fs, set_cdn_published, errata=errata_units
+        )
 
         # Then wait for publishes to finish.
         for f in publish_fs:
