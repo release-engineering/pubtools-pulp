@@ -61,7 +61,7 @@ class UdCache(UdCacheClientService):
     """Provide features to interact with UD cache."""
 
     @step("Flush UD cache")
-    def flush_ud(self, repos):
+    def flush_ud(self, repos, errata=None):
         client = self.udcache_client
         if not client:
             LOG.info("UD cache flush is not enabled.")
@@ -70,6 +70,8 @@ class UdCache(UdCacheClientService):
         out = []
         for repo in repos:
             out.append(client.flush_repo(repo.id))
+
+        out.extend([client.flush_erratum(erratum.id) for erratum in (errata or [])])
 
         return out
 
@@ -127,7 +129,7 @@ class Publisher(CDNCache, UdCache):
             )
         return out
 
-    def publish_with_cache_flush(self, repos, units=None, pulp_client=None):
+    def publish_with_cache_flush(self, repos, units=None, pulp_client=None, errata=None):
         # Ensure all repos in 'repos' are fully published, and CDN/UD caches are flushed.
         #
         # If 'units' are provided, ensures those units have cdn_published field set after
@@ -153,7 +155,7 @@ class Publisher(CDNCache, UdCache):
         set_published = f_sequence(self.set_cdn_published(units, pulp_client))
 
         # flush UD cache only after cdn_published is set (if applicable)
-        flush_ud = f_flat_map(set_published, lambda _: f_sequence(self.flush_ud(repos)))
+        flush_ud = f_flat_map(set_published, lambda _: f_sequence(self.flush_ud(repos, errata)))
         out.append(flush_ud)
 
         return out

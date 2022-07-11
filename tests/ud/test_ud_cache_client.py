@@ -4,13 +4,16 @@ import logging
 from pubtools._pulp.ud import UdCacheClient
 
 
-def test_flush(requests_mock):
+def test_flush(requests_mock, caplog):
     """Client flushes by hitting expected URLs."""
+
+    caplog.set_level(logging.INFO)
 
     with UdCacheClient("https://ud.example.com/", auth=("user", "pass")) as client:
         urls = [
             "https://ud.example.com/internal/rcm/flush-cache/eng-product/1234",
             "https://ud.example.com/internal/rcm/flush-cache/repo/some-repo",
+            "https://ud.example.com/internal/rcm/flush-cache/erratum/RHBA-1234",
         ]
 
         for url in urls:
@@ -19,10 +22,18 @@ def test_flush(requests_mock):
         # It should succeed
         client.flush_product(1234).result()
         client.flush_repo("some-repo").result()
+        client.flush_erratum("RHBA-1234").result()
 
     # It should have called above two URLs
     fetched_urls = [req.url for req in requests_mock.request_history]
     assert fetched_urls == urls
+
+    # It should log flush for each unit
+    assert caplog.messages == [
+        "Invalidating eng-product 1234",
+        "Invalidating repo some-repo",
+        "Invalidating erratum RHBA-1234"
+    ]
 
 
 def test_retries(requests_mock):
