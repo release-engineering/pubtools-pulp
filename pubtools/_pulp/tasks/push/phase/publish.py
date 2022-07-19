@@ -1,7 +1,7 @@
 import logging
 
 import attr
-from pubtools.pulplib import Criteria
+from pubtools.pulplib import Criteria, ErratumUnit
 
 from .base import Phase
 from . import constants
@@ -59,6 +59,7 @@ class Publish(Phase):
         # away - the CDN origin supports near-atomic update.
         all_repo_ids = set()
         set_cdn_published = set()
+        errata_units = set()
         all_items = []
 
         for item in self.iter_input():
@@ -69,6 +70,9 @@ class Publish(Phase):
             unit = item.pulp_unit
             if hasattr(unit, "cdn_published") and unit.cdn_published is None:
                 set_cdn_published.add(unit)
+
+            if isinstance(unit, ErratumUnit):
+                errata_units.add(unit)
 
             all_items.append(item)
 
@@ -82,7 +86,9 @@ class Publish(Phase):
         )
 
         # Start publishing them, including cache flushes.
-        publish_fs = self.publish_with_cache_flush(repo_fs, set_cdn_published)
+        publish_fs = self.publish_with_cache_flush(
+            repo_fs, set_cdn_published, errata=errata_units
+        )
 
         # Then wait for publishes to finish.
         for f in publish_fs:

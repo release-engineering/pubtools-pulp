@@ -110,3 +110,16 @@ class UdCacheClient(object):
                 A future resolved once flush has completed.
         """
         return self._flush_object("repo", repo_id)
+
+    def flush_erratum(self, erratum_id):
+        """Flush a particular erratum by ID.
+
+        Arguments:
+            erratum_id (str)
+                Erratum ID
+
+        Returns:
+            Future[None]
+                A future resolved when flush has completed
+        """
+        return self._flush_object("erratum", erratum_id)
