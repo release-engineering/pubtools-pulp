@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.18.0] - 2022-07-19
+
+- Added errata flush to UD cache flush step post publish.
+
 ## [1.17.0] - 2022-06-16
 
 - Introduced `pulp_item_push_finished`
@@ -156,7 +160,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.17.0...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.18.0...HEAD
+[1.18.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.17.0...v1.18.0
 [1.17.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.16.0...v1.17.0
 [1.16.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.15.0...v1.16.0
 [1.15.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.14.0...v1.15.0
