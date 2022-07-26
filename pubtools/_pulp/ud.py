@@ -18,8 +18,7 @@ class UdCacheClient(object):
     _ATTEMPTS = int(os.environ.get("UD_CACHE_FLUSH_RETRY_ATTEMPTS", "9"))
     _SLEEP = float(os.environ.get("UD_CACHE_FLUSH_RETRY_SLEEP", "1.0"))
     _EXPONENT = float(os.environ.get("UD_CACHE_FLUSH_RETRY_EXPONENT", "3.0"))
-    _MAX_SLEEP = float(os.environ.get("UD_CACHE_FLUSH_RETRY_MAX_SLEEP",
-                                      "120.0"))
+    _MAX_SLEEP = float(os.environ.get("UD_CACHE_FLUSH_RETRY_MAX_SLEEP", "120.0"))
 
     def __init__(self, url, max_retry_sleep=_MAX_SLEEP, **kwargs):
         """Create a new UD cache flush client.
@@ -37,17 +36,18 @@ class UdCacheClient(object):
         self._url = url
         self._tls = threading.local()
 
-        retry_args = {"max_sleep": max_retry_sleep,
-                      "max_attempts": UdCacheClient._ATTEMPTS,
-                      "sleep": UdCacheClient._SLEEP,
-                      "exponent": UdCacheClient._EXPONENT}
+        retry_args = {
+            "max_sleep": max_retry_sleep,
+            "max_attempts": UdCacheClient._ATTEMPTS,
+            "sleep": UdCacheClient._SLEEP,
+            "exponent": UdCacheClient._EXPONENT,
+        }
 
         self._session_attrs = kwargs
         self._executor = (
-            Executors.thread_pool(name="ud-client",
-                                  max_workers=self._REQUEST_THREADS)
-                .with_map(self._check_http_response)
-                .with_retry(**retry_args)
+            Executors.thread_pool(name="ud-client", max_workers=self._REQUEST_THREADS)
+            .with_map(self._check_http_response)
+            .with_retry(**retry_args)
         )
 
     def __enter__(self):
@@ -72,8 +72,7 @@ class UdCacheClient(object):
         return self._session.get(*args, **kwargs)
 
     def _on_failure(self, object_type, object_id, exception):
-        LOG.error("Invalidating %s %s failed: %s", object_type, object_id,
-                  exception)
+        LOG.error("Invalidating %s %s failed: %s", object_type, object_id, exception)
         raise exception
 
     def _flush_object(self, object_type, object_id):
@@ -88,8 +87,7 @@ class UdCacheClient(object):
 
         # Wrap with logging on failure
         out = f_map(
-            out,
-            error_fn=lambda ex: self._on_failure(object_type, object_id, ex)
+            out, error_fn=lambda ex: self._on_failure(object_type, object_id, ex)
         )
 
         return out
