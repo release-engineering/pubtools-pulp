@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.19.0] - 2022-07-27
+
+- Added retry args to increase retry backoff in UD Cache client.
+
 ## [1.18.0] - 2022-07-19
 
 - Added errata flush to UD cache flush step post publish.
@@ -160,7 +164,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.18.0...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.19.0...HEAD
+[1.19.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.18.0...v1.19.0
 [1.18.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.17.0...v1.18.0
 [1.17.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.16.0...v1.17.0
 [1.16.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.15.0...v1.16.0
