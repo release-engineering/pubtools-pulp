@@ -15,8 +15,12 @@ class UdCacheClient(object):
     # Default number of request thread modifiable by an env variable.
     # This is not a documented/supported feature of the library.
     _REQUEST_THREADS = int(os.environ.get("UDCACHE_REQUEST_THREADS", "4"))
+    _ATTEMPTS = int(os.environ.get("UD_CACHE_FLUSH_RETRY_ATTEMPTS", "9"))
+    _SLEEP = float(os.environ.get("UD_CACHE_FLUSH_RETRY_SLEEP", "1.0"))
+    _EXPONENT = float(os.environ.get("UD_CACHE_FLUSH_RETRY_EXPONENT", "3.0"))
+    _MAX_SLEEP = float(os.environ.get("UD_CACHE_FLUSH_RETRY_MAX_SLEEP", "120.0"))
 
-    def __init__(self, url, max_retry_sleep=None, **kwargs):
+    def __init__(self, url, max_retry_sleep=_MAX_SLEEP, **kwargs):
         """Create a new UD cache flush client.
 
         Arguments:
@@ -32,9 +36,12 @@ class UdCacheClient(object):
         self._url = url
         self._tls = threading.local()
 
-        retry_args = {}
-        if max_retry_sleep:
-            retry_args["max_sleep"] = max_retry_sleep
+        retry_args = {
+            "max_sleep": max_retry_sleep,
+            "max_attempts": UdCacheClient._ATTEMPTS,
+            "sleep": UdCacheClient._SLEEP,
+            "exponent": UdCacheClient._EXPONENT,
+        }
 
         self._session_attrs = kwargs
         self._executor = (
