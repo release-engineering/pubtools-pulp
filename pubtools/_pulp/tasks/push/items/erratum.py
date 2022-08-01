@@ -7,17 +7,35 @@ from pubtools.pulplib import (
     Criteria,
 )
 
-from .base import supports_type, PulpPushItem, State
+from .base import supports_type, PulpPushItem, State, UploadContext
 from . import erratum_conv
 
 
 LOG = logging.getLogger("pubtools.pulp")
 
 
+@attr.s(frozen=True, slots=True)
+class ErratumUploadContext(UploadContext):
+    """A custom context for Erratum uploads.
+
+    This context object avoids having to query the UPLOAD_REPO repeatedly.
+    """
+
+    upload_repo = attr.ib(default=None)
+
+
 @supports_type(ErratumPushItem)
 @attr.s(frozen=True, slots=True)
 class PulpErratumPushItem(PulpPushItem):
     """Handler for errata."""
+
+    # Erratums are always uploaded to this repo first.
+    # Pulp stores the erratum pkglist for (erratum_id, repo) pair. If an erratum is
+    # uploaded for an already existing ID, the pkglist is overwritten if the repo is
+    # same, else is appended. To keep the pkglist consistent, all the erratums are
+    # uploaded to the same repo instead of a random repo from the list of destinations.
+    # For more details, refer RHELDST-12782.
+    UPLOAD_REPO = "all-rpm-content"
 
     @property
     def unit_type(self):
@@ -72,6 +90,13 @@ class PulpErratumPushItem(PulpPushItem):
         return out
 
     @classmethod
+    def upload_context(cls, pulp_client):
+        return ErratumUploadContext(
+            client=pulp_client,
+            upload_repo=pulp_client.get_repository(cls.UPLOAD_REPO),
+        )
+
+    @classmethod
     def match_items_units(cls, items, units):
         units_by_id = {}
 
@@ -81,6 +106,10 @@ class PulpErratumPushItem(PulpPushItem):
 
         for item in items:
             yield item.with_unit(units_by_id.get(item.pushsource_item.name))
+
+    def ensure_uploaded(self, ctx, repo_f=None):
+        # Overridden to force our desired upload repo.
+        return super(PulpErratumPushItem, self).ensure_uploaded(ctx, ctx.upload_repo)
 
     def upload_to_repo(self, repo):
         # Convert the push item into a Pulp unit - possibly includes a version bump
