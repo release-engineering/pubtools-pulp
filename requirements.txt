@@ -169,9 +169,9 @@ gssapi==1.7.3 \
     --hash=sha256:ec25bfa506dbf82e0471f9ffce198b10da8f4b787f1779d52dbe514eb2cda999 \
     --hash=sha256:ee76851059aecfcf2927ae991d74bd8c635de3e958d8e1cd3cd213d566ec7911
     # via requests-gssapi
-humanize==4.2.3 \
-    --hash=sha256:2bc1fdd831cd00557d3010abdd84d3e41b4a96703a3eaf6c24ee290b26b75a44 \
-    --hash=sha256:bed628920d45cd5018abb095710f0c03a8336d6ac0790e7647c6a328f3880b81
+humanize==4.3.0 \
+    --hash=sha256:0dfac79fe8c1c0c734c14177b07b857bad9ae30dd50daa0a14e2c3d8054ee0c4 \
+    --hash=sha256:5dd159c9910cd57b94072e4d7decae097f0eb84c4645153706929a7f127cb2ef
     # via pubtools-pulplib
 idna==3.3 \
     --hash=sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff \
@@ -186,9 +186,9 @@ iniparse==0.5 \
     --hash=sha256:932e5239d526e7acb504017bb707be67019ac428a6932368e6851691093aa842 \
     --hash=sha256:db6ef1d8a02395448e0e7b17ac0aa28b8d338b632bbd1ffca08c02ddae32cf97
     # via rhsm
-jsonschema==4.9.0 \
-    --hash=sha256:5d0be0cd1b670438b71c3d3145b2abba1f9d197e3e91adc4c4bae4c0e114e252 \
-    --hash=sha256:df10e65c8f3687a48e93d0d348ce0ce5f897b5a28e9bbcbbe8f7c7eaf019e850
+jsonschema==4.9.1 \
+    --hash=sha256:408c4c8ed0dede3b268f7a441784f74206380b04f93eb2d537c7befb3df3099f \
+    --hash=sha256:8ebad55894c002585271af2d327d99339ef566fb085d9129b69e2623867c4106
     # via
     #   pubtools-pulplib
     #   pushcollector
@@ -234,9 +234,9 @@ pubtools==1.3.0 \
     # via
     #   -r requirements.in
     #   pubtools-pulplib
-pubtools-pulplib==2.34.0 \
-    --hash=sha256:2bfcd7729cdf6bda9113ab692d3e4fa7a9887756938341c48f4a6d4632a46383 \
-    --hash=sha256:654e31dc7e0c0517d16bbbbae234349413beadbdcf73aae9a472b19600c99cda
+pubtools-pulplib==2.34.2 \
+    --hash=sha256:456a8d5fc7b083d793d9cfcd8c683d71d5f10dfdb9c7a2106222484164516da6 \
+    --hash=sha256:65c76dd6fb055cf86c86dcc32d0872cd66d8835b7c7b979e9720939ea09a2cb6
     # via -r requirements.in
 pushcollector==1.3.0 \
     --hash=sha256:18281fcd4247ca8b668c25348bbc2f9cc032912cecc7037824a74ad8adcbb1c3 \
@@ -244,9 +244,9 @@ pushcollector==1.3.0 \
     # via
     #   -r requirements.in
     #   pushsource
-pushsource==2.22.3 \
-    --hash=sha256:7fcaa20ef3bc23358f0496cdedea79c83d5a45c914b2ef5ca70d0d7867125230 \
-    --hash=sha256:9bfd6c35101e3219f3d629b6fc97015985e6064969ed49603717bad1dd22afb7
+pushsource==2.22.4 \
+    --hash=sha256:a57d6c15e4332717877a8d6596e71c4e74deb67040ae1c9c972f5a20fd32be7e \
+    --hash=sha256:ca12fa578eda6ad6a237cd474913d4de11f5b7af42110490347c65d7a875e263
     # via -r requirements.in
 pyasn1==0.4.8 \
     --hash=sha256:39c7e2ec30515947ff4e87fb6f456dfc6e84857d34be479c9d4a4ba4bf46aa5d \
