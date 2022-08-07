@@ -121,6 +121,7 @@ units:
     type: other
   release: '0'
   repository_memberships:
+  - all-rpm-content
   - dest1
   rights: Copyright 2020 Red Hat Inc
   severity: None
@@ -2746,6 +2747,7 @@ units:
     type: other
   release: '0'
   repository_memberships:
+  - all-rpm-content
   - dest1
   rights: Copyright 2019 Red Hat Inc
   severity: None
@@ -2891,6 +2893,7 @@ units:
     type: other
   release: '0'
   repository_memberships:
+  - all-rpm-content
   - dest1
   rights: Copyright 2020 Red Hat Inc
   severity: Important

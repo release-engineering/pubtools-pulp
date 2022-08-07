@@ -22,7 +22,7 @@ def test_collect_dupes():
             pushsource_item=FilePushItem(
                 name="file%s" % i,
                 dest=["some-repo"],
-                src="/tmp/file%s" % i,
+                src="/fake/file%s" % i,
                 state="PENDING",
             )
         )
@@ -75,61 +75,61 @@ def test_collect_dupes():
         FilePushItem(
             name="file0",
             dest=["some-repo"],
-            src="/tmp/file0",
+            src="/fake/file0",
             state="PUSHED",
         ),
         FilePushItem(
             name="file1",
             dest=["some-repo"],
-            src="/tmp/file1",
+            src="/fake/file1",
             state="PENDING",
         ),
         FilePushItem(
             name="file2",
             dest=["some-repo"],
-            src="/tmp/file2",
+            src="/fake/file2",
             state="PENDING",
         ),
         FilePushItem(
             name="file3",
             dest=["some-repo"],
-            src="/tmp/file3",
+            src="/fake/file3",
             state="PENDING",
         ),
         FilePushItem(
             name="file4",
             dest=["some-repo"],
-            src="/tmp/file4",
+            src="/fake/file4",
             state="WHATEVER",
         ),
         FilePushItem(
             name="file5",
             dest=["some-repo"],
-            src="/tmp/file5",
+            src="/fake/file5",
             state="PENDING",
         ),
         FilePushItem(
             name="file6",
             dest=["some-repo"],
-            src="/tmp/file6",
+            src="/fake/file6",
             state="PENDING",
         ),
         FilePushItem(
             name="file7",
             dest=["some-repo"],
-            src="/tmp/file7",
+            src="/fake/file7",
             state="PENDING",
         ),
         FilePushItem(
             name="file8",
             dest=["some-repo"],
-            src="/tmp/file8",
+            src="/fake/file8",
             state="PENDING",
         ),
         FilePushItem(
             name="file9",
             dest=["some-repo"],
-            src="/tmp/file9",
+            src="/fake/file9",
             state="PENDING",
         ),
     ]
