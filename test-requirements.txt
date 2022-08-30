@@ -10,9 +10,9 @@ alabaster==0.7.12 ; python_version >= "3" \
     # via
     #   -r test-requirements.in
     #   sphinx
-astroid==2.11.7 \
-    --hash=sha256:86b0a340a512c65abf4368b80252754cda17c02cdbbd3f587dddf98112233e7b \
-    --hash=sha256:bb24615c77f4837c707669d16907331374ae8a964650a66999da3f5ca68dc946
+astroid==2.12.4 \
+    --hash=sha256:39fa822c82dc112f5072a208ddf01c58184043aa90e3e469786fa0520c71aaa7 \
+    --hash=sha256:af71cdc0775b6e4d88076746620e2c8cd1bf4533a9977cfdd00eeea97d95530c
     # via pylint
 attrs==22.1.0 \
     --hash=sha256:29adc2665447e5191d0e7c568fde78b21f9672d344281d0c6e1ab085429b22b6 \
@@ -223,9 +223,9 @@ dill==0.3.5.1 \
     --hash=sha256:33501d03270bbe410c72639b350e941882a8b0fd55357580fbc873fba0c59302 \
     --hash=sha256:d75e41f3eff1eee599d738e76ba8f4ad98ea229db8b085318aa2b3333a208c86
     # via pylint
-distlib==0.3.5 \
-    --hash=sha256:a7f75737c70be3b25e2bee06288cec4e4c221de18455b2dd037fe2a795cab2fe \
-    --hash=sha256:b710088c59f06338ca514800ad795a132da19fda270e3ce4affc74abf955a26c
+distlib==0.3.6 \
+    --hash=sha256:14bad2d9b04d3a36127ac97f30b12a19268f211063d8f8ee4f47108896e11b46 \
+    --hash=sha256:f35c4b692542ca110de7ef0bea44d73981caeb34ca0b9b6b2e6d7790dda8f80e
     # via virtualenv
 docopt==0.6.2 \
     --hash=sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491
@@ -532,9 +532,9 @@ pygments==2.13.0 \
     --hash=sha256:56a8508ae95f98e2b9bdf93a6be5ae3f7d8af858b43e02c5a2ff083726be40c1 \
     --hash=sha256:f643f331ab57ba3c9d89212ee4a2dabc6e94f117cf4eefde99a0574720d14c42
     # via sphinx
-pylint==2.14.5 ; python_version >= "3" \
-    --hash=sha256:487ce2192eee48211269a0e976421f334cf94de1806ca9d0a99449adcdf0285e \
-    --hash=sha256:fabe30000de7d07636d2e82c9a518ad5ad7908590fe135ace169b44839c15f90
+pylint==2.15.0 ; python_version >= "3" \
+    --hash=sha256:4b124affc198b7f7c9b5f9ab690d85db48282a025ef9333f51d2d7281b92a6c3 \
+    --hash=sha256:4f3f7e869646b0bd63b3dfb79f3c0f28fc3d2d923ea220d52620fd625aed92b0
     # via -r test-requirements.in
 pyopenssl==22.0.0 \
     --hash=sha256:660b1b1425aac4a1bea1d94168a85d99f0b3144c869dd4390d27629d0087f1bf \
@@ -733,9 +733,9 @@ typing-extensions==4.3.0 \
     #   astroid
     #   black
     #   pylint
-urllib3==1.26.11 \
-    --hash=sha256:c33ccba33c819596124764c23a97d25f32b28433ba0dedeb77d873a38722c9bc \
-    --hash=sha256:ea6e8fb210b19d950fab93b60c9009226c63a28808bc8386e05301e25883ac0a
+urllib3==1.26.12 \
+    --hash=sha256:3fa96cf423e6987997fc326ae8df396db2a8b7c667747d47ddd8ecba91f4a74e \
+    --hash=sha256:b930dd878d5a8afb066a637fbb35144fe7901e3b209d1cd4f524bd0e9deee997
     # via
     #   edgegrid-python
     #   requests
