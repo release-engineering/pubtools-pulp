@@ -51,9 +51,9 @@ black==22.8.0 ; python_version >= "3" \
     --hash=sha256:e8166b7bfe5dcb56d325385bd1d1e0f635f24aae14b3ae437102dedc0c186747 \
     --hash=sha256:e981e20ec152dfb3e77418fb616077937378b322d7b26aa1ff87717fb18b4875
     # via -r test-requirements.in
-certifi==2022.9.14 \
-    --hash=sha256:36973885b9542e6bd01dea287b2b4b3b21236307c56324fcc3f1160f2d655ed5 \
-    --hash=sha256:e232343de1ab72c2aa521b625c80f699e356830fd0e2c620b465b304b17b0516
+certifi==2022.9.24 \
+    --hash=sha256:0d9c601124e5a6ba9712dbc60d9c53c21e34f5f641fe83002317394311bdce14 \
+    --hash=sha256:90c1a32f1d68f940488354e36370f6cca89f0f106db09518524c88d6ed83f382
     # via requests
 cffi==1.15.1 \
     --hash=sha256:00a9ed42e88df81ffae7a8ab6d9356b371399b91dbdf0c3cb1e84c03a13aceb5 \
@@ -238,9 +238,9 @@ docutils==0.19 \
     --hash=sha256:33995a6753c30b7f577febfc2c50411fec6aac7f7ffeb7c4cfe5991072dcf9e6 \
     --hash=sha256:5e1de4d849fee02c63b040a4a3fd567f4ab104defd8a5511fbbc24a8a017efbc
     # via sphinx
-edgegrid-python==1.3.0 \
-    --hash=sha256:4cecd0b7027e061f7495623deed7c4a70c641bdccf45935d5a0ea939e808e50d \
-    --hash=sha256:9bf7aac076838b4d0bfc28798ddad99105a927c8001e5eedfe5c9fea2626209a
+edgegrid-python==1.3.1 \
+    --hash=sha256:480ad3e8e4586ba3190f176ae2c2e5a3ab66e47834a01812826d01e1c2b6439a \
+    --hash=sha256:c7dbfd66b4ea8e386fe5391005b2cb9bf8556f4f04ab2fad53fe27554b553b7d
     # via fastpurge
 fastpurge==1.0.3 \
     --hash=sha256:178098cf6d39b2887a4c656fc7014cc13f1f64fc353d98324ceb55141b7849ee \
@@ -295,9 +295,9 @@ gssapi==1.8.1 \
     --hash=sha256:ec6ee12b0ac1c649c4d6693277025c3a23f6586c3dea01cf9e7067d0f713bd63 \
     --hash=sha256:ef1cca01e099771e21328228cd1683ec284d8ec983ad18c9ba82e91a455687bb
     # via requests-gssapi
-humanize==4.3.0 \
-    --hash=sha256:0dfac79fe8c1c0c734c14177b07b857bad9ae30dd50daa0a14e2c3d8054ee0c4 \
-    --hash=sha256:5dd159c9910cd57b94072e4d7decae097f0eb84c4645153706929a7f127cb2ef
+humanize==4.4.0 \
+    --hash=sha256:8830ebf2d65d0395c1bd4c79189ad71e023f277c2c7ae00f263124432e6f2ffa \
+    --hash=sha256:efb2584565cc86b7ea87a977a15066de34cdedaf341b11c851cfcfd2b964779c
     # via pubtools-pulplib
 identify==2.5.5 \
     --hash=sha256:322a5699daecf7c6fd60e68852f36f2ecbb6a36ff6e6e973e0d2bb6fca203ee6 \
@@ -536,13 +536,13 @@ pygments==2.13.0 \
     --hash=sha256:56a8508ae95f98e2b9bdf93a6be5ae3f7d8af858b43e02c5a2ff083726be40c1 \
     --hash=sha256:f643f331ab57ba3c9d89212ee4a2dabc6e94f117cf4eefde99a0574720d14c42
     # via sphinx
-pylint==2.15.2 ; python_version >= "3" \
-    --hash=sha256:cc3da458ba810c49d330e09013dec7ced5217772dec8f043ccdd34dae648fde8 \
-    --hash=sha256:f63404a2547edb5247da263748771ac9a806ed1de4174cda01293c08ddbc2999
+pylint==2.15.3 ; python_version >= "3" \
+    --hash=sha256:5fdfd44af182866999e6123139d265334267339f29961f00c89783155eacc60b \
+    --hash=sha256:7f6aad1d8d50807f7bc64f89ac75256a9baf8e6ed491cc9bc65592bc3f462cf1
     # via -r test-requirements.in
-pyopenssl==22.0.0 \
-    --hash=sha256:660b1b1425aac4a1bea1d94168a85d99f0b3144c869dd4390d27629d0087f1bf \
-    --hash=sha256:ea252b38c87425b64116f808355e8da644ef9b07e429398bfece610f893ee2e0
+pyopenssl==22.1.0 \
+    --hash=sha256:7a83b7b272dd595222d672f5ce29aa030f1fb837630ef229f62e72e395ce8968 \
+    --hash=sha256:b28437c9773bb6c6958628cf9c3bebe585de661dba6f63df17111966363dd15e
     # via
     #   edgegrid-python
     #   ndg-httpsclient
@@ -692,9 +692,9 @@ snowballstemmer==2.2.0 \
     --hash=sha256:09b16deb8547d3412ad7b590689584cd0fe25ec8db3be37788be3810cbf19cb1 \
     --hash=sha256:c8e1716e83cc398ae16824e5572ae04e0d9fc2c6b985fb0f900f5f0c96ecba1a
     # via sphinx
-sphinx==5.1.1 ; python_version >= "3" \
-    --hash=sha256:309a8da80cb6da9f4713438e5b55861877d5d7976b69d87e336733637ea12693 \
-    --hash=sha256:ba3224a4e206e1fbdecf98a4fae4992ef9b24b85ebf7b584bb340156eaf08d89
+sphinx==5.2.0.post0 ; python_version >= "3" \
+    --hash=sha256:68e7833263a961521f45302fa87285f9395ecf385f1eefd85cd61ddff0b15bc1 \
+    --hash=sha256:db93dc52cc90d12ef38c9f506eab9171813041204d8270e30ffad2be511e7ced
     # via
     #   -r test-requirements.in
     #   sphinx-argparse
