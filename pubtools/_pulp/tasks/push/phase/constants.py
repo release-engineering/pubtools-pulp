@@ -53,7 +53,7 @@ DEFAULT_PROGRESS_TYPE = PROGRESS_TYPE_QUEUE
 """Default progress type for phases."""
 
 
-PHASE_TIMEOUT = int(os.getenv("PUBTOOLS_PULP_PHASE_TIMEOUT") or "200000")
+PHASE_TIMEOUT = int(os.getenv("PUBTOOLS_PULP_PHASE_TIMEOUT") or "2000000")  # ~23 days
 """How long, in seconds, we're willing to wait while joining phase threads.
 
 Should be a large value. In fact, the code should strictly speaking not
