@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.20.1] - 2022-09-27
+
+- `pubtools-pulp-push`: fix spurious push timeout after ~55 hours
+
 ## [1.20.0] - 2022-08-02
 
 - `pubtools-pulp-push`: errata's always uploaded to `all-rpm-content` repository
@@ -168,7 +172,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.0...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.1...HEAD
+[1.20.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.0...v1.20.1
 [1.20.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.19.0...v1.20.0
 [1.19.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.18.0...v1.19.0
 [1.18.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.17.0...v1.18.0
