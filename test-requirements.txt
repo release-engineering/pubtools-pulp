@@ -461,17 +461,17 @@ packaging==21.3 \
     # via
     #   pytest
     #   sphinx
-pathspec==0.10.1 \
-    --hash=sha256:46846318467efc4556ccfd27816e004270a9eeeeb4d062ce5e6fc7a87c573f93 \
-    --hash=sha256:7ace6161b621d31e7902eb6b5ae148d12cfd23f4a249b9ffb6b9fee12084323d
+pathspec==0.10.2 \
+    --hash=sha256:88c2606f2c1e818b978540f73ecc908e13999c6c3a383daf3705652ae79807a5 \
+    --hash=sha256:8f6bf73e5758fd365ef5d58ce09ac7c27d2833a8d7da51712eac6e27e35141b0
     # via black
 pkgutil-resolve-name==1.3.10 \
     --hash=sha256:357d6c9e6a755653cfd78893817c0853af365dd51ec97f3d358a819373bbd174 \
     --hash=sha256:ca27cc078d25c5ad71a9de0a7a330146c4e014c2462d9af19c6b828280649c5e
     # via jsonschema
-platformdirs==2.5.3 \
-    --hash=sha256:0cb405749187a194f444c25c82ef7225232f11564721eabffc6ec70df83b11cb \
-    --hash=sha256:6e52c21afff35cb659c6e52d8b4d61b9bd544557180440538f255d9382c8cbe0
+platformdirs==2.5.4 \
+    --hash=sha256:1006647646d80f16130f052404c6b901e80ee4ed6bef6792e1f238a8969106f7 \
+    --hash=sha256:af0276409f9a02373d540bf8480021a048711d572745aef4b7842dad245eba10
     # via
     #   black
     #   pylint
@@ -683,9 +683,9 @@ sphinx==5.3.0 ; python_version >= "3" \
     # via
     #   -r test-requirements.in
     #   sphinx-argparse
-sphinx-argparse==0.3.2 ; python_version >= "3" \
-    --hash=sha256:499afb62d19966651e1e5d601ac912ca2bdfb43f5dad491305d84bef4414f4f4 \
-    --hash=sha256:e54ad6c8f895ac6bb9d0dd9fa07e47e137a2a42ae18a714515262e86b4cc4bab
+sphinx-argparse==0.4.0 ; python_version >= "3" \
+    --hash=sha256:73bee01f7276fae2bf621ccfe4d167af7306e7288e3482005405d9f826f9b037 \
+    --hash=sha256:e0f34184eb56f12face774fbc87b880abdb9017a0998d1ec559b267e9697e449
     # via -r test-requirements.in
 sphinxcontrib-applehelp==1.0.2 \
     --hash=sha256:806111e5e962be97c29ec4c1e7fe277bfd19e9652fb1a4392105b43e01af885a \
@@ -740,9 +740,9 @@ urllib3==1.26.12 \
     # via
     #   edgegrid-python
     #   requests
-virtualenv==20.16.6 \
-    --hash=sha256:186ca84254abcbde98180fd17092f9628c5fe742273c02724972a1d8a2035108 \
-    --hash=sha256:530b850b523c6449406dfba859d6345e48ef19b8439606c5d74d7d3c9e14d76e
+virtualenv==20.16.7 \
+    --hash=sha256:8691e3ff9387f743e00f6bb20f70121f5e4f596cae754531f2b3b3a1b1ac696e \
+    --hash=sha256:efd66b00386fdb7dbe4822d172303f40cd05e50e01740b19ea42425cbe653e29
     # via pre-commit
 wrapt==1.14.1 \
     --hash=sha256:00b6d4ea20a906c0ca56d84f93065b398ab74b927a7a3dbd470f6fc503f95dc3 \
