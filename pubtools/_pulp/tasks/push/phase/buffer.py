@@ -3,7 +3,11 @@ import concurrent.futures
 from collections import namedtuple
 
 from more_executors import f_map
-from monotonic import monotonic
+
+try:
+    from time import monotonic
+except ImportError:  # pragma: no cover
+    from monotonic import monotonic
 
 
 # Internal class to keep track of whether a value represents a single item

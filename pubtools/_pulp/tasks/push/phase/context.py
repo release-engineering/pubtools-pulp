@@ -2,7 +2,11 @@ import logging
 
 from pushsource import ModuleMdPushItem
 from threading import Event
-from monotonic import monotonic
+
+try:
+    from time import monotonic
+except ImportError:  # pragma: no cover
+    from monotonic import monotonic
 import concurrent.futures
 from collections import defaultdict
 from six.moves.queue import Queue, Full, Empty
