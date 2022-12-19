@@ -1,7 +1,11 @@
 import logging
 import os
 from threading import Thread
-from monotonic import monotonic
+
+try:
+    from time import monotonic
+except ImportError:  # pragma: no cover
+    from monotonic import monotonic
 from six.moves.queue import Empty
 
 from .buffer import OutputBuffer
