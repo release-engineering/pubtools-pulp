@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.20.3] - 2022-12-20
+
+- Fixed issues with usage of `monotonic` dependency
+
 ## [1.20.2] - 2022-11-21
 
 - Fixed pulp_item_push_finished hook arguments
@@ -176,8 +180,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.2...HEAD
-[1.20.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.1...v1.20.2
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.3...HEAD
+[1.20.3]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.2...v1.20.3
+[1.20.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.1...v1.20.2
 [1.20.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.0...v1.20.1
 [1.20.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.19.0...v1.20.0
 [1.19.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.18.0...v1.19.0
