@@ -11,9 +11,9 @@ attrs==22.1.0 \
     #   jsonschema
     #   pubtools-pulplib
     #   pushsource
-certifi==2022.9.24 \
-    --hash=sha256:0d9c601124e5a6ba9712dbc60d9c53c21e34f5f641fe83002317394311bdce14 \
-    --hash=sha256:90c1a32f1d68f940488354e36370f6cca89f0f106db09518524c88d6ed83f382
+certifi==2022.12.7 \
+    --hash=sha256:35824b4c3a97115964b408844d64aa14db1cc518f6562e8d7261699d1350a9e3 \
+    --hash=sha256:4ad3232f5e926d6718ec31cfc1fcadfde020920e278684144551c91769c7bc18
     # via requests
 cffi==1.15.1 \
     --hash=sha256:00a9ed42e88df81ffae7a8ab6d9356b371399b91dbdf0c3cb1e84c03a13aceb5 \
@@ -121,9 +121,9 @@ edgegrid-python==1.3.1 \
     --hash=sha256:480ad3e8e4586ba3190f176ae2c2e5a3ab66e47834a01812826d01e1c2b6439a \
     --hash=sha256:c7dbfd66b4ea8e386fe5391005b2cb9bf8556f4f04ab2fad53fe27554b553b7d
     # via fastpurge
-fastpurge==1.0.3 \
-    --hash=sha256:178098cf6d39b2887a4c656fc7014cc13f1f64fc353d98324ceb55141b7849ee \
-    --hash=sha256:d82a9ae11eec67ca81207f295b2bd8ddbb1e42f97c1c0b12a3b7295277a695ca
+fastpurge==1.0.4 \
+    --hash=sha256:1593fe3cf96f7cce685cc181b67ed5361a23f01a00156c37e8043a16a32975ae \
+    --hash=sha256:94babd520815d3a0316374f076fee88f6abe2861080b9c0e3422ecda667e11fb
     # via -r requirements.in
 frozendict==2.3.4 \
     --hash=sha256:15b4b18346259392b0d27598f240e9390fafbff882137a9c48a1e0104fb17f78 \
@@ -182,9 +182,9 @@ idna==3.4 \
     --hash=sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4 \
     --hash=sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2
     # via requests
-importlib-resources==5.10.0 \
-    --hash=sha256:c01b1b94210d9849f286b86bb51bcea7cd56dde0600d8db721d7b81330711668 \
-    --hash=sha256:ee17ec648f85480d523596ce49eae8ead87d5631ae1551f913c0100b5edd3437
+importlib-resources==5.10.1 \
+    --hash=sha256:32bb095bda29741f6ef0e5278c42df98d135391bee5f932841efc0041f748dc3 \
+    --hash=sha256:c09b067d82e72c66f4f8eb12332f5efbebc9b007c0b6c40818108c9870adc363
     # via jsonschema
 iniparse==0.5 \
     --hash=sha256:88ca60473b1637055a937933d48840be1b1b6835f381a6158ef118a532583675 \
@@ -205,15 +205,9 @@ koji==1.31.0 \
     --hash=sha256:5689ae1386a188b3a7cd89c47f46613e0255bfe33f27e9e1d275e6ef48352584 \
     --hash=sha256:906c520834106ece96b941714cd45d16e98e340cd8c2e647a97abc0542a1b9f0
     # via pushsource
-monotonic==1.6 \
-    --hash=sha256:3a55207bcfed53ddd5c5bae174524062935efed17792e9de2ad0205ce9ad63f7 \
-    --hash=sha256:68687e19a14f11f26d140dd5c86f3dba4bf5df58003000ed467e0e2a69bca96c
-    # via
-    #   fastpurge
-    #   more-executors
-more-executors==2.11.1 \
-    --hash=sha256:06ca3b3ae1b07b2581441589296d486098ebe8740f859f5c7a2e0a687b12628d \
-    --hash=sha256:a5a7c9344168974d17dc0e89fb68c045b516cc74fe9bb1a4f76016dac4d25be5
+more-executors==2.11.3 \
+    --hash=sha256:13b55a9ee053ae91ecaa8f327adbf9fec55ad4b434a6123e996f09acffaecaf2 \
+    --hash=sha256:859e7881efee83409fbb2d5a2d7d39d4a3dd1b981d0657e3d00148d1e6303396
     # via
     #   -r requirements.in
     #   fastpurge
@@ -239,9 +233,9 @@ pubtools==1.3.0 \
     # via
     #   -r requirements.in
     #   pubtools-pulplib
-pubtools-pulplib==2.34.2 \
-    --hash=sha256:456a8d5fc7b083d793d9cfcd8c683d71d5f10dfdb9c7a2106222484164516da6 \
-    --hash=sha256:65c76dd6fb055cf86c86dcc32d0872cd66d8835b7c7b979e9720939ea09a2cb6
+pubtools-pulplib==2.34.3 \
+    --hash=sha256:8c436939e228d833308df1a14c03f1f47b846ebd4a90bed62736f57af7f2b561 \
+    --hash=sha256:97503dbc7642ebe1a00d98c0b0e647e73398d22c2bab7bd4478ee446291e384d
     # via -r requirements.in
 pushcollector==1.3.0 \
     --hash=sha256:18281fcd4247ca8b668c25348bbc2f9cc032912cecc7037824a74ad8adcbb1c3 \
@@ -249,9 +243,9 @@ pushcollector==1.3.0 \
     # via
     #   -r requirements.in
     #   pushsource
-pushsource==2.23.3 \
-    --hash=sha256:03de416d7900298e9b8025dbc5e73c54c70d4f1626c882958cf29d1899a00b8c \
-    --hash=sha256:915b794bbda40606b42ac1eb25976e4d32bf4c99db04a1025e7076a82d9a0c5b
+pushsource==2.23.4 \
+    --hash=sha256:2ed6b3522bfab37ef0230335da5214ad95ea86b24c5b89d4e7b4c7596bebc455 \
+    --hash=sha256:99d4808efc5fd90756efc19b3fbfd1e74e4742d7e51ea221d671f697544e8645
     # via -r requirements.in
 pyasn1==0.4.8 \
     --hash=sha256:39c7e2ec30515947ff4e87fb6f456dfc6e84857d34be479c9d4a4ba4bf46aa5d \
