@@ -14,9 +14,9 @@ astroid==2.12.13 \
     --hash=sha256:10e0ad5f7b79c435179d0d0f0df69998c4eef4597534aae44910db060baeb907 \
     --hash=sha256:1493fe8bd3dfd73dc35bd53c9d5b6e49ead98497c47b2307662556a5692d29d7
     # via pylint
-attrs==22.1.0 \
-    --hash=sha256:29adc2665447e5191d0e7c568fde78b21f9672d344281d0c6e1ab085429b22b6 \
-    --hash=sha256:86efa402f67bf2df34f51a335487cf46b1ec130d02b8d39fd248abfd30da551c
+attrs==22.2.0 \
+    --hash=sha256:29e95c7f6778868dbd49170f98f8818f78f3dc5e0e37c0b1f474e3561b240836 \
+    --hash=sha256:c9227bfc2f01993c03f68db37d1d15c9690188323c067c641f1a35ca58185f99
     # via
     #   jsonschema
     #   pubtools-pulplib
@@ -231,9 +231,9 @@ edgegrid-python==1.3.1 \
     --hash=sha256:480ad3e8e4586ba3190f176ae2c2e5a3ab66e47834a01812826d01e1c2b6439a \
     --hash=sha256:c7dbfd66b4ea8e386fe5391005b2cb9bf8556f4f04ab2fad53fe27554b553b7d
     # via fastpurge
-exceptiongroup==1.0.4 \
-    --hash=sha256:542adf9dea4055530d6e1279602fa5cb11dab2395fa650b8674eaec35fc4a828 \
-    --hash=sha256:bd14967b79cd9bdb54d97323216f8fdf533e278df937aa2a90089e7d6e06e5ec
+exceptiongroup==1.1.0 \
+    --hash=sha256:327cbda3da756e2de031a3107b81ab7b3770a602c4d16ca618298c526f4bec1e \
+    --hash=sha256:bcb67d800a4497e1b404c2dd44fca47d3b7a5e5433dbab67f96c1a685cdfdf23
     # via pytest
 fastpurge==1.0.4 \
     --hash=sha256:1593fe3cf96f7cce685cc181b67ed5361a23f01a00156c37e8043a16a32975ae \
@@ -325,9 +325,9 @@ iniparse==0.5 \
     --hash=sha256:932e5239d526e7acb504017bb707be67019ac428a6932368e6851691093aa842 \
     --hash=sha256:db6ef1d8a02395448e0e7b17ac0aa28b8d338b632bbd1ffca08c02ddae32cf97
     # via rhsm
-isort==5.11.3 \
-    --hash=sha256:83155ffa936239d986b0f190347a3f2285f42a9b9e1725c89d865b27dd0627e5 \
-    --hash=sha256:a8ca25fbfad0f7d5d8447a4314837298d9f6b23aed8618584c894574f626b64b
+isort==5.11.4 \
+    --hash=sha256:6db30c5ded9815d813932c04c2f85a360bcdd35fed496f4d8f35495ef0a261b6 \
+    --hash=sha256:c033fd0edb91000a7f09527fe5c75321878f98322a77ddcc81adbd83724afb7b
     # via pylint
 jinja2==3.1.2 \
     --hash=sha256:31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852 \
