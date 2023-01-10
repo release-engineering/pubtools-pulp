@@ -26,7 +26,14 @@ def test_init_args():
     with patch("sys.argv", arg):
         task_args = task.args
 
-    cli_args = ["pulp_url", "pulp_user", "pulp_password", "debug"]
+    cli_args = [
+        "pulp_url",
+        "pulp_user",
+        "pulp_password",
+        "pulp_certificate",
+        "pulp_certificate_key",
+        "debug",
+    ]
     for a in cli_args:
         assert hasattr(task_args, a)
 
@@ -39,6 +46,95 @@ def test_pulp_client():
             client = task.pulp_client
 
     assert isinstance(client, Client)
+
+
+@pytest.mark.parametrize(
+    "args_cert, args_key, expected_kwargs",
+    [
+        ("args_crt", "args_key", ("args_crt", "args_key")),
+        ("args_pem", None, "args_pem"),
+    ],
+    ids=("args_crt_and_key", "args_cert_pem"),
+)
+@patch("pubtools.pluggy.pm.hook.get_cert_key_paths")
+def test_pub_client_args_cert(mock_hook, args_cert, args_key, expected_kwargs):
+    """
+    Assuming certs are not passed in any way.
+    Checks if certificate is used when passed as argument.
+    """
+    # making sure certs are not passed through hook
+    mock_hook.return_value = ("does_not_exist", "does_not_exist")
+    with TaskWithPulpClient() as task:
+        arg = [
+            "",
+            "--pulp-url",
+            "http://some.url",
+        ]
+        if args_cert:
+            arg.extend(
+                [
+                    "--pulp-certificate",
+                    str(args_cert),
+                ]
+            )
+        if args_key:
+            arg.extend(
+                [
+                    "--pulp-certificate-key",
+                    str(args_key),
+                ]
+            )
+        with patch("sys.argv", arg):
+            with patch("pubtools._pulp.services.pulp.pulplib.Client") as mock_client:
+                with patch("pubtools._pulp.task.PulpTask.run"):
+                    assert task.main() == 0
+                    assert task.pulp_client
+
+                    client_kwargs = mock_client.mock_calls[0].kwargs
+                    assert client_kwargs["cert"] == expected_kwargs
+
+
+@pytest.mark.parametrize(
+    "hook_cert, hook_key",
+    [("fake_hook_crt", "fake_hook_key"), ("fake_hook_pem", None)],
+    ids=("hook_cert_crt_and_key", "hook_cert_pem"),
+)
+@patch("pubtools.pluggy.pm.hook.get_cert_key_paths")
+def test_pub_client_hook_cert(mock_hook, tmp_path, hook_cert, hook_key):
+    """
+    Checks if cert is returned when the hook is used.
+    Assuming password is not passed as argument.
+    """
+    # use tmp_path pytest fixture to create the fake hook certs
+    fake_hook_crt_pem = tmp_path / hook_cert
+    fake_hook_crt_pem.touch()
+    fake_hook_key = tmp_path / hook_key if hook_key else None
+    if fake_hook_key:
+        fake_hook_key.touch()
+    mock_hook.return_value = (str(fake_hook_crt_pem), str(fake_hook_key))
+    with TaskWithPulpClient() as task:
+        arg = [
+            "",
+            "--pulp-url",
+            "http://some.url",
+        ]
+        with patch("sys.argv", arg):
+            with patch("pubtools._pulp.services.pulp.pulplib.Client") as mock_client:
+                with patch("pubtools._pulp.task.PulpTask.run"):
+                    assert task.main() == 0
+                    assert task.pulp_client
+
+                    client_kwargs = mock_client.mock_calls[0].kwargs
+                    # verify if kwargs contains the certificate file(s)
+                    # with a key file present, we should get a (crt, key) tuple
+                    if hook_key:
+                        assert client_kwargs["cert"] == (
+                            str(fake_hook_crt_pem),
+                            str(fake_hook_key),
+                        )
+                    # without a key file present, we should only get the crt/pem file
+                    else:
+                        assert client_kwargs["cert"] == str(fake_hook_crt_pem)
 
 
 def test_pulp_fake_client(monkeypatch, tmpdir):
