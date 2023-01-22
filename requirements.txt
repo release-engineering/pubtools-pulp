@@ -326,9 +326,9 @@ pushcollector==1.3.0 \
     # via
     #   -r requirements.in
     #   pushsource
-pushsource==2.23.5 \
-    --hash=sha256:7dcc95d1e5ddc21a283aa8894214e85e6ea4b415f58fa7552715ddfa9ad563fd \
-    --hash=sha256:e2b7f62eddd7cfc268e45b1677bf97abcf5a366ca0272ea02039ed9c89a1adcd
+pushsource==2.24.0 \
+    --hash=sha256:da0dd641a792ef1403a03b62616117a356538817f9bc24540091420e4827c12c \
+    --hash=sha256:f97173dfc140aaed068b8c0839fbcd4471c61f9967e18e30d6c6c0d207409df3
     # via -r requirements.in
 pyasn1==0.4.8 \
     --hash=sha256:39c7e2ec30515947ff4e87fb6f456dfc6e84857d34be479c9d4a4ba4bf46aa5d \
