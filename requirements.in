@@ -1,4 +1,3 @@
-six
 pubtools>=0.3.0
 pubtools-pulplib>=2.33.0
 fastpurge
