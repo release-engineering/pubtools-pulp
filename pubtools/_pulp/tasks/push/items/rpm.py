@@ -58,9 +58,9 @@ class PulpRpmPushItem(PulpPushItem):
             # Crashes above may be a bit hard to understand, so we raise with
             # a more self-explanatory message.
             raise ValueError(
-                    "Invalid RPM filename %s (expected: "
-                    "[name]-[version]-[release].[arch].rpm)" % self.pushsource_item.name
-                ) from exc
+                "Invalid RPM filename %s (expected: "
+                "[name]-[version]-[release].[arch].rpm)" % self.pushsource_item.name
+            ) from exc
 
     @property
     def cdn_path(self):
