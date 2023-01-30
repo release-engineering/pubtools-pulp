@@ -2,7 +2,6 @@ import os
 
 from pushsource import RpmPushItem
 import attr
-import six
 from pubtools.pulplib import RpmUnit, Criteria
 
 from .base import supports_type, PulpPushItem, UploadContext
@@ -58,13 +57,10 @@ class PulpRpmPushItem(PulpPushItem):
         except Exception as exc:  # pylint: disable=broad-except
             # Crashes above may be a bit hard to understand, so we raise with
             # a more self-explanatory message.
-            six.raise_from(
-                ValueError(
-                    "Invalid RPM filename %s (expected: "
-                    "[name]-[version]-[release].[arch].rpm)" % self.pushsource_item.name
-                ),
-                exc,
-            )
+            raise ValueError(
+                "Invalid RPM filename %s (expected: "
+                "[name]-[version]-[release].[arch].rpm)" % self.pushsource_item.name
+            ) from exc
 
     @property
     def cdn_path(self):

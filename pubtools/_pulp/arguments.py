@@ -1,11 +1,6 @@
 import os
 from argparse import Action
 
-import six
-
-# short alias for version specific base string type
-_STRING = six.string_types[0]
-
 
 def from_environ(key, delegate_converter=lambda x: x):
     """A converter for use as an argparse "type" argument which supports
@@ -128,7 +123,7 @@ class SplitAndExtend(Action):
         # so unless this action is being used in conjunction with
         # parser.add_argument(type=<some non-string type>) this
         # should not be the case.
-        split = values.split(self.split_on) if isinstance(values, _STRING) else values
+        split = values.split(self.split_on) if isinstance(values, str) else values
         items.extend(split)
         setattr(namespace, self.dest, items)
 
