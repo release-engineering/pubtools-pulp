@@ -257,9 +257,9 @@ gssapi==1.8.2 \
     --hash=sha256:f75b094913a1757e5e634b70b03e808cab0eb02c802ec50b760636b23b0aa50c \
     --hash=sha256:fac7d1f4b14383bd29d3996cf5f6f23d0dc50ffd7965d2bc35bcc0849da24152
     # via requests-gssapi
-humanize==4.5.0 \
-    --hash=sha256:127e333677183070b82e90e0faef9440f9a16dab92143e52f4523afb08ca9290 \
-    --hash=sha256:d6ed00ed4dc59a66df71012e3d69cf655d7d21b02112d435871998969e8aedc8
+humanize==4.6.0 \
+    --hash=sha256:401201aca462749773f02920139f302450cb548b70489b9b4b92be39fe3c3c50 \
+    --hash=sha256:5f1f22bc65911eb1a6ffe7659bd6598e33dcfeeb904eb16ee1e705a09bf75916
     # via pubtools-pulplib
 idna==3.4 \
     --hash=sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4 \
@@ -288,9 +288,9 @@ koji==1.31.1 \
     --hash=sha256:cd97c6c0c7a572a8b4a4b9c45daf37d40778eccbcbed41e8e990a35cbe3810dc \
     --hash=sha256:e0f2dce99c622becfb1c4663ca5b0efddf2ec86380bff4ad031f583283aae80f
     # via pushsource
-more-executors==2.11.3 \
-    --hash=sha256:13b55a9ee053ae91ecaa8f327adbf9fec55ad4b434a6123e996f09acffaecaf2 \
-    --hash=sha256:859e7881efee83409fbb2d5a2d7d39d4a3dd1b981d0657e3d00148d1e6303396
+more-executors==2.11.4 \
+    --hash=sha256:a304139c6bece5be18aed7dcff4c48440412cb7cbe90f64ba4572772fcb0407f \
+    --hash=sha256:f1b21d72c4c15069e891d9b96bca05f9abde149e3c11ca54630c5a1a5ee8f4b5
     # via
     #   -r requirements.in
     #   fastpurge
@@ -450,7 +450,6 @@ six==1.16.0 \
     --hash=sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926 \
     --hash=sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254
     # via
-    #   -r requirements.in
     #   fastpurge
     #   iniparse
     #   kobo
@@ -465,9 +464,9 @@ urllib3==1.26.14 \
     # via
     #   edgegrid-python
     #   requests
-zipp==3.12.0 \
-    --hash=sha256:73efd63936398aac78fd92b6f4865190119d6c91b531532e798977ea8dd402eb \
-    --hash=sha256:9eb0a4c5feab9b08871db0d672745b53450d7f26992fd1e4653aa43345e97b86
+zipp==3.12.1 \
+    --hash=sha256:6c4fe274b8f85ec73c37a8e4e3fa00df9fb9335da96fb789e3b96b318e5097b3 \
+    --hash=sha256:a3cac813d40993596b39ea9e93a18e8a2076d5c378b8bc88ec32ab264e04ad02
     # via importlib-resources
 
 # WARNING: The following packages were not pinned, but pip requires them to be
