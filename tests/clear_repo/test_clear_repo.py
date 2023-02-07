@@ -260,7 +260,6 @@ def test_clear_yum_repo(command_tester, fake_collector, monkeypatch):
     ]
 
     with FakeClearRepo() as task_instance:
-
         task_instance.pulp_client_controller.insert_repository(repo)
         task_instance.pulp_client_controller.insert_units(repo, files)
 
@@ -320,7 +319,6 @@ def test_clear_container_repo(command_tester):
     """Clearing a container image repo is not allowed."""
 
     with FakeClearRepo() as task_instance:
-
         repo = ContainerImageRepository(id="some-containerrepo")
 
         task_instance.pulp_client_controller.insert_repository(repo)

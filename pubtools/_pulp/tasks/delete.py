@@ -707,7 +707,7 @@ class Delete(PulpClientService, CollectorService, Publisher, PulpTask):
         return out
 
     def push_item_for_unit(self, unit, dest, state):
-        for (unit_type, fn) in [
+        for unit_type, fn in [
             (ModulemdUnit, self.push_item_for_modulemd),
             (RpmUnit, self.push_item_for_rpm),
             (FileUnit, self.push_item_for_file),

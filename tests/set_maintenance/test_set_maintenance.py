@@ -58,7 +58,6 @@ def assert_expected_report(expected_repos, pulp_client, message=None):
 
 
 def get_task_instance(on, *repos):
-
     iso_distributor = Distributor(
         id="iso_distributor",
         type_id="iso_distributor",

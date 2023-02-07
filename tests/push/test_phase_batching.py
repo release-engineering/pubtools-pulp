@@ -7,7 +7,6 @@ from pubtools._pulp.tasks.push.phase import Context, Phase, context, base, const
 
 
 def test_batch_timeout(monkeypatch):
-
     # Set all these to known values so we don't get affected by the relevant env vars.
     monkeypatch.setattr(constants, "QUEUE_SIZE", 100)
     monkeypatch.setattr(constants, "BATCH_TIMEOUT", 0.1)
@@ -71,7 +70,6 @@ def test_iter_respects_timeout(monkeypatch):
         thread.join()
 
     try:
-
         # Try iterating over the items now.
         got_batches = []
         for batch in phase.iter_input_batched():

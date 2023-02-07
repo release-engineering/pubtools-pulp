@@ -12,6 +12,7 @@ from pubtools._pulp.tasks.push.items import (
 )
 from pubtools._pulp.tasks.push.phase import Context, Upload, Phase, constants
 
+
 # Wrap Pulp client/repo objects to spy on uploads.
 class RepoWrapper(object):
     def __init__(self, delegate, uploads):
