@@ -98,7 +98,7 @@ class PulpPushItem(object):
         """Given a pushsource.PushItem, returns an instance of a PulpPushItem wrapper
         of a concrete subtype, or None if the push item is unsupported."""
 
-        for (pushitem_type, wrapper_type) in SUPPORTED_TYPES:
+        for pushitem_type, wrapper_type in SUPPORTED_TYPES:
             if isinstance(pushsource_item, pushitem_type):
                 return wrapper_type(pushsource_item=pushsource_item, **kwargs)
 

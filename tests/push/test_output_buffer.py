@@ -119,7 +119,6 @@ def test_implicit_flush_handles_futures():
     buf = OutputBuffer(queue, context, flush_threshold=5)
 
     with ThreadPoolExecutor(max_workers=1) as executor:
-
         # Make the buffer almost full...
         buf.write(0)
         buf.write(1)

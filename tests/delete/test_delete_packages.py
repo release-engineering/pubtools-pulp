@@ -197,7 +197,6 @@ def test_delete_rpms(command_tester, fake_collector, monkeypatch):
     files2.extend(files3)
 
     with FakeDeletePackages() as task_instance:
-
         task_instance.pulp_client_controller.insert_repository(repo1)
         task_instance.pulp_client_controller.insert_repository(repo2)
         task_instance.pulp_client_controller.insert_units(repo1, files1)
@@ -374,7 +373,6 @@ def test_delete_unsigned_rpms(command_tester, fake_collector, monkeypatch):
     ]
 
     with FakeDeletePackages() as task_instance:
-
         task_instance.pulp_client_controller.insert_repository(repo)
         task_instance.pulp_client_controller.insert_units(repo, files)
 
@@ -486,7 +484,6 @@ def test_delete_modules(command_tester, fake_collector, monkeypatch):
     ]
 
     with FakeDeletePackages() as task_instance:
-
         task_instance.pulp_client_controller.insert_repository(repo)
         task_instance.pulp_client_controller.insert_units(repo, files)
 
@@ -601,7 +598,6 @@ def test_delete_files(command_tester, fake_collector, monkeypatch):
     ]
 
     with FakeDeletePackages() as task_instance:
-
         task_instance.pulp_client_controller.insert_repository(repo1)
         task_instance.pulp_client_controller.insert_repository(repo2)
         task_instance.pulp_client_controller.insert_units(repo1, files1)

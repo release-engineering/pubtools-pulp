@@ -195,7 +195,6 @@ def test_delete_advisory(command_tester, fake_collector, monkeypatch):
     ]
 
     with FakeDeleteAdvisory() as task_instance:
-
         task_instance.pulp_client_controller.insert_repository(repo1)
         task_instance.pulp_client_controller.insert_repository(repo2)
         task_instance.pulp_client_controller.insert_units(repo1, files1)
@@ -385,7 +384,6 @@ def test_delete_advisory_in_multiple_repos(command_tester, fake_collector, monke
     ]
 
     with FakeDeleteAdvisory() as task_instance:
-
         task_instance.pulp_client_controller.insert_repository(repo1)
         task_instance.pulp_client_controller.insert_repository(repo2)
         task_instance.pulp_client_controller.insert_units(repo1, files)
@@ -555,7 +553,6 @@ def test_delete_advisory_no_repos_provided(command_tester, fake_collector, monke
     ]
 
     with FakeDeleteAdvisory() as task_instance:
-
         task_instance.pulp_client_controller.insert_repository(repo1)
         task_instance.pulp_client_controller.insert_repository(repo2)
         task_instance.pulp_client_controller.insert_units(repo1, files)

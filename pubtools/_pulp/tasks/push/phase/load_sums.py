@@ -47,7 +47,6 @@ class LoadChecksums(Phase):
         with Executors.thread_pool(
             max_workers=CHECKSUM_THREADS, name="checksummer"
         ) as exc:
-
             for item in self.iter_input():
                 # Use a heuristic to try to hand off the item onto the next
                 # phase as quickly as possible.

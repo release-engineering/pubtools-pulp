@@ -118,7 +118,6 @@ class Publish(PulpClientService, Publisher, PulpTask):
         sys.exit(30)
 
     def _filter_repos(self, repos):
-
         repos = set(repos) if repos else set()
 
         if self.args.published_before or self.args.repo_url_regex:
