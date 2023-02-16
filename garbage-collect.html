@@ -44,6 +44,8 @@ weekly scheduled trigger.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">garbage</span><span class="o">-</span><span class="n">collect</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span>
+                                     <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">certificate</span> <span class="n">PULP_CERTIFICATE</span><span class="p">]</span>
+                                     <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">certificate</span><span class="o">-</span><span class="n">key</span> <span class="n">PULP_CERTIFICATE_KEY</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">throttle</span> <span class="n">PULP_THROTTLE</span><span class="p">]</span>
                                      <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">fake</span><span class="p">]</span>
@@ -79,6 +81,12 @@ weekly scheduled trigger.</p>
 </dd>
 <dt><kbd>--pulp-password</kbd></dt>
 <dd><p>Pulp password (or set PULP_PASSWORD environment variable)</p>
+</dd>
+<dt><kbd>--pulp-certificate</kbd></dt>
+<dd><p>Pulp certificate. Can also be a single file (.pem)</p>
+</dd>
+<dt><kbd>--pulp-certificate-key</kbd></dt>
+<dd><p>Pulp certificate key</p>
 </dd>
 <dt><kbd>--pulp-insecure</kbd></dt>
 <dd><p>Allow unverified HTTPS connection to Pulp</p>
