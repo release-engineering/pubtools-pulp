@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.21.0] - 2023-02-16
+
+- Added PKI support for Pulp client
+
 ## [1.20.3] - 2022-12-20
 
 - Fixed issues with usage of `monotonic` dependency
@@ -180,7 +184,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.3...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.21.0...HEAD
+[1.21.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.3...v1.21.0
 [1.20.3]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.2...v1.20.3
 [1.20.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.1...v1.20.2
 [1.20.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.0...v1.20.1
