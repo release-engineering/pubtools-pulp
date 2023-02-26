@@ -326,9 +326,9 @@ pushcollector==1.3.0 \
     # via
     #   -r requirements.in
     #   pushsource
-pushsource==2.25.0 \
-    --hash=sha256:0e9c640fe95e22ceb505205986b154a8e54a28cfb4767551443304f390f797a3 \
-    --hash=sha256:f5015fe32b8363ff3428d4b12f8ed678a42bd385f8199bf690d81bcb92d8a20a
+pushsource==2.26.0 \
+    --hash=sha256:0bf99cc78cc732830e623d1c99de4a5cfca9bc4cabcf355f53a663fb0ef6e2d8 \
+    --hash=sha256:a08cdc68e4765383860a63647c7b87dbe3f70ae33f81641e222c666ca4770190
     # via -r requirements.in
 pyasn1==0.4.8 \
     --hash=sha256:39c7e2ec30515947ff4e87fb6f456dfc6e84857d34be479c9d4a4ba4bf46aa5d \
@@ -462,9 +462,9 @@ urllib3==1.26.14 \
     # via
     #   edgegrid-python
     #   requests
-zipp==3.14.0 \
-    --hash=sha256:188834565033387710d046e3fe96acfc9b5e86cbca7f39ff69cf21a4128198b7 \
-    --hash=sha256:9e5421e176ef5ab4c0ad896624e87a7b2f07aca746c9b2aa305952800cb8eecb
+zipp==3.15.0 \
+    --hash=sha256:112929ad649da941c23de50f356a2b5570c954b65150642bccdd66bf194d224b \
+    --hash=sha256:48904fc76a60e542af151aded95726c1a5c34ed43ab4134b597665c86d7ad556
     # via importlib-resources
 
 # WARNING: The following packages were not pinned, but pip requires them to be
