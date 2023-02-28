@@ -591,9 +591,9 @@ pluggy==1.0.0 \
     # via
     #   pubtools
     #   pytest
-pre-commit==3.0.4 ; python_version >= "3" \
-    --hash=sha256:9e3255edb0c9e7fe9b4f328cb3dc86069f8fdc38026f1bf521018a05eaf4d67b \
-    --hash=sha256:bc4687478d55578c4ac37272fe96df66f73d9b5cf81be6f28627d4e712e752d5
+pre-commit==3.1.0 ; python_version >= "3" \
+    --hash=sha256:61bd9f1b96d3d1e763f2a9a0f8522aed341646800642ff6803c73fac5781f5b7 \
+    --hash=sha256:7001dfcd174540658822b1fd3630ceadf4f41375a5d1844b5c3b3830f227348c
     # via -r test-requirements.in
 pubtools==1.3.0 \
     --hash=sha256:25663f9aa22cc41bafba9a7dc10a374013e6abe010e7cc0a3ddaa525654bf6c8 \
@@ -611,9 +611,9 @@ pushcollector==1.3.0 \
     # via
     #   -r requirements.in
     #   pushsource
-pushsource==2.25.0 \
-    --hash=sha256:0e9c640fe95e22ceb505205986b154a8e54a28cfb4767551443304f390f797a3 \
-    --hash=sha256:f5015fe32b8363ff3428d4b12f8ed678a42bd385f8199bf690d81bcb92d8a20a
+pushsource==2.26.0 \
+    --hash=sha256:0bf99cc78cc732830e623d1c99de4a5cfca9bc4cabcf355f53a663fb0ef6e2d8 \
+    --hash=sha256:a08cdc68e4765383860a63647c7b87dbe3f70ae33f81641e222c666ca4770190
     # via -r requirements.in
 pyasn1==0.4.8 \
     --hash=sha256:39c7e2ec30515947ff4e87fb6f456dfc6e84857d34be479c9d4a4ba4bf46aa5d \
@@ -913,9 +913,9 @@ wrapt==1.14.1 \
     --hash=sha256:ee6acae74a2b91865910eef5e7de37dc6895ad96fa23603d1d27ea69df545015 \
     --hash=sha256:ef3f72c9666bba2bab70d2a8b79f2c6d2c1a42a7f7e2b0ec83bb2f9e383950af
     # via astroid
-zipp==3.14.0 \
-    --hash=sha256:188834565033387710d046e3fe96acfc9b5e86cbca7f39ff69cf21a4128198b7 \
-    --hash=sha256:9e5421e176ef5ab4c0ad896624e87a7b2f07aca746c9b2aa305952800cb8eecb
+zipp==3.15.0 \
+    --hash=sha256:112929ad649da941c23de50f356a2b5570c954b65150642bccdd66bf194d224b \
+    --hash=sha256:48904fc76a60e542af151aded95726c1a5c34ed43ab4134b597665c86d7ad556
     # via
     #   importlib-metadata
     #   importlib-resources
