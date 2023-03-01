@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.22.0] - 2023-03-01
+
+- Added container_list converter for ErratumUnit
+
 ## [1.21.0] - 2023-02-16
 
 - Added PKI support for Pulp client
@@ -184,7 +188,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.21.0...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.22.0...HEAD
+[1.22.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.21.0...v1.22.0
 [1.21.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.3...v1.21.0
 [1.20.3]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.2...v1.20.3
 [1.20.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.1...v1.20.2
