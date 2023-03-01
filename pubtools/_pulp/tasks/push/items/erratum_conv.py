@@ -36,6 +36,7 @@ def unit_for_item(item, old_unit):
         solution=item.solution,
         summary=item.summary,
         content_types=item.content_types,
+        container_list=item.container_list,
         # This field needs to be bumped if there is an existing unit,
         # else Pulp will discard changes.
         version=unit_erratum_version(item, old_unit),
