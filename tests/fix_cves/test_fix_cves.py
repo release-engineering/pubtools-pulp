@@ -21,6 +21,7 @@ class FakeUdCache(object):
     def __init__(self):
         self.flushed_repos = []
         self.flushed_products = []
+        self.flushed_errata = []
 
     def flush_repo(self, repo_id):
         self.flushed_repos.append(repo_id)
@@ -28,6 +29,10 @@ class FakeUdCache(object):
 
     def flush_product(self, product_id):
         self.flushed_products.append(product_id)
+        return f_return()
+
+    def flush_erratum(self, erratum_id):
+        self.flushed_errata.append(erratum_id)
         return f_return()
 
 
@@ -198,6 +203,20 @@ def test_fix_cves_with_cache_cleanup(command_tester):
                 "CVE-987,CVE-456",
             ],
         )
+
+        ud_client = fake_fix_cves.udcache_client
+
+        assert ud_client.flushed_repos == ["all-rpm-content", "repo"]
+        assert ud_client.flushed_products == []
+        assert ud_client.flushed_errata == ["RHSA-1234:56"]
+
+        fastpurge_client = fake_fix_cves.fastpurge_client
+
+        assert fastpurge_client.purged_urls == ["https://cdn.example.com/content/unit/1/all-rpm/mutable1", 
+                                                "https://cdn.example.com/content/unit/1/all-rpm/mutable2",
+                                                "https://cdn.example.com/content/unit/1/client/mutable1",
+                                                "https://cdn.example.com/content/unit/1/client/mutable2"]
+    
 
 
 def test_no_erratum_found_error(command_tester):

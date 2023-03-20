@@ -163,7 +163,7 @@ class FixCves(PulpClientService, Publisher, PulpTask):
             self.upload_erratum(erratum, repos)
 
         # Publish repos
-        self.publish_with_cache_flush(repos)
+        self.publish_with_cache_flush(repos, errata=[erratum])
 
 
 def entry_point(cls=FixCves):

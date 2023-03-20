@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- n/a
+- Added UD cache flush of Erratum object in CVE fix task
 
 ## [1.22.0] - 2023-03-01
 
