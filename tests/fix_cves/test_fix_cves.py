@@ -212,11 +212,12 @@ def test_fix_cves_with_cache_cleanup(command_tester):
 
         fastpurge_client = fake_fix_cves.fastpurge_client
 
-        assert fastpurge_client.purged_urls == ["https://cdn.example.com/content/unit/1/all-rpm/mutable1", 
-                                                "https://cdn.example.com/content/unit/1/all-rpm/mutable2",
-                                                "https://cdn.example.com/content/unit/1/client/mutable1",
-                                                "https://cdn.example.com/content/unit/1/client/mutable2"]
-    
+        assert fastpurge_client.purged_urls == [
+            "https://cdn.example.com/content/unit/1/all-rpm/mutable1",
+            "https://cdn.example.com/content/unit/1/all-rpm/mutable2",
+            "https://cdn.example.com/content/unit/1/client/mutable1",
+            "https://cdn.example.com/content/unit/1/client/mutable2",
+        ]
 
 
 def test_no_erratum_found_error(command_tester):
