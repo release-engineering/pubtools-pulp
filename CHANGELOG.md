@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- n/a
+
+## [1.23.0] - 2023-03-23
+
 - Added UD cache flush of Erratum object in CVE fix task
 
 ## [1.22.0] - 2023-03-01
@@ -188,7 +192,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.22.0...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.23.0...HEAD
+[1.23.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.22.0...v1.23.0
 [1.22.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.21.0...v1.22.0
 [1.21.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.3...v1.21.0
 [1.20.3]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.2...v1.20.3
