@@ -13,7 +13,8 @@ class SetMaintenance(PulpClientService, PulpTask):
     def add_args(self):
         super(SetMaintenance, self).add_args()
 
-        self.parser.add_argument("--owner", help="who sets/unsets maintenance mode")
+        self.parser.add_argument("--owner",
+                                 help="who sets/unsets maintenance mode")
 
         self.parser.add_argument(
             "--repo-url-regex",
@@ -40,8 +41,10 @@ class SetMaintenance(PulpClientService, PulpTask):
         return self.pulp_client.set_maintenance(report)
 
     def run(self):
-        report = self.get_maintenance_report().result()
+        with self.pulp_client.get_repository("redhat-maintenance").lock(
+                "Set Maintenance Task"):
+            report = self.get_maintenance_report().result()
 
-        report = self.adjust_maintenance_report(report)
+            report = self.adjust_maintenance_report(report)
 
-        self.set_maintenance(report).result()
+            self.set_maintenance(report).result()
