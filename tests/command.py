@@ -6,6 +6,7 @@ import os
 import traceback
 import json
 import difflib
+import re
 
 LOGS_DIR = os.path.join(os.path.dirname(__file__), "logs")
 
@@ -105,8 +106,18 @@ class CommandTester(object):
             compare_extra=compare_extra or {},
         )
 
-    def _normalize_plaintext(self, text):
+    def _normalize_tmpdir(self, text):
         return text.replace(str(self._tmpdir), "<tmpdir>")
+
+    def _normalize_repo_lock(self, text):
+        return re.sub(
+            r"(Submitting|Deleting) lock with id '([^']+)'",
+            r"\1 lock with id '<lock-id>'",
+            text,
+        )
+
+    def _normalize_plaintext(self, text):
+        return self._normalize_tmpdir(self._normalize_repo_lock(text))
 
     @property
     def logfile_basename(self):

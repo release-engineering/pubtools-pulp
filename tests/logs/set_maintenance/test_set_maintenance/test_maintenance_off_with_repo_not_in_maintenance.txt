@@ -1,3 +1,6 @@
+[    INFO] Attempting to lock redhat-maintenance.
+[    INFO] Submitting lock with id '<lock-id>' to redhat-maintenance (Set Maintenance Task).
+[    INFO] Lock obtained for redhat-maintenance.
 [    INFO] Get maintenance report: started
 [    INFO] Get maintenance report: finished
 [    INFO] Adjust maintenance report: started
@@ -8,3 +11,4 @@
 [    INFO] Set maintenance report: started
 [    INFO] Uploading repos.json to redhat-maintenance [85776e9a-dd84-f39e-7154-5a137a1d5006]
 [    INFO] Set maintenance report: finished
+[    INFO] Deleting lock with id '<lock-id>' from redhat-maintenance (Set Maintenance Task).

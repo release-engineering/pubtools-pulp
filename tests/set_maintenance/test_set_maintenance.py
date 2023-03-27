@@ -112,6 +112,13 @@ def test_maintenance_on(command_tester):
     assert len(controller.publish_history) == 1
     assert controller.publish_history[0].repository.id == "redhat-maintenance"
 
+    lock_history = controller.repo_lock_history
+    assert len(lock_history) == 2
+    assert lock_history[0].repository == "redhat-maintenance"
+    assert lock_history[0].action == "lock"
+    assert lock_history[1].repository == "redhat-maintenance"
+    assert lock_history[1].action == "unlock"
+
 
 def test_maintenance_on_with_regex(command_tester):
     """Test set maintenance by using regex"""
@@ -189,6 +196,13 @@ def test_maintenance_off(command_tester):
 
     # It should have also published the maintenance repo once more.
     assert len(controller.publish_history) == 2
+
+    lock_history = controller.repo_lock_history
+    assert len(lock_history) == 2
+    assert lock_history[0].repository == "redhat-maintenance"
+    assert lock_history[0].action == "lock"
+    assert lock_history[1].repository == "redhat-maintenance"
+    assert lock_history[1].action == "unlock"
 
 
 def test_maintenance_off_with_regex(command_tester):
