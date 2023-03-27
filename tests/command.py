@@ -10,6 +10,7 @@ import re
 
 LOGS_DIR = os.path.join(os.path.dirname(__file__), "logs")
 
+
 class CommandTester(object):
     """CommandTester is a helper class to run a command, capture its output and
     compare against expected.
@@ -108,10 +109,12 @@ class CommandTester(object):
     def _normalize_tmpdir(self, text):
         return text.replace(str(self._tmpdir), "<tmpdir>")
 
-
     def _normalize_repo_lock(self, text):
-        return re.sub(r"(Submitting|Deleting) lock with id '([^']+)'",
-                      r"\1 lock with id '<lock-id>'", text)
+        return re.sub(
+            r"(Submitting|Deleting) lock with id '([^']+)'",
+            r"\1 lock with id '<lock-id>'",
+            text,
+        )
 
     def _normalize_plaintext(self, text):
         return self._normalize_tmpdir(self._normalize_repo_lock(text))
