@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.24.0] - 2023-03-28
+
+- `pubtools-pulp-maintenance-on/off` now use advisory locks to avoid conflicting updates
+  when several tasks are run concurrently.
+
 ## [1.23.0] - 2023-03-23
 
 - Added UD cache flush of Erratum object in CVE fix task
@@ -192,7 +197,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.23.0...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.24.0...HEAD
+[1.24.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.23.0...v1.24.0
 [1.23.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.22.0...v1.23.0
 [1.22.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.21.0...v1.22.0
 [1.21.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.20.3...v1.21.0
