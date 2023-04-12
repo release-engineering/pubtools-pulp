@@ -5,6 +5,7 @@ from fastpurge import FastPurgeClient
 from pubtools.pulplib import FakeController, Client, Distributor, Repository
 
 from pubtools._pulp.ud import UdCacheClient
+from pubtools._pulp.cdn import CdnClient
 from pubtools._pulp.tasks.publish import Publish, entry_point
 
 
@@ -31,6 +32,16 @@ class FakeFastPurge(object):
         return f_return()
 
 
+class FakeCdn(object):
+    def get_arl_for_path(self, path, templates):
+        out = []
+        for item in templates:
+            arl = item.format(ttl="fake-ttl", path=path)
+            out.append(f_return(arl))
+
+        return out
+
+
 class FakePublish(Publish):
     """publish with services overridden for test"""
 
@@ -39,6 +50,7 @@ class FakePublish(Publish):
         self.pulp_client_controller = FakeController()
         self._udcache_client = FakeUdCache()
         self._fastpurge_client = FakeFastPurge()
+        self._cdn_client = FakeCdn()
 
     @property
     def pulp_client(self):
@@ -68,6 +80,16 @@ class FakePublish(Publish):
 
         # We'll substitute our own, only if fastpurge client is being used
         return self._fastpurge_client if from_super else None
+
+    @property
+    def cdn_client(self):
+        # Super may or may not give a cdn client, depends on arguments
+        from_super = super(FakePublish, self).cdn_client
+        if from_super:
+            # If it did create one, it should be this
+            assert isinstance(from_super, CdnClient)
+        # We'll substitute our own, only if cdn client is being used
+        return self._cdn_client if from_super else None
 
 
 def _add_repo(controller):
@@ -206,6 +228,56 @@ def test_repo_publish_cache_cleanup(command_tester):
     assert [hist.repository.id for hist in fake_pulp.publish_history] == ["repo1"]
     # flushed the urls
     assert sorted(fake_publish.fastpurge_client.purged_urls) == [
+        "https://cdn.example.com/content/unit/1/client/mutable1",
+        "https://cdn.example.com/content/unit/1/client/mutable2",
+    ]
+    # flushed the UD object
+    assert fake_publish.udcache_client.flushed_repos == ["repo1"]
+
+
+def test_repo_publish_cache_cleanup_with_arl(command_tester):
+    """publishes the repo provided, cleans up UD cache and CDN cache also by ARLs"""
+    with FakePublish() as fake_publish:
+        fake_pulp = fake_publish.pulp_client_controller
+        _add_repo(fake_pulp)
+
+        command_tester.test(
+            fake_publish.main,
+            [
+                "test-publish",
+                "--pulp-url",
+                "https://pulp.example.com",
+                "--fastpurge-host",
+                "fakehost-xxx.example.net",
+                "--fastpurge-client-secret",
+                "abcdef",
+                "--fastpurge-client-token",
+                "efg",
+                "--fastpurge-access-token",
+                "tok",
+                "--fastpurge-root-url",
+                "https://cdn.example.com/",
+                "--udcache-url",
+                "https://ud.example.com/",
+                "--repo-ids",
+                "repo1",
+                "--cdn-url",
+                "https://cdn.example.com/",
+                "--cdn-arl-template",
+                "/foo/{ttl}/{path}",
+                "--cdn-cert",
+                "/some/path/to/cert",
+                "--cdn-key",
+                "/some/path/to/key",
+            ],
+        )
+
+    # pulp repo is published
+    assert [hist.repository.id for hist in fake_pulp.publish_history] == ["repo1"]
+    # flushed the urls and the arls
+    assert sorted(fake_publish.fastpurge_client.purged_urls) == [
+        "/foo/fake-ttl/content/unit/1/client/mutable1",
+        "/foo/fake-ttl/content/unit/1/client/mutable2",
         "https://cdn.example.com/content/unit/1/client/mutable1",
         "https://cdn.example.com/content/unit/1/client/mutable2",
     ]

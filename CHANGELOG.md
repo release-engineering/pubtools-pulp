@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- n/a
+- Added purging CDN cache by ARL
 
 ## [1.24.0] - 2023-03-28
 
