@@ -39,6 +39,9 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">delete</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">url</span> <span class="n">UDCACHE_URL</span><span class="p">]</span>
                             <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">user</span> <span class="n">UDCACHE_USER</span><span class="p">]</span>
                             <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">password</span> <span class="n">UDCACHE_PASSWORD</span><span class="p">]</span>
+                            <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">url</span> <span class="n">CDN_URL</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">cert</span> <span class="n">CDN_CERT</span><span class="p">]</span>
+                            <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">key</span> <span class="n">CDN_KEY</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">ca</span><span class="o">-</span><span class="n">cert</span> <span class="n">CDN_CA_CERT</span><span class="p">]</span>
+                            <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">arl</span><span class="o">-</span><span class="n">template</span> <span class="p">[</span><span class="n">CDN_ARL_TEMPLATE</span> <span class="p">[</span><span class="n">CDN_ARL_TEMPLATE</span> <span class="o">...</span><span class="p">]]]</span>
                             <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">host</span> <span class="n">FASTPURGE_HOST</span><span class="p">]</span>
                             <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">token</span> <span class="n">FASTPURGE_CLIENT_TOKEN</span><span class="p">]</span>
                             <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">secret</span> <span class="n">FASTPURGE_CLIENT_SECRET</span><span class="p">]</span>
@@ -95,6 +98,26 @@
 <dt><kbd>--udcache-password</kbd></dt>
 <dd><p>Password for UD cache flush (or set UDCACHE_PASSWORD)</p>
 <p>Default: “”</p>
+</dd>
+</dl>
+</section>
+<section id="cdn-client-environment">
+<h2>CDN Client environment<a class="headerlink" href="#cdn-client-environment" title="Permalink to this heading">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>--cdn-url</kbd></dt>
+<dd><p>Base URL of CDN, if omitted, CDN won’t be requested for special data (e.g. headers for ARLs)</p>
+</dd>
+<dt><kbd>--cdn-cert</kbd></dt>
+<dd><p>Client certificate for CDN client</p>
+</dd>
+<dt><kbd>--cdn-key</kbd></dt>
+<dd><p>Client key for CDN client</p>
+</dd>
+<dt><kbd>--cdn-ca-cert</kbd></dt>
+<dd><p>CA certificate for CDN</p>
+</dd>
+<dt><kbd>--cdn-arl-template</kbd></dt>
+<dd><p>ARL template used for flushing cache by ARL</p>
 </dd>
 </dl>
 </section>
