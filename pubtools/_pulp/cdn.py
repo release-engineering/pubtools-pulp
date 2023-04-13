@@ -2,7 +2,8 @@ import logging
 import os
 import re
 import threading
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
+
 
 import requests
 from more_executors import Executors
@@ -119,6 +120,9 @@ class CdnClient(object):
         provided ARL templates. TTL value is requested from CDN
         special headers.
 
+        If value of TTL cannot be fetched from CDN service,
+        we fallback to hardcoded values.
+
         Arguments:
             path (str)
                 Relative path/URL (e.g. content/foo/bar/repomd.xml).
@@ -132,6 +136,7 @@ class CdnClient(object):
         """
 
         def _format_template(ttl, template, path):
+            ttl = f_map(ttl, fn=lambda x: x, error_fn=lambda _: ttl_for_path(path))
             return f_map(ttl, lambda x: template.format(ttl=x, path=path))
 
         out = []
@@ -142,3 +147,26 @@ class CdnClient(object):
                 out.append(_format_template(ttl_ft, item, path))
 
         return out
+
+
+# ordering of items matters as it's used as priority
+CDN_TTL_CONFIG = OrderedDict(
+    {
+        re.compile(r"/repodata/.*\.xml$"): "4h",
+        re.compile(r".*/ostree/repo/refs/heads/.*/(base|standard)$"): "10m",
+        re.compile(r"(/PULP_MANIFEST$|/listing$|/repodata/)"): "10m",
+        re.compile(r"/$"): "4h",
+    }
+)
+
+DEFAULT_TTL = "30d"
+
+
+def ttl_for_path(path):
+    out = DEFAULT_TTL
+    for regex, ttl in CDN_TTL_CONFIG.items():
+        if regex.search(path):
+            out = ttl
+            break
+
+    return out

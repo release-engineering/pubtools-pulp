@@ -1,4 +1,5 @@
 import logging
+import pytest
 from concurrent.futures import as_completed
 
 from pubtools._pulp.cdn import CdnClient
@@ -96,7 +97,7 @@ def test_retries(requests_mock):
 
 
 def test_logs(requests_mock, caplog):
-    """Client produces logs after requests."""
+    """Client produces logs before/after requests."""
 
     caplog.set_level(logging.INFO)
 
@@ -104,20 +105,59 @@ def test_logs(requests_mock, caplog):
         "/fake/template-1/{ttl}/{path}",
     ]
     with CdnClient("https://cdn.example.com/", max_retry_sleep=0.001) as client:
-        url = "https://cdn.example.com/content/foo/test-path-1/repomd.xml"
+        url = "https://cdn.example.com/content/foo/test-path-1/some-file"
 
         requests_mock.register_uri("HEAD", url, status_code=500)
 
-        # It should eventually fail with the HTTP error
-        exception = client.get_arl_for_path(
-            "content/foo/test-path-1/repomd.xml", templates
-        )[0].exception()
-        assert "500 Server Error" in str(exception)
+        # Request ARLs
+        arls_ft = client.get_arl_for_path(
+            "content/foo/test-path-1/some-file", templates
+        )
+
+        # It should be successful
+        arl = [item.result() for item in as_completed(arls_ft)][0]
 
     # It should have logged what it was doing and what failed
     assert caplog.messages == [
         "Getting headers ['akamai-x-get-cache-key'] for "
-        "https://cdn.example.com/content/foo/test-path-1/repomd.xml",
+        "https://cdn.example.com/content/foo/test-path-1/some-file",
         "Requesting header ['akamai-x-get-cache-key'] failed: 500 Server Error: None "
-        "for url: https://cdn.example.com/content/foo/test-path-1/repomd.xml",
+        "for url: https://cdn.example.com/content/foo/test-path-1/some-file",
     ]
+
+    # Eventually it should fallback to default ttl value
+    assert arl == "/fake/template-1/30d/content/foo/test-path-1/some-file"
+
+
+@pytest.mark.parametrize(
+    "path, expected_ttl",
+    [
+        ("content/test/repodata/repomd.xml", "4h"),
+        ("content/test/repodata/", "10m"),
+        ("/ostree/repo/refs/heads/test-path/base", "10m"),
+        ("content/test/PULP_MANIFEST", "10m"),
+        ("content/test/", "4h"),
+        ("content/test/some-file", "30d"),
+    ],
+)
+def test_arl_fallback(requests_mock, path, expected_ttl):
+    """
+    Tests fallback to default TTL values when TTL cannot be
+    fetched from CDN service.
+    """
+    templates = [
+        "/fake/template-1/{ttl}/{path}",
+    ]
+    with CdnClient("https://cdn.example.com/", max_retry_sleep=0.001) as client:
+        url = "https://cdn.example.com/content/foo/test-path-1/some-file"
+
+        requests_mock.register_uri("HEAD", url, status_code=500)
+
+        # Request ARLs
+        arls_ft = client.get_arl_for_path(path, templates)
+
+        # It should be successful
+        arl = [item.result() for item in as_completed(arls_ft)][0]
+
+    # It should fallback to default ttl value
+    assert arl == "/fake/template-1/{ttl}/{path}".format(ttl=expected_ttl, path=path)
