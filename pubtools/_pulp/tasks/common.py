@@ -3,12 +3,16 @@ import logging
 import datetime
 import attr
 
-from more_executors.futures import f_map, f_flat_map, f_sequence
+from more_executors.futures import f_map, f_flat_map, f_sequence, f_return
 
 from pubtools.pulplib import PublishOptions
 
 from pubtools._pulp.task import PulpTask
-from pubtools._pulp.services import FastPurgeClientService, UdCacheClientService
+from pubtools._pulp.services import (
+    FastPurgeClientService,
+    UdCacheClientService,
+    CdnClientService,
+)
 
 from ..hooks import pm
 
@@ -21,7 +25,7 @@ step = PulpTask.step
 # pylint: disable=no-member
 
 
-class CDNCache(FastPurgeClientService):
+class CDNCache(FastPurgeClientService, CdnClientService):
     """Provide features to interact with CDN cache."""
 
     @step("Flush CDN cache")
@@ -45,13 +49,20 @@ class CDNCache(FastPurgeClientService):
         def purge_repo(repo):
             to_flush = []
             for url in repo.mutable_urls:
-                flush_url = os.path.join(
-                    self.fastpurge_root_url, repo.relative_url, url
-                )
-                to_flush.append(flush_url)
+                relative_mutable_url = os.path.join(repo.relative_url, url)
+                flush_url = os.path.join(self.fastpurge_root_url, relative_mutable_url)
+                LOG.debug("Flush: %s", flush_url)
 
-            LOG.debug("Flush: %s", to_flush)
-            flush = self.fastpurge_client.purge_by_url(to_flush)
+                to_flush.append(f_return(flush_url))
+
+                if self.cdn_client:
+                    arl_fts = self.cdn_client.get_arl_for_path(
+                        relative_mutable_url,
+                        self.args.cdn_arl_template,
+                    )
+                    to_flush.extend(arl_fts)
+
+            flush = f_flat_map(f_sequence(to_flush), self.fastpurge_client.purge_by_url)
             return f_map(flush, lambda _: repo)
 
         return [purge_repo(r) for r in repos if r.relative_url]
