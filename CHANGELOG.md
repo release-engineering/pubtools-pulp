@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- n/a
+
+## [1.25.0] - 2023-04-20
+
 - Added purging CDN cache by ARL
 
 ## [1.24.0] - 2023-03-28
@@ -197,7 +201,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.24.0...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.25.0...HEAD
+[1.25.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.24.0...v1.25.0
 [1.24.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.23.0...v1.24.0
 [1.23.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.22.0...v1.23.0
 [1.22.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.21.0...v1.22.0
