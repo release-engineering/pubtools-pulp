@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: 3.8
       - name: Install Tox
-        run: pip install tox
+        run: pip install tox 'virtualenv<20.21.1'
       - name: Run Tox
         run: tox -e py38
   static:
@@ -30,7 +30,7 @@ jobs:
         with:
           python-version: 3.8
       - name: Install Tox
-        run: pip install tox
+        run: pip install tox 'virtualenv<20.21.1'
       - name: Run Tox
         run: tox -e static
   coverage:
@@ -44,7 +44,7 @@ jobs:
         with:
           python-version: 3.8
       - name: Install Tox
-        run: pip install tox
+        run: pip install tox 'virtualenv<20.21.1'
       - name: Install pytest cov
         run: pip install pytest-cov
       - name: Run Tox
@@ -65,7 +65,7 @@ jobs:
         with:
           python-version: 3.8
       - name: Install Tox
-        run: pip install tox
+        run: pip install tox 'virtualenv<20.21.1'
       - name: Run Tox
         run: tox -e docs
   bandit-exitzero:
@@ -81,7 +81,7 @@ jobs:
         with:
           python-version: 3.8
       - name: Install Tox
-        run: pip install tox
+        run: pip install tox 'virtualenv<20.21.1'
       - name: Run Tox
         run: tox -e bandit-exitzero
   bandit:
@@ -97,6 +97,6 @@ jobs:
         with:
           python-version: 3.8
       - name: Install Tox
-        run: pip install tox
+        run: pip install tox 'virtualenv<20.21.1'
       - name: Run Tox
         run: tox -e bandit
