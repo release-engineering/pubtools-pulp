@@ -333,9 +333,9 @@ pushsource==2.30.0 \
     --hash=sha256:17fa4438d57352542faf6ccdab312b0735f5f03e7fc70d5f49dd091e4b1e19be \
     --hash=sha256:9e98f81f939e26a7983c4f4d183309ed6effa407d2ebead497be891266616871
     # via -r requirements.in
-pyasn1==0.4.8 \
-    --hash=sha256:39c7e2ec30515947ff4e87fb6f456dfc6e84857d34be479c9d4a4ba4bf46aa5d \
-    --hash=sha256:aef77c9fb94a3ac588e87841208bdec464471d9871bd5050a287cc9a475cd0ba
+pyasn1==0.5.0 \
+    --hash=sha256:87a2121042a1ac9358cabcaf1d07680ff97ee6404333bacca15f76aa8ad01a57 \
+    --hash=sha256:97b7290ca68e62a832558ec3976f15cbf911bf5d7c7039d8b861c2a0ece69fde
     # via
     #   edgegrid-python
     #   ndg-httpsclient
