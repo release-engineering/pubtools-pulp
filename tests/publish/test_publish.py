@@ -1,6 +1,9 @@
 from datetime import datetime
+
+import pytest
 from more_executors.futures import f_return
 from fastpurge import FastPurgeClient
+import sys
 
 from pubtools.pulplib import FakeController, Client, Distributor, Repository
 
@@ -325,6 +328,68 @@ def test_publish_repos_published_before_a_date(command_tester):
 
     # repo published before 2019-08-09 is published
     assert [hist.repository.id for hist in fake_pulp.publish_history] == ["repo3"]
+
+
+def test_publish_repos_published_before_a_datetime(command_tester):
+    """publishes repos that were published before the given datetime"""
+    with FakePublish() as fake_publish:
+        fake_pulp = fake_publish.pulp_client_controller
+        _add_repo(fake_pulp)
+
+        command_tester.test(
+            fake_publish.main,
+            [
+                "test-publish",
+                "--pulp-url",
+                "https://pulp.example.com",
+                "--published-before",
+                "2019-09-08T01:00:00Z",
+            ],
+        )
+
+    # repo published before 2019-08-09T01:00:00Z is published
+    assert [hist.repository.id for hist in fake_pulp.publish_history] == ["repo3"]
+
+
+def test_publish_repos_not_published_before_a_datetime(command_tester):
+    """publishes repos that were published before the given datetime"""
+    with FakePublish() as fake_publish:
+        fake_pulp = fake_publish.pulp_client_controller
+        _add_repo(fake_pulp)
+
+        command_tester.test(
+            fake_publish.main,
+            [
+                "test-publish",
+                "--pulp-url",
+                "https://pulp.example.com",
+                "--published-before",
+                "2019-09-06T23:59:00Z",
+            ],
+        )
+
+    # No repo should be published
+    assert [hist.repository.id for hist in fake_pulp.publish_history] == []
+
+
+def test_publish_repos_published_before_exception(command_tester):
+    """Expect a parser exception when passing a bad date"""
+    with pytest.raises(SystemExit) as e:
+        with FakePublish() as fake_publish:
+            command_tester.test(
+                fake_publish.main,
+                [
+                    "test-publish",
+                    "--pulp-url",
+                    "https://pulp.example.com",
+                    "--published-before",
+                    "2019-09-07BADFORMAT01:00:00Z",
+                ],
+                allow_raise=True
+            )
+        assert "published-before date should be in YYYY-mm-ddTHH:MM:SSZ " \
+            "or YYYY-mm-dd format" in e.traceback
+        assert e.value.code == 2
 
 
 def test_publish_filtered_repos(command_tester):
