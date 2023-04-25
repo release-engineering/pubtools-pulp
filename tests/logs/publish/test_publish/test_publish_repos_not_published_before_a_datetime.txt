@@ -1,0 +1,4 @@
+[    INFO] Check repos: started
+[   ERROR] No repo(s) found to publish
+[   ERROR] Check repos: failed
+# Raised: 30

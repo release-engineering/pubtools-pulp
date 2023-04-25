@@ -1,6 +1,7 @@
 import logging
 import sys
 import re
+from argparse import ArgumentTypeError
 from datetime import datetime
 
 from pubtools.pulplib import Criteria, Matcher
@@ -21,8 +22,14 @@ LOG = logging.getLogger("pubtools.pulp")
 
 
 def publish_date(str_date):
-    # validates publish-before date
-    return datetime.strptime(str_date, "%Y-%m-%d")
+    for date_format in ["%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d"]:
+        try:
+            return datetime.strptime(str_date, date_format)
+        except ValueError:
+            pass
+    raise ArgumentTypeError(
+        "published-before date should be in YYYY-mm-ddTHH:MM:SSZ or YYYY-mm-dd format"
+    )
 
 
 class Publish(PulpClientService, Publisher, PulpTask):
