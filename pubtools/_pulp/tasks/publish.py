@@ -22,13 +22,14 @@ LOG = logging.getLogger("pubtools.pulp")
 
 
 def publish_date(str_date):
-    for date_format in ['%Y-%m-%dT%H:%M:%SZ', '%Y-%m-%d']:
+    for date_format in ["%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%d"]:
         try:
             return datetime.strptime(str_date, date_format)
         except ValueError:
             pass
-    raise ArgumentTypeError("published-before date should be in YYYY-mm-ddTHH:MM:SSZ or YYYY-mm-dd format")
-
+    raise ArgumentTypeError(
+        "published-before date should be in YYYY-mm-ddTHH:MM:SSZ or YYYY-mm-dd format"
+    )
 
 
 class Publish(PulpClientService, Publisher, PulpTask):

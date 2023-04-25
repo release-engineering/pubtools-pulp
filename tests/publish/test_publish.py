@@ -385,10 +385,12 @@ def test_publish_repos_published_before_exception(command_tester):
                     "--published-before",
                     "2019-09-07BADFORMAT01:00:00Z",
                 ],
-                allow_raise=True
+                allow_raise=True,
             )
-        assert "published-before date should be in YYYY-mm-ddTHH:MM:SSZ " \
+        assert (
+            "published-before date should be in YYYY-mm-ddTHH:MM:SSZ "
             "or YYYY-mm-dd format" in e.traceback
+        )
         assert e.value.code == 2
 
 
