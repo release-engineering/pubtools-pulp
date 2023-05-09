@@ -56,9 +56,9 @@ black==23.3.0 ; python_version >= "3" \
     --hash=sha256:ec751418022185b0c1bb7d7736e6933d40bbb14c14a0abcf9123d1b159f98dd4 \
     --hash=sha256:f0bd2f4a58d6666500542b26354978218a9babcdc972722f4bf90779524515f3
     # via -r test-requirements.in
-certifi==2022.12.7 \
-    --hash=sha256:35824b4c3a97115964b408844d64aa14db1cc518f6562e8d7261699d1350a9e3 \
-    --hash=sha256:4ad3232f5e926d6718ec31cfc1fcadfde020920e278684144551c91769c7bc18
+certifi==2023.5.7 \
+    --hash=sha256:0f0d56dc5a6ad56fd4ba36484d6cc34451e1c6548c61daad8c320169f91eddc7 \
+    --hash=sha256:c6c2e98f5c7869efca1f8916fed228dd91539f9f1b444c314c06eef02980c716
     # via requests
 cffi==1.15.1 \
     --hash=sha256:00a9ed42e88df81ffae7a8ab6d9356b371399b91dbdf0c3cb1e84c03a13aceb5 \
@@ -406,9 +406,9 @@ humanize==4.6.0 \
     --hash=sha256:401201aca462749773f02920139f302450cb548b70489b9b4b92be39fe3c3c50 \
     --hash=sha256:5f1f22bc65911eb1a6ffe7659bd6598e33dcfeeb904eb16ee1e705a09bf75916
     # via pubtools-pulplib
-identify==2.5.23 \
-    --hash=sha256:17d9351c028a781456965e781ed2a435755cac655df1ebd930f7186b54399312 \
-    --hash=sha256:50b01b9d5f73c6b53e5fa2caf9f543d3e657a9d0bbdeb203ebb8d45960ba7433
+identify==2.5.24 \
+    --hash=sha256:0aac67d5b4812498056d28a9a512a483f5085cc28640b02b258a59dac34301d4 \
+    --hash=sha256:986dbfb38b1140e763e413e6feb44cd731faf72d1909543178aa79b0e258265d
     # via pre-commit
 idna==3.4 \
     --hash=sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4 \
@@ -618,9 +618,9 @@ pluggy==1.0.0 \
     # via
     #   pubtools
     #   pytest
-pre-commit==3.2.2 ; python_version >= "3" \
-    --hash=sha256:0b4210aea813fe81144e87c5a291f09ea66f199f367fa1df41b55e1d26e1e2b4 \
-    --hash=sha256:5b808fcbda4afbccf6d6633a56663fed35b6c2bc08096fd3d47ce197ac351d9d
+pre-commit==3.3.1 ; python_version >= "3" \
+    --hash=sha256:218e9e3f7f7f3271ebc355a15598a4d3893ad9fc7b57fe446db75644543323b9 \
+    --hash=sha256:733f78c9a056cdd169baa6cd4272d51ecfda95346ef8a89bf93712706021b907
     # via -r test-requirements.in
 pubtools==1.3.0 \
     --hash=sha256:25663f9aa22cc41bafba9a7dc10a374013e6abe010e7cc0a3ddaa525654bf6c8 \
@@ -658,9 +658,9 @@ pygments==2.15.1 \
     # via
     #   rich
     #   sphinx
-pylint==2.17.3 ; python_version >= "3" \
-    --hash=sha256:761907349e699f8afdcd56c4fe02f3021ab5b3a0fc26d19a9bfdc66c7d0d5cd5 \
-    --hash=sha256:a6cbb4c6e96eab4a3c7de7c6383c512478f58f88d95764507d84c899d656a89a
+pylint==2.17.4 ; python_version >= "3" \
+    --hash=sha256:5dcf1d9e19f41f38e4e85d10f511e5b9c35e1aa74251bf95cdd8cb23584e2db1 \
+    --hash=sha256:7a1145fb08c251bdb5cca11739722ce64a63db479283d10ce718b2460e54123c
     # via -r test-requirements.in
 pyopenssl==23.1.1 \
     --hash=sha256:841498b9bec61623b1b6c47ebbc02367c07d60e0e195f19790817f10cc8db0b7 \
@@ -771,9 +771,9 @@ pyyaml==6.0 \
     #   pubtools-pulplib
     #   pushcollector
     #   pushsource
-requests==2.29.0 \
-    --hash=sha256:e8f3c9be120d3333921d213eef078af392fba3933ab7ed2d1cba3b56f2568c3b \
-    --hash=sha256:f2e34a75f4749019bb0e3effb66683630e4ffeaf75819fb51bebef1bf5aef059
+requests==2.30.0 \
+    --hash=sha256:10e94cc4f3121ee6da529d358cdaeaff2f1c409cd377dbc72b825852f2f7e294 \
+    --hash=sha256:239d7d4458afcb28a692cdd298d87542235f4ca8d36d03a15bfc128a6559a2f4
     # via
     #   coveralls
     #   edgegrid-python
@@ -791,9 +791,9 @@ requests-mock==1.10.0 \
     --hash=sha256:2fdbb637ad17ee15c06f33d31169e71bf9fe2bdb7bc9da26185be0dd8d842699 \
     --hash=sha256:59c9c32419a9fb1ae83ec242d98e889c45bd7d7a65d48375cc243ec08441658b
     # via -r test-requirements.in
-requests-toolbelt==0.10.1 \
-    --hash=sha256:18565aa58116d9951ac39baa288d3adb5b3ff975c4f25eee78555d89e8f247f7 \
-    --hash=sha256:62e09f7ff5ccbda92772a29f394a49c3ad6cb181d568b1337626b2abb628a63d
+requests-toolbelt==1.0.0 \
+    --hash=sha256:7681a0a3d047012b5bdc0ee37d7f8f07ebe76ab08caeccfc3921ce23c88d5bc6 \
+    --hash=sha256:cccfdd665f0a24fcf4726e690f65639d272bb0637b9b92dfd91a5568ccf6bd06
     # via edgegrid-python
 rhsm==1.19.2 \
     --hash=sha256:156525483560d821dd858194af9692803d339b379f7a378c382a3782d0902329
@@ -882,9 +882,9 @@ typing-extensions==4.5.0 \
     #   black
     #   pylint
     #   rich
-urllib3==1.26.15 \
-    --hash=sha256:8a388717b9476f934a21484e8c8e61875ab60644d29b9b39e11e4b9dc1c6b305 \
-    --hash=sha256:aa751d169e23c7479ce47a0cb0da579e3ede798f994f5816a74e4f4500dcea42
+urllib3==2.0.2 \
+    --hash=sha256:61717a1095d7e155cdb737ac7bb2f4324a858a1e2e6466f6d03ff630ca68d3cc \
+    --hash=sha256:d055c2f9d38dc53c808f6fdc8eab7360b6fdbbde02340ed25cfbcd817c62469e
     # via
     #   edgegrid-python
     #   requests
