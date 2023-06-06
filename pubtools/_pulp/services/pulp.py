@@ -132,7 +132,7 @@ class PulpClientService(Service):
             cert_file = hook_rets[0]
             LOG.info(
                 "Pulp certificate %s was provided through the get_cert_key_paths hook",
-                cert,
+                cert_file,
             )
             key_file = (
                 hook_rets[1] if hook_rets[1] and os.path.exists(hook_rets[1]) else None
