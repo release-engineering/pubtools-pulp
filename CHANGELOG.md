@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.26.1] - 2023-06-08
+
+- Fixed a minor logging error during Pulp authentication.
+
 ## [1.26.0] - 2023-04-26
 
 - `pubtools-pulp-publish`: the `--published-before` option now supports timestamps.
@@ -205,7 +209,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.0...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.1...HEAD
+[1.26.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.0...v1.26.1
 [1.26.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.25.0...v1.26.0
 [1.25.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.24.0...v1.25.0
 [1.24.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.23.0...v1.24.0
