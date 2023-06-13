@@ -283,9 +283,9 @@ jsonschema==4.17.3 \
     # via
     #   pubtools-pulplib
     #   pushcollector
-kobo==0.27.0 \
-    --hash=sha256:31729b9895aaabbd0029148602f121fb97d0d74c9f3e0d357f67ea18249f2a97 \
-    --hash=sha256:623e26801240c9ae8a746b71161198564a8e31cc34fb71b03d349d17d9c25e97
+kobo==0.28.0 \
+    --hash=sha256:00f13d4229570320ed29b5160d78dc46a2ed970116bccf817b97c38cd9fd306d \
+    --hash=sha256:c842609018e99fa70017c31b8dcb5ac6614df4ec620d001320e930e1bc0a7c67
     # via pushsource
 koji==1.33.0 \
     --hash=sha256:8636f903d8c72414ffbd39082e7984a095a77114e3617930e7b9d195d7a33b9b \
@@ -464,9 +464,9 @@ six==1.16.0 \
     #   koji
     #   more-executors
     #   python-dateutil
-urllib3==2.0.2 \
-    --hash=sha256:61717a1095d7e155cdb737ac7bb2f4324a858a1e2e6466f6d03ff630ca68d3cc \
-    --hash=sha256:d055c2f9d38dc53c808f6fdc8eab7360b6fdbbde02340ed25cfbcd817c62469e
+urllib3==2.0.3 \
+    --hash=sha256:48e7fafa40319d358848e1bc6809b208340fafe2096f1725d05d67443d0483d1 \
+    --hash=sha256:bee28b5e56addb8226c96f7f13ac28cb4c301dd5ea8a6ca179c0b9835e032825
     # via
     #   edgegrid-python
     #   requests
