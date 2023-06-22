@@ -261,7 +261,7 @@ class PulpPushItem(object):
 
         # Add some reasonable logging onto the copies...
         def log_copy_done(f):
-            if not f.exception():
+            if not f.cancelled() and not f.exception():
                 tasks = f.result()
                 oper = copy_opers[f]
                 for t in tasks:
