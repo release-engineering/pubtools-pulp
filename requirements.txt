@@ -260,9 +260,9 @@ gssapi==1.8.2 \
     --hash=sha256:f75b094913a1757e5e634b70b03e808cab0eb02c802ec50b760636b23b0aa50c \
     --hash=sha256:fac7d1f4b14383bd29d3996cf5f6f23d0dc50ffd7965d2bc35bcc0849da24152
     # via requests-gssapi
-humanize==4.6.0 \
-    --hash=sha256:401201aca462749773f02920139f302450cb548b70489b9b4b92be39fe3c3c50 \
-    --hash=sha256:5f1f22bc65911eb1a6ffe7659bd6598e33dcfeeb904eb16ee1e705a09bf75916
+humanize==4.7.0 \
+    --hash=sha256:7ca0e43e870981fa684acb5b062deb307218193bca1a01f2b2676479df849b3a \
+    --hash=sha256:df7c429c2d27372b249d3f26eb53b07b166b661326e0325793e0a988082e3889
     # via pubtools-pulplib
 idna==3.4 \
     --hash=sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4 \
@@ -476,5 +476,6 @@ zipp==3.15.0 \
     # via importlib-resources
 
 # WARNING: The following packages were not pinned, but pip requires them to be
-# pinned when the requirements file includes hashes. Consider using the --allow-unsafe flag.
+# pinned when the requirements file includes hashes and the requirement is not
+# satisfied by a package already installed. Consider using the --allow-unsafe flag.
 # setuptools
