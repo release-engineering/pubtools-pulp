@@ -191,7 +191,9 @@ class PulpPushItem(object):
         return f_map(units_f, matcher)
 
     @classmethod
-    def associated_items_single_batch(cls, pulp_client, items, copy_options):
+    def associated_items_single_batch(
+        cls, pulp_client, items, copy_options, association_retry_count
+    ):
         """Associate a single batch of items into destination repos.
 
         This generator yields instances of Future[list[<associated-items>]].
@@ -203,72 +205,89 @@ class PulpPushItem(object):
         for any item in the batch.
         """
 
-        copy_crit = {}
-        copy_opers = {}
-        copy_results = []
+        def enqueue_items(items):
+            """
+            Enqueue items to be copied into repos they are missing from.
 
-        copy_items = []
-        nocopy_items = []
+            Args:
+              items: Non-empty iterable of PulpPushItem s to be associated into their repos
 
-        unit_type = items[0].unit_type
+            Returns:
+              (copy_items, nocopy_items, copy_results)
+                - copy_items: list of items that need to be copied into some desired repos
+                - nocopy_items: list of items that are not missing from any repos
+                - copy_results: list of futures of results of copy operations
 
-        base_crit = Criteria.with_unit_type(unit_type) if unit_type else None
+            """
+            copy_opers = {}
+            copy_results = []
+            copy_crit = {}
 
-        for item in items:
-            if not item.missing_pulp_repos:
-                # Don't need to do anything with this item.
-                nocopy_items.append(item)
-            else:
-                copy_items.append(item)
-                crit = item.criteria()
-                # This item needs to be copied into each of the missing repos.
-                for dest_repo_id in item.missing_pulp_repos:
-                    # The source repo for copy can be anything. However, as copying
-                    # locks both src and dest repo, it's better to select the src
-                    # randomly so the locks tend to be uniformly distributed.
-                    #
-                    # TODO: could be sped up by looking for the repo with the smallest
-                    # available queue.
-                    #
-                    src_repo_id = random.sample(item.in_pulp_repos, 1)[0]
-                    key = (src_repo_id, dest_repo_id)
-                    copy_crit.setdefault(key, []).append(crit)
+            copy_items = []
+            nocopy_items = []
 
-        for key in copy_crit.keys():
-            (src_repo_id, dest_repo_id) = key
+            unit_type = items[0].unit_type
+            base_crit = Criteria.with_unit_type(unit_type) if unit_type else None
 
-            src_repo = pulp_client.get_repository(src_repo_id)
-            dest_repo = pulp_client.get_repository(dest_repo_id)
+            for item in items:
+                if not item.missing_pulp_repos:
+                    # Don't need to do anything with this item.
+                    nocopy_items.append(item)
+                else:
+                    copy_items.append(item)
+                    crit = item.criteria()
+                    # This item needs to be copied into each of the missing repos.
+                    for dest_repo_id in item.missing_pulp_repos:
+                        # The source repo for copy can be anything. However, as copying
+                        # locks both src and dest repo, it's better to select the src
+                        # randomly so the locks tend to be uniformly distributed.
+                        #
+                        # TODO: could be sped up by looking for the repo with the smallest
+                        # available queue.
+                        #
+                        src_repo_id = random.sample(item.in_pulp_repos, 1)[0]
+                        key = (src_repo_id, dest_repo_id)
+                        copy_crit.setdefault(key, []).append(crit)
 
-            crit = Criteria.and_(base_crit, Criteria.or_(*copy_crit[key]))
+            for key in copy_crit.keys():
+                (src_repo_id, dest_repo_id) = key
 
-            oper = CopyOperation(src_repo_id, dest_repo_id, crit)
-            oper.log_copy_start()
+                src_repo = pulp_client.get_repository(src_repo_id)
+                dest_repo = pulp_client.get_repository(dest_repo_id)
 
-            copy_f = pulp_client.copy_content(
-                src_repo.result(), dest_repo.result(), crit, options=copy_options
-            )
+                crit = Criteria.and_(base_crit, Criteria.or_(*copy_crit[key]))
 
-            # Stash the oper for logging later.
-            copy_opers[copy_f] = oper
+                oper = CopyOperation(src_repo_id, dest_repo_id, crit)
+                oper.log_copy_start()
 
-            copy_results.append(copy_f)
+                copy_f = pulp_client.copy_content(
+                    src_repo.result(), dest_repo.result(), crit, options=copy_options
+                )
 
+                # Stash the oper for logging later.
+                copy_opers[copy_f] = oper
+
+                copy_results.append(copy_f)
+
+            # Add some reasonable logging onto the copies...
+            def log_copy_done(f):
+                if not f.cancelled() and not f.exception():
+                    tasks = f.result()
+                    oper = copy_opers[f]
+                    for t in tasks:
+                        oper.log_copy_done(t)
+
+            for f in copy_results:
+                f.add_done_callback(log_copy_done)
+
+            return copy_items, nocopy_items, copy_results
+            # End of enqueue_items function
+
+        copy_items, nocopy_items, copy_results = enqueue_items(items)
         # Copies have been started.
         # Any items which didn't need a copy can be immediately yielded now.
         if nocopy_items:
             yield f_return(nocopy_items)
-
-        # Add some reasonable logging onto the copies...
-        def log_copy_done(f):
-            if not f.cancelled() and not f.exception():
-                tasks = f.result()
-                oper = copy_opers[f]
-                for t in tasks:
-                    oper.log_copy_done(t)
-
-        for f in copy_results:
-            f.add_done_callback(log_copy_done)
 
         # A helper to refresh the state of each item in Pulp and make sure they
         # were copied OK.
@@ -281,10 +300,42 @@ class PulpPushItem(object):
 
             return f
 
+        # A helper function to re-try copying of failed items
+        #  Since the association phase can take a while and the items can be
+        #  moved to other repos meanwhile, we fetch up-to-date info about the
+        #  items from pulp and re-try the failing cases
+        def retry_failed_items(_):
+            copy_results = []
+            for i in range(association_retry_count):
+                # Get an up-to-date version of all the copy items.
+                f = cls.items_with_pulp_state_single_batch(pulp_client, copy_items)
+
+                updated_items = list(f.result())
+                if len(updated_items) > 0:
+                    # copy any failed items
+                    _, _, copy_results = enqueue_items(updated_items)
+
+                if len(copy_results) > 0:
+                    LOG.info(
+                        "Retrying association for %d item(s). Attempt %d/%d",
+                        len(copy_results),
+                        i + 1,
+                        association_retry_count,
+                    )
+                    f_sequence(copy_results).result()
+                else:
+                    # there are no more failed items, end retry loop
+                    break
+            # Return a future with list of all results of copy operations
+            return f_sequence(copy_results)
+
         # This future completes once *all* copies are done successfully.
         # TODO: this still could be improved, as not every item needs every copy
         # before the state could be refreshed.
         all_copies = f_sequence(copy_results)
+
+        # If there are any failed copy operations, retry them
+        all_copies = f_map(all_copies, retry_failed_items)
 
         # To finish up: wait for all copies to complete, then refresh item states
         # and ensure they're no longer missing any repos.
