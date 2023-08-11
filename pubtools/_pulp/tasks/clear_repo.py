@@ -71,7 +71,7 @@ class ClearRepo(
         )
         self.parser.add_argument(
             "--content-type",
-            help="remove only content of these comma-separated type(s)",
+            help="remove only content of these comma-separated type(s). e.g. --content-type=(rpm, srpm, modulemd, iso, modulemd_defaults, package_langpacks, or erratum and so on)",
             type=str,
             action=SplitAndExtend,
             split_on=",",
