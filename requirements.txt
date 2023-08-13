@@ -273,9 +273,9 @@ idna==3.4 \
     --hash=sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4 \
     --hash=sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2
     # via requests
-importlib-resources==6.0.0 \
-    --hash=sha256:4cf94875a8368bd89531a756df9a9ebe1f150e0f885030b461237bc7f2d905f2 \
-    --hash=sha256:d952faee11004c045f785bb5636e8f885bed30dc3c940d5d42798a2a4541c185
+importlib-resources==6.0.1 \
+    --hash=sha256:134832a506243891221b88b4ae1213327eea96ceb4e407a00d790bb0626f45cf \
+    --hash=sha256:4359457e42708462b9626a04657c6208ad799ceb41e5c58c57ffa0e6a098a5d4
     # via
     #   jsonschema
     #   jsonschema-specifications
@@ -284,9 +284,9 @@ iniparse==0.5 \
     --hash=sha256:932e5239d526e7acb504017bb707be67019ac428a6932368e6851691093aa842 \
     --hash=sha256:db6ef1d8a02395448e0e7b17ac0aa28b8d338b632bbd1ffca08c02ddae32cf97
     # via rhsm
-jsonschema==4.18.6 \
-    --hash=sha256:ce71d2f8c7983ef75a756e568317bf54bc531dc3ad7e66a128eae0d51623d8a3 \
-    --hash=sha256:dc274409c36175aad949c68e5ead0853aaffbe8e88c830ae66bb3c7a1728ad2d
+jsonschema==4.19.0 \
+    --hash=sha256:043dc26a3845ff09d20e4420d6012a9c91c9aa8999fa184e7efcfeccb41e32cb \
+    --hash=sha256:6e1e7569ac13be8139b2dd2c21a55d350066ee3f80df06c608b398cdc6f30e8f
     # via
     #   pubtools-pulplib
     #   pushcollector
@@ -294,9 +294,9 @@ jsonschema-specifications==2023.7.1 \
     --hash=sha256:05adf340b659828a004220a9613be00fa3f223f2b82002e273dee62fd50524b1 \
     --hash=sha256:c91a50404e88a1f6ba40636778e2ee08f6e24c5613fe4c53ac24578a5a7f72bb
     # via jsonschema
-kobo==0.28.0 \
-    --hash=sha256:00f13d4229570320ed29b5160d78dc46a2ed970116bccf817b97c38cd9fd306d \
-    --hash=sha256:c842609018e99fa70017c31b8dcb5ac6614df4ec620d001320e930e1bc0a7c67
+kobo==0.29.1 \
+    --hash=sha256:472a46a1097ddc6cb42cc78e679d454a9c91956cd768a401bd80afa9cddb8bfb \
+    --hash=sha256:a93ec583a382158c5bbeb3aee99c3460497671b32562a5ff8717b347fdfa1a37
     # via pushsource
 koji==1.33.1 \
     --hash=sha256:16493a182e7194f7a5be3426a48dafb5982a450ad4cf79d14f36eb5c8a2c863d \
