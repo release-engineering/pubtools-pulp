@@ -88,7 +88,7 @@ class CdnClient(object):
     def _get_headers_for_path(self, path, headers):
         url = os.path.join(self._url, path)
 
-        LOG.info("Getting headers %s for %s", list(headers.values()), url)
+        LOG.debug("Getting headers %s for %s", list(headers.values()), url)
 
         out = self._executor.submit(self._head, url, headers=headers)
         out = f_map(

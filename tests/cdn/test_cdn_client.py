@@ -7,7 +7,7 @@ from pubtools._pulp.cdn import CdnClient
 
 def test_format_arl_template(requests_mock, caplog):
     """Client formats ARL template with live TTL."""
-    caplog.set_level(logging.INFO)
+    caplog.set_level(logging.DEBUG)
 
     # test templates also with invalid template which should be skipped from processing
     templates = [
@@ -50,12 +50,13 @@ def test_format_arl_template(requests_mock, caplog):
     assert sorted(fetched_urls) == [url for url, _ in url_ttl]
 
     # It should log 'Getting headers...' for each path
-    assert caplog.messages == [
+    for message in [
         "Getting headers ['akamai-x-get-cache-key'] for "
         "https://cdn.example.com/content/foo/test-path-1/repomd.xml",
         "Getting headers ['akamai-x-get-cache-key'] for "
         "https://cdn.example.com/content/foo/test-path-2/other-file.xml",
-    ]
+    ]:
+        assert message in caplog.messages
 
 
 def test_retries(requests_mock):
@@ -99,7 +100,7 @@ def test_retries(requests_mock):
 def test_logs(requests_mock, caplog):
     """Client produces logs before/after requests."""
 
-    caplog.set_level(logging.INFO)
+    caplog.set_level(logging.DEBUG)
 
     templates = [
         "/fake/template-1/{ttl}/{path}",
@@ -118,12 +119,13 @@ def test_logs(requests_mock, caplog):
         arl = [item.result() for item in as_completed(arls_ft)][0]
 
     # It should have logged what it was doing and what failed
-    assert caplog.messages == [
+    for message in [
         "Getting headers ['akamai-x-get-cache-key'] for "
         "https://cdn.example.com/content/foo/test-path-1/some-file",
         "Requesting header ['akamai-x-get-cache-key'] failed: 500 Server Error: None "
         "for url: https://cdn.example.com/content/foo/test-path-1/some-file",
-    ]
+    ]:
+        assert message in caplog.messages
 
     # Eventually it should fallback to default ttl value
     assert arl == "/fake/template-1/30d/content/foo/test-path-1/some-file"
