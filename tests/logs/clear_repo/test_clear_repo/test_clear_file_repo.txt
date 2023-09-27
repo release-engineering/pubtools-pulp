@@ -10,4 +10,7 @@
 [    INFO] Flush UD cache: started
 [    INFO] Flush UD cache: finished
 [    INFO] Flush CDN cache: started
+[    INFO] Flushing cache for some-filerepo:
+[    INFO]    https://cdn.example.com/some/publish/url/mutable1
+[    INFO]    https://cdn.example.com/some/publish/url/mutable2
 [    INFO] Flush CDN cache: finished

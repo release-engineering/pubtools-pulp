@@ -62,10 +62,18 @@ class CDNCache(FastPurgeClientService, CdnClientService):
                     )
                     to_flush.extend(arl_fts)
 
-            flush = f_flat_map(f_sequence(to_flush), self.fastpurge_client.purge_by_url)
+            flush = f_flat_map(
+                f_sequence(to_flush), lambda urls: self.purge_urls(repo.id, urls)
+            )
             return f_map(flush, lambda _: repo)
 
         return [purge_repo(r) for r in repos if r.relative_url]
+
+    def purge_urls(self, repo_id: str, urls: list):
+        LOG.info("Flushing cache for %s:", repo_id)
+        for url in sorted(urls):
+            LOG.info("   %s", url)
+        return self.fastpurge_client.purge_by_url(urls)
 
 
 class UdCache(UdCacheClientService):
