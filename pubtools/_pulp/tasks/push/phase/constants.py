@@ -112,8 +112,3 @@ OUT_BATCH_TIMEOUT = float(os.getenv("PUBTOOLS_PULP_OUT_BATCH_TIMEOUT") or "10.0"
 
 OUT_MAX_FUTURES = int(os.getenv("PUBTOOLS_PULP_OUT_MAX_FUTURES") or "10")
 """Max number of pending futures in output buffer."""
-
-# The following tune the behaviour of individual phases
-
-ASSOCIATION_RETRY_COUNT = int(os.getenv("PUBTOOLS_PULP_ASSOCIATION_RETRY_COUNT") or "2")
-"""Number of retries for association of pulp items."""

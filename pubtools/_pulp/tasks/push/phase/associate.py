@@ -27,9 +27,6 @@ class Associate(Phase):
     # so we'll avoid marking it as started until then
     STARTUP_TYPE = constants.STARTUP_TYPE_NOTIFY
 
-    # How many times to retry association if some item gets missing:
-    ASSOCIATION_RETRY_COUNT = constants.ASSOCIATION_RETRY_COUNT
-
     def __init__(self, context, pulp_client, pre_push, allow_unsigned, in_queue, **_):
         super(Associate, self).__init__(
             context, in_queue=in_queue, name="Associate items in Pulp"
@@ -131,9 +128,6 @@ class Associate(Phase):
         for batch in self.iter_for_associate():
             for items in PulpPushItem.items_by_type(batch):
                 for associated_f in PulpPushItem.associated_items_single_batch(
-                    self.pulp_client,
-                    items,
-                    self.copy_options,
-                    self.ASSOCIATION_RETRY_COUNT,
+                    self.pulp_client, items, self.copy_options
                 ):
                     self.put_future_outputs(associated_f)
