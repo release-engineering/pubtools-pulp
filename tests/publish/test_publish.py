@@ -268,6 +268,9 @@ def test_repo_publish_cache_cleanup_with_arl(command_tester):
                 "https://cdn.example.com/",
                 "--cdn-arl-template",
                 "/foo/{ttl}/{path}",
+                "--cdn-arl-template",
+                "/bar/{ttl}/{path}",
+                "/baz/{ttl}/{path}",
                 "--cdn-cert",
                 "/some/path/to/cert",
                 "--cdn-key",
@@ -279,6 +282,10 @@ def test_repo_publish_cache_cleanup_with_arl(command_tester):
     assert [hist.repository.id for hist in fake_pulp.publish_history] == ["repo1"]
     # flushed the urls and the arls
     assert sorted(fake_publish.fastpurge_client.purged_urls) == [
+        "/bar/fake-ttl/content/unit/1/client/mutable1",
+        "/bar/fake-ttl/content/unit/1/client/mutable2",
+        "/baz/fake-ttl/content/unit/1/client/mutable1",
+        "/baz/fake-ttl/content/unit/1/client/mutable2",
         "/foo/fake-ttl/content/unit/1/client/mutable1",
         "/foo/fake-ttl/content/unit/1/client/mutable2",
         "https://cdn.example.com/content/unit/1/client/mutable1",

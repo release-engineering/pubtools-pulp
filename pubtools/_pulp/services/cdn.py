@@ -45,6 +45,13 @@ class CdnClientService(Service):
             "--cdn-arl-template",
             help="ARL template used for flushing cache by ARL",
             nargs="*",
+            # FIXME: combination of nargs='*' and action='append' will
+            # generate a list of lists, but we just want one flat list.
+            # We flatten this elsewhere.
+            #
+            # When minimum python is >= 3.8, replace this with action="extend"
+            action="append",
+            default=[],
         )
 
     @property
@@ -61,6 +68,11 @@ class CdnClientService(Service):
 
     def __get_instance(self):
         args = self._service_args
+
+        # FIXME: see above comment about action="extend" for python >= 3.8
+        # This flattens the list-of-list.
+        args.cdn_arl_template = [x for y in args.cdn_arl_template for x in y]
+
         if not args.cdn_url:
             # disable requests made to CDN
             return None
