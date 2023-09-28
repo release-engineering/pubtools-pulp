@@ -5,6 +5,10 @@
 [    INFO] Publish: finished
 [    INFO] Flush CDN cache: started
 [    INFO] Flushing cache for repo1:
+[    INFO]    /bar/fake-ttl/content/unit/1/client/mutable1
+[    INFO]    /bar/fake-ttl/content/unit/1/client/mutable2
+[    INFO]    /baz/fake-ttl/content/unit/1/client/mutable1
+[    INFO]    /baz/fake-ttl/content/unit/1/client/mutable2
 [    INFO]    /foo/fake-ttl/content/unit/1/client/mutable1
 [    INFO]    /foo/fake-ttl/content/unit/1/client/mutable2
 [    INFO]    https://cdn.example.com/content/unit/1/client/mutable1
