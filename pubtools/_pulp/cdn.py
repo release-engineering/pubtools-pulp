@@ -26,7 +26,7 @@ class CdnClient(object):
     _EXPONENT = float(os.environ.get("CDN_RETRY_EXPONENT", "3.0"))
     _MAX_SLEEP = float(os.environ.get("CDN_RETRY_MAX_SLEEP", "120.0"))
 
-    TTL_REGEX = re.compile(r".*/(\d+[smhd])/.*")
+    TTL_REGEX = re.compile(r"/(\d+[smhd])/")
     CACHE_KEY_HEADER = HeaderPair("akamai-x-get-cache-key", "X-Cache-Key")
 
     def __init__(self, url, max_retry_sleep=_MAX_SLEEP, **kwargs):
@@ -104,7 +104,7 @@ class CdnClient(object):
         out = self._get_headers_for_path(path, headers)
 
         def _parse_ttl(value):
-            parsed = re.match(
+            parsed = re.search(
                 self.TTL_REGEX, value.get(self.CACHE_KEY_HEADER.response) or ""
             )
             return parsed.group(1) if parsed else None

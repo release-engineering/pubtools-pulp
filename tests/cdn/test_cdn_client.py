@@ -24,8 +24,14 @@ def test_format_arl_template(requests_mock, caplog):
             ("https://cdn.example.com/content/foo/test-path-2/other-file.xml", "30m"),
         ]
 
+        # ARLs are generated from the template using the {ttl} placeholder, which is replaced with
+        # the real TTL value. The real TTL value is extracted from the cache key header of the real
+        # request for the given path using '/(\d+[smhd])/' regex.
+        # The /1h/foo in the mocked header here is to test that if the path contains a component
+        # that also matches the TTL regex ('/1h/'), it will still find the correct value
+        # ('/10h/' or '/30m/').
         for url, ttl in url_ttl:
-            headers = {"X-Cache-Key": f"/fake/cache-key/{ttl}/something"}
+            headers = {"X-Cache-Key": f"/fake/cache-key/{ttl}/something/1h/foo"}
             requests_mock.register_uri("HEAD", url, headers=headers)
 
         fts = []
