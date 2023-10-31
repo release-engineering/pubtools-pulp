@@ -11,8 +11,8 @@ from pubtools._pulp.services import PulpClientService
 LOG = logging.getLogger("pubtools.pulp")
 step = PulpTask.step
 
-UNASSOCIATE_BATCH_LIMIT = int(
-    os.getenv("PULP_GC_UNASSOCIATE_BATCH_LIMIT", "10000"))
+UNASSOCIATE_BATCH_LIMIT = int(os.getenv("PULP_GC_UNASSOCIATE_BATCH_LIMIT", "10000"))
+
 
 class GarbageCollect(PulpClientService, PulpTask):
     """Perform garbage collection on Pulp data.
@@ -106,21 +106,20 @@ class GarbageCollect(PulpClientService, PulpTask):
             deletion_tasks = arc_repo.remove_content(
                 criteria=criteria, limit=UNASSOCIATE_BATCH_LIMIT
             ).result()
-            arc_tasks = [t for t in deletion_tasks if
-                         t.repo_id == "all-rpm-content"]
+            arc_tasks = [t for t in deletion_tasks if t.repo_id == "all-rpm-content"]
             for task in arc_tasks:
                 for unit in task.units:
                     LOG.info("Old all-rpm-content deleted: %s", unit.name)
                     deleted_content.append(unit)
 
-            if not arc_tasks or \
-                    any([t for t in arc_tasks
-                         if len(t.units) < UNASSOCIATE_BATCH_LIMIT]):
+            if not arc_tasks or any(
+                [t for t in arc_tasks if len(t.units) < UNASSOCIATE_BATCH_LIMIT]
+            ):
                 break
 
         if not deleted_content:
-            LOG.info("No all-rpm-content found older than %s",
-                     arc_threshold)
+            LOG.info("No all-rpm-content found older than %s", arc_threshold)
+
 
 def entry_point():
     with GarbageCollect() as instance:
