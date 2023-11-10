@@ -1,4 +1,3 @@
-import os
 import logging
 from datetime import datetime, timedelta
 
@@ -10,8 +9,6 @@ from pubtools._pulp.services import PulpClientService
 
 LOG = logging.getLogger("pubtools.pulp")
 step = PulpTask.step
-
-UNASSOCIATE_BATCH_LIMIT = int(os.getenv("PULP_GC_UNASSOCIATE_BATCH_LIMIT", "10000"))
 
 
 class GarbageCollect(PulpClientService, PulpTask):
@@ -99,24 +96,13 @@ class GarbageCollect(PulpClientService, PulpTask):
             LOG.info("No repos found for cleaning.")
             return
         arc_repo = clean_repos[0]
-
+        deleted_arc = list(arc_repo.remove_content(criteria=criteria))
         deleted_content = []
-
-        while True:
-            deletion_tasks = arc_repo.remove_content(
-                criteria=criteria, limit=UNASSOCIATE_BATCH_LIMIT
-            ).result()
-            arc_tasks = [t for t in deletion_tasks if t.repo_id == "all-rpm-content"]
-            for task in arc_tasks:
+        for task in deleted_arc:
+            if task.repo_id == "all-rpm-content":
                 for unit in task.units:
                     LOG.info("Old all-rpm-content deleted: %s", unit.name)
                     deleted_content.append(unit)
-
-            if not arc_tasks or any(
-                [t for t in arc_tasks if len(t.units) < UNASSOCIATE_BATCH_LIMIT]
-            ):
-                break
-
         if not deleted_content:
             LOG.info("No all-rpm-content found older than %s", arc_threshold)
 
