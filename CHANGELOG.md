@@ -222,7 +222,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial release to PyPI
 
 [Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.4...HEAD
-[1.26.3]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.3...v1.26.4
+[1.26.4]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.3...v1.26.4
 [1.26.3]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.2...v1.26.3
 [1.26.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.1...v1.26.2
 [1.26.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.0...v1.26.1
