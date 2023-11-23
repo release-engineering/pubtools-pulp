@@ -236,10 +236,9 @@ def test_arc_garbage_collect(mock_logger):
     mock_logger.info.assert_any_call("Old all-rpm-content deleted: %s", rpm2.name)
 
 
-
 def test_arc_garbage_collect_in_batches(mock_logger, monkeypatch):
     """deletes relevant all-rpm-content content in batches"""
-    monkeypatch.setattr(gc_module, 'UNASSOCIATE_BATCH_LIMIT', 5)
+    monkeypatch.setattr(gc_module, "UNASSOCIATE_BATCH_LIMIT", 5)
     repo = Repository(
         id="all-rpm-content",
         created=_get_created(7),
@@ -249,27 +248,32 @@ def test_arc_garbage_collect_in_batches(mock_logger, monkeypatch):
     assert list(client.search_content()) == []
 
     all_rpm_content = client.get_repository("all-rpm-content").result()
-    new_rpms = [RpmUnit(
-        cdn_published=datetime.datetime.utcnow(),
-        arch="src",
-        filename="test-arc-new%02d-1.0-1.src.rpm" % i,
-        name="test-arc-new%02d" % i,
-        version="1.0",
-        release="1",
-        content_type_id="rpm",
-        unit_id="gc_arc_new%02d" % i,
-    ) for i in range(0, 10)]
-    old_rpms = [RpmUnit(
-        cdn_published=datetime.datetime.utcnow() - datetime.timedelta(
-            days=190),
-        arch="src",
-        filename="test-arc-old%02d-1.0-1.src.rpm" % i,
-        name="test-arc-old%02d" % i,
-        version="1.0",
-        release="1",
-        content_type_id="rpm",
-        unit_id="gc_arc_old%02d" % i,
-    ) for i in range(0, 23)]
+    new_rpms = [
+        RpmUnit(
+            cdn_published=datetime.datetime.utcnow(),
+            arch="src",
+            filename="test-arc-new%02d-1.0-1.src.rpm" % i,
+            name="test-arc-new%02d" % i,
+            version="1.0",
+            release="1",
+            content_type_id="rpm",
+            unit_id="gc_arc_new%02d" % i,
+        )
+        for i in range(0, 10)
+    ]
+    old_rpms = [
+        RpmUnit(
+            cdn_published=datetime.datetime.utcnow() - datetime.timedelta(days=190),
+            arch="src",
+            filename="test-arc-old%02d-1.0-1.src.rpm" % i,
+            name="test-arc-old%02d" % i,
+            version="1.0",
+            release="1",
+            content_type_id="rpm",
+            unit_id="gc_arc_old%02d" % i,
+        )
+        for i in range(0, 23)
+    ]
 
     controller.insert_units(all_rpm_content, new_rpms + old_rpms)
     updated_rpm = list(client.get_repository("all-rpm-content").search_content())
@@ -282,8 +286,16 @@ def test_arc_garbage_collect_in_batches(mock_logger, monkeypatch):
             gc.main()
     updated_rpm = list(client.get_repository("all-rpm-content").search_content())
     assert len(updated_rpm) == 10
-    assert len([call for call in mock_logger.debug.call_args_list
-                if 'Submitting batch for deletion' in call.args]) == 5
+    assert (
+        len(
+            [
+                call
+                for call in mock_logger.debug.call_args_list
+                if "Submitting batch for deletion" in call.args
+            ]
+        )
+        == 5
+    )
 
 
 def test_arc_garbage_collect_0items(mock_logger):

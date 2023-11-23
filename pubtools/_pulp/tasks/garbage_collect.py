@@ -11,8 +11,7 @@ from pubtools._pulp.services import PulpClientService
 LOG = logging.getLogger("pubtools.pulp")
 step = PulpTask.step
 
-UNASSOCIATE_BATCH_LIMIT = int(
-    os.getenv("PULP_GC_UNASSOCIATE_BATCH_LIMIT", "10000"))
+UNASSOCIATE_BATCH_LIMIT = int(os.getenv("PULP_GC_UNASSOCIATE_BATCH_LIMIT", "10000"))
 
 
 class GarbageCollect(PulpClientService, PulpTask):
@@ -98,8 +97,7 @@ class GarbageCollect(PulpClientService, PulpTask):
             Criteria.with_unit_type(RpmUnit, unit_fields=["unit_id"]),
             Criteria.with_field(
                 "cdn_published",
-                Matcher.less_than(
-                    datetime.utcnow() - timedelta(days=arc_threshold)),
+                Matcher.less_than(datetime.utcnow() - timedelta(days=arc_threshold)),
             ),
         )
 
@@ -109,8 +107,10 @@ class GarbageCollect(PulpClientService, PulpTask):
             LOG.info("No all-rpm-content found older than %s", arc_threshold)
             return
 
-        unit_batches = [units[i:i + UNASSOCIATE_BATCH_LIMIT] for i in
-                   range(0, len(units), UNASSOCIATE_BATCH_LIMIT)]
+        unit_batches = [
+            units[i : i + UNASSOCIATE_BATCH_LIMIT]
+            for i in range(0, len(units), UNASSOCIATE_BATCH_LIMIT)
+        ]
         for batch in unit_batches:
             LOG.info("Submitting batch for deletion")
             deletion_criteria = Criteria.and_(
@@ -121,8 +121,7 @@ class GarbageCollect(PulpClientService, PulpTask):
                 ),
             )
             LOG.debug("Submitting batch for deletion")
-            deletion_task = arc_repo.remove_content(
-                criteria=deletion_criteria).result()
+            deletion_task = arc_repo.remove_content(criteria=deletion_criteria).result()
             for task in deletion_task:
                 if task.repo_id == "all-rpm-content":
                     for unit in task.units:
