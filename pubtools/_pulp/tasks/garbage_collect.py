@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime, timedelta
+import os
 
 from pubtools.pulplib import Criteria, Matcher, RpmUnit
 
@@ -9,6 +10,8 @@ from pubtools._pulp.services import PulpClientService
 
 LOG = logging.getLogger("pubtools.pulp")
 step = PulpTask.step
+
+UNASSOCIATE_BATCH_LIMIT = int(os.getenv("PULP_GC_UNASSOCIATE_BATCH_LIMIT", "10000"))
 
 
 class GarbageCollect(PulpClientService, PulpTask):
@@ -80,13 +83,6 @@ class GarbageCollect(PulpClientService, PulpTask):
         # Clear out old all-rpm-content
         LOG.info("Start old all-rpm-content deletion")
         arc_threshold = self.args.arc_threshold
-        criteria = Criteria.and_(
-            Criteria.with_unit_type(RpmUnit),
-            Criteria.with_field(
-                "cdn_published",
-                Matcher.less_than(datetime.utcnow() - timedelta(days=arc_threshold)),
-            ),
-        )
         clean_repos = list(
             self.pulp_client.search_repository(
                 Criteria.with_field("id", "all-rpm-content")
@@ -96,15 +92,40 @@ class GarbageCollect(PulpClientService, PulpTask):
             LOG.info("No repos found for cleaning.")
             return
         arc_repo = clean_repos[0]
-        deleted_arc = list(arc_repo.remove_content(criteria=criteria))
-        deleted_content = []
-        for task in deleted_arc:
-            if task.repo_id == "all-rpm-content":
-                for unit in task.units:
-                    LOG.info("Old all-rpm-content deleted: %s", unit.name)
-                    deleted_content.append(unit)
-        if not deleted_content:
+
+        search_criteria = Criteria.and_(
+            Criteria.with_unit_type(RpmUnit, unit_fields=["unit_id"]),
+            Criteria.with_field(
+                "cdn_published",
+                Matcher.less_than(datetime.utcnow() - timedelta(days=arc_threshold)),
+            ),
+        )
+
+        LOG.info("Collecting unit batches for deletion")
+        units = list(arc_repo.search_content(criteria=search_criteria))
+        if not units:
             LOG.info("No all-rpm-content found older than %s", arc_threshold)
+            return
+
+        unit_batches = [
+            units[i : i + UNASSOCIATE_BATCH_LIMIT]
+            for i in range(0, len(units), UNASSOCIATE_BATCH_LIMIT)
+        ]
+        for batch in unit_batches:
+            LOG.info("Submitting batch for deletion")
+            deletion_criteria = Criteria.and_(
+                Criteria.with_unit_type(RpmUnit),
+                Criteria.with_field(
+                    "unit_id",
+                    Matcher.in_([unit.unit_id for unit in batch]),
+                ),
+            )
+            LOG.debug("Submitting batch for deletion")
+            deletion_task = arc_repo.remove_content(criteria=deletion_criteria).result()
+            for task in deletion_task:
+                if task.repo_id == "all-rpm-content":
+                    for unit in task.units:
+                        LOG.info("Old all-rpm-content deleted: %s", unit.name)
 
 
 def entry_point():
