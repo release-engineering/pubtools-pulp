@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.26.5] - 2023-11-29
+
+- Improved `pubtools-pulp-garbage-collect` effectiveness
+
 ## [1.26.4] - 2023-11-10
 
 - Fixed TTL extraction from cache key header
@@ -221,7 +225,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.4...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.5...HEAD
+[1.26.5]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.4...v1.26.5
 [1.26.4]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.3...v1.26.4
 [1.26.3]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.2...v1.26.3
 [1.26.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.1...v1.26.2
