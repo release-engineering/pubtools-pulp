@@ -309,9 +309,9 @@ jsonschema-specifications==2023.11.2 \
     --hash=sha256:9472fc4fea474cd74bea4a2b190daeccb5a9e4db2ea80efcf7a1b582fc9a81b8 \
     --hash=sha256:e74ba7c0a65e8cb49dc26837d6cfe576557084a8b423ed16a420984228104f93
     # via jsonschema
-kobo==0.35.0 \
-    --hash=sha256:5f886ab03ef74cf5edef907f401a1b1b23070f4ff51b60d19a062009672e5c08 \
-    --hash=sha256:9f86d79be6e825bcb6af2facb2730eb38e48e871a57631f3acf012e56bcee544
+kobo==0.35.1 \
+    --hash=sha256:0820cb659672690e2a404b149763c676b0b04e21e71abd8d1808cc422b9a420a \
+    --hash=sha256:bbdff14eb23a3eeff12b0984e64703e70432443fcab3d9aad74b304c238f3a46
     # via pushsource
 koji==1.33.1 \
     --hash=sha256:16493a182e7194f7a5be3426a48dafb5982a450ad4cf79d14f36eb5c8a2c863d \
