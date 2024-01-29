@@ -3,6 +3,7 @@
 # FIXME: please delete this entire module when py2 support is dropped
 and just use contextlib directly!
 """
+
 import contextlib
 
 # As we are referring to legacy stuff removed in py3...
