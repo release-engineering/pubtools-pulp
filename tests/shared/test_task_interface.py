@@ -1,4 +1,5 @@
 """Tests ensuring all task modules have a consistent interface."""
+
 import argparse
 import sys
 import pytest
