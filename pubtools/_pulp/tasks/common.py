@@ -1,18 +1,19 @@
-import os
-import logging
+import collections
 import datetime
+import logging
+import os
+import sys
+
 import attr
+from more_executors.futures import f_flat_map, f_map, f_return, f_sequence
+from pubtools.pulplib import (ErratumUnit, FileUnit, ModulemdUnit,
+                              PublishOptions, RpmUnit)
+from pushsource import (ErratumPushItem, FilePushItem, ModuleMdPushItem,
+                        RpmPushItem)
 
-from more_executors.futures import f_map, f_flat_map, f_sequence, f_return
-
-from pubtools.pulplib import PublishOptions
-
+from pubtools._pulp.services import (CdnClientService, FastPurgeClientService,
+                                     UdCacheClientService)
 from pubtools._pulp.task import PulpTask
-from pubtools._pulp.services import (
-    FastPurgeClientService,
-    UdCacheClientService,
-    CdnClientService,
-)
 
 from ..hooks import pm
 
@@ -82,13 +83,15 @@ class UdCache(UdCacheClientService):
     @step("Flush UD cache")
     def flush_ud(self, repos, errata=None):
         client = self.udcache_client
+        out = []
         if not client:
             LOG.info("UD cache flush is not enabled.")
-            return []
+            return out
 
-        out = []
         for repo in repos:
             out.append(client.flush_repo(repo.id))
+            if repo.eng_product_id:
+                out.append(client.flush_product(repo.eng_product_id))
 
         out.extend([client.flush_erratum(erratum.id) for erratum in (errata or [])])
 
@@ -182,3 +185,161 @@ class Publisher(CDNCache, UdCache):
         out.append(flush_ud)
 
         return out
+
+
+class PulpRepositoryOperation(CDNCache, UdCache, PulpTask):
+    def __init__(self):
+        super(PulpRepositoryOperation, self).__init__()
+
+        self.task_state = "PENDING"
+
+    def add_args(self):
+        super(PulpRepositoryOperation, self).add_args()
+
+        self.parser.add_argument(
+            "--skip", help="skip given comma-separated sub-steps", type=str
+        )
+
+    def fail(self, *args, **kwargs):
+        LOG.error(*args, **kwargs)
+        sys.exit(30)
+
+    def log_remove(self, removed_repo):
+        return self.log_repo_action(removed_repo, "removed")
+
+    def log_copy(self, copied_repo):
+        return self.log_repo_action(copied_repo, "copied")
+
+    def log_repo_action(self, repo, action):
+        # Given a repo which has been altered, log some messages
+        # summarizing the affected unit(s).
+        content_types = collections.defaultdict(int)
+
+        for task in repo.tasks:
+            for unit in task.units:
+                type_id = unit.content_type_id
+                content_types[type_id] += 1
+
+        task_ids = ", ".join(sorted([t.id for t in repo.tasks]))
+        repo_id = repo.repo.id
+        if not content_types:
+            LOG.warning("%s: no content %s, tasks: %s", repo_id, action, task_ids)
+        else:
+            types = []
+            for key in sorted(content_types.keys()):
+                types.append("%s %s(s)" % (content_types[key], key))
+            types = ", ".join(types)
+
+            LOG.info("%s: %s %s, tasks: %s", repo_id, action, types, task_ids)
+        return repo
+
+    @step("Record push items")
+    def record_push_items(self, repo_fs, state=None):
+        if state:
+            self.task_state = state
+        return [f_flat_map(f, self.record_repo_action) for f in repo_fs]
+
+    def record_repo_action(self, repo):
+        push_items = []
+        for task in repo.tasks:
+            repo_id = None if self.task_state == "DELETED" else repo.repo.id
+            push_items.extend(self.push_items_for_task(task, repo_id))
+        return self.collector.update_push_items(push_items)
+
+    @step("Publish")
+    def publish(self, repo_fs, clean=False):
+        return [
+            f_flat_map(f, lambda r: r.publish(PublishOptions(clean=clean)))
+            for f in repo_fs
+        ]
+
+    def push_items_for_task(self, task, repo_id):
+        out = []
+        for unit in task.units:
+            push_item = self.push_item_for_unit(unit, repo_id)
+            if push_item:
+                out.append(push_item)
+        return out
+
+    def push_item_for_unit(self, unit, repo_id):
+        for unit_type, fn in [
+            (ModulemdUnit, self.push_item_for_modulemd),
+            (RpmUnit, self.push_item_for_rpm),
+            (ErratumUnit, self.push_item_for_erratum),
+            (FileUnit, self.push_item_for_file),
+        ]:
+            if isinstance(unit, unit_type):
+                return fn(unit, repo_id)
+
+    def push_item_for_modulemd(self, unit, repo_id):
+        out = {}
+        out["state"] = self.task_state
+        out["origin"] = "pulp"
+
+        # Note: N:S:V:C:A format here is kept even if some part
+        # of the data is missing (never expected to happen).
+        # For example, if C was missing, you'll get N:S:V::A
+        # so the arch part can't be misinterpreted as context.
+        nsvca = ":".join(
+            [unit.name, unit.stream, str(unit.version), unit.context, unit.arch]
+        )
+
+        out["name"] = nsvca
+        out["dest"] = [repo_id]
+
+        return ModuleMdPushItem(**out)
+
+    def push_item_for_rpm(self, unit, repo_id):
+        out = {}
+
+        out["state"] = self.task_state
+        out["origin"] = "pulp"
+
+        filename_parts = [
+            unit.name,
+            "-",
+            unit.version,
+            "-",
+            unit.release,
+            ".",
+            unit.arch,
+            ".rpm",
+        ]
+        out["name"] = "".join(filename_parts)
+        out["dest"] = [repo_id]
+
+        # Note: in practice we don't necessarily expect to get all of these
+        # attributes, as after a delete the server will only provide those
+        # which make up the unit key. We still copy them anyway (even if
+        # values are None) in case this is improved some day.
+        out["sha256sum"] = unit.sha256sum
+        out["md5sum"] = unit.md5sum
+        out["signing_key"] = unit.signing_key
+
+        return RpmPushItem(**out)
+
+    def push_item_for_erratum(self, unit, repo_id):
+        out = {}
+
+        out["state"] = self.task_state
+        out["origin"] = "pulp"
+        out["name"] = unit.id
+        out["dest"] = [repo_id]
+
+        return ErratumPushItem(**out)
+
+    def push_item_for_file(self, unit, repo_id):
+        out = {}
+
+        out["state"] = self.task_state
+        out["origin"] = "pulp"
+        out["name"] = unit.path
+        out["sha256sum"] = unit.sha256sum
+        out["dest"] = [repo_id]
+
+        return FilePushItem(**out)
+
+    def run(self):
+        """Implement a specific task"""
+
+        raise NotImplementedError()
