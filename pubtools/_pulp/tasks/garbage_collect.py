@@ -1,12 +1,11 @@
 import logging
-from datetime import datetime, timedelta
 import os
+from datetime import datetime, timedelta
 
 from pubtools.pulplib import Criteria, Matcher, RpmUnit
 
-from pubtools._pulp.task import PulpTask
 from pubtools._pulp.services import PulpClientService
-
+from pubtools._pulp.task import PulpTask
 
 LOG = logging.getLogger("pubtools.pulp")
 step = PulpTask.step
@@ -39,7 +38,7 @@ class GarbageCollect(PulpClientService, PulpTask):
             "--arc-threshold",
             help="delete all-rpm-content older than this many days",
             type=int,
-            default=30,
+            default=14,
         )
 
     def run(self):
