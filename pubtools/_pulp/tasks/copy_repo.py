@@ -3,8 +3,14 @@ from functools import partial
 
 import attr
 from more_executors.futures import f_map, f_sequence
-from pubtools.pulplib import (ContainerImageRepository, Criteria, ErratumUnit,
-                              FileUnit, ModulemdUnit, RpmUnit)
+from pubtools.pulplib import (
+    ContainerImageRepository,
+    Criteria,
+    ErratumUnit,
+    FileUnit,
+    ModulemdUnit,
+    RpmUnit,
+)
 
 from pubtools._pulp.arguments import SplitAndExtend
 from pubtools._pulp.services import CollectorService, PulpClientService

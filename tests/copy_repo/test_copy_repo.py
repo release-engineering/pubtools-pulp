@@ -1,7 +1,15 @@
 from more_executors.futures import f_return
-from pubtools.pulplib import (Client, ContainerImageRepository, ErratumUnit,
-                              FakeController, FileRepository, FileUnit,
-                              ModulemdUnit, RpmUnit, YumRepository)
+from pubtools.pulplib import (
+    Client,
+    ContainerImageRepository,
+    ErratumUnit,
+    FakeController,
+    FileRepository,
+    FileUnit,
+    ModulemdUnit,
+    RpmUnit,
+    YumRepository,
+)
 
 import pubtools._pulp.tasks.copy_repo
 from pubtools._pulp.tasks.copy_repo import CopyRepo

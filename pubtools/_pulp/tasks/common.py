@@ -6,13 +6,20 @@ import sys
 
 import attr
 from more_executors.futures import f_flat_map, f_map, f_return, f_sequence
-from pubtools.pulplib import (ErratumUnit, FileUnit, ModulemdUnit,
-                              PublishOptions, RpmUnit)
-from pushsource import (ErratumPushItem, FilePushItem, ModuleMdPushItem,
-                        RpmPushItem)
+from pubtools.pulplib import (
+    ErratumUnit,
+    FileUnit,
+    ModulemdUnit,
+    PublishOptions,
+    RpmUnit,
+)
+from pushsource import ErratumPushItem, FilePushItem, ModuleMdPushItem, RpmPushItem
 
-from pubtools._pulp.services import (CdnClientService, FastPurgeClientService,
-                                     UdCacheClientService)
+from pubtools._pulp.services import (
+    CdnClientService,
+    FastPurgeClientService,
+    UdCacheClientService,
+)
 from pubtools._pulp.task import PulpTask
 
 from ..hooks import pm
