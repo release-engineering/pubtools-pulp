@@ -38,8 +38,11 @@
 information on what was removed.  Removal may optionally be filtered
 to selected content types.</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">clear</span><span class="o">-</span><span class="n">repo</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">url</span> <span class="n">CDN_URL</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">cert</span> <span class="n">CDN_CERT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">key</span> <span class="n">CDN_KEY</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">clear</span><span class="o">-</span><span class="n">repo</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">url</span> <span class="n">UDCACHE_URL</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">user</span> <span class="n">UDCACHE_USER</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">password</span> <span class="n">UDCACHE_PASSWORD</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">url</span> <span class="n">CDN_URL</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">cert</span> <span class="n">CDN_CERT</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">key</span> <span class="n">CDN_KEY</span><span class="p">]</span>
                                 <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">ca</span><span class="o">-</span><span class="n">cert</span> <span class="n">CDN_CA_CERT</span><span class="p">]</span>
                                 <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">arl</span><span class="o">-</span><span class="n">template</span> <span class="p">[</span><span class="n">CDN_ARL_TEMPLATE</span> <span class="p">[</span><span class="n">CDN_ARL_TEMPLATE</span> <span class="o">...</span><span class="p">]]]</span>
                                 <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">host</span> <span class="n">FASTPURGE_HOST</span><span class="p">]</span>
@@ -53,9 +56,6 @@ to selected content types.</p>
                                 <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">certificate</span><span class="o">-</span><span class="n">key</span> <span class="n">PULP_CERTIFICATE_KEY</span><span class="p">]</span>
                                 <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span>
                                 <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">throttle</span> <span class="n">PULP_THROTTLE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">fake</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">url</span> <span class="n">UDCACHE_URL</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">user</span> <span class="n">UDCACHE_USER</span><span class="p">]</span>
-                                <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">password</span> <span class="n">UDCACHE_PASSWORD</span><span class="p">]</span>
                                 <span class="p">[</span><span class="o">--</span><span class="n">skip</span> <span class="n">SKIP</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">content</span><span class="o">-</span><span class="nb">type</span> <span class="n">CONTENT_TYPE</span><span class="p">]</span>
                                 <span class="n">repo</span> <span class="p">[</span><span class="n">repo</span> <span class="o">...</span><span class="p">]</span>
 </pre></div>
@@ -80,6 +80,21 @@ to selected content types.</p>
 </dd>
 <dt><kbd>--content-type</kbd></dt>
 <dd><p>remove only content of these comma-separated type(s). e.g. –content-type=(rpm, srpm, modulemd, iso, modulemd_defaults, package_langpacks, or erratum and so on)</p>
+</dd>
+</dl>
+</section>
+<section id="unified-downloads-cache-environment">
+<h2>Unified Downloads Cache environment<a class="headerlink" href="#unified-downloads-cache-environment" title="Permalink to this heading">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>--udcache-url</kbd></dt>
+<dd><p>Base URL of UD cache flush API; if omitted, UD cache flush features are disabled.</p>
+</dd>
+<dt><kbd>--udcache-user</kbd></dt>
+<dd><p>Username for UD cache flush</p>
+</dd>
+<dt><kbd>--udcache-password</kbd></dt>
+<dd><p>Password for UD cache flush (or set UDCACHE_PASSWORD)</p>
+<p>Default: “”</p>
 </dd>
 </dl>
 </section>
@@ -154,21 +169,6 @@ to selected content types.</p>
 <dt><kbd>--pulp-fake</kbd></dt>
 <dd><p>Use a fake in-memory Pulp client rather than interacting with a real server. For development/testing only, may have limited functionality.</p>
 <p>Default: False</p>
-</dd>
-</dl>
-</section>
-<section id="unified-downloads-cache-environment">
-<h2>Unified Downloads Cache environment<a class="headerlink" href="#unified-downloads-cache-environment" title="Permalink to this heading">¶</a></h2>
-<dl class="option-list">
-<dt><kbd>--udcache-url</kbd></dt>
-<dd><p>Base URL of UD cache flush API; if omitted, UD cache flush features are disabled.</p>
-</dd>
-<dt><kbd>--udcache-user</kbd></dt>
-<dd><p>Username for UD cache flush</p>
-</dd>
-<dt><kbd>--udcache-password</kbd></dt>
-<dd><p>Password for UD cache flush (or set UDCACHE_PASSWORD)</p>
-<p>Default: “”</p>
 </dd>
 </dl>
 </section>
