@@ -47,6 +47,7 @@ setup(
             "pubtools-pulp-push = pubtools._pulp.tasks.push:entry_point",
             "pubtools-pulp-fix-cves = pubtools._pulp.tasks.fix_cves:entry_point",
             "pubtools-pulp-delete = pubtools._pulp.tasks.delete:entry_point",
+            "pubtools-pulp-copy-repo = pubtools._pulp.tasks.copy_repo:entry_point",
         ]
     },
     project_urls={
