@@ -207,7 +207,7 @@ def test_fix_cves_with_cache_cleanup(command_tester):
         ud_client = fake_fix_cves.udcache_client
 
         assert ud_client.flushed_repos == ["all-rpm-content", "repo"]
-        assert ud_client.flushed_products == []
+        assert ud_client.flushed_products == [100, 101]
         assert ud_client.flushed_errata == ["RHSA-1234:56"]
 
         fastpurge_client = fake_fix_cves.fastpurge_client

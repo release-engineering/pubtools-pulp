@@ -1,32 +1,25 @@
 import logging
 import re
 import sys
-import attr
-
 from functools import partial
 
-from more_executors.futures import (
-    f_map,
-    f_flat_map,
-    f_zip,
-    f_return,
-    f_sequence,
-)
-from pushsource import FilePushItem, ModuleMdPushItem, RpmPushItem
+import attr
+from more_executors.futures import f_flat_map, f_map, f_return, f_sequence, f_zip
 from pubtools.pulplib import (
     Criteria,
-    Matcher,
-    RpmUnit,
-    ModulemdUnit,
-    FileUnit,
     ErratumUnit,
+    FileUnit,
+    Matcher,
+    ModulemdUnit,
+    RpmUnit,
 )
+from pushsource import FilePushItem, ModuleMdPushItem, RpmPushItem
 
-from pubtools._pulp.services.pulp import PulpClientService
+from pubtools._pulp.arguments import SplitAndExtend
 from pubtools._pulp.services.collector import CollectorService
+from pubtools._pulp.services.pulp import PulpClientService
 from pubtools._pulp.task import PulpTask
 from pubtools._pulp.tasks.common import Publisher
-from pubtools._pulp.arguments import SplitAndExtend
 
 LOG = logging.getLogger("pubtools.pulp")
 

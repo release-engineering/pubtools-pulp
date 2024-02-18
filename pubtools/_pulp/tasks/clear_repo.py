@@ -1,27 +1,14 @@
 import logging
-import sys
 from functools import partial
 
 import attr
-from more_executors.futures import f_flat_map, f_map, f_sequence
-from pushsource import FilePushItem, ModuleMdPushItem, RpmPushItem
-from pubtools.pulplib import (
-    ContainerImageRepository,
-    Criteria,
-    FileUnit,
-    ModulemdUnit,
-    PublishOptions,
-    RpmUnit,
-)
+from more_executors.futures import f_map, f_sequence
+from pubtools.pulplib import ContainerImageRepository, Criteria
 
 from pubtools._pulp.arguments import SplitAndExtend
-from pubtools._pulp.services import (
-    CollectorService,
-    PulpClientService,
-    UdCacheClientService,
-)
+from pubtools._pulp.services import CollectorService, PulpClientService
 from pubtools._pulp.task import PulpTask
-from pubtools._pulp.tasks.common import CDNCache
+from pubtools._pulp.tasks.common import PulpRepositoryOperation
 
 step = PulpTask.step
 
@@ -47,9 +34,7 @@ class ClearedRepo(object):
     """The repo which was cleared."""
 
 
-class ClearRepo(
-    CollectorService, UdCacheClientService, PulpClientService, CDNCache, PulpTask
-):
+class ClearRepo(CollectorService, PulpClientService, PulpRepositoryOperation):
     """Remove all contents from one or more Pulp repositories.
 
     This command will remove contents from repositories and record
@@ -67,9 +52,6 @@ class ClearRepo(
         super(ClearRepo, self).add_args()
 
         self.parser.add_argument(
-            "--skip", help="skip given comma-separated sub-steps", type=str
-        )
-        self.parser.add_argument(
             "--content-type",
             help="remove only content of these comma-separated type(s). e.g. --content-type=(rpm, srpm, modulemd, iso, modulemd_defaults, package_langpacks, or erratum and so on)",
             type=str,
@@ -77,10 +59,6 @@ class ClearRepo(
             split_on=",",
         )
         self.parser.add_argument("repo", nargs="+", help="Repositories to be cleared")
-
-    def fail(self, *args, **kwargs):
-        LOG.error(*args, **kwargs)
-        sys.exit(30)
 
     @step("Check repos")
     def get_repos(self):
@@ -124,30 +102,6 @@ class ClearRepo(
 
         return out
 
-    def log_remove(self, cleared_repo):
-        # Given a repo which has been cleared, log some messages
-        # summarizing the removed unit(s)
-        content_types = {}
-
-        for task in cleared_repo.tasks:
-            for unit in task.units:
-                type_id = unit.content_type_id
-                content_types[type_id] = content_types.get(type_id, 0) + 1
-
-        task_ids = ", ".join(sorted([t.id for t in cleared_repo.tasks]))
-        repo_id = cleared_repo.repo.id
-        if not content_types:
-            LOG.warning("%s: no content removed, tasks: %s", repo_id, task_ids)
-        else:
-            removed_types = []
-            for key in sorted(content_types.keys()):
-                removed_types.append("%s %s(s)" % (content_types[key], key))
-            removed_types = ", ".join(removed_types)
-
-            LOG.info("%s: removed %s, tasks: %s", repo_id, removed_types, task_ids)
-
-        return cleared_repo
-
     @step("Clear content")
     def clear_content(self, repos):
         out = []
@@ -160,113 +114,7 @@ class ClearRepo(
 
         return out
 
-    @step("Record push items")
-    def record_clears(self, cleared_repo_fs):
-        return [f_flat_map(f, self.record_cleared_repo) for f in cleared_repo_fs]
-
-    def record_cleared_repo(self, cleared_repo):
-        push_items = []
-        for task in cleared_repo.tasks:
-            push_items.extend(self.push_items_for_task(task))
-        return self.collector.update_push_items(push_items)
-
-    def push_items_for_task(self, task):
-        out = []
-        for unit in task.units:
-            push_item = self.push_item_for_unit(unit)
-            if push_item:
-                out.append(push_item)
-        return out
-
-    def push_item_for_unit(self, unit):
-        for unit_type, fn in [
-            (ModulemdUnit, self.push_item_for_modulemd),
-            (RpmUnit, self.push_item_for_rpm),
-            (FileUnit, self.push_item_for_file),
-        ]:
-            if isinstance(unit, unit_type):
-                return fn(unit)
-
-    def push_item_for_modulemd(self, unit):
-        out = {}
-        out["state"] = "DELETED"
-        out["origin"] = "pulp"
-
-        # Note: N:S:V:C:A format here is kept even if some part
-        # of the data is missing (never expected to happen).
-        # For example, if C was missing, you'll get N:S:V::A
-        # so the arch part can't be misinterpreted as context.
-        nsvca = ":".join(
-            [unit.name, unit.stream, str(unit.version), unit.context, unit.arch]
-        )
-
-        out["name"] = nsvca
-
-        return ModuleMdPushItem(**out)
-
-    def push_item_for_rpm(self, unit):
-        out = {}
-
-        out["state"] = "DELETED"
-        out["origin"] = "pulp"
-
-        filename_parts = [
-            unit.name,
-            "-",
-            unit.version,
-            "-",
-            unit.release,
-            ".",
-            unit.arch,
-            ".rpm",
-        ]
-        out["name"] = "".join(filename_parts)
-
-        # Note: in practice we don't necessarily expect to get all of these
-        # attributes, as after a delete the server will only provide those
-        # which make up the unit key. We still copy them anyway (even if
-        # values are None) in case this is improved some day.
-        out["sha256sum"] = unit.sha256sum
-        out["md5sum"] = unit.md5sum
-        out["signing_key"] = unit.signing_key
-
-        return RpmPushItem(**out)
-
-    def push_item_for_file(self, unit):
-        out = {}
-
-        out["state"] = "DELETED"
-        out["origin"] = "pulp"
-        out["name"] = unit.path
-        out["sha256sum"] = unit.sha256sum
-
-        return FilePushItem(**out)
-
-    @step("Publish")
-    def publish(self, repo_fs):
-        return [
-            f_flat_map(f, lambda r: r.publish(PublishOptions(clean=True)))
-            for f in repo_fs
-        ]
-
-    @step("Flush UD cache")
-    def flush_ud(self, repos):
-        client = self.udcache_client
-        if not client:
-            LOG.info("UD cache flush is not enabled.")
-            return []
-
-        out = []
-        for repo in repos:
-            out.append(client.flush_repo(repo.id))
-            if repo.eng_product_id:
-                out.append(client.flush_product(repo.eng_product_id))
-
-        return out
-
     def run(self):
-        to_await = []
-
         # Get the repos we'll be dealing with.
         # This is blocking so we'll fail early on missing/bad repos.
         repos = self.get_repos()
@@ -276,7 +124,7 @@ class ClearRepo(
 
         # As clearing completes, record pushitem info on what was removed.
         # We don't have to wait on this before continuing.
-        to_await.extend(self.record_clears(cleared_repos_fs))
+        to_await = self.record_push_items(cleared_repos_fs, "DELETED")
 
         # Don't need the repo clearing tasks for anything more.
         repos_fs = [f_map(f, lambda cr: cr.repo) for f in cleared_repos_fs]
@@ -284,7 +132,7 @@ class ClearRepo(
         # Now move repos into the desired state:
 
         # They should be published.
-        publish_fs = self.publish(repos_fs)
+        publish_fs = self.publish(repos_fs, clean=True)
 
         # Wait for all repo publishes to complete before continuing.
         # Why: cache flush is what makes changes visible, and we want that to be

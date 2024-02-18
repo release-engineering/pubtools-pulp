@@ -9,6 +9,7 @@ import pytest
     params=[
         "pubtools._pulp.tasks.garbage_collect",
         "pubtools._pulp.tasks.clear_repo",
+        "pubtools._pulp.tasks.copy_repo",
         "pubtools._pulp.tasks.set_maintenance.set_maintenance_on",
         "pubtools._pulp.tasks.set_maintenance.set_maintenance_off",
         "pubtools._pulp.tasks.publish",

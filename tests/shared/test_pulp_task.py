@@ -1,7 +1,7 @@
 import sys
 import pytest
 
-from mock import Mock, patch
+from mock import patch
 
 from pubtools.pulplib import Client
 from pubtools._pulp.task import PulpTask, task_context
