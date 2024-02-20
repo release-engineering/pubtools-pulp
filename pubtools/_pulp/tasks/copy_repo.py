@@ -9,6 +9,7 @@ from pubtools.pulplib import (
     ErratumUnit,
     FileUnit,
     ModulemdUnit,
+    ModulemdDefaultsUnit,
     RpmUnit,
 )
 
@@ -137,16 +138,18 @@ class CopyRepo(CollectorService, PulpClientService, PulpRepositoryOperation):
     def copy_content(self, src_repo, dest_repo):
         futures = []
         content_types = self.content_type or ["None"]
-        for t in content_types:
+        for content_type in [t.lower() for t in content_types]:
             crit = None
-            if t == "iso":
+            if content_type == "iso":
                 crit = Criteria.with_unit_type(FileUnit)
-            if t in ("rpm", "srpm"):
+            if content_type in ("rpm", "srpm"):
                 crit = Criteria.with_unit_type(RpmUnit)
-            if t == "erratum":
+            if content_type == "erratum":
                 crit = Criteria.with_unit_type(ErratumUnit)
-            if t == "modulemd":
+            if content_type == "modulemd":
                 crit = Criteria.with_unit_type(ModulemdUnit)
+            if content_type == "modulemd_defaults":
+                crit = Criteria.with_unit_type(ModulemdDefaultsUnit)
 
             f = self.pulp_client.copy_content(src_repo, dest_repo, criteria=crit)
             f = f_map(f, partial(RepoCopy, repo=dest_repo))
