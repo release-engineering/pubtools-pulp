@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.27.0] - 2024-02-21
+
+- Reduce `pubtools-pulp-garbage-collect` default arc_threshold, 30->14
+- Implement `pubtools-pulp-copy-repo`
+
 ## [1.26.5] - 2023-11-29
 
 - Improved `pubtools-pulp-garbage-collect` effectiveness
@@ -225,7 +230,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.5...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.27.0...HEAD
+[1.27.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.5...v1.27.0
 [1.26.5]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.4...v1.26.5
 [1.26.4]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.3...v1.26.4
 [1.26.3]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.2...v1.26.3
