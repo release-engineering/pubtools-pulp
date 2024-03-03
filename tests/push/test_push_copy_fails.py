@@ -6,6 +6,7 @@ from pushsource import Source, FilePushItem
 from pubtools.pulplib import FileUnit
 
 from pubtools._pulp.tasks.push import entry_point
+from pubtools._pulp.tasks.push.items.base import MAX_RETRIES
 
 
 def test_push_copy_fails(
@@ -75,4 +76,10 @@ def test_push_copy_fails(
         "Fatal error: Pulp unit not present in repo(s) iso-dest2 "
         "after copy: FileUnit(path='some-file'"
     )
+
     assert msg in caplog.text
+
+    # there should be also evidence of retries
+    for i in range(1, MAX_RETRIES + 1):
+        msg = f"Retrying copy for 1 item(s). Attempt {i}/{MAX_RETRIES}"
+        assert msg in caplog.text

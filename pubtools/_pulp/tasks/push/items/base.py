@@ -18,6 +18,8 @@ SUPPORTED_TYPES = []
 
 LOG = logging.getLogger("pubtools.pulp")
 
+MAX_RETRIES = int(os.getenv("PUBTOOLS_MAX_COPY_RETRIES") or "5")
+
 
 def supports_type(pushitem_type):
     """Decorator used to define which PulpPushItem subclass implements support
@@ -200,19 +202,87 @@ class PulpPushItem(object):
 
         It is guaranteed that every yielded item exists in the desired
         target repos in Pulp. A fatal error occurs if this can't be done
-        for any item in the batch.
+        for any item in the batch. A retry mechanism is in place for those
+        items that weren't possible to copy due to race conditions.
         """
+        retries = 0
+        unit_type = items[0].unit_type
+        _items_to_process = items
 
+        while retries <= MAX_RETRIES:
+            copy_crit, copy_items, nocopy_items = cls._prepare_copy_items(
+                _items_to_process
+            )
+            copy_opers, copy_results = cls._submit_copies(
+                pulp_client, unit_type, copy_crit, copy_options
+            )
+
+            # Copies have been started.
+            # Any items which didn't need a copy can be immediately yielded now.
+            if nocopy_items:
+                yield f_return(nocopy_items)
+
+            # Add some reasonable logging onto the copies...
+            def log_copy_done(f):
+                if not f.cancelled() and not f.exception():
+                    tasks = f.result()
+                    oper = copy_opers[f]
+                    for t in tasks:
+                        oper.log_copy_done(t)
+
+            for f in copy_results:
+                f.add_done_callback(log_copy_done)
+
+            # A helper to refresh the state of each item in Pulp and make sure they
+            # were copied OK.
+            def refresh_after_copy(_):
+                # Get an up-to-date version of all the copy items.
+                f = cls.items_with_pulp_state_single_batch(pulp_client, copy_items)
+
+                asserting_all_copied_ok_maybe_fatal = partial(
+                    asserting_all_copied_ok, fatal=retries >= MAX_RETRIES
+                )
+                # Raise if any still have missing repos, only if we attempted all retries.
+                f = f_map(f, asserting_all_copied_ok_maybe_fatal)
+
+                return f
+
+            # This future completes once *all* copies are done successfully.
+            # TODO: this still could be improved, as not every item needs every copy
+            # before the state could be refreshed.
+            all_copies = f_sequence(copy_results)
+            # To finish up: wait for all copies to complete, then refresh item states
+            # and ensure they're no longer missing any repos.
+            finished = f_flat_map(all_copies, refresh_after_copy)
+
+            to_retry = []
+            to_yield = []
+            for item in finished.result():
+                if item.missing_pulp_repos:
+                    to_retry.append(item)
+                else:
+                    to_yield.append(item)
+            # yield successfully copied items
+            yield f_return(to_yield)
+
+            # if there are not items for copy, end retry loop
+            if not to_retry:
+                break
+            # otherwise increment retry counter and try copy with unsuccessfully copied items
+            retries += 1
+            _items_to_process = to_retry
+            LOG.info(
+                "Retrying copy for %s item(s). Attempt %s/%s",
+                len(to_retry),
+                retries,
+                MAX_RETRIES,
+            )
+
+    @classmethod
+    def _prepare_copy_items(cls, items):
         copy_crit = {}
-        copy_opers = {}
-        copy_results = []
-
         copy_items = []
         nocopy_items = []
-
-        unit_type = items[0].unit_type
-
-        base_crit = Criteria.with_unit_type(unit_type) if unit_type else None
 
         for item in items:
             if not item.missing_pulp_repos:
@@ -234,6 +304,15 @@ class PulpPushItem(object):
                     key = (src_repo_id, dest_repo_id)
                     copy_crit.setdefault(key, []).append(crit)
 
+        return copy_crit, copy_items, nocopy_items
+
+    @classmethod
+    def _submit_copies(cls, pulp_client, unit_type, copy_crit, copy_options):
+        copy_opers = {}
+        copy_results = []
+
+        base_crit = Criteria.with_unit_type(unit_type) if unit_type else None
+
         for key in copy_crit.keys():
             (src_repo_id, dest_repo_id) = key
 
@@ -254,41 +333,7 @@ class PulpPushItem(object):
 
             copy_results.append(copy_f)
 
-        # Copies have been started.
-        # Any items which didn't need a copy can be immediately yielded now.
-        if nocopy_items:
-            yield f_return(nocopy_items)
-
-        # Add some reasonable logging onto the copies...
-        def log_copy_done(f):
-            if not f.cancelled() and not f.exception():
-                tasks = f.result()
-                oper = copy_opers[f]
-                for t in tasks:
-                    oper.log_copy_done(t)
-
-        for f in copy_results:
-            f.add_done_callback(log_copy_done)
-
-        # A helper to refresh the state of each item in Pulp and make sure they
-        # were copied OK.
-        def refresh_after_copy(_):
-            # Get an up-to-date version of all the copy items.
-            f = cls.items_with_pulp_state_single_batch(pulp_client, copy_items)
-
-            # Raise if any still have missing repos.
-            f = f_map(f, asserting_all_copied_ok)
-
-            return f
-
-        # This future completes once *all* copies are done successfully.
-        # TODO: this still could be improved, as not every item needs every copy
-        # before the state could be refreshed.
-        all_copies = f_sequence(copy_results)
-
-        # To finish up: wait for all copies to complete, then refresh item states
-        # and ensure they're no longer missing any repos.
-        yield f_flat_map(all_copies, refresh_after_copy)
+        return copy_opers, copy_results
 
     @property
     def in_pulp_repos(self):
