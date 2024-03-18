@@ -3,6 +3,8 @@ import logging
 
 import yaml
 import attr
+from frozendict import frozendict
+from frozenlist2 import frozenlist
 from pubtools.pluggy import pm, hookimpl
 
 from pubtools import pulplib
@@ -104,6 +106,15 @@ def deserialize(value):
     return value
 
 
+def yaml_dumper(*args, **kwargs):
+    # Returns a yaml.SafeDumper which also supports immutable containers of the
+    # types used by pubtools-pulplib objects.
+    out = yaml.SafeDumper(*args, **kwargs)
+    out.add_representer(frozendict, out.__class__.represent_dict)
+    out.add_representer(frozenlist, out.__class__.represent_list)
+    return out
+
+
 class PersistentFake(object):
     """Wraps pulplib fake client adding persistence of state."""
 
@@ -162,7 +173,7 @@ class PersistentFake(object):
 
         # This sort key is a bit expensive since it means we essentially do yaml dump
         # twice. On the plus side it ensures a stable order across py2 and py3.
-        serialized["units"].sort(key=lambda x: yaml.dump(x, Dumper=yaml.SafeDumper))
+        serialized["units"].sort(key=lambda x: yaml.dump(x, Dumper=yaml_dumper))
 
         path = self.state_path
 
@@ -171,7 +182,7 @@ class PersistentFake(object):
             os.makedirs(state_dir)
 
         with open(path, "wt") as f:  # pylint:disable=unspecified-encoding
-            yaml.dump(serialized, f, Dumper=yaml.SafeDumper)
+            yaml.dump(serialized, f, Dumper=yaml_dumper)
 
         LOG.info("Fake pulp state persisted to %s", path)
 
