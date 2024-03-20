@@ -6,6 +6,7 @@ from more_executors.futures import f_sequence, f_return
 LOG = logging.getLogger("pubtools.pulp")
 UNSET = object()
 
+
 class StepDecorator(object):
     """Implementation of PulpTask.step decorator. See that method for more info."""
 
