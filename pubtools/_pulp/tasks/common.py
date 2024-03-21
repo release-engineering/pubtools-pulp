@@ -36,7 +36,7 @@ step = PulpTask.step
 class CDNCache(FastPurgeClientService, CdnClientService):
     """Provide features to interact with CDN cache."""
 
-    @step("Flush CDN cache")
+    @step("Flush CDN cache", depends_on=["publish"], skipped_value=[])
     def flush_cdn(self, repos):
         """Clears the CDN cache for the repositories provided
 

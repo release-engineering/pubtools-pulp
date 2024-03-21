@@ -4,13 +4,16 @@ import inspect
 from more_executors.futures import f_sequence, f_return
 
 LOG = logging.getLogger("pubtools.pulp")
+UNSET = object()
 
 
 class StepDecorator(object):
     """Implementation of PulpTask.step decorator. See that method for more info."""
 
-    def __init__(self, name):
+    def __init__(self, name, depends_on, skipped_value):
         self._name = name
+        self._depends_on = depends_on or []
+        self._skipped_value = skipped_value
 
     @property
     def human_name(self):
@@ -28,7 +31,11 @@ class StepDecorator(object):
                     self.human_name,
                     extra={"event": {"type": "%s-skip" % self.machine_name}},
                 )
-                return args[0] if args else None
+                return (
+                    self._skipped_value
+                    if self._skipped_value is not UNSET
+                    else args[0] if args else None
+                )
 
             logger = StepLogger(self)
             args = logger.log_start(args)
@@ -53,7 +60,8 @@ class StepDecorator(object):
 
     def should_skip(self, instance):
         skip = (getattr(instance.args, "skip", None) or "").split(",")
-        return self.machine_name in skip
+        deps_and_self = self._depends_on + [self.machine_name]
+        return any([name in skip for name in deps_and_self])
 
 
 # helpers used in implementation of decorator

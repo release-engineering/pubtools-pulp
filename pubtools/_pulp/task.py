@@ -4,7 +4,7 @@ from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
 from pubtools.pluggy import task_context
 
-from .step import StepDecorator
+from .step import StepDecorator, UNSET
 
 
 LOG = logging.getLogger("pubtools.pulp")
@@ -68,13 +68,17 @@ class PulpTask(object):
         return self._args
 
     @classmethod
-    def step(cls, name):
+    def step(cls, name, depends_on=None, skipped_value=UNSET):
         """A decorator to mark an instance method as a discrete workflow step.
 
         Marking a method as a step has effects:
 
         - Log messages will be produced when entering and leaving the method
         - The method can be skipped if requested by the caller (via --skip argument)
+        - Methods that depend on other methods are implicitly skipped if depends_on
+          is supplied and that dependant is being skipped
+        - If the method is skipped, it returns either `skipped_value` (if that has
+          been set), or the method's first argument.
 
         Steps may be written as plain blocking functions, as non-blocking
         functions which accept or return Futures, or as generators.
@@ -94,7 +98,7 @@ class PulpTask(object):
         - The step is considered *failed* if it raised an exception.
         - The step is considered *finished* once all items have been yielded.
         """
-        return StepDecorator(name)
+        return StepDecorator(name, depends_on, skipped_value)
 
     def _basic_args(self):
         # minimum args required for a pulp CLI task
