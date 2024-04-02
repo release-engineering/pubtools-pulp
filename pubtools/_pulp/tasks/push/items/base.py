@@ -95,6 +95,24 @@ class PulpPushItem(object):
     to a single unit (e.g. modulemd YAML files; comps.xml files).
     """
 
+    MULTI_UPLOAD_CONTEXT = False
+    """
+    Can the push item class create a different upload context based on the data
+    it holds. e.g PulpRpmPushItem has checksum separated upload repos/contexts.
+    
+    If true, subclass should override upload_repo.
+    """
+
+    @property
+    def upload_repo(self):
+        """Given a PulpPushItem, returns the repo its pushsource.PushItem
+        should be uploaded to.
+
+        Subclasses MAY override this to return a variable default destination.
+        Subclasses must set MULTI_UPLOAD_CONTEXT to True for this to be used.
+        """
+        return "" # pragma: no cover
+
     @classmethod
     def for_item(cls, pushsource_item, **kwargs):
         """Given a pushsource.PushItem, returns an instance of a PulpPushItem wrapper
@@ -136,12 +154,11 @@ class PulpPushItem(object):
 
         return klass.match_items_units(items, units)
 
-    @classmethod
-    def upload_context(cls, pulp_client):
+    def upload_context(self, pulp_client):
         """Return a context object used during uploads.
 
-        The context object will be shared across all uploads for a specific content
-        type.
+        The context object should be shared across all uploads for a specific
+        content type. Subclasses classes may introduce multiple contexts.
 
         Subclasses MAY override this to provide their own context
         (e.g. to cache a value rather than recalculating per upload).

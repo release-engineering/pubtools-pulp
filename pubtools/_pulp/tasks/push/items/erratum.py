@@ -1,5 +1,5 @@
 import logging
-
+import re
 import attr
 from pushsource import ErratumPushItem
 from pubtools.pulplib import (
@@ -18,10 +18,18 @@ LOG = logging.getLogger("pubtools.pulp")
 class ErratumUploadContext(UploadContext):
     """A custom context for Erratum uploads.
 
-    This context object avoids having to query the UPLOAD_REPO repeatedly.
+    This context object avoids having to query the PushItem's repo repeatedly.
     """
 
     upload_repo = attr.ib(default=None)
+
+
+class ErratumPushItemException(BaseException):
+    """
+    Custom exception for PulpErratumPushItem specific issues.
+
+    Mainly used for when a year value can't be parsed from the advisory name.
+    """
 
 
 @supports_type(ErratumPushItem)
@@ -29,13 +37,25 @@ class ErratumUploadContext(UploadContext):
 class PulpErratumPushItem(PulpPushItem):
     """Handler for errata."""
 
-    # Erratums are always uploaded to this repo first.
-    # Pulp stores the erratum pkglist for (erratum_id, repo) pair. If an erratum is
-    # uploaded for an already existing ID, the pkglist is overwritten if the repo is
-    # same, else is appended. To keep the pkglist consistent, all the erratums are
-    # uploaded to the same repo instead of a random repo from the list of destinations.
-    # For more details, refer RHELDST-12782.
-    UPLOAD_REPO = "all-rpm-content"
+    MULTI_UPLOAD_CONTEXT = True
+    ADVISORY_PATTERN = re.compile(r"RH.A-(\d{4})", re.IGNORECASE)
+    CONTENT_SPLIT_RANGES = [(2014, 2040), (8014, 8040)]
+
+    @property
+    def upload_repo(self):
+        # Split errata into different repos by year, assuming the advisory name
+        # is formatted like RHXA-YYYY
+        name_match = self.ADVISORY_PATTERN.match(self.pushsource_item.name)
+        if not name_match:
+            LOG.error("Bad Advisory name: '%s' does not contain a reasonable year value.",
+                         self.pushsource_item.name)
+            raise ErratumPushItemException
+        year = int(name_match.group(1))
+        if not any([r[0] <= year <= r[1] for r in self.CONTENT_SPLIT_RANGES]):
+            LOG.warning("%s was not in a valid date range for repo content splitting, using the default.",
+                        self.pushsource_item.name )
+            year = "0000"
+        return "all-erratum-content-%s" % year
 
     @property
     def unit_type(self):
@@ -89,11 +109,10 @@ class PulpErratumPushItem(PulpPushItem):
 
         return out
 
-    @classmethod
-    def upload_context(cls, pulp_client):
+    def upload_context(self, pulp_client):
         return ErratumUploadContext(
             client=pulp_client,
-            upload_repo=pulp_client.get_repository(cls.UPLOAD_REPO),
+            upload_repo=pulp_client.get_repository(self.upload_repo),
         )
 
     @classmethod

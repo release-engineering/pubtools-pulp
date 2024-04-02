@@ -39,8 +39,9 @@ def test_uploads_shared(data_path):
     """Upload phase allows for uploads of identical content to be reused."""
 
     pulp_ctrl = FakeController()
+    pulp_ctrl.insert_repository(YumRepository(id="all-rpm-content-54"))
+    pulp_ctrl.insert_repository(YumRepository(id="all-rpm-content-e8"))
 
-    pulp_ctrl.insert_repository(YumRepository(id="all-rpm-content"))
     pulp_ctrl.insert_repository(YumRepository(id="repo1"))
     pulp_ctrl.insert_repository(YumRepository(id="repo2"))
     pulp_ctrl.insert_repository(YumRepository(id="repo3"))

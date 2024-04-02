@@ -60,13 +60,17 @@ class Upload(Phase):
             else:
                 # This item is not in Pulp, or otherwise needs a reupload.
                 item_type = type(item)
-                if item_type not in upload_context:
-                    upload_context[item_type] = item_type.upload_context(
-                        self.pulp_client
-                    )
-
-                ctx = upload_context[item_type]
-
+                if item.MULTI_UPLOAD_CONTEXT:
+                    if item_type not in upload_context:
+                        upload_context[item_type] = {}
+                    if item.upload_repo not in upload_context[item_type]:
+                        upload_context[item_type][item.upload_repo] = \
+                            item.upload_context(self.pulp_client)
+                    ctx = upload_context[item_type][item.upload_repo]
+                else:
+                    if item_type not in upload_context:
+                        upload_context[item_type] = item.upload_context(self.pulp_client)
+                    ctx = upload_context[item_type]
                 uploading += 1
                 self.put_future_output(item.ensure_uploaded(ctx))
 
