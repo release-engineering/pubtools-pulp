@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.28.1] - 2024-04-05
+
+- Added retries for copy operation in `pubtools-pulp-push`
+- Introduced mechanism for implicit skip of steps in a task
+
 ## [1.27.1] - 2024-02-22
 
 - Introduced `pubtools-pulp-copy-repo` command
@@ -229,7 +234,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.27.1...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.28.1...HEAD
+[1.28.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.27.1...v1.28.1
 [1.27.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.5...v1.27.1
 [1.26.5]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.4...v1.26.5
 [1.26.4]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.3...v1.26.4
