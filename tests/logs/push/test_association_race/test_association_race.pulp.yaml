@@ -1,8 +1,16 @@
 repos:
+- _class: YumRepository
+  id: all-erratum-content-2019
+- _class: YumRepository
+  id: all-erratum-content-2020
 - _class: FileRepository
   id: all-iso-content
 - _class: YumRepository
   id: all-rpm-content
+- _class: YumRepository
+  id: all-rpm-content-54
+- _class: YumRepository
+  id: all-rpm-content-e8
 - _class: YumRepository
   arch: x86_64
   eng_product_id: 123
@@ -131,7 +139,7 @@ units:
     type: other
   release: '0'
   repository_memberships:
-  - all-rpm-content
+  - all-erratum-content-2020
   - dest1
   rights: Copyright 2020 Red Hat Inc
   severity: None
@@ -2757,7 +2765,7 @@ units:
     type: other
   release: '0'
   repository_memberships:
-  - all-rpm-content
+  - all-erratum-content-2019
   - dest1
   rights: Copyright 2019 Red Hat Inc
   severity: None
@@ -2903,7 +2911,7 @@ units:
     type: other
   release: '0'
   repository_memberships:
-  - all-rpm-content
+  - all-erratum-content-2020
   - dest1
   rights: Copyright 2020 Red Hat Inc
   severity: Important
@@ -7876,7 +7884,7 @@ units:
     version: '5.21'
   release: '1'
   repository_memberships:
-  - all-rpm-content
+  - all-rpm-content-e8
   - dest2
   requires:
   - _class: RpmDependency
@@ -7906,7 +7914,7 @@ units:
   provides: []
   release: '1'
   repository_memberships:
-  - all-rpm-content
+  - all-rpm-content-54
   - dest1
   requires:
   - _class: RpmDependency

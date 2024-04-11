@@ -1,8 +1,16 @@
 repos:
+- _class: YumRepository
+  id: all-erratum-content-2019
+- _class: YumRepository
+  id: all-erratum-content-2020
 - _class: FileRepository
   id: all-iso-content
 - _class: YumRepository
   id: all-rpm-content
+- _class: YumRepository
+  id: all-rpm-content-54
+- _class: YumRepository
+  id: all-rpm-content-e8
 - _class: YumRepository
   arch: x86_64
   eng_product_id: 123
@@ -33,7 +41,7 @@ units:
     version: '5.21'
   release: '1'
   repository_memberships:
-  - all-rpm-content
+  - all-rpm-content-e8
   requires:
   - _class: RpmDependency
     epoch: '0'

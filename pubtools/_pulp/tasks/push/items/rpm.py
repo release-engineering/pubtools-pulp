@@ -9,9 +9,11 @@ from .base import supports_type, PulpPushItem, UploadContext
 
 @attr.s(frozen=True, slots=True)
 class RpmUploadContext(UploadContext):
-    """A custom context for RPM uploads.
+    """
+    A custom context for RPM uploads.
 
-    This context object avoids having to query the all-rpm-content repo repeatedly.
+    This context object lets us avoid querying the all-rpm-content-XX repos
+    repeatedly.
     """
 
     upload_repo = attr.ib(default=None)
@@ -22,8 +24,12 @@ class RpmUploadContext(UploadContext):
 class PulpRpmPushItem(PulpPushItem):
     """Handler for RPMs."""
 
-    # RPMs are always uploaded to this repo first.
-    UPLOAD_REPO = "all-rpm-content"
+    MULTI_UPLOAD_CONTEXT = True
+
+    @property
+    def upload_repo(self):
+        # Split RPMs into different repos by checksum
+        return "all-rpm-content-%s" % self.pushsource_item.sha256sum[0:2]
 
     @property
     def unit_type(self):
@@ -89,16 +95,15 @@ class PulpRpmPushItem(PulpPushItem):
         for item in items:
             yield item.with_unit(units_by_sum.get(item.pushsource_item.sha256sum))
 
-    @classmethod
-    def upload_context(cls, pulp_client):
+    def upload_context(self, pulp_client):
         return RpmUploadContext(
             client=pulp_client,
-            upload_repo=pulp_client.get_repository(cls.UPLOAD_REPO),
+            upload_repo=pulp_client.get_repository(self.upload_repo),
         )
 
     @property
     def can_pre_push(self):
-        # We support pre-push by uploading to all-rpm-content first.
+        # We support pre-push by uploading to all-rpm-content-XX first.
         return True
 
     @property
