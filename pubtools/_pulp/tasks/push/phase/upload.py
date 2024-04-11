@@ -64,12 +64,15 @@ class Upload(Phase):
                     if item_type not in upload_context:
                         upload_context[item_type] = {}
                     if item.upload_repo not in upload_context[item_type]:
-                        upload_context[item_type][item.upload_repo] = \
+                        upload_context[item_type][item.upload_repo] = (
                             item.upload_context(self.pulp_client)
+                        )
                     ctx = upload_context[item_type][item.upload_repo]
                 else:
                     if item_type not in upload_context:
-                        upload_context[item_type] = item.upload_context(self.pulp_client)
+                        upload_context[item_type] = item.upload_context(
+                            self.pulp_client
+                        )
                     ctx = upload_context[item_type]
                 uploading += 1
                 self.put_future_output(item.ensure_uploaded(ctx))
