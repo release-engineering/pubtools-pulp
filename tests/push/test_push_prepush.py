@@ -58,8 +58,10 @@ def test_pre_push(
     assert units
 
     # RPMs are separated into different arc repos by checksum
-    expected_repo_mapping = {"test-srpm01": ["all-rpm-content-54"],
-                             "walrus": ["all-rpm-content-e8"]}
+    expected_repo_mapping = {
+        "test-srpm01": ["all-rpm-content-54"],
+        "walrus": ["all-rpm-content-e8"],
+    }
 
     for unit in units:
         # The only type of content is RPMs, because that's all we support for

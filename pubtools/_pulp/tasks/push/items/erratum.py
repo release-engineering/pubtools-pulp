@@ -47,13 +47,17 @@ class PulpErratumPushItem(PulpPushItem):
         # is formatted like RHXA-YYYY
         name_match = self.ADVISORY_PATTERN.match(self.pushsource_item.name)
         if not name_match:
-            LOG.error("Bad Advisory name: '%s' does not contain a reasonable year value.",
-                         self.pushsource_item.name)
+            LOG.error(
+                "Bad Advisory name: '%s' does not contain a reasonable year value.",
+                self.pushsource_item.name,
+            )
             raise ErratumPushItemException
         year = int(name_match.group(1))
         if not any([r[0] <= year <= r[1] for r in self.CONTENT_SPLIT_RANGES]):
-            LOG.warning("%s was not in a valid date range for repo content splitting, using the default.",
-                        self.pushsource_item.name )
+            LOG.warning(
+                "%s was not in a valid date range for repo content splitting, using the default.",
+                self.pushsource_item.name,
+            )
             year = "0000"
         return "all-erratum-content-%s" % year
 

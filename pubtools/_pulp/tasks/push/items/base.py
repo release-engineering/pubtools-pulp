@@ -111,7 +111,7 @@ class PulpPushItem(object):
         Subclasses MAY override this to return a variable default destination.
         Subclasses must set MULTI_UPLOAD_CONTEXT to True for this to be used.
         """
-        return "" # pragma: no cover
+        return ""  # pragma: no cover
 
     @classmethod
     def for_item(cls, pushsource_item, **kwargs):
