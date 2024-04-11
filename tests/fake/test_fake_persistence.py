@@ -24,10 +24,15 @@ def test_state_persisted(tmpdir, data_path):
         # It should already have a few repos since there is some default
         # state.
         repo_ids = sorted([repo.id for repo in client.search_repository()])
-        assert repo_ids == ["all-erratum-content-2019", "all-erratum-content-2020",
-                            "all-iso-content", "all-rpm-content",
-                            "all-rpm-content-54", "all-rpm-content-e8",
-                            "redhat-maintenance"]
+        assert repo_ids == [
+            "all-erratum-content-2019",
+            "all-erratum-content-2020",
+            "all-iso-content",
+            "all-rpm-content",
+            "all-rpm-content-54",
+            "all-rpm-content-e8",
+            "redhat-maintenance",
+        ]
 
         # Now add a bit more state.
         # We use modules here because that's one of the more complex types
