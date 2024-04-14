@@ -136,6 +136,11 @@ class PersistentFake(object):
         self.ctrl.insert_repository(FileRepository(id="redhat-maintenance"))
         self.ctrl.insert_repository(FileRepository(id="all-iso-content"))
         self.ctrl.insert_repository(YumRepository(id="all-rpm-content"))
+        # Repos required for common test data (RHELDST-23264)
+        self.ctrl.insert_repository(YumRepository(id="all-rpm-content-e8"))
+        self.ctrl.insert_repository(YumRepository(id="all-rpm-content-54"))
+        self.ctrl.insert_repository(YumRepository(id="all-erratum-content-2019"))
+        self.ctrl.insert_repository(YumRepository(id="all-erratum-content-2020"))
 
     def load(self):
         """Load data into the fake from previously serialized state (if any).

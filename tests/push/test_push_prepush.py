@@ -57,14 +57,18 @@ def test_pre_push(
     # It should have uploaded some stuff
     assert units
 
+    # RPMs are separated into different arc repos by checksum
+    expected_repo_mapping = {
+        "test-srpm01": ["all-rpm-content-54"],
+        "walrus": ["all-rpm-content-e8"],
+    }
+
     for unit in units:
         # The only type of content is RPMs, because that's all we support for
         # pre-push right now
         assert isinstance(unit, RpmUnit)
 
-        # And the only repo containing those RPMs should be all-rpm-content,
-        # because that's how pre-push works
-        assert unit.repository_memberships == ["all-rpm-content"]
+        assert unit.repository_memberships == expected_repo_mapping[unit.name]
 
 
 def test_pre_push_no_dest(
@@ -124,4 +128,4 @@ def test_pre_push_no_dest(
     assert isinstance(units[0], RpmUnit)
 
     # Only to this repo
-    assert units[0].repository_memberships == ["all-rpm-content"]
+    assert units[0].repository_memberships == ["all-rpm-content-e8"]
