@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.29.1] - 2024-04-15
+
+- Added support for `all-rpm-content-XX` and `all-erratum-content-YYYY` repositories in `upload_repo()`
+
 ## [1.28.1] - 2024-04-05
 
 - Added retries for copy operation in `pubtools-pulp-push`
@@ -234,7 +238,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.28.1...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.29.1...HEAD
+[1.29.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.28.1...v1.29.1
 [1.28.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.27.1...v1.28.1
 [1.27.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.5...v1.27.1
 [1.26.5]: https://github.com/release-engineering/pubtools-pulp/compare/v1.26.4...v1.26.5
