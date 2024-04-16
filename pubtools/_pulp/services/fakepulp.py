@@ -40,7 +40,7 @@ def serialize(value):
     if isinstance(value, list):
         return [serialize(elem) for elem in value]
 
-    if isinstance(value, dict):
+    if isinstance(value, (dict, frozendict)):
         out = {}
         for key, elem in value.items():
             out[key] = serialize(elem)
