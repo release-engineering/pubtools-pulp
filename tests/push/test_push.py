@@ -131,7 +131,7 @@ def test_typical_push(
     )
 
     # It should have invoked hook(s).
-    assert len(hookspy) == 29
+    assert len(hookspy) == 25
     (hook_name, hook_kwargs) = hookspy[0]
     assert hook_name == "task_start"
     (hook_name, hook_kwargs) = hookspy[1]

@@ -86,7 +86,8 @@ class PulpErratumPushItem(PulpPushItem):
             #
             # Also note that there's an entire family of these repos, hence the
             # startswith rather than plain equality check.
-            if not repo_id.startswith("all-rpm-content"):
+            if not (repo_id.startswith("all-rpm-content")
+                    or repo_id.startswith("all-erratum-content")):
                 out.add(repo_id)
 
         return sorted(out)
