@@ -1,0 +1,12 @@
+[    INFO] Check repos: started
+[    INFO] Check repos: finished
+[    INFO] Copy content: started
+[    INFO] another-filerepo: copied 1 iso(s), tasks: e3e70682-c209-4cac-629f-6fbed82c07cd
+[    INFO] Copy content: finished
+[    INFO] Record push items: started
+[    INFO] Record push items: finished
+[    INFO] Publish: skipped
+[    INFO] Flush UD cache: started
+[    INFO] UD cache flush is not enabled.
+[    INFO] Flush UD cache: finished
+[    INFO] Flush CDN cache: skipped

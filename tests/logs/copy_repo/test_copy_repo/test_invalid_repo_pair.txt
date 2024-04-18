@@ -1,0 +1,4 @@
+[    INFO] Check repos: started
+[   ERROR] Pair(s) must contain two repository IDs, source and destination. Got: 'repo1, '
+[   ERROR] Check repos: failed
+# Raised: 30

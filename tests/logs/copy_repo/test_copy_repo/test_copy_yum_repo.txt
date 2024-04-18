@@ -1,0 +1,15 @@
+[    INFO] Check repos: started
+[    INFO] Check repos: finished
+[    INFO] Copy content: started
+[    INFO] another-yumrepo: copied 1 erratum(s), 1 modulemd(s), 1 rpm(s), tasks: e3e70682-c209-4cac-629f-6fbed82c07cd
+[    INFO] Copy content: finished
+[    INFO] Record push items: started
+[    INFO] Record push items: finished
+[    INFO] Publish: started
+[    INFO] Publish: finished
+[    INFO] Flush UD cache: started
+[    INFO] UD cache flush is not enabled.
+[    INFO] Flush UD cache: finished
+[    INFO] Flush CDN cache: started
+[    INFO] CDN cache flush is not enabled.
+[    INFO] Flush CDN cache: finished
