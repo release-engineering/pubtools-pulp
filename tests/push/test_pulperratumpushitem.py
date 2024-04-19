@@ -23,6 +23,7 @@ def test_erratum_publishes_all_repos():
             repository_memberships=[
                 "all-rpm-content",
                 "all-rpm-content-ff",
+                "all-erratum-content-2019",
                 "existing1",
                 "existing2",
             ],
