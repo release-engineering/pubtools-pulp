@@ -1,0 +1,4 @@
+[    INFO] Check repos: started
+[   ERROR] Requested repo(s) don't exist: repo1, repo2, repo3, repo4
+[   ERROR] Check repos: failed
+# Raised: 30

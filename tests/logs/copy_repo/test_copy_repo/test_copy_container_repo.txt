@@ -1,0 +1,4 @@
+[    INFO] Check repos: started
+[   ERROR] Container image repo(s) provided, not supported: another-container-repo, some-container-repo
+[   ERROR] Check repos: failed
+# Raised: 30

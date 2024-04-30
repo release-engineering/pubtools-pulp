@@ -9,6 +9,8 @@ from pubtools.pulplib import (
     ModulemdUnit,
     RpmUnit,
     YumRepository,
+    Criteria,
+    Matcher,
 )
 
 import pubtools._pulp.tasks.copy_repo
@@ -73,7 +75,7 @@ def test_missing_repos(command_tester):
     )
 
 
-def test_invalid_repo_pair(command_tester, caplog):
+def test_invalid_repo_pair(command_tester):
     command_tester.test(
         lambda: pubtools._pulp.tasks.copy_repo.entry_point(FakeCopyRepo),
         [
@@ -82,10 +84,6 @@ def test_invalid_repo_pair(command_tester, caplog):
             "https://pulp.example.com/",
             "repo1, ",
         ],
-    )
-    assert (
-        "Pair(s) must contain two repository IDs, source and destination. Got: ['repo1', ' ']"
-        in caplog.text
     )
 
 
@@ -106,6 +104,34 @@ def test_copy_empty_repo(command_tester, fake_collector):
                 "--pulp-url",
                 "https://pulp.example.com/",
                 "some-filerepo,another-filerepo",
+            ],
+        )
+
+    # No push items recorded
+    assert not fake_collector.items
+
+
+def test_copy_invalid_content_type(command_tester, fake_collector):
+    """Running command with invalid content type fails"""
+
+    with FakeCopyRepo() as task_instance:
+        repoA = FileRepository(id="some-filerepo")
+        repoB = FileRepository(id="another-filerepo")
+
+        task_instance.pulp_client_controller.insert_repository(repoA)
+        task_instance.pulp_client_controller.insert_repository(repoB)
+
+        command_tester.test(
+            task_instance.main,
+            [
+                "test-copy-repo",
+                "--pulp-url",
+                "https://pulp.example.com/",
+                "some-filerepo,another-filerepo",
+                "--content-type",
+                "rpm",
+                "--content-type",
+                "container",
             ],
         )
 
@@ -330,8 +356,8 @@ def test_copy_container_repo(command_tester):
     """Copying a container image repo is not allowed."""
 
     with FakeCopyRepo() as task_instance:
-        repoA = ContainerImageRepository(id="some-containerrepo")
-        repoB = ContainerImageRepository(id="another-containerrepo")
+        repoA = ContainerImageRepository(id="some-container-repo")
+        repoB = ContainerImageRepository(id="another-container-repo")
 
         task_instance.pulp_client_controller.insert_repository(repoA)
         task_instance.pulp_client_controller.insert_repository(repoB)
@@ -343,7 +369,7 @@ def test_copy_container_repo(command_tester):
                 "test-copy-repo",
                 "--pulp-url",
                 "https://pulp.example.com/",
-                "some-containerrepo,another-containerrepo",
+                "some-container-repo,another-container-repo",
             ],
         )
 
@@ -399,7 +425,7 @@ def test_copy_repo_multiple_content_types(command_tester, fake_collector):
             ],
         )
 
-    # test the new ClearRepo argument handling for --content-type
+    # test the CopyRepo argument handling for --content-type
     # produces the expected output
     assert task_instance.args.content_type == ["rpm", "modulemd", "iso", "erratum"]
 
@@ -426,3 +452,90 @@ def test_copy_repo_multiple_content_types(command_tester, fake_collector):
             "build": None,
         },
     ]
+
+
+def test_copy_repo_criteria(command_tester):
+    repoA = YumRepository(
+        id="some-yumrepo", relative_url="some/publish/url", mutable_urls=["repomd.xml"]
+    )
+    repoB = YumRepository(
+        id="another-yumrepo",
+        relative_url="another/publish/url",
+        mutable_urls=["repomd.xml"],
+    )
+    with FakeCopyRepo() as task_instance:
+        task_instance.pulp_client_controller.insert_repository(repoA)
+        task_instance.pulp_client_controller.insert_repository(repoB)
+        # It should run with expected output.
+        command_tester.test(
+            task_instance.main,
+            [
+                "test-copy-repo",
+                "--pulp-url",
+                "https://pulp.example.com/",
+                "--content-type",
+                "rpm",
+                "--content-type",
+                "srpm",  # will be coerced to rpm (and deduplicated)
+                "--content-type",
+                "modulemd",
+                "--content-type",  # duplicate
+                "modulemd",
+                "--content-type",
+                "iso",
+                "--content-type",
+                "erratum",
+                "--content-type",
+                "package_group",
+                "--content-type",
+                "package_langpacks",
+                "some-yumrepo,another-yumrepo",
+            ],
+        )
+
+        # we passed 8 content types to command
+        assert len(task_instance.args.content_type) == 8
+        # while creating criteria, content types are sanitized:
+        # 1. srpm coerced to rpm
+        # 2. deduplicated
+        # and converted to list of Criteria
+        criteria = sorted([str(item) for item in task_instance.content_type_criteria])
+        # there should be mix of Criteria.with_unit_type and Criteria.with_field
+        # but we will try at least check that proper content types are queried
+
+        expected_criteria = sorted(
+            [
+                str(item)
+                for item in [
+                    Criteria.with_unit_type(
+                        RpmUnit,
+                        unit_fields=(
+                            "name",
+                            "version",
+                            "release",
+                            "arch",
+                            "sha256sum",
+                            "md5sum",
+                            "signing_key",
+                        ),
+                    ),
+                    Criteria.with_unit_type(ErratumUnit, unit_fields=("unit_id",)),
+                    Criteria.with_unit_type(
+                        ModulemdUnit,
+                        unit_fields=(
+                            "name",
+                            "stream",
+                            "version",
+                            "context",
+                            "arch",
+                        ),
+                    ),
+                    Criteria.with_unit_type(FileUnit, unit_fields=("unit_id",)),
+                    Criteria.with_field(
+                        "content_type_id",
+                        Matcher.in_(["package_group", "package_langpacks"]),
+                    ),
+                ]
+            ]
+        )
+        assert criteria == expected_criteria
