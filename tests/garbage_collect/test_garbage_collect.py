@@ -320,4 +320,4 @@ def test_arc_garbage_collect_0items(mock_logger):
             gc.main()
     updated_rpm = list(client.get_repository("all-rpm-content").search_content())
     assert len(updated_rpm) == 1
-    mock_logger.info.assert_any_call("No all-rpm-content found older than %s", 14)
+    mock_logger.info.assert_any_call("No all-rpm-content found older than %s", 30)
