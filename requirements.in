@@ -3,6 +3,5 @@ pubtools-pulplib>=2.36.0
 fastpurge
 more_executors>=2.7.0
 pushcollector>=1.2.0
-pushsource>=2.27.0
-rhsm
+pushsource>=2.45.0
 monotonic; python_version < '3.3'

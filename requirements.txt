@@ -299,11 +299,6 @@ importlib-resources==6.4.0 \
     # via
     #   jsonschema
     #   jsonschema-specifications
-iniparse==0.5 \
-    --hash=sha256:88ca60473b1637055a937933d48840be1b1b6835f381a6158ef118a532583675 \
-    --hash=sha256:932e5239d526e7acb504017bb707be67019ac428a6932368e6851691093aa842 \
-    --hash=sha256:db6ef1d8a02395448e0e7b17ac0aa28b8d338b632bbd1ffca08c02ddae32cf97
-    # via rhsm
 jsonschema==4.22.0 \
     --hash=sha256:5b22d434a45935119af990552c862e5d6d564e8f6601206b305a61fdf661a2b7 \
     --hash=sha256:ff4cfd6b1367a40e7bc6411caec72effadd3db0bbe5017de188f2d6108335802
@@ -487,9 +482,6 @@ requests-toolbelt==1.0.0 \
     --hash=sha256:7681a0a3d047012b5bdc0ee37d7f8f07ebe76ab08caeccfc3921ce23c88d5bc6 \
     --hash=sha256:cccfdd665f0a24fcf4726e690f65639d272bb0637b9b92dfd91a5568ccf6bd06
     # via edgegrid-python
-rhsm==1.19.2 \
-    --hash=sha256:156525483560d821dd858194af9692803d339b379f7a378c382a3782d0902329
-    # via -r requirements.in
 rpds-py==0.18.1 \
     --hash=sha256:05f3d615099bd9b13ecf2fc9cf2d839ad3f20239c678f461c753e93755d629ee \
     --hash=sha256:06d218939e1bf2ca50e6b0ec700ffe755e5216a8230ab3e87c059ebb4ea06afc \
@@ -598,7 +590,6 @@ six==1.16.0 \
     --hash=sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254
     # via
     #   fastpurge
-    #   iniparse
     #   kobo
     #   koji
     #   more-executors
