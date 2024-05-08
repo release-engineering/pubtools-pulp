@@ -38,7 +38,7 @@ class GarbageCollect(PulpClientService, PulpTask):
             "--arc-threshold",
             help="delete all-rpm-content older than this many days",
             type=int,
-            default=14,
+            default=30,
         )
 
     def run(self):
