@@ -3,7 +3,7 @@ pytest-cov
 coveralls
 mock
 requests_mock
-rpm-py-installer
+rpmdyn
 
 # The following deps are not relevant for the legacy test env.
 black; python_version>='3'

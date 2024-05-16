@@ -1,22 +1,11 @@
-from pushsource import ProductIdPushItem
+from pushsource import ProductId, ProductIdPushItem
 
-import rhsm.certificate
 from pubtools.pulplib import FakeController, YumRepository
 from pubtools._pulp.tasks.push.items import PulpProductIdPushItem
 from pubtools._pulp.tasks.push.items.base import UploadContext
 
 
-class FakeProduct(object):
-    def __init__(self, version):
-        self.version = version
-
-
-class FakeCert(object):
-    def __init__(self, versions):
-        self.products = [FakeProduct(v) for v in versions]
-
-
-def test_updates_product_versions(monkeypatch, tmpdir):
+def test_updates_product_versions(tmpdir):
     """Uploading a productid to a repo will update the product_versions field
     on that repo and related repos.
     """
@@ -79,14 +68,8 @@ def test_updates_product_versions(monkeypatch, tmpdir):
     ctrl.insert_repository(repo7)
     ctrl.insert_repository(repo8)
 
-    # Set up cert parser to use a fake cert object (saves us having to explicitly
-    # generate certs with certain values)
-    monkeypatch.setattr(
-        rhsm.certificate, "create_from_file", lambda _: FakeCert(["a", "d"])
-    )
-
-    # make a fake productid.
-    # content doesn't matter since we patched the cert parser, it just has
+    # make a fake productid file.
+    # content doesn't matter since we inject the ProductIDs, it just has
     # to be an existing file.
     productid = tmpdir.join("productid")
     productid.write("")
@@ -94,7 +77,13 @@ def test_updates_product_versions(monkeypatch, tmpdir):
     # make an item targeting two of the repos
     item = PulpProductIdPushItem(
         pushsource_item=ProductIdPushItem(
-            name="test", src=str(productid), dest=["repo2", "repo7"]
+            name="test",
+            src=str(productid),
+            dest=["repo2", "repo7"],
+            products=[
+                ProductId(id=1234, version="a"),
+                ProductId(id=1234, version="d"),
+            ],
         )
     )
 

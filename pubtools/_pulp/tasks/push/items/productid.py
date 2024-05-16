@@ -4,7 +4,6 @@ from threading import Lock
 import attr
 from more_executors.futures import f_flat_map, f_map, f_sequence
 from pushsource import ProductIdPushItem
-import rhsm.certificate
 from pubtools.pulplib import Criteria
 
 from .base import supports_type
@@ -79,9 +78,8 @@ class PulpProductIdPushItem(PulpDirectUploadPushItem):
 
     @product_versions.default
     def _product_versions_from_cert(self):
-        if self.pushsource_item and self.pushsource_item.src:
-            cert = rhsm.certificate.create_from_file(self.pushsource_item.src)
-            versions = [p.version for p in cert.products]
+        if self.pushsource_item:
+            versions = [p.version for p in self.pushsource_item.products]
             return sorted(set(versions))
         return []
 
