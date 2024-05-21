@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup, find_namespace_packages
 
 
 def get_description():
@@ -22,7 +22,8 @@ def get_requirements():
 setup(
     name="pubtools-pulp",
     version="1.30.1",
-    packages=find_packages(exclude=["tests"]),
+    packages=find_namespace_packages(where="src"),
+    package_dir={"": "src"},
     url="https://github.com/release-engineering/pubtools-pulp",
     license="GNU General Public License",
     description=get_description(),
