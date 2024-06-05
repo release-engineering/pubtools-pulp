@@ -52,9 +52,7 @@ def test_erratum_upload_repo_normal_exists_in_pulp():
 
     item = PulpErratumPushItem(
         # We're being asked to push an advisory to a few repos...
-        pushsource_item=ErratumPushItem(
-            name="RHSA-2030:56", dest=["new", "existing"]
-        ),
+        pushsource_item=ErratumPushItem(name="RHSA-2030:56", dest=["new", "existing"]),
         pulp_state=State.PARTIAL,
         pulp_unit=ErratumUnit(
             id="abc123",
@@ -77,9 +75,7 @@ def test_erratum_upload_repo_legacy():
 
     item = PulpErratumPushItem(
         # We're being asked to push an advisory to a few repos...
-        pushsource_item=ErratumPushItem(
-            name="RHSA-2030:56", dest=["new", "existing"]
-        ),
+        pushsource_item=ErratumPushItem(name="RHSA-2030:56", dest=["new", "existing"]),
         pulp_state=State.PARTIAL,
         pulp_unit=ErratumUnit(
             id="abc123",
@@ -113,5 +109,3 @@ def test_erratum_upload_repo_bad_format():
             pushsource_item=ErratumPushItem(name="RHSA-fail:1234")
         )
         item.upload_repo
-
-
