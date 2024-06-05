@@ -45,6 +45,13 @@ class PulpErratumPushItem(PulpPushItem):
     def upload_repo(self):
         # Split errata into different repos by year, assuming the advisory name
         # is formatted like RHXA-YYYY
+
+        # Already existing erratum units that were previously uploaded only to all-rpm-content
+        # needs to be uploaded to the same repository again otherwise pkglist within the erratum unit 
+        # will get extended but not overwritten
+        if "all-rpm-content" in self.in_pulp_repos:
+            return "all-rpm-content"
+
         name_match = self.ADVISORY_PATTERN.match(self.pushsource_item.name)
         if not name_match:
             LOG.error(

@@ -46,6 +46,55 @@ def test_erratum_upload_repo_normal():
     assert item.upload_repo == "all-erratum-content-2019"
 
 
+def test_erratum_upload_repo_normal_exists_in_pulp():
+    # Test upload_repo maps name to expected repo but requested
+    # erratum unit already exists in pulp
+
+    item = PulpErratumPushItem(
+        # We're being asked to push an advisory to a few repos...
+        pushsource_item=ErratumPushItem(
+            name="RHSA-2030:56", dest=["new", "existing"]
+        ),
+        pulp_state=State.PARTIAL,
+        pulp_unit=ErratumUnit(
+            id="abc123",
+            # ...and the advisory already exists in some Pulp, repos, maybe with
+            # some overlap
+            repository_memberships=[
+                "all-erratum-content-2030",
+                "existing",
+            ],
+        ),
+    )
+
+    assert item.upload_repo == "all-erratum-content-2030"
+
+
+def test_erratum_upload_repo_legacy():
+    # Erratum unit previously uploaded to legacy all-rpm-content repo
+    # has to be upload to the same repository otherwise we will observe
+    # unwanted side-effect of extending pkglist instead of overwriting it
+
+    item = PulpErratumPushItem(
+        # We're being asked to push an advisory to a few repos...
+        pushsource_item=ErratumPushItem(
+            name="RHSA-2030:56", dest=["new", "existing"]
+        ),
+        pulp_state=State.PARTIAL,
+        pulp_unit=ErratumUnit(
+            id="abc123",
+            # ...and the advisory already exists in some Pulp, repos, maybe with
+            # some overlap
+            repository_memberships=[
+                "all-rpm-content",
+                "existing",
+            ],
+        ),
+    )
+
+    assert item.upload_repo == "all-rpm-content"
+
+
 def test_erratum_upload_repo_default():
     # Test upload_repo maps name to default repo when advisory year is outside
     # the expected range
@@ -64,3 +113,5 @@ def test_erratum_upload_repo_bad_format():
             pushsource_item=ErratumPushItem(name="RHSA-fail:1234")
         )
         item.upload_repo
+
+
