@@ -285,7 +285,10 @@ def test_repo_publish_cache_cleanup_skip_ud(command_tester):
         )
 
     # pulp repo is published
-    assert [hist.repository.id for hist in fake_pulp.publish_history] == ["repo1", "repo4"]
+    assert [hist.repository.id for hist in fake_pulp.publish_history] == [
+        "repo1",
+        "repo4",
+    ]
     # flushed the urls
     assert sorted(fake_publish.fastpurge_client.purged_urls) == [
         "https://cdn.example.com/content/unit/1/client/mutable1",
