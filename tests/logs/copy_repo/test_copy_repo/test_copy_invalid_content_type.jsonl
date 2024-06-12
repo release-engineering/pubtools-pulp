@@ -1,0 +1,4 @@
+{"event": {"type": "check-repos-start"}}
+{"event": {"type": "check-repos-end"}}
+{"event": {"type": "copy-content-start"}}
+{"event": {"type": "copy-content-error"}}
