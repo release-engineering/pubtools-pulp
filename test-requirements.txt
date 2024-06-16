@@ -26,9 +26,9 @@ babel==2.15.0 \
     --hash=sha256:08706bdad8d0a3413266ab61bd6c34d0c28d6e1e7badf40a2cebe67644e2e1fb \
     --hash=sha256:8daf0e265d05768bc6c7a314cf1321e9a123afc328cc635c18622a2f30a04413
     # via sphinx
-bandit==1.7.8 ; python_version >= "3" \
-    --hash=sha256:36de50f720856ab24a24dbaa5fee2c66050ed97c1477e0a1159deab1775eab6b \
-    --hash=sha256:509f7af645bc0cd8fd4587abc1a038fc795636671ee8204d502b933aee44f381
+bandit==1.7.9 ; python_version >= "3" \
+    --hash=sha256:52077cb339000f337fb25f7e045995c4ad01511e716e5daac37014b9752de8ec \
+    --hash=sha256:7c395a436743018f7be0a4cbb0a4ea9b902b6d87264ddecf8cfdc73b4f78ff61
     # via -r test-requirements.in
 black==24.4.2 ; python_version >= "3" \
     --hash=sha256:257d724c2c9b1660f353b36c802ccece186a30accc7742c176d29c146df6e474 \
@@ -349,9 +349,9 @@ fastpurge==1.0.5 \
     --hash=sha256:0e8c082afca8d4fd289963a59b4ba022704263b271117bac18b7d8bd768b0b9f \
     --hash=sha256:74499c36be7372ee63bf694d61b0c85b6877d15830be4cfe2918f4baec2a0803
     # via -r requirements.in
-filelock==3.14.0 \
-    --hash=sha256:43339835842f110ca7ae60f1e1c160714c5a6afd15a2873419ab185334975c0f \
-    --hash=sha256:6ea72da3be9b8c82afd3edcf99f2fffbb5076335a5ae4d03248bb5b6c3eae78a
+filelock==3.15.1 \
+    --hash=sha256:58a2549afdf9e02e10720eaa4d4470f56386d7a6f72edd7d0596337af8ed7ad8 \
+    --hash=sha256:71b3102950e91dfc1bb4209b64be4dc8854f40e5f534428d8684f953ac847fac
     # via virtualenv
 frozendict==2.4.4 \
     --hash=sha256:07c3a5dee8bbb84cba770e273cdbf2c87c8e035903af8f781292d72583416801 \
@@ -596,9 +596,9 @@ opentelemetry-semantic-conventions==0.46b0 \
     --hash=sha256:6daef4ef9fa51d51855d9f8e0ccd3a1bd59e0e545abe99ac6203804e36ab3e07 \
     --hash=sha256:fbc982ecbb6a6e90869b15c1673be90bd18c8a56ff1cffc0864e38e2edffaefa
     # via opentelemetry-sdk
-packaging==24.0 \
-    --hash=sha256:2ddfb553fdf02fb784c234c7ba6ccc288296ceabec964ad2eae3777778130bc5 \
-    --hash=sha256:eb82c5e3e56209074766e6885bb04b8c38a0c015d0a30036ebe7ece34c9989e9
+packaging==24.1 \
+    --hash=sha256:026ed72c8ed3fcce5bf8950572258698927fd1dbda10a5e981cdf0ac37f4f002 \
+    --hash=sha256:5b8f2217dbdbd2f7f384c41c628544e6d52f2d0f53c6d0c3ea61aa5d1d7ff124
     # via
     #   black
     #   pytest
