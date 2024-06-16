@@ -150,9 +150,26 @@ def _add_repo(controller):
         relative_url="content/unit/3/client",
     )
 
+    dt4 = datetime(2019, 9, 9, 0, 0, 0)
+    d4 = Distributor(
+        id="cdn_distributor",
+        type_id="rpm_rsync_distributor",
+        repo_id="repo4",
+        last_publish=dt4,
+        relative_url="content/unit/4/client",
+    )
+    repo4 = Repository(
+        id="repo4",
+        # omit eng ID -- UD can't flush this repo
+        distributors=[d4],
+        relative_url="content/unit/4/client",
+        mutable_urls=["mutable1", "mutable2"],
+    )
+
     controller.insert_repository(repo1)
     controller.insert_repository(repo2)
     controller.insert_repository(repo3)
+    controller.insert_repository(repo4)
 
 
 def test_nonexist_repos(command_tester):
@@ -235,6 +252,51 @@ def test_repo_publish_cache_cleanup(command_tester):
         "https://cdn.example.com/content/unit/1/client/mutable2",
     ]
     # flushed the UD object
+    assert fake_publish.udcache_client.flushed_repos == ["repo1"]
+
+
+def test_repo_publish_cache_cleanup_skip_ud(command_tester):
+    """publishes the repo provided, doesn't clean up UD cache if repo missing eng ID"""
+    with FakePublish() as fake_publish:
+        fake_pulp = fake_publish.pulp_client_controller
+        _add_repo(fake_pulp)
+
+        command_tester.test(
+            fake_publish.main,
+            [
+                "test-publish",
+                "--pulp-url",
+                "https://pulp.example.com",
+                "--fastpurge-host",
+                "fakehost-xxx.example.net",
+                "--fastpurge-client-secret",
+                "abcdef",
+                "--fastpurge-client-token",
+                "efg",
+                "--fastpurge-access-token",
+                "tok",
+                "--fastpurge-root-url",
+                "https://cdn.example.com/",
+                "--udcache-url",
+                "https://ud.example.com/",
+                "--repo-ids",
+                "repo1,repo4",
+            ],
+        )
+
+    # pulp repo is published
+    assert [hist.repository.id for hist in fake_pulp.publish_history] == [
+        "repo1",
+        "repo4",
+    ]
+    # flushed the urls
+    assert sorted(fake_publish.fastpurge_client.purged_urls) == [
+        "https://cdn.example.com/content/unit/1/client/mutable1",
+        "https://cdn.example.com/content/unit/1/client/mutable2",
+        "https://cdn.example.com/content/unit/4/client/mutable1",
+        "https://cdn.example.com/content/unit/4/client/mutable2",
+    ]
+    # should not flush the UD object for repo4 because it's missing an eng ID
     assert fake_publish.udcache_client.flushed_repos == ["repo1"]
 
 
