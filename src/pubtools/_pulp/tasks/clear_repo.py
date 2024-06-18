@@ -143,9 +143,6 @@ class ClearRepo(CollectorService, PulpClientService, PulpRepositoryOperation):
         # They should have UD cache flushed.
         to_await.extend(self.flush_ud(repos))
 
-        # They should have CDN cache flushed.
-        to_await.extend(self.flush_cdn(repos))
-
         # Now make sure we wait for everything to finish.
         for f in to_await:
             f.result()

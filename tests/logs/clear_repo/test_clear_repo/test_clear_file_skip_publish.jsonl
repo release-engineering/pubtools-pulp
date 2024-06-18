@@ -7,4 +7,3 @@
 {"event": {"type": "publish-skip"}}
 {"event": {"type": "flush-ud-cache-start"}}
 {"event": {"type": "flush-ud-cache-end"}}
-{"event": {"type": "flush-cdn-cache-skip"}}

@@ -1,11 +1,10 @@
 import collections
 import datetime
 import logging
-import os
 import sys
 
 import attr
-from more_executors.futures import f_flat_map, f_map, f_return, f_sequence
+from more_executors.futures import f_flat_map, f_sequence
 from pubtools.pulplib import (
     ErratumUnit,
     FileUnit,
@@ -15,11 +14,7 @@ from pubtools.pulplib import (
 )
 from pushsource import ErratumPushItem, FilePushItem, ModuleMdPushItem, RpmPushItem
 
-from pubtools._pulp.services import (
-    CdnClientService,
-    FastPurgeClientService,
-    UdCacheClientService,
-)
+from pubtools._pulp.services import UdCacheClientService
 from pubtools._pulp.task import PulpTask
 
 from ..hooks import pm
@@ -31,57 +26,6 @@ step = PulpTask.step
 # Since these classes are designed to be mixed in with PulpTask but pylint
 # doesn't know that...
 # pylint: disable=no-member
-
-
-class CDNCache(FastPurgeClientService, CdnClientService):
-    """Provide features to interact with CDN cache."""
-
-    @step("Flush CDN cache", depends_on=["publish"], skipped_value=[])
-    def flush_cdn(self, repos):
-        """Clears the CDN cache for the repositories provided
-
-        Arguments:
-            repos (list)
-                Repositories to be cleared from the cache
-
-        Returns:
-            list[Future]
-                List of futures that resolve to the repository
-                objects on completion
-                An empty list when a client is not available
-        """
-        if not self.fastpurge_client:
-            LOG.info("CDN cache flush is not enabled.")
-            return []
-
-        def purge_repo(repo):
-            to_flush = []
-            for url in repo.mutable_urls:
-                relative_mutable_url = os.path.join(repo.relative_url, url)
-                flush_url = os.path.join(self.fastpurge_root_url, relative_mutable_url)
-                LOG.debug("Flush: %s", flush_url)
-
-                to_flush.append(f_return(flush_url))
-
-                if self.cdn_client:
-                    arl_fts = self.cdn_client.get_arl_for_path(
-                        relative_mutable_url,
-                        self.args.cdn_arl_template,
-                    )
-                    to_flush.extend(arl_fts)
-
-            flush = f_flat_map(
-                f_sequence(to_flush), lambda urls: self.purge_urls(repo.id, urls)
-            )
-            return f_map(flush, lambda _: repo)
-
-        return [purge_repo(r) for r in repos if r.relative_url]
-
-    def purge_urls(self, repo_id: str, urls: list):
-        LOG.info("Flushing cache for %s:", repo_id)
-        for url in sorted(urls):
-            LOG.info("   %s", url)
-        return self.fastpurge_client.purge_by_url(urls)
 
 
 class UdCache(UdCacheClientService):
@@ -107,7 +51,7 @@ class UdCache(UdCacheClientService):
         return out
 
 
-class Publisher(CDNCache, UdCache):
+class Publisher(UdCache):
     """Provides behavior relating to Pulp repo publish which can be shared by
     multiple tasks."""
 
@@ -170,6 +114,7 @@ class Publisher(CDNCache, UdCache):
         #
         units = units or []
         pulp_client = pulp_client or self.pulp_client
+        out = []
 
         # publish the repos found
         publish_fs = self.publish(repos)
@@ -180,9 +125,6 @@ class Publisher(CDNCache, UdCache):
 
         # hook implementation(s) may now flush pulp-derived caches and datastores
         pm.hook.task_pulp_flush()
-
-        # flush CDN cache
-        out = self.flush_cdn(repos)
 
         # set units as published
         set_published = f_sequence(self.set_cdn_published(units, pulp_client))
@@ -196,7 +138,7 @@ class Publisher(CDNCache, UdCache):
         return out
 
 
-class PulpRepositoryOperation(CDNCache, UdCache, PulpTask):
+class PulpRepositoryOperation(UdCache, PulpTask):
     def __init__(self):
         super(PulpRepositoryOperation, self).__init__()
 

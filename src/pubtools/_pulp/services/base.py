@@ -7,7 +7,7 @@ class Service(object):
     The Service class is used as follows:
 
     - for a particular service needed by certain tasks (e.g. a Pulp client,
-      a FastPurge client), implement a subclass of Service
+      a UD Cache client), implement a subclass of Service
     - in the subclass, if there are associated command-line arguments, override
       add_service_args to configure those
     - in the subclass, add the properties which should be exposed by that service

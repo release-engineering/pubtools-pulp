@@ -23,12 +23,6 @@
 [    INFO] Publishing other-yumrepo
 [    INFO] Publishing some-yumrepo
 [    INFO] Publish: finished
-[    INFO] Flush CDN cache: started
-[    INFO] Flushing cache for other-yumrepo:
-[    INFO]    https://cdn.example2.com/other/publish/url/repomd.xml
-[    INFO] Flushing cache for some-yumrepo:
-[    INFO]    https://cdn.example2.com/some/publish/url/repomd.xml
-[    INFO] Flush CDN cache: finished
 [    INFO] Set cdn_published: started
 [    INFO] Set cdn_published: finished
 [    INFO] Flush UD cache: started

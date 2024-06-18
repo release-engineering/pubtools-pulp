@@ -125,7 +125,7 @@ class PulpTask(object):
             debug_loggers.append("pubtools.pulp")
         if self.args.debug >= 2:
             # debug level 2: enable DEBUG from closely related projects.
-            debug_loggers.extend(["pubtools", "fastpurge"])
+            debug_loggers.extend(["pubtools"])
         if self.args.debug >= 3:
             # debug level 3: enable DEBUG from root logger
             # (potentially very, very verbose!)
