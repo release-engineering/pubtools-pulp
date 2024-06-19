@@ -94,6 +94,12 @@ class FakePublish(Publish):
         # We'll substitute our own, only if cdn client is being used
         return self._cdn_client if from_super else None
 
+    # override to generate consistent repo sequence in the logs
+    def publish_with_cache_flush(self, repos, *args, **kwargs):
+        return super(FakePublish, self).publish_with_cache_flush(
+            sorted(repos), *args, **kwargs
+        )
+
 
 def _add_repo(controller):
     # test repos added to the controller
