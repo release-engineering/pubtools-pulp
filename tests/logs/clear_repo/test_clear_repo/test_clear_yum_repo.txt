@@ -10,7 +10,3 @@
 [    INFO] Flush UD cache: started
 [    INFO] UD cache flush is not enabled.
 [    INFO] Flush UD cache: finished
-[    INFO] Flush CDN cache: started
-[    INFO] Flushing cache for some-yumrepo:
-[    INFO]    https://cdn.example2.com/some/publish/url/repomd.xml
-[    INFO] Flush CDN cache: finished

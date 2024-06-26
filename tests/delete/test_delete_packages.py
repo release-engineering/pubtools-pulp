@@ -1,5 +1,4 @@
 from more_executors.futures import f_return
-from fastpurge import FastPurgeClient
 
 from pubtools.pulplib import (
     FakeController,
@@ -32,15 +31,6 @@ class FakeUdCache(object):
         return f_return()
 
 
-class FakeFastPurge(object):
-    def __init__(self):
-        self.purged_urls = []
-
-    def purge_by_url(self, urls):
-        self.purged_urls.extend(urls)
-        return f_return()
-
-
 class FakeDeletePackages(Delete):
     """clear-repo with services overridden for test"""
 
@@ -48,7 +38,6 @@ class FakeDeletePackages(Delete):
         super(FakeDeletePackages, self).__init__(*args, **kwargs)
         self.pulp_client_controller = FakeController()
         self._udcache_client = FakeUdCache()
-        self._fastpurge_client = FakeFastPurge()
 
     @property
     def pulp_client(self):
@@ -68,17 +57,6 @@ class FakeDeletePackages(Delete):
         # We'll substitute our own, only if UD client is being used
         return self._udcache_client if from_super else None
 
-    @property
-    def fastpurge_client(self):
-        # Super may or may not give a fastpurge client, depends on arguments
-        from_super = super(FakeDeletePackages, self).fastpurge_client
-        if from_super:
-            # If it did create one, it should be this
-            assert isinstance(from_super, FastPurgeClient)
-
-        # We'll substitute our own, only if fastpurge client is being used
-        return self._fastpurge_client if from_super else None
-
 
 def test_delete_rpms_without_signing_keys(command_tester):
     """Fails when either signing key or --allow-unsigned is not provided"""
@@ -89,14 +67,6 @@ def test_delete_rpms_without_signing_keys(command_tester):
             "test-delete",
             "--pulp-url",
             "https://pulp.example.com/",
-            "--fastpurge-host",
-            "fakehost-xxx.example.net",
-            "--fastpurge-client-secret",
-            "abcdef",
-            "--fastpurge-client-token",
-            "efg",
-            "--fastpurge-access-token",
-            "tok",
             "--file",
             "some.rpm",
             "--repo",
@@ -202,9 +172,6 @@ def test_delete_rpms(command_tester, fake_collector, monkeypatch):
         task_instance.pulp_client_controller.insert_units(repo1, files1)
         task_instance.pulp_client_controller.insert_units(repo2, files2)
 
-        # Let's try setting the cache flush root via env.
-        monkeypatch.setenv("FASTPURGE_ROOT_URL", "https://cdn.example2.com/")
-
         # It should run with expected output.
         command_tester.test(
             task_instance.main,
@@ -212,14 +179,6 @@ def test_delete_rpms(command_tester, fake_collector, monkeypatch):
                 "test-delete",
                 "--pulp-url",
                 "https://pulp.example.com/",
-                "--fastpurge-host",
-                "fakehost-xxx.example.net",
-                "--fastpurge-client-secret",
-                "abcdef",
-                "--fastpurge-client-token",
-                "efg",
-                "--fastpurge-access-token",
-                "tok",
                 "--repo",
                 "some-yumrepo,other-yumrepo",
                 "--repo",
@@ -376,9 +335,6 @@ def test_delete_unsigned_rpms(command_tester, fake_collector, monkeypatch):
         task_instance.pulp_client_controller.insert_repository(repo)
         task_instance.pulp_client_controller.insert_units(repo, files)
 
-        # Let's try setting the cache flush root via env.
-        monkeypatch.setenv("FASTPURGE_ROOT_URL", "https://cdn.example2.com/")
-
         # It should run with expected output.
         command_tester.test(
             task_instance.main,
@@ -386,14 +342,6 @@ def test_delete_unsigned_rpms(command_tester, fake_collector, monkeypatch):
                 "test-delete",
                 "--pulp-url",
                 "https://pulp.example.com/",
-                "--fastpurge-host",
-                "fakehost-xxx.example.net",
-                "--fastpurge-client-secret",
-                "abcdef",
-                "--fastpurge-client-token",
-                "efg",
-                "--fastpurge-access-token",
-                "tok",
                 "--repo",
                 "some-yumrepo",
                 "--file",
@@ -487,9 +435,6 @@ def test_delete_modules(command_tester, fake_collector, monkeypatch):
         task_instance.pulp_client_controller.insert_repository(repo)
         task_instance.pulp_client_controller.insert_units(repo, files)
 
-        # Let's try setting the cache flush root via env.
-        monkeypatch.setenv("FASTPURGE_ROOT_URL", "https://cdn.example2.com/")
-
         # It should run with expected output.
         command_tester.test(
             task_instance.main,
@@ -497,14 +442,6 @@ def test_delete_modules(command_tester, fake_collector, monkeypatch):
                 "test-delete",
                 "--pulp-url",
                 "https://pulp.example.com/",
-                "--fastpurge-host",
-                "fakehost-xxx.example.net",
-                "--fastpurge-client-secret",
-                "abcdef",
-                "--fastpurge-client-token",
-                "efg",
-                "--fastpurge-access-token",
-                "tok",
                 "--repo",
                 "some-yumrepo",
                 "--file",
@@ -603,9 +540,6 @@ def test_delete_files(command_tester, fake_collector, monkeypatch):
         task_instance.pulp_client_controller.insert_units(repo1, files1)
         task_instance.pulp_client_controller.insert_units(repo2, files2)
 
-        # Let's try setting the cache flush root via env.
-        monkeypatch.setenv("FASTPURGE_ROOT_URL", "https://cdn.example2.com/")
-
         # It should run with expected output.
         command_tester.test(
             task_instance.main,
@@ -613,14 +547,6 @@ def test_delete_files(command_tester, fake_collector, monkeypatch):
                 "test-delete",
                 "--pulp-url",
                 "https://pulp.example.com/",
-                "--fastpurge-host",
-                "fakehost-xxx.example.net",
-                "--fastpurge-client-secret",
-                "abcdef",
-                "--fastpurge-client-token",
-                "efg",
-                "--fastpurge-access-token",
-                "tok",
                 "--repo",
                 "some-filerepo",
                 "--file",
@@ -689,14 +615,6 @@ def test_no_file_provided(command_tester):
             "test-delete",
             "--pulp-url",
             "https://pulp.example.com/",
-            "--fastpurge-host",
-            "fakehost-xxx.example.net",
-            "--fastpurge-client-secret",
-            "abcdef",
-            "--fastpurge-client-token",
-            "efg",
-            "--fastpurge-access-token",
-            "tok",
             "--repo",
             "some-filerepo",
         ],
@@ -712,14 +630,6 @@ def test_no_repo_provided(command_tester):
             "test-delete",
             "--pulp-url",
             "https://pulp.example.com/",
-            "--fastpurge-host",
-            "fakehost-xxx.example.net",
-            "--fastpurge-client-secret",
-            "abcdef",
-            "--fastpurge-client-token",
-            "efg",
-            "--fastpurge-access-token",
-            "tok",
             "--file",
             "some.iso",
         ],

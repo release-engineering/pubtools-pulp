@@ -12,7 +12,6 @@ from pubtools.pulplib import (
     ModulemdUnit,
     RpmUnit,
 )
-from fastpurge import FastPurgeClient
 
 import pubtools._pulp.tasks.clear_repo
 from pubtools._pulp.tasks.clear_repo import ClearRepo
@@ -33,15 +32,6 @@ class FakeUdCache(object):
         return f_return()
 
 
-class FakeFastPurge(object):
-    def __init__(self):
-        self.purged_urls = []
-
-    def purge_by_url(self, urls):
-        self.purged_urls.extend(urls)
-        return f_return()
-
-
 class FakeClearRepo(ClearRepo):
     """clear-repo with services overridden for test"""
 
@@ -49,7 +39,6 @@ class FakeClearRepo(ClearRepo):
         super(FakeClearRepo, self).__init__(*args, **kwargs)
         self.pulp_client_controller = FakeController()
         self._udcache_client = FakeUdCache()
-        self._fastpurge_client = FakeFastPurge()
 
     @property
     def pulp_client(self):
@@ -68,17 +57,6 @@ class FakeClearRepo(ClearRepo):
 
         # We'll substitute our own, only if UD client is being used
         return self._udcache_client if from_super else None
-
-    @property
-    def fastpurge_client(self):
-        # Super may or may not give a fastpurge client, depends on arguments
-        from_super = super(FakeClearRepo, self).fastpurge_client
-        if from_super:
-            # If it did create one, it should be this
-            assert isinstance(from_super, FastPurgeClient)
-
-        # We'll substitute our own, only if fastpurge client is being used
-        return self._fastpurge_client if from_super else None
 
 
 def test_missing_repos(command_tester):
@@ -148,16 +126,6 @@ def test_clear_file_repo(command_tester, fake_collector):
                 "--pulp-url",
                 "https://pulp.example.com/",
                 "--pulp-insecure",
-                "--fastpurge-host",
-                "fakehost-xxx.example.net",
-                "--fastpurge-client-secret",
-                "abcdef",
-                "--fastpurge-client-token",
-                "efg",
-                "--fastpurge-access-token",
-                "tok",
-                "--fastpurge-root-url",
-                "https://cdn.example.com/",
                 "--udcache-url",
                 "https://ud.example.com/",
                 "some-filerepo",
@@ -191,12 +159,6 @@ def test_clear_file_repo(command_tester, fake_collector):
     # It should have published the Pulp repo
     assert [hist.repository.id for hist in fakepulp.publish_history] == [
         "some-filerepo"
-    ]
-
-    # It should have flushed these URLs
-    assert sorted(task_instance.fastpurge_client.purged_urls) == [
-        "https://cdn.example.com/some/publish/url/mutable1",
-        "https://cdn.example.com/some/publish/url/mutable2",
     ]
 
     # It should have flushed these UD objects
@@ -263,9 +225,6 @@ def test_clear_yum_repo(command_tester, fake_collector, monkeypatch):
         task_instance.pulp_client_controller.insert_repository(repo)
         task_instance.pulp_client_controller.insert_units(repo, files)
 
-        # Let's try setting the cache flush root via env.
-        monkeypatch.setenv("FASTPURGE_ROOT_URL", "https://cdn.example2.com/")
-
         # It should run with expected output.
         command_tester.test(
             task_instance.main,
@@ -273,14 +232,6 @@ def test_clear_yum_repo(command_tester, fake_collector, monkeypatch):
                 "test-clear-repo",
                 "--pulp-url",
                 "https://pulp.example.com/",
-                "--fastpurge-host",
-                "fakehost-xxx.example.net",
-                "--fastpurge-client-secret",
-                "abcdef",
-                "--fastpurge-client-token",
-                "efg",
-                "--fastpurge-access-token",
-                "tok",
                 "some-yumrepo",
             ],
         )
@@ -307,11 +258,6 @@ def test_clear_yum_repo(command_tester, fake_collector, monkeypatch):
             "signing_key": None,
             "build": None,
         },
-    ]
-
-    # It should have flushed these URLs
-    assert task_instance.fastpurge_client.purged_urls == [
-        "https://cdn.example2.com/some/publish/url/repomd.xml"
     ]
 
 

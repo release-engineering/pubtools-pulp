@@ -2,7 +2,6 @@ import pytest
 from mock import patch
 
 from more_executors.futures import f_return
-from fastpurge import FastPurgeClient
 
 from pubtools.pulplib import (
     FakeController,
@@ -36,15 +35,6 @@ class FakeUdCache(object):
         return f_return()
 
 
-class FakeFastPurge(object):
-    def __init__(self):
-        self.purged_urls = []
-
-    def purge_by_url(self, urls):
-        self.purged_urls.extend(urls)
-        return f_return()
-
-
 class FakeFixCves(FixCves):
     """publish with services overridden for test"""
 
@@ -52,7 +42,6 @@ class FakeFixCves(FixCves):
         super(FakeFixCves, self).__init__(*args, **kwargs)
         self.pulp_client_controller = FakeController()
         self._udcache_client = FakeUdCache()
-        self._fastpurge_client = FakeFastPurge()
 
     @property
     def pulp_client(self):
@@ -71,17 +60,6 @@ class FakeFixCves(FixCves):
 
         # We'll substitute our own, only if UD client is being used
         return self._udcache_client if from_super else None
-
-    @property
-    def fastpurge_client(self):
-        # Super may or may not give a fastpurge client, depends on arguments
-        from_super = super(FakeFixCves, self).fastpurge_client
-        if from_super:
-            # If it did create one, it should be this
-            assert isinstance(from_super, FastPurgeClient)
-
-        # We'll substitute our own, only if fastpurge client is being used
-        return self._fastpurge_client if from_super else None
 
     def get_affected_repos(self, erratum):
         repos = super(FakeFixCves, self).get_affected_repos(erratum)
@@ -185,16 +163,6 @@ def test_fix_cves_with_cache_cleanup(command_tester):
                 "test-fix-cves",
                 "--pulp-url",
                 "https://pulp.example.com",
-                "--fastpurge-host",
-                "fakehost-xxx.example.net",
-                "--fastpurge-client-secret",
-                "abcdef",
-                "--fastpurge-client-token",
-                "efg",
-                "--fastpurge-access-token",
-                "tok",
-                "--fastpurge-root-url",
-                "https://cdn.example.com/",
                 "--udcache-url",
                 "https://ud.example.com/",
                 "--advisory",
@@ -209,15 +177,6 @@ def test_fix_cves_with_cache_cleanup(command_tester):
         assert ud_client.flushed_repos == ["all-rpm-content", "repo"]
         assert ud_client.flushed_products == [100, 101]
         assert ud_client.flushed_errata == ["RHSA-1234:56"]
-
-        fastpurge_client = fake_fix_cves.fastpurge_client
-
-        assert fastpurge_client.purged_urls == [
-            "https://cdn.example.com/content/unit/1/all-rpm/mutable1",
-            "https://cdn.example.com/content/unit/1/all-rpm/mutable2",
-            "https://cdn.example.com/content/unit/1/client/mutable1",
-            "https://cdn.example.com/content/unit/1/client/mutable2",
-        ]
 
 
 def test_no_erratum_found_error(command_tester):

@@ -17,14 +17,6 @@
 [    INFO] Publishing all-rpm-content
 [    INFO] Publishing repo
 [    INFO] Publish: finished
-[    INFO] Flush CDN cache: started
-[    INFO] Flushing cache for all-rpm-content:
-[    INFO]    https://cdn.example.com/content/unit/1/all-rpm/mutable1
-[    INFO]    https://cdn.example.com/content/unit/1/all-rpm/mutable2
-[    INFO] Flushing cache for repo:
-[    INFO]    https://cdn.example.com/content/unit/1/client/mutable1
-[    INFO]    https://cdn.example.com/content/unit/1/client/mutable2
-[    INFO] Flush CDN cache: finished
 [    INFO] Set cdn_published: started
 [    INFO] Set cdn_published: finished
 [    INFO] Flush UD cache: started

@@ -17,9 +17,6 @@
 [    INFO] Publishing all-rpm-content
 [    INFO] Publishing repo
 [    INFO] Publish: finished
-[    INFO] Flush CDN cache: started
-[    INFO] CDN cache flush is not enabled.
-[    INFO] Flush CDN cache: finished
 [    INFO] Set cdn_published: started
 [    INFO] Set cdn_published: finished
 [    INFO] Flush UD cache: started
