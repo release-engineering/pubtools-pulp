@@ -42,6 +42,8 @@ an intersection of input repositories and filters.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">publish</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">url</span> <span class="n">UDCACHE_URL</span><span class="p">]</span>
                              <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">user</span> <span class="n">UDCACHE_USER</span><span class="p">]</span>
                              <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">password</span> <span class="n">UDCACHE_PASSWORD</span><span class="p">]</span>
+                             <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">certificate</span> <span class="n">UDCACHE_CERTIFICATE</span><span class="p">]</span>
+                             <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">certificate</span><span class="o">-</span><span class="n">key</span> <span class="n">UDCACHE_CERTIFICATE_KEY</span><span class="p">]</span>
                              <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
                              <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span>
                              <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">certificate</span> <span class="n">PULP_CERTIFICATE</span><span class="p">]</span>
@@ -73,6 +75,14 @@ an intersection of input repositories and filters.</p>
 </dd>
 <dt><kbd>--udcache-password</kbd></dt>
 <dd><p>Password for UD cache flush (or set UDCACHE_PASSWORD)</p>
+<p>Default: “”</p>
+</dd>
+<dt><kbd>--udcache-certificate</kbd></dt>
+<dd><p>Client certificate for UD cache flush (or set UDCACHE_CERT)</p>
+<p>Default: “”</p>
+</dd>
+<dt><kbd>--udcache-certificate-key</kbd></dt>
+<dd><p>Client key for UD cache flush (or set UDCACHE_KEY)</p>
 <p>Default: “”</p>
 </dd>
 </dl>
