@@ -40,6 +40,18 @@ class UdCacheClientService(Service):
             default="",
             type=from_environ("UDCACHE_PASSWORD"),
         )
+        group.add_argument(
+            "--udcache-certificate",
+            help="Client certificate for UD cache flush (or set UDCACHE_CERT)",
+            default="",
+            type=from_environ("UDCACHE_CERT"),
+        )
+        group.add_argument(
+            "--udcache-certificate-key",
+            help="Client key for UD cache flush (or set UDCACHE_KEY)",
+            default="",
+            type=from_environ("UDCACHE_KEY"),
+        )
 
     @property
     def udcache_client(self):
@@ -54,13 +66,31 @@ class UdCacheClientService(Service):
         return self.__instance
 
     def __get_instance(self):
+        cert = None
+        auth = None
         args = self._service_args
+        kwargs = {}
         if not args.udcache_url:
             # UD cache flushing will be disabled
             return None
 
+        if args.udcache_certificate:
+            if args.udcache_certificate_key:
+                cert = (args.udcache_certificate, args.udcache_certificate_key)
+            else:
+                cert = args.udcache_certificate
+
+        else:
+            auth = (args.udcache_user, args.udcache_password)
+
+        if cert:
+            kwargs["cert"] = cert
+        else:
+            kwargs["auth"] = auth
+
         return UdCacheClient(
-            url=args.udcache_url, auth=(args.udcache_user, args.udcache_password)
+            args.udcache_url,
+            **kwargs,
         )
 
     def __exit__(self, *exc_details):
