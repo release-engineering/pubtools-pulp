@@ -84,29 +84,6 @@ They will be removed from the provided applicable repos.
     --repo some-yumrepo
     --repo some-filerepo
 
-Example: With cache flush
-.........................
-
-If the Pulp server is configured to publish to an Akamai CDN,
-usage of the Akamai FastPurge API for cache flushing may be enabled
-to flush cache after publishing repositories.
-
-This is enabled by providing a value for ``--fastpurge-root-url``.
-FastPurge credentials may also be provided; if omitted, the command
-will attempt to use a local
-`edgerc <https://developer.akamai.com/introduction/Conf_Client.html>`_
-file for authentication.
-
-.. code-block::
-
-  pubtools-pulp-delete \
-    --pulp-url https://pulp.example.com/ \
-    --pulp-user admin \
-    --pulp-password XXXXX \
-    --fastpurge-root-url https://cdn.example.com/ \
-    --file some-pkg-1.3-1.el8_x86_64.rpm \
-    --signing-key aabbcc \
-    --repo some-yumrepo
 
 Example: Skip publish
 .....................

@@ -29,9 +29,6 @@ advisory belongs to. All those repos will then be published.
 Example: with cache flush
 .........................
 
-If the Pulp server is configured to publish to Akamai CDN,
-cache flush may be enabled by providing --fastpurge-root-url
-to publish and clear the Akamai cache to get the updated advisory.
 If the repo is listed for Unified Downloads,UD cache flush may be
 enabled with --udcache-url.
 
@@ -41,7 +38,6 @@ enabled with --udcache-url.
     --pulp-url https://pulp.example.com/ \
     --pulp-user admin \
     --pulp-password XXXXX \
-    --fastpurge-root-url https://cdn.example.com/ \
     --udcache-url https://ud.example.com/ \
     --advisory RHXA-123:45 \
     --cves CVE-123,CVE-345

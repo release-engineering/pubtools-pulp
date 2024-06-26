@@ -38,14 +38,6 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">delete</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">url</span> <span class="n">UDCACHE_URL</span><span class="p">]</span>
                             <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">user</span> <span class="n">UDCACHE_USER</span><span class="p">]</span>
                             <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">password</span> <span class="n">UDCACHE_PASSWORD</span><span class="p">]</span>
-                            <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">url</span> <span class="n">CDN_URL</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">cert</span> <span class="n">CDN_CERT</span><span class="p">]</span>
-                            <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">key</span> <span class="n">CDN_KEY</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">ca</span><span class="o">-</span><span class="n">cert</span> <span class="n">CDN_CA_CERT</span><span class="p">]</span>
-                            <span class="p">[</span><span class="o">--</span><span class="n">cdn</span><span class="o">-</span><span class="n">arl</span><span class="o">-</span><span class="n">template</span> <span class="p">[</span><span class="n">CDN_ARL_TEMPLATE</span> <span class="p">[</span><span class="n">CDN_ARL_TEMPLATE</span> <span class="o">...</span><span class="p">]]]</span>
-                            <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">host</span> <span class="n">FASTPURGE_HOST</span><span class="p">]</span>
-                            <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">token</span> <span class="n">FASTPURGE_CLIENT_TOKEN</span><span class="p">]</span>
-                            <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">client</span><span class="o">-</span><span class="n">secret</span> <span class="n">FASTPURGE_CLIENT_SECRET</span><span class="p">]</span>
-                            <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">access</span><span class="o">-</span><span class="n">token</span> <span class="n">FASTPURGE_ACCESS_TOKEN</span><span class="p">]</span>
-                            <span class="p">[</span><span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">root</span><span class="o">-</span><span class="n">url</span> <span class="n">FASTPURGE_ROOT_URL</span><span class="p">]</span>
                             <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
                             <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span>
                             <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">certificate</span> <span class="n">PULP_CERTIFICATE</span><span class="p">]</span>
@@ -96,49 +88,6 @@
 </dd>
 <dt><kbd>--udcache-password</kbd></dt>
 <dd><p>Password for UD cache flush (or set UDCACHE_PASSWORD)</p>
-<p>Default: “”</p>
-</dd>
-</dl>
-</section>
-<section id="cdn-client-environment">
-<h2>CDN Client environment<a class="headerlink" href="#cdn-client-environment" title="Permalink to this heading">¶</a></h2>
-<dl class="option-list">
-<dt><kbd>--cdn-url</kbd></dt>
-<dd><p>Base URL of CDN, if omitted, CDN won’t be requested for special data (e.g. headers for ARLs)</p>
-</dd>
-<dt><kbd>--cdn-cert</kbd></dt>
-<dd><p>Client certificate for CDN client</p>
-</dd>
-<dt><kbd>--cdn-key</kbd></dt>
-<dd><p>Client key for CDN client</p>
-</dd>
-<dt><kbd>--cdn-ca-cert</kbd></dt>
-<dd><p>CA certificate for CDN</p>
-</dd>
-<dt><kbd>--cdn-arl-template</kbd></dt>
-<dd><p>ARL template used for flushing cache by ARL</p>
-<p>Default: []</p>
-</dd>
-</dl>
-</section>
-<section id="akamai-fastpurge-environment">
-<h2>Akamai FastPurge environment<a class="headerlink" href="#akamai-fastpurge-environment" title="Permalink to this heading">¶</a></h2>
-<dl class="option-list">
-<dt><kbd>--fastpurge-host</kbd></dt>
-<dd><p>FastPurge hostname (xxx.purge.akamaiapis.net)</p>
-</dd>
-<dt><kbd>--fastpurge-client-token</kbd></dt>
-<dd><p>Fast Purge client token</p>
-</dd>
-<dt><kbd>--fastpurge-client-secret</kbd></dt>
-<dd><p>FastPurge client secret (or set FASTPURGE_SECRET environment variable)</p>
-<p>Default: “”</p>
-</dd>
-<dt><kbd>--fastpurge-access-token</kbd></dt>
-<dd><p>FastPurge access token</p>
-</dd>
-<dt><kbd>--fastpurge-root-url</kbd></dt>
-<dd><p>Root URL of CDN for all cache purges (or set FASTPURGE_ROOT_URL environment variable). If omitted, FastPurge features are disabled.</p>
 <p>Default: “”</p>
 </dd>
 </dl>
@@ -252,27 +201,6 @@ They will be removed from the provided applicable repos.</p>
   <span class="o">--</span><span class="n">signing</span><span class="o">-</span><span class="n">key</span> <span class="n">aabbcc</span> \
   <span class="o">--</span><span class="n">repo</span> <span class="n">some</span><span class="o">-</span><span class="n">yumrepo</span>
   <span class="o">--</span><span class="n">repo</span> <span class="n">some</span><span class="o">-</span><span class="n">filerepo</span>
-</pre></div>
-</div>
-</section>
-<section id="example-with-cache-flush">
-<h2>Example: With cache flush<a class="headerlink" href="#example-with-cache-flush" title="Permalink to this heading">¶</a></h2>
-<p>If the Pulp server is configured to publish to an Akamai CDN,
-usage of the Akamai FastPurge API for cache flushing may be enabled
-to flush cache after publishing repositories.</p>
-<p>This is enabled by providing a value for <code class="docutils literal notranslate"><span class="pre">--fastpurge-root-url</span></code>.
-FastPurge credentials may also be provided; if omitted, the command
-will attempt to use a local
-<a class="reference external" href="https://developer.akamai.com/introduction/Conf_Client.html">edgerc</a>
-file for authentication.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">delete</span> \
-  <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">pulp</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span> \
-  <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">admin</span> \
-  <span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">XXXXX</span> \
-  <span class="o">--</span><span class="n">fastpurge</span><span class="o">-</span><span class="n">root</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">cdn</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span> \
-  <span class="o">--</span><span class="n">file</span> <span class="n">some</span><span class="o">-</span><span class="n">pkg</span><span class="o">-</span><span class="mf">1.3</span><span class="o">-</span><span class="mf">1.</span><span class="n">el8_x86_64</span><span class="o">.</span><span class="n">rpm</span> \
-  <span class="o">--</span><span class="n">signing</span><span class="o">-</span><span class="n">key</span> <span class="n">aabbcc</span> \
-  <span class="o">--</span><span class="n">repo</span> <span class="n">some</span><span class="o">-</span><span class="n">yumrepo</span>
 </pre></div>
 </div>
 </section>
