@@ -1,20 +1,18 @@
 from more_executors.futures import f_return
-
 from pubtools.pulplib import (
-    FakeController,
     Client,
     Criteria,
-    Matcher,
-    YumRepository,
-    RpmUnit,
-    ModulemdUnit,
+    FakeController,
     FileRepository,
     FileUnit,
+    Matcher,
+    ModulemdUnit,
+    RpmUnit,
+    YumRepository,
 )
 
-from pubtools._pulp.ud import UdCacheClient
-
 from pubtools._pulp.tasks.delete import Delete, entry_point
+from pubtools._pulp.ud import UdCacheClient
 
 
 class FakeUdCache(object):
@@ -634,3 +632,100 @@ def test_no_repo_provided(command_tester):
             "some.iso",
         ],
     )
+
+
+def test_delete_rpms_skip_publish(command_tester, fake_collector, monkeypatch):
+    """Deleting RPMs with skip publish succeeds"""
+
+    repo1 = YumRepository(
+        id="some-yumrepo", relative_url="some/publish/url", mutable_urls=["repomd.xml"]
+    )
+
+    files1 = [
+        RpmUnit(
+            name="bash",
+            version="1.23",
+            release="1.test8",
+            arch="x86_64",
+            filename="bash-1.23-1.test8_x86_64.rpm",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+            unit_id="file1_rpm1",
+        ),
+        ModulemdUnit(
+            name="mymod",
+            stream="s1",
+            version=123,
+            context="a1c2",
+            arch="s390x",
+            unit_id="file1_mod1",
+        ),
+    ]
+
+    with FakeDeletePackages() as task_instance:
+        task_instance.pulp_client_controller.insert_repository(repo1)
+        task_instance.pulp_client_controller.insert_units(repo1, files1)
+
+        # It should run with expected output.
+        command_tester.test(
+            task_instance.main,
+            [
+                "test-delete",
+                "--pulp-url",
+                "https://pulp.example.com/",
+                "--repo",
+                "some-yumrepo",
+                "--file",
+                "bash-1.23-1.test8_x86_64.rpm",
+                "--signing-key",
+                "aabbcc",
+                "--skip",
+                "publish",
+            ],
+        )
+
+    # It should record that it removed these push items:
+    assert sorted(fake_collector.items, key=lambda pi: pi["filename"]) == [
+        {
+            "origin": "pulp",
+            "src": None,
+            "dest": "some-yumrepo",
+            "signing_key": None,
+            "filename": "bash-1.23-1.test8.x86_64.rpm",
+            "state": "DELETED",
+            "build": None,
+            "checksums": {"sha256": "a" * 64},
+        },
+    ]
+
+    # verify whether files were deleted on Pulp
+    client = task_instance.pulp_client
+
+    # get the repo where the files were deleted
+    repos = sorted(
+        list(client.search_repository(Criteria.with_id(["some-yumrepo"])).result()),
+        key=lambda r: r.id,
+    )
+    assert len(repos) == 1
+
+    assert repos[0].id == repo1.id
+
+    # criteria with the unit_ids
+    # critera1 for files1 in repo1
+    unit_ids = []
+    for f in files1:
+        unit_ids.append(f.unit_id)
+    criteria1 = Criteria.with_field("unit_id", Matcher.in_(unit_ids))
+
+    # files are not in the repo1 except module
+    result1 = sorted(
+        list(repos[0].search_content(criteria1).result()), key=lambda v: v.unit_id
+    )
+    assert len(result1) == 1
+    # modulemd in files1
+    assert result1[0].unit_id == files1[1].unit_id
+
+    # All the files exist on Pulp
+    files_search = list(client.search_content(criteria1).result())
+    assert len(files_search) == 2

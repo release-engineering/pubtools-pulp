@@ -70,7 +70,7 @@ class Publisher(UdCache):
             action="store_true",
         )
 
-    @step("Publish")
+    @step("Publish", skipped_value=[])
     def publish(self, repos):
         out = []
 
