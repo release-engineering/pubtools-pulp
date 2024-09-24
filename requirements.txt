@@ -321,10 +321,10 @@ kobo==0.37.0 \
     --hash=sha256:05ee956fb40aff3eaa2abf2cdec931245f5d6fb6ba8ea6c19f6e26c7ea602fb9 \
     --hash=sha256:3a76e9748a1d218aa91e7ae6ffaed43dcd25984cb09a9c1db19a1f7648665141
     # via pushsource
-koji==1.34.2 \
-    --hash=sha256:2965b0a6a680779cdbc8dff5b19b2bdbd0e925bd4f848b40bee18078b00c4c59 \
-    --hash=sha256:4c4a2840b5209f81d656d269f81a582899a0d2978c47ef35575082f7e72afae7 \
-    --hash=sha256:9a273a6980b17c7def5cc906a2bb684a331d5478782c2d8e0594fa9bc688dead
+koji==1.35.0 \
+    --hash=sha256:22d4b971d122b606d99160ca20dbddc97b6cb2f1b883699f84bac1e7bb18a5b8 \
+    --hash=sha256:56615a1af842bae2c151b78840ce75848bbb4143cd1851e7cf7430be2ee59179 \
+    --hash=sha256:72137a841d70dddc872091af5760b5236d4aeb956e88c5d33d80467cadfdc475
     # via pushsource
 more-executors==2.11.4 \
     --hash=sha256:a304139c6bece5be18aed7dcff4c48440412cb7cbe90f64ba4572772fcb0407f \
