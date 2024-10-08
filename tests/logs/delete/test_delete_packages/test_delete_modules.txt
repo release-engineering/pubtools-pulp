@@ -3,7 +3,7 @@
 [ WARNING] Requested unit(s) don't exist as file: mymod:s1:123:a1c2:s390x
 [    INFO] 0 unit(s) found for deletion
 [    INFO] Get files: finished
-[ WARNING] No units to remove from some-yumrepo
+[ WARNING] No units to remove from other-yumrepo, some-yumrepo
 [    INFO] Unassociate files: started
 [ WARNING] Nothing mapped for removal
 [    INFO] Unassociate files: finished
@@ -14,23 +14,30 @@
 [    INFO] Get modules: started
 [    INFO] 1 unit(s) found for deletion
 [    INFO] Get modules: finished
+[ WARNING] mymod:s1:123:a1c2:s390x is not present in other-yumrepo
+[ WARNING] No units to remove from other-yumrepo
 [    INFO] Deleting mymod:s1:123:a1c2:s390x from some-yumrepo
 [    INFO] Remove artifacts from modules: started
 [    INFO] Delete RPMs: started
 [    INFO] Get RPMs: started
-[    INFO] 2 unit(s) found for deletion
+[    INFO] 3 unit(s) found for deletion
 [    INFO] Get RPMs: finished
+[ WARNING] bash-1.23-1.test8_x86_64.rpm is not present in other-yumrepo
+[ WARNING] dash-1.23-1.test8_x86_64.rpm is not present in other-yumrepo
+[ WARNING] smash-0.24-1.test8_x86_64.rpm is not present in some-yumrepo
 [    INFO] Deleting bash-1.23-1.test8_x86_64.rpm from some-yumrepo
 [    INFO] Deleting dash-1.23-1.test8_x86_64.rpm from some-yumrepo
+[    INFO] Deleting smash-0.24-1.test8_x86_64.rpm from other-yumrepo
 [    INFO] Unassociate RPMs: started
-[    INFO] some-yumrepo: removed 2 rpm(s), tasks: e3e70682-c209-4cac-629f-6fbed82c07cd
+[    INFO] other-yumrepo: removed 1 rpm(s), tasks: e3e70682-c209-4cac-629f-6fbed82c07cd
+[    INFO] some-yumrepo: removed 2 rpm(s), tasks: 82e2e662-f728-b4fa-4248-5e3a0a5d2f34
 [    INFO] Unassociate RPMs: finished
 [    INFO] Record push items: started
 [    INFO] Record push items: finished
 [    INFO] Delete RPMs: finished
 [    INFO] Remove artifacts from modules: finished
 [    INFO] Unassociate modules: started
-[    INFO] some-yumrepo: removed 1 modulemd(s), tasks: 82e2e662-f728-b4fa-4248-5e3a0a5d2f34
+[    INFO] some-yumrepo: removed 1 modulemd(s), tasks: d4713d60-c8a7-0639-eb11-67b367a9c378
 [    INFO] Unassociate modules: finished
 [    INFO] Record push items: started
 [    INFO] Record push items: finished
