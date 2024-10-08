@@ -390,6 +390,11 @@ def test_delete_modules(command_tester, fake_collector, monkeypatch):
     repo = YumRepository(
         id="some-yumrepo", relative_url="some/publish/url", mutable_urls=["repomd.xml"]
     )
+    repo2 = YumRepository(
+        id="other-yumrepo",
+        relative_url="other/publish/url",
+        mutable_urls=["repomd.xml"],
+    )
 
     files = [
         RpmUnit(
@@ -424,14 +429,49 @@ def test_delete_modules(command_tester, fake_collector, monkeypatch):
             version=123,
             context="a1c2",
             arch="s390x",
-            artifacts=["bash-0:1.23-1.test8_x86_64", "dash-0:1.23-1.test8_x86_64"],
+            artifacts=[
+                "bash-0:1.23-1.test8_x86_64",
+                "dash-0:1.23-1.test8_x86_64",
+                "smash-0.24-1.test8_x86_64",
+            ],
             unit_id="module1",
+        ),
+    ]
+
+    files2 = [
+        RpmUnit(
+            name="smash",
+            version="0.24",
+            release="1.test8",
+            arch="x86_64",
+            filename="smash-0.24-1.test8_x86_64.rpm",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+            provides=[],
+            requires=[],
+            unit_id="rpm3",
+        ),
+        RpmUnit(
+            name="rash",
+            version="2.23",
+            release="1.test8",
+            arch="x86_64",
+            filename="rash-2.23-1.test8_x86_64.rpm",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+            provides=[],
+            requires=[],
+            unit_id="rpm4",
         ),
     ]
 
     with FakeDeletePackages() as task_instance:
         task_instance.pulp_client_controller.insert_repository(repo)
+        task_instance.pulp_client_controller.insert_repository(repo2)
         task_instance.pulp_client_controller.insert_units(repo, files)
+        task_instance.pulp_client_controller.insert_units(repo2, files2)
 
         # It should run with expected output.
         command_tester.test(
@@ -442,6 +482,8 @@ def test_delete_modules(command_tester, fake_collector, monkeypatch):
                 "https://pulp.example.com/",
                 "--repo",
                 "some-yumrepo",
+                "--repo",
+                "other-yumrepo",
                 "--file",
                 "mymod:s1:123:a1c2:s390x",
                 "--signing-key",
@@ -480,17 +522,33 @@ def test_delete_modules(command_tester, fake_collector, monkeypatch):
                 "signing_key": None,
                 "filename": "mymod:s1:123:a1c2:s390x",
             },
+            {
+                "origin": "pulp",
+                "src": None,
+                "state": "DELETED",
+                "build": None,
+                "dest": "other-yumrepo",
+                "checksums": {"sha256": "a" * 64},
+                "signing_key": None,
+                "filename": "smash-0.24-1.test8.x86_64.rpm",
+            },
         ]
 
         # verify whether files were deleted on Pulp
         client = task_instance.pulp_client
 
-        # get the repo where the files were deleted
+        # get the repos where the files were deleted
         repos = list(
             client.search_repository(Criteria.with_id("some-yumrepo")).result()
         )
         assert len(repos) == 1
         repo = repos[0]
+
+        repos2 = list(
+            client.search_repository(Criteria.with_id("other-yumrepo")).result()
+        )
+        assert len(repos2) == 1
+        repo2 = repos2[0]
 
         # criteria with the unit_ids
         unit_ids = []
@@ -498,13 +556,27 @@ def test_delete_modules(command_tester, fake_collector, monkeypatch):
             unit_ids.append(f.unit_id)
         criteria = Criteria.with_field("unit_id", Matcher.in_(unit_ids))
 
-        # deleted files are not in the repo
+        unit_ids2 = []
+        for f in files2:
+            unit_ids2.append(f.unit_id)
+        criteria2 = Criteria.with_field("unit_id", Matcher.in_(unit_ids2))
+
+        # deleted files are not in "some-yumrepo" repo
         files = list(repo.search_content(criteria).result())
         assert len(files) == 0
+
+        # there's one file in "other-yumrepo" repo as only one was
+        # listed in module's artifacts and was deleted with the module
+        files2 = list(repo2.search_content(criteria2).result())
+        assert len(files2) == 1
+        assert files2[0].filename == "rash-2.23-1.test8_x86_64.rpm"
 
         # same files exist on Pulp as orphans
         files_search = list(client.search_content(criteria).result())
         assert len(files_search) == 3
+
+        files_search = list(client.search_content(criteria2).result())
+        assert len(files_search) == 2
 
 
 def test_delete_files(command_tester, fake_collector, monkeypatch):

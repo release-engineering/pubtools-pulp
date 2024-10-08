@@ -234,14 +234,19 @@ class Delete(PulpClientService, CollectorService, Publisher, PulpTask):
         f = f_map(mods_f, partial(self.map_to_repo, repos=repos, unit_attr="nsvca"))
         repo_map_f = f_map(f, self.log_units)
 
-        # remove packages from modules
+        # remove packages in the modules from all the provided repos,
+        # after establishing that the modules are present in one of the
+        # provided repos in the previous step
         unit_map_f = f_map(f, lambda map: map[1])
         artifact_f = f_map(
-            unit_map_f, partial(self.remove_mod_artifacts, signing_keys=signing_keys)
+            unit_map_f,
+            lambda unit_map: self.remove_mod_artifacts(
+                unit_map.values(), repos=repos, signing_keys=signing_keys
+            ),
         )
 
         # hold for rpms in the artifacts to be removed before removing modules
-        # wait for rpms_fs to resolve for f_zip to resolve and return repo_map_f
+        # wait for artifact_f to resolve for f_zip to resolve and return repo_map_f
         # to remove_modules in next step
         repo_map_f = f_map(
             f_zip(repo_map_f, f_sequence(artifact_f.result())), lambda t: t[0]
@@ -389,11 +394,10 @@ class Delete(PulpClientService, CollectorService, Publisher, PulpTask):
         return verified_repos
 
     @step("Remove artifacts from modules")
-    def remove_mod_artifacts(self, unit_map, signing_keys):
+    def remove_mod_artifacts(self, modules, repos, signing_keys):
         out = []
-        for item in unit_map.values():
+        for item in modules:
             rpms = item.unit.artifacts_filenames
-            repos = item.repos
             if rpms:
                 rpms_info = [RpmInfoItem(filename=rpm, sha256sum=None) for rpm in rpms]
                 out.append(self.delete_rpms(repos, rpms_info, signing_keys))
