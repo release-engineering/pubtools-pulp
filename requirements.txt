@@ -368,9 +368,9 @@ pubtools==1.4.0 \
     # via
     #   -r requirements.in
     #   pubtools-pulplib
-pubtools-pulplib==2.39.0 \
-    --hash=sha256:7df9858165bde5934554165ae190fa8babdc3b9b4aa378b090643df4e2502956 \
-    --hash=sha256:c95550fa4c2489d4393204dd43cbc0a952e9e5dc8b1c74e8035d92315bd4a7d3
+pubtools-pulplib==2.41.0 \
+    --hash=sha256:789612c1a7e8e535a43600b406a92d7b5205d2febe541d23a0cee1a1180e071c \
+    --hash=sha256:83b3d5b2cbc9c35c1a29f973181679fe006c6cf599496c13bdc43a3746333bdf
     # via -r requirements.in
 pushcollector==1.3.0 \
     --hash=sha256:18281fcd4247ca8b668c25348bbc2f9cc032912cecc7037824a74ad8adcbb1c3 \
