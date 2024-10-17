@@ -27,6 +27,7 @@ step = PulpTask.step
 
 MODULEMD_REGEX = re.compile(r"^[-.+\w]+:[-.+\w]+:\d+(:[-.+\w]+){0,2}$")
 
+ALL_REPOS_INDICATOR = "*"
 
 @attr.s
 class ClearedRepo(object):
@@ -78,7 +79,10 @@ class Delete(PulpClientService, CollectorService, Publisher, PulpTask):
 
         self.parser.add_argument(
             "--repo",
-            help="remove content from these comma-seperated repositories ",
+            help="remove content from these comma-seperated repositories. If "
+                 "'%s' is used, the package will be removed from all repos, "
+                 "excluding all-rpm-content-* repos. These may be added "
+                 "separately." % ALL_REPOS_INDICATOR,
             type=str,
             action=SplitAndExtend,
             split_on=",",
@@ -564,22 +568,30 @@ class Delete(PulpClientService, CollectorService, Publisher, PulpTask):
         repo_map = {}
         unit_map = {}
         repos = sorted(repos)
-
         for unit in sorted(units):
             unit_name = getattr(unit, unit_attr)
             unit_map.setdefault(unit_name, RemoveUnitItem(unit=unit, repos=[]))
-            for repo in repos:
-                if repo not in unit.repository_memberships:
-                    LOG.warning(
-                        "%s is not present in %s",
-                        unit_name,
-                        repo,
-                    )
-                else:
+            if ALL_REPOS_INDICATOR in repos:
+                for repo in unit.repository_memberships:
+                    if re.match("all-rpm-content-.*", repo) and repo not in repos:
+                        continue
                     repo_map.setdefault(repo, []).append(unit)
                     unit_map.get(unit_name).repos.append(repo)
+            else:
+                for repo in repos:
+                    if repo not in unit.repository_memberships:
+                        LOG.warning(
+                            "%s is not present in %s",
+                            unit_name,
+                            repo,
+                        )
+                    else:
+                        repo_map.setdefault(repo, []).append(unit)
+                        unit_map.get(unit_name).repos.append(repo)
 
         missing = set(repos) - set(repo_map.keys())
+        if ALL_REPOS_INDICATOR in missing:
+            missing.remove(ALL_REPOS_INDICATOR)
         if missing:
             missing = ", ".join(sorted(list(missing)))
             LOG.warning("No units to remove from %s", missing)
