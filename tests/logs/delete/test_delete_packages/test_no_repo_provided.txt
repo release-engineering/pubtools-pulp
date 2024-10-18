@@ -1,2 +1,2 @@
-[   ERROR] Repository names in --repo is required
+[   ERROR] Repository names in --repo or --all-repos is required
 # Raised: 30

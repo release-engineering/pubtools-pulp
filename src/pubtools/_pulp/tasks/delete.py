@@ -78,10 +78,18 @@ class Delete(PulpClientService, CollectorService, Publisher, PulpTask):
 
         self.parser.add_argument(
             "--repo",
-            help="remove content from these comma-seperated repositories ",
+            help="remove content from these comma-seperated repositories",
             type=str,
             action=SplitAndExtend,
             split_on=",",
+            default=[]
+        )
+
+        self.parser.add_argument(
+            "--all-repos",
+            help="remove content from all repos it belongs to. "
+                 "If --repo is used, this behaviour will not run.",
+            action="store_true"
         )
 
         self.parser.add_argument(
@@ -130,8 +138,13 @@ class Delete(PulpClientService, CollectorService, Publisher, PulpTask):
         if not (self.args.file or self.args.advisory):
             self.fail("One of --file or --advisory is required")
 
-        if self.args.file and not self.args.repo:
-            self.fail("Repository names in --repo is required")
+        if self.args.repo and self.args.all_repos:
+            LOG.warning("Both --repos and --all-repos have been used. "
+                        "Defaulting to the repos specified with --repo.")
+            self.args.all_repos = False
+
+        if self.args.file and not (self.args.repo or self.args.all_repos):
+            self.fail("Repository names in --repo or --all-repos is required")
 
         if not signing_keys and self.args.allow_unsigned:
             signing_keys = [None]
@@ -564,26 +577,39 @@ class Delete(PulpClientService, CollectorService, Publisher, PulpTask):
         repo_map = {}
         unit_map = {}
         repos = sorted(repos)
+        if repos:
+            for unit in sorted(units):
+                unit_name = getattr(unit, unit_attr)
+                unit_map.setdefault(unit_name, RemoveUnitItem(unit=unit, repos=[]))
+                for repo in repos:
+                    if repo not in unit.repository_memberships:
+                        LOG.warning(
+                            "%s is not present in %s",
+                            unit_name,
+                            repo,
+                        )
+                    else:
+                        repo_map.setdefault(repo, []).append(unit)
+                        unit_map.get(unit_name).repos.append(repo)
 
-        for unit in sorted(units):
-            unit_name = getattr(unit, unit_attr)
-            unit_map.setdefault(unit_name, RemoveUnitItem(unit=unit, repos=[]))
-            for repo in repos:
-                if repo not in unit.repository_memberships:
-                    LOG.warning(
-                        "%s is not present in %s",
-                        unit_name,
-                        repo,
-                    )
-                else:
+            missing = set(repos) - set(repo_map.keys())
+            if missing:
+                missing = ", ".join(sorted(list(missing)))
+                LOG.warning("No units to remove from %s", missing)
+        else:
+            LOG.info("Get repos from units")
+            LOG.info(list(units))
+            for unit in sorted(units):
+                unit_name = getattr(unit, unit_attr)
+                unit_map.setdefault(unit_name, RemoveUnitItem(unit=unit, repos=[]))
+                for repo in unit.repository_memberships:
+                    LOG.info(repo)
+                    if re.match("all-rpm-content-.*", repo):
+                        continue
                     repo_map.setdefault(repo, []).append(unit)
                     unit_map.get(unit_name).repos.append(repo)
-
-        missing = set(repos) - set(repo_map.keys())
-        if missing:
-            missing = ", ".join(sorted(list(missing)))
-            LOG.warning("No units to remove from %s", missing)
-
+            LOG.info(repo_map)
+            LOG.info(unit_map)
         return repo_map, unit_map
 
     @step("Unassociate RPMs")
