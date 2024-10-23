@@ -1,0 +1,46 @@
+[    INFO] Delete files: started
+[    INFO] Get files: started
+[ WARNING] Requested unit(s) don't exist as file: bash-1.23-1.test8_x86_64.rpm, dash-2.25-1.test8_x86_64.rpm
+[    INFO] 0 unit(s) found for deletion
+[    INFO] Get files: finished
+[    INFO] Get repos from units
+[    INFO] []
+[    INFO] {}
+[    INFO] {}
+[    INFO] Unassociate files: started
+[ WARNING] Nothing mapped for removal
+[    INFO] Unassociate files: finished
+[    INFO] Record push items: started
+[    INFO] Record push items: finished
+[    INFO] Delete files: finished
+[    INFO] Delete RPMs: started
+[    INFO] Get RPMs: started
+[    INFO] 2 unit(s) found for deletion
+[    INFO] Get RPMs: finished
+[    INFO] Get repos from units
+[    INFO] [RpmUnit(name='dash', version='2.25', release='1.test8', arch='x86_64', signing_key='aabbcc', filename='dash-2.25-1.test8_x86_64.rpm', md5sum='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', sha256sum='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', repository_memberships=['all-rpm-content-gg', 'some-yumrepo'], unit_id='file1_rpm2'), RpmUnit(name='bash', version='1.23', release='1.test8', arch='x86_64', signing_key='aabbcc', filename='bash-1.23-1.test8_x86_64.rpm', md5sum='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', sha256sum='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', repository_memberships=['all-rpm-content-gg', 'other-yumrepo', 'some-yumrepo'], unit_id='file1_rpm1')]
+[    INFO] all-rpm-content-gg
+[    INFO] other-yumrepo
+[    INFO] some-yumrepo
+[    INFO] all-rpm-content-gg
+[    INFO] some-yumrepo
+[    INFO] {'other-yumrepo': [RpmUnit(name='bash', version='1.23', release='1.test8', arch='x86_64', signing_key='aabbcc', filename='bash-1.23-1.test8_x86_64.rpm', md5sum='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', sha256sum='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', repository_memberships=['all-rpm-content-gg', 'other-yumrepo', 'some-yumrepo'], unit_id='file1_rpm1')], 'some-yumrepo': [RpmUnit(name='bash', version='1.23', release='1.test8', arch='x86_64', signing_key='aabbcc', filename='bash-1.23-1.test8_x86_64.rpm', md5sum='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', sha256sum='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', repository_memberships=['all-rpm-content-gg', 'other-yumrepo', 'some-yumrepo'], unit_id='file1_rpm1'), RpmUnit(name='dash', version='2.25', release='1.test8', arch='x86_64', signing_key='aabbcc', filename='dash-2.25-1.test8_x86_64.rpm', md5sum='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', sha256sum='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', repository_memberships=['all-rpm-content-gg', 'some-yumrepo'], unit_id='file1_rpm2')]}
+[    INFO] {'bash-1.23-1.test8_x86_64.rpm': RemoveUnitItem(unit=RpmUnit(name='bash', version='1.23', release='1.test8', arch='x86_64', signing_key='aabbcc', filename='bash-1.23-1.test8_x86_64.rpm', md5sum='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', sha256sum='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', repository_memberships=['all-rpm-content-gg', 'other-yumrepo', 'some-yumrepo'], unit_id='file1_rpm1'), repos=['other-yumrepo', 'some-yumrepo']), 'dash-2.25-1.test8_x86_64.rpm': RemoveUnitItem(unit=RpmUnit(name='dash', version='2.25', release='1.test8', arch='x86_64', signing_key='aabbcc', filename='dash-2.25-1.test8_x86_64.rpm', md5sum='bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', sha256sum='aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', repository_memberships=['all-rpm-content-gg', 'some-yumrepo'], unit_id='file1_rpm2'), repos=['some-yumrepo'])}
+[    INFO] Deleting bash-1.23-1.test8_x86_64.rpm from other-yumrepo, some-yumrepo
+[    INFO] Deleting dash-2.25-1.test8_x86_64.rpm from some-yumrepo
+[    INFO] Unassociate RPMs: started
+[    INFO] other-yumrepo: removed 1 rpm(s), tasks: e3e70682-c209-4cac-629f-6fbed82c07cd
+[    INFO] some-yumrepo: removed 2 rpm(s), tasks: 82e2e662-f728-b4fa-4248-5e3a0a5d2f34
+[    INFO] Unassociate RPMs: finished
+[    INFO] Record push items: started
+[    INFO] Record push items: finished
+[    INFO] Delete RPMs: finished
+[    INFO] Publish: started
+[    INFO] Publishing other-yumrepo
+[    INFO] Publishing some-yumrepo
+[    INFO] Publish: finished
+[    INFO] Set cdn_published: started
+[    INFO] Set cdn_published: finished
+[    INFO] Flush UD cache: started
+[    INFO] UD cache flush is not enabled.
+[    INFO] Flush UD cache: finished
