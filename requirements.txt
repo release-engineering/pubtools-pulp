@@ -319,9 +319,9 @@ idna==3.10 \
     --hash=sha256:12f65c9b470abda6dc35cf8e63cc574b1c52b11df2c86030af0ac09b01b13ea9 \
     --hash=sha256:946d195a0d259cbba61165e88e65941f16e9b36ea6ddb97f00452bae8b1287d3
     # via requests
-importlib-metadata==8.4.0 \
-    --hash=sha256:66f342cc6ac9818fc6ff340576acd24d65ba0b3efabb2b4ac08b598965a4a2f1 \
-    --hash=sha256:9a547d3bc3608b025f93d403fdd1aae741c24fbb8314df4b155675742ce303c5
+importlib-metadata==8.5.0 \
+    --hash=sha256:45e54197d28b7a7f1559e60b95e7c567032b602131fbd588f1497f47880aa68b \
+    --hash=sha256:71522656f0abace1d072b9e5481a48f07c138e00f079c38c8f883823f9c26bd7
     # via opentelemetry-api
 importlib-resources==6.4.5 \
     --hash=sha256:980862a1d16c9e147a59603677fa2aa5fd82b87f223b6cb870695bcfce830065 \
@@ -356,20 +356,20 @@ more-executors==2.11.4 \
     #   pubtools-pulplib
     #   pushcollector
     #   pushsource
-opentelemetry-api==1.27.0 \
-    --hash=sha256:953d5871815e7c30c81b56d910c707588000fff7a3ca1c73e6531911d53065e7 \
-    --hash=sha256:ed673583eaa5f81b5ce5e86ef7cdaf622f88ef65f0b9aab40b843dcae5bef342
+opentelemetry-api==1.28.1 \
+    --hash=sha256:6fa7295a12c707f5aebef82da3d9ec5afe6992f3e42bfe7bec0339a44b3518e7 \
+    --hash=sha256:bfe86c95576cf19a914497f439fd79c9553a38de0adbdc26f7cfc46b0c00b16c
     # via
     #   opentelemetry-sdk
     #   opentelemetry-semantic-conventions
     #   pubtools
-opentelemetry-sdk==1.27.0 \
-    --hash=sha256:365f5e32f920faf0fd9e14fdfd92c086e317eaa5f860edba9cdc17a380d9197d \
-    --hash=sha256:d525017dea0ccce9ba4e0245100ec46ecdc043f2d7b8315d56b19aff0904fa6f
+opentelemetry-sdk==1.28.1 \
+    --hash=sha256:100fa371b2046ffba6a340c18f0b2a0463acad7461e5177e126693b613a6ca57 \
+    --hash=sha256:72aad7f5fcbe37113c4ab4899f6cdeb6ac77ed3e62f25a85e3627b12583dad0f
     # via pubtools
-opentelemetry-semantic-conventions==0.48b0 \
-    --hash=sha256:12d74983783b6878162208be57c9effcb89dc88691c64992d70bb89dc00daa1a \
-    --hash=sha256:a0de9f45c413a8669788a38569c7e0a11ce6ce97861a628cca785deecdc32a1f
+opentelemetry-semantic-conventions==0.49b1 \
+    --hash=sha256:91817883b159ffb94c2ca9548509c4fe0aafce7c24f437aa6ac3fc613aa9a758 \
+    --hash=sha256:dd6f3ac8169d2198c752e1a63f827e5f5e110ae9b0ce33f2aad9a3baf0739743
     # via opentelemetry-sdk
 pkgutil-resolve-name==1.3.10 \
     --hash=sha256:357d6c9e6a755653cfd78893817c0853af365dd51ec97f3d358a819373bbd174 \
@@ -395,9 +395,9 @@ pushcollector==1.3.0 \
     # via
     #   -r requirements.in
     #   pushsource
-pushsource==2.48.0 \
-    --hash=sha256:5f4a73e54779bf42128f4d22be784cfe17fdb4c7487e97fd6bce68078f011db0 \
-    --hash=sha256:7b4cca68e64d128433a4fc3c9f80f7a09b8e79860c0d45cc9cc9ea510a81b705
+pushsource==2.49.0 \
+    --hash=sha256:1d807beb4d172b68806bf1d4689c7a5f8552eace6048f62e2b2229db52adf755 \
+    --hash=sha256:b0838f8df61dae1ec5c04c53664ac92021ed33a3cdaa01729ccf82567955a392
     # via -r requirements.in
 pyasn1==0.6.1 \
     --hash=sha256:0d632f46f2ba09143da3a8afe9e33fb6f92fa2320ab7e886e2d0f7672af84629 \
