@@ -238,7 +238,7 @@ class Delete(PulpClientService, CollectorService, Publisher, PulpTask):
         # after establishing that the modules are present in one of the
         # provided repos in the previous step
         unit_map_f = f_map(f, lambda map: map[1])
-        artifact_f = f_map(
+        artifact_cleared_repos_f = f_map(
             unit_map_f,
             lambda unit_map: self.remove_mod_artifacts(
                 unit_map.values(), repos=repos, signing_keys=signing_keys
@@ -249,18 +249,25 @@ class Delete(PulpClientService, CollectorService, Publisher, PulpTask):
         # wait for artifact_f to resolve for f_zip to resolve and return repo_map_f
         # to remove_modules in next step
         repo_map_f = f_map(
-            f_zip(repo_map_f, f_sequence(artifact_f.result())), lambda t: t[0]
+            f_zip(repo_map_f, f_sequence(artifact_cleared_repos_f.result())),
+            lambda t: t[0],
         )
 
         # remove modules
-        cleared_repos_f = f_map(repo_map_f, self.remove_modules)
+        mod_cleared_repos_f = f_map(repo_map_f, self.remove_modules)
 
         # collect items
-        f = f_map(cleared_repos_f, self.record_clears)
+        f = f_map(mod_cleared_repos_f, self.record_clears)
         self.to_await.extend(f.result())
 
         # return affected repos
-        return cleared_repos_f
+        # gather all the affected repos by combining the list of cleared_repo
+        # futures from removing the modules(cleared_repos_f) and removing the
+        # packages from the modules(artifact_f)
+        return f_map(
+            f_zip(mod_cleared_repos_f, artifact_cleared_repos_f),
+            lambda cr_tuple: cr_tuple[0] + cr_tuple[1],
+        )
 
     @step("Delete files")
     def delete_files(self, repos, file_names):
@@ -400,7 +407,7 @@ class Delete(PulpClientService, CollectorService, Publisher, PulpTask):
             rpms = item.unit.artifacts_filenames
             if rpms:
                 rpms_info = [RpmInfoItem(filename=rpm, sha256sum=None) for rpm in rpms]
-                out.append(self.delete_rpms(repos, rpms_info, signing_keys))
+                out.extend(self.delete_rpms(repos, rpms_info, signing_keys).result())
 
         return out
 
