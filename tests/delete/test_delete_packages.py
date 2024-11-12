@@ -395,6 +395,11 @@ def test_delete_modules(command_tester, fake_collector, monkeypatch):
         relative_url="other/publish/url",
         mutable_urls=["repomd.xml"],
     )
+    repo3 = YumRepository(
+        id="another-yumrepo",
+        relative_url="another/publish/url",
+        mutable_urls=["repomd.xml"],
+    )
 
     files = [
         RpmUnit(
@@ -436,6 +441,17 @@ def test_delete_modules(command_tester, fake_collector, monkeypatch):
             ],
             unit_id="module1",
         ),
+        ModulemdUnit(
+            name="othermod",
+            stream="s2",
+            version=123,
+            context="a1c2",
+            arch="x86_64",
+            artifacts=[
+                "crash-0:2.23-1.test8_x86_64",
+            ],
+            unit_id="module2",
+        ),
     ]
 
     files2 = [
@@ -467,11 +483,29 @@ def test_delete_modules(command_tester, fake_collector, monkeypatch):
         ),
     ]
 
+    files3 = [
+        RpmUnit(
+            name="crash",
+            version="2.23",
+            release="1.test8",
+            arch="x86_64",
+            filename="crash-2.23-1.test8_x86_64.rpm",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+            provides=[],
+            requires=[],
+            unit_id="rpm5",
+        ),
+    ]
+
     with FakeDeletePackages() as task_instance:
         task_instance.pulp_client_controller.insert_repository(repo)
         task_instance.pulp_client_controller.insert_repository(repo2)
+        task_instance.pulp_client_controller.insert_repository(repo3)
         task_instance.pulp_client_controller.insert_units(repo, files)
         task_instance.pulp_client_controller.insert_units(repo2, files2)
+        task_instance.pulp_client_controller.insert_units(repo3, files3)
 
         # It should run with expected output.
         command_tester.test(
@@ -483,9 +517,11 @@ def test_delete_modules(command_tester, fake_collector, monkeypatch):
                 "--repo",
                 "some-yumrepo",
                 "--repo",
-                "other-yumrepo",
+                "other-yumrepo,another-yumrepo",
                 "--file",
                 "mymod:s1:123:a1c2:s390x",
+                "--file",
+                "othermod:s2:123:a1c2:x86_64",
                 "--signing-key",
                 "aabbcc",
             ],
@@ -507,6 +543,16 @@ def test_delete_modules(command_tester, fake_collector, monkeypatch):
                 "src": None,
                 "state": "DELETED",
                 "build": None,
+                "dest": "another-yumrepo",
+                "checksums": {"sha256": "a" * 64},
+                "signing_key": None,
+                "filename": "crash-2.23-1.test8.x86_64.rpm",
+            },
+            {
+                "origin": "pulp",
+                "src": None,
+                "state": "DELETED",
+                "build": None,
                 "dest": "some-yumrepo",
                 "checksums": {"sha256": "a" * 64},
                 "signing_key": None,
@@ -521,6 +567,16 @@ def test_delete_modules(command_tester, fake_collector, monkeypatch):
                 "checksums": None,
                 "signing_key": None,
                 "filename": "mymod:s1:123:a1c2:s390x",
+            },
+            {
+                "origin": "pulp",
+                "src": None,
+                "state": "DELETED",
+                "build": None,
+                "dest": "some-yumrepo",
+                "checksums": None,
+                "signing_key": None,
+                "filename": "othermod:s2:123:a1c2:x86_64",
             },
             {
                 "origin": "pulp",
@@ -573,7 +629,7 @@ def test_delete_modules(command_tester, fake_collector, monkeypatch):
 
         # same files exist on Pulp as orphans
         files_search = list(client.search_content(criteria).result())
-        assert len(files_search) == 3
+        assert len(files_search) == 4
 
         files_search = list(client.search_content(criteria2).result())
         assert len(files_search) == 2

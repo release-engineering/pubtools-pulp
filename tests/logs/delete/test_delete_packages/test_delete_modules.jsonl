@@ -18,6 +18,14 @@
 {"event": {"type": "record-push-items-start"}}
 {"event": {"type": "record-push-items-end"}}
 {"event": {"type": "delete-rpms-end"}}
+{"event": {"type": "delete-rpms-start"}}
+{"event": {"type": "get-rpms-start"}}
+{"event": {"type": "get-rpms-end"}}
+{"event": {"type": "unassociate-rpms-start"}}
+{"event": {"type": "unassociate-rpms-end"}}
+{"event": {"type": "record-push-items-start"}}
+{"event": {"type": "record-push-items-end"}}
+{"event": {"type": "delete-rpms-end"}}
 {"event": {"type": "remove-artifacts-from-modules-end"}}
 {"event": {"type": "unassociate-modules-start"}}
 {"event": {"type": "unassociate-modules-end"}}
