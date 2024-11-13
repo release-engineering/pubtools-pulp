@@ -857,3 +857,187 @@ def test_delete_rpms_skip_publish(command_tester, fake_collector, monkeypatch):
     # All the files exist on Pulp
     files_search = list(client.search_content(criteria1).result())
     assert len(files_search) == 2
+
+
+def test_delete_rpms_with_all_repos(command_tester, fake_collector, monkeypatch):
+    """Deleting RPMs from repos succeeds"""
+
+    repo1 = YumRepository(
+        id="some-yumrepo", relative_url="some/publish/url", mutable_urls=["repomd.xml"]
+    )
+    repo2 = YumRepository(
+        id="other-yumrepo",
+        relative_url="other/publish/url",
+        mutable_urls=["repomd.xml"],
+    )
+    arc_repo_1 = YumRepository(
+        id="all-rpm-content-gg",
+        relative_url="other/publish/url",
+        mutable_urls=["repomd.xml"],
+    )
+    arc_repo_2 = YumRepository(
+        id="all-rpm-content-xp",
+        relative_url="other/publish/url",
+        mutable_urls=["repomd.xml"],
+    )
+
+    files1 = [
+        RpmUnit(
+            name="bash",
+            version="1.23",
+            release="1.test8",
+            arch="x86_64",
+            filename="bash-1.23-1.test8_x86_64.rpm",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+            unit_id="file1_rpm1",
+        ),
+        RpmUnit(
+            name="dash",
+            version="2.25",
+            release="1.test8",
+            arch="x86_64",
+            filename="dash-2.25-1.test8_x86_64.rpm",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+            unit_id="file1_rpm2",
+        ),
+    ]
+
+    files2 = [
+        RpmUnit(
+            name="crash",
+            version="3.30",
+            release="1.test8",
+            arch="s390x",
+            filename="crash-3.30-1.test8_s390x.rpm",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+            unit_id="file2_rpm1",
+        )
+    ]
+
+
+    with FakeDeletePackages() as task_instance:
+        task_instance.pulp_client_controller.insert_repository(repo1)
+        task_instance.pulp_client_controller.insert_repository(repo2)
+        task_instance.pulp_client_controller.insert_repository(arc_repo_1)
+        task_instance.pulp_client_controller.insert_repository(arc_repo_2)
+        task_instance.pulp_client_controller.insert_units(repo1, files1)
+        task_instance.pulp_client_controller.insert_units(repo2, files2)
+        task_instance.pulp_client_controller.insert_units(repo2, [files1[0]])
+        task_instance.pulp_client_controller.insert_units(arc_repo_1, files1)
+        task_instance.pulp_client_controller.insert_units(arc_repo_2, files2)
+        task_instance.pulp_client_controller.insert_units(arc_repo_2, [files1[0]])
+
+        # It should run with expected output.
+        command_tester.test(
+            task_instance.main,
+            [
+                "test-delete",
+                "--pulp-url",
+                "https://pulp.example.com/",
+                "--repo",
+                "*",
+                "--repo",
+                "all-rpm-content-xp",
+                "--file",
+                "bash-1.23-1.test8_x86_64.rpm",
+                "--file",
+                "dash-2.25-1.test8_x86_64.rpm",
+                "--signing-key",
+                "aabbcc",
+            ]
+        )
+    # It should record that it removed these push items:
+    assert sorted(fake_collector.items, key=lambda pi: pi["filename"]) == [
+        {
+            "origin": "pulp",
+            "src": None,
+            "dest": "all-rpm-content-xp",
+            "signing_key": None,
+            "filename": "bash-1.23-1.test8.x86_64.rpm",
+            "state": "DELETED",
+            "build": None,
+            "checksums": {"sha256": "a" * 64},
+        },
+        {
+            "origin": "pulp",
+            "src": None,
+            "dest": "other-yumrepo",
+            "signing_key": None,
+            "filename": "bash-1.23-1.test8.x86_64.rpm",
+            "state": "DELETED",
+            "build": None,
+            "checksums": {"sha256": "a" * 64},
+        },
+        {
+            "origin": "pulp",
+            "src": None,
+            "dest": "some-yumrepo",
+            "signing_key": None,
+            "filename": "bash-1.23-1.test8.x86_64.rpm",
+            "state": "DELETED",
+            "build": None,
+            "checksums": {"sha256": "a" * 64},
+        },
+        {
+            "origin": "pulp",
+            "src": None,
+            "dest": "some-yumrepo",
+            "signing_key": None,
+            "filename": "dash-2.25-1.test8.x86_64.rpm",
+            "state": "DELETED",
+            "build": None,
+            "checksums": {"sha256": "a" * 64},
+        },
+    ]
+    #
+    # verify whether files were deleted on Pulp
+    client = task_instance.pulp_client
+
+    # get the repo where the files were deleted
+    repos = sorted(
+        list(
+            client.search_repository(
+                Criteria.with_id(["all-rpm-content-gg", "all-rpm-content-xp", "some-yumrepo", "other-yumrepo"])
+            ).result()
+        ),
+        key=lambda r: r.id,
+    )
+    assert len(repos) == 4
+    r_arc_1, r_arc_2, r2, r1 = repos
+
+    assert r_arc_1.id == arc_repo_1.id
+    assert r_arc_2.id == arc_repo_2.id
+    assert r1.id == repo1.id
+    assert r2.id == repo2.id
+    #
+    # # criteria with the unit_ids
+    # # critera1 for files1 in repo1
+    unit_ids = []
+    for f in files1:
+        unit_ids.append(f.unit_id)
+
+    for f in files2:
+        unit_ids.append(f.unit_id)
+    search_criteria = Criteria.with_field("unit_id", Matcher.in_(unit_ids))
+
+    # No files should be in repo1
+    result1 =list(r1.search_content(search_criteria).result())
+    assert len(result1) == 0
+
+    result2 = list(r2.search_content(search_criteria).result())
+    assert len(result2) == 1
+    assert result2[0].unit_id == files2[0].unit_id
+
+    # --repos * arg should skip over all-rpm-content repos...
+    result3 = list(r_arc_1.search_content(search_criteria).result())
+    assert len(result3) == 2
+
+    # ... unless specified as an extra --repo arg.
+    result4 = list(r_arc_2.search_content(search_criteria).result())
+    assert len(result4) == 1
