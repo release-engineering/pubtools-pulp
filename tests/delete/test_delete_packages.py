@@ -920,7 +920,6 @@ def test_delete_rpms_with_all_repos(command_tester, fake_collector, monkeypatch)
         )
     ]
 
-
     with FakeDeletePackages() as task_instance:
         task_instance.pulp_client_controller.insert_repository(repo1)
         task_instance.pulp_client_controller.insert_repository(repo2)
@@ -950,7 +949,7 @@ def test_delete_rpms_with_all_repos(command_tester, fake_collector, monkeypatch)
                 "dash-2.25-1.test8_x86_64.rpm",
                 "--signing-key",
                 "aabbcc",
-            ]
+            ],
         )
     # It should record that it removed these push items:
     assert sorted(fake_collector.items, key=lambda pi: pi["filename"]) == [
@@ -1003,7 +1002,14 @@ def test_delete_rpms_with_all_repos(command_tester, fake_collector, monkeypatch)
     repos = sorted(
         list(
             client.search_repository(
-                Criteria.with_id(["all-rpm-content-gg", "all-rpm-content-xp", "some-yumrepo", "other-yumrepo"])
+                Criteria.with_id(
+                    [
+                        "all-rpm-content-gg",
+                        "all-rpm-content-xp",
+                        "some-yumrepo",
+                        "other-yumrepo",
+                    ]
+                )
             ).result()
         ),
         key=lambda r: r.id,
@@ -1027,7 +1033,7 @@ def test_delete_rpms_with_all_repos(command_tester, fake_collector, monkeypatch)
     search_criteria = Criteria.with_field("unit_id", Matcher.in_(unit_ids))
 
     # No files should be in repo1
-    result1 =list(r1.search_content(search_criteria).result())
+    result1 = list(r1.search_content(search_criteria).result())
     assert len(result1) == 0
 
     result2 = list(r2.search_content(search_criteria).result())

@@ -29,6 +29,7 @@ MODULEMD_REGEX = re.compile(r"^[-.+\w]+:[-.+\w]+:\d+(:[-.+\w]+){0,2}$")
 
 ALL_REPOS_INDICATOR = "*"
 
+
 @attr.s
 class ClearedRepo(object):
     """Represents a single repo where contents were removed."""
@@ -80,9 +81,9 @@ class Delete(PulpClientService, CollectorService, Publisher, PulpTask):
         self.parser.add_argument(
             "--repo",
             help="remove content from these comma-seperated repositories. If "
-                 "'%s' is used, the package will be removed from all repos, "
-                 "excluding all-rpm-content-* repos. These may be added "
-                 "separately." % ALL_REPOS_INDICATOR,
+            "'%s' is used, the package will be removed from all repos, "
+            "excluding all-rpm-content-* repos. These may be added "
+            "separately." % ALL_REPOS_INDICATOR,
             type=str,
             action=SplitAndExtend,
             split_on=",",
