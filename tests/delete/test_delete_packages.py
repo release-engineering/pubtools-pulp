@@ -1,3 +1,5 @@
+import pytest
+
 from more_executors.futures import f_return
 from pubtools.pulplib import (
     Client,
@@ -633,6 +635,183 @@ def test_delete_modules(command_tester, fake_collector, monkeypatch):
 
         files_search = list(client.search_content(criteria2).result())
         assert len(files_search) == 2
+
+
+@pytest.mark.parametrize(
+    # repo_count* - # of units left after deletion
+    "nsvca, repo_count, repo2_count",
+    [
+        pytest.param("mymod:s1:123:a1c2:x86_64", 4, 1, id="nsvca"),
+        pytest.param("mymod:s1:123:a1c2", 4, 0, id="nsvc"),
+        pytest.param("mymod:s1:123", 2, 0, id="nsv"),
+    ],
+)
+def test_delete_mods_partial_nsvca(
+    command_tester, fake_collector, nsvca, repo_count, repo2_count
+):
+    """All the modules matching the partial NSVCA are deleted along with their artifacts"""
+    repo = YumRepository(
+        id="some-yumrepo", relative_url="some/publish/url", mutable_urls=["repomd.xml"]
+    )
+    repo2 = YumRepository(
+        id="other-yumrepo", relative_url="some/publish/url", mutable_urls=["repomd.xml"]
+    )
+
+    files = [
+        RpmUnit(
+            name="bash",
+            version="1.23",
+            release="1.test8",
+            arch="x86_64",
+            filename="bash-1.23-1.test8_x86_64.rpm",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+            provides=[],
+            requires=[],
+            unit_id="rpm1",
+        ),
+        RpmUnit(
+            name="dash",
+            version="1.23",
+            release="1.test8",
+            arch="x86_64",
+            filename="dash-1.23-1.test8_x86_64.rpm",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+            provides=[],
+            requires=[],
+            unit_id="rpm2",
+        ),
+        RpmUnit(
+            name="crash",
+            version="2.23",
+            release="1.test8",
+            arch="x86_64",
+            filename="crash-2.23-1.test8_x86_64.rpm",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+            provides=[],
+            requires=[],
+            unit_id="rpm3",
+        ),
+        ModulemdUnit(
+            name="mymod",
+            stream="s1",
+            version=123,
+            context="a1c2",
+            arch="x86_64",
+            artifacts=[
+                "bash-0:1.23-1.test8_x86_64",
+                "dash-0:1.23-1.test8_x86_64",
+            ],
+            unit_id="module1",
+        ),
+        ModulemdUnit(
+            name="mymod",
+            stream="s1",
+            version=123,
+            context="a2c2",
+            arch="x86_64",
+            artifacts=[
+                "crash-0:2.23-1.test8_x86_64",
+            ],
+            unit_id="module2",
+        ),
+        ModulemdUnit(
+            name="mymod",
+            stream="s1",
+            version=124,
+            context="a2c2",
+            arch="x86_64",
+            artifacts=[],
+            unit_id="module3",
+        ),
+        ModulemdUnit(
+            name="othermod",
+            stream="s1",
+            version=123,
+            context="a1c2",
+            arch="x86_64",
+            artifacts=[],
+            unit_id="module5",
+        ),
+    ]
+
+    files2 = [
+        ModulemdUnit(
+            name="mymod",
+            stream="s1",
+            version=123,
+            context="a1c2",
+            arch="s390x",
+            artifacts=[],
+            unit_id="module6",
+        ),
+    ]
+
+    with FakeDeletePackages() as task_instance:
+        task_instance.pulp_client_controller.insert_repository(repo)
+        task_instance.pulp_client_controller.insert_repository(repo2)
+        task_instance.pulp_client_controller.insert_units(repo, files)
+        task_instance.pulp_client_controller.insert_units(repo2, files2)
+
+        # It should run with expected output.
+        command_tester.test(
+            task_instance.main,
+            [
+                "test-delete",
+                "--pulp-url",
+                "https://pulp.example.com/",
+                "--repo",
+                "some-yumrepo",
+                "--repo",
+                "other-yumrepo",
+                "--file",
+                nsvca,
+                "--signing-key",
+                "aabbcc",
+            ],
+        )
+
+    # verify whether files were deleted on Pulp
+    client = task_instance.pulp_client
+
+    # get the repos where the files were deleted
+    repos = list(client.search_repository(Criteria.with_id("some-yumrepo")).result())
+    assert len(repos) == 1
+    repo = repos[0]
+
+    repos = list(client.search_repository(Criteria.with_id("other-yumrepo")).result())
+    assert len(repos) == 1
+    repo2 = repos[0]
+
+    # criteria with the unit_ids
+    unit_ids = []
+    for f in files:
+        unit_ids.append(f.unit_id)
+    criteria = Criteria.with_field("unit_id", Matcher.in_(unit_ids))
+
+    unit_ids2 = []
+    for f in files2:
+        unit_ids2.append(f.unit_id)
+    criteria2 = Criteria.with_field("unit_id", Matcher.in_(unit_ids2))
+
+    # deleted files are not in the repo
+    files = list(repo.search_content(criteria).result())
+    assert len(files) == repo_count
+
+    files2 = list(repo2.search_content(criteria2).result())
+    assert len(files2) == repo2_count
+
+    # same files exist on Pulp as orphans
+    files_search = list(client.search_content(criteria).result())
+    assert len(files_search) == 7
+
+    files_search = list(client.search_content(criteria2).result())
+    assert len(files_search) == 1
 
 
 def test_delete_files(command_tester, fake_collector, monkeypatch):
