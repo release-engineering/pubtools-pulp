@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.32.0] - 2024-11-22
+
+- Introduced `--all-repos` argument for `pubtools-pulp-delete`
+
 ## [1.31.0] - 2024-07-01
 
 - Fixed erratum unit upload to `all-erratum-content-YYYY` that affected the pkglist generation
@@ -252,7 +256,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.31.0...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.32.0...HEAD
+[1.32.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.31.0...v1.32.0
 [1.31.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.30.1...v1.31.0
 [1.30.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.29.1...v1.30.1
 [1.29.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.28.1...v1.29.1

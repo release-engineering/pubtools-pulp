@@ -21,7 +21,7 @@ def get_requirements():
 
 setup(
     name="pubtools-pulp",
-    version="1.31.0",
+    version="1.32.0",
     packages=find_namespace_packages(where="src"),
     package_dir={"": "src"},
     url="https://github.com/release-engineering/pubtools-pulp",
