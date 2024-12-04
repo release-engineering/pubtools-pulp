@@ -84,7 +84,9 @@ class PulpProductIdPushItem(PulpDirectUploadPushItem):
         return []
 
     def upload_to_repo(self, repo):
-        return repo.upload_metadata(self.pushsource_item.src, metadata_type="productid")
+        return repo.upload_metadata(
+            self.pushsource_item.content(), metadata_type="productid"
+        )
 
     def ensure_uploaded(self, ctx, repo_f=None):
         # Overridden to add the post-upload step of product_versions update.
