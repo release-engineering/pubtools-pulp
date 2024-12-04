@@ -143,4 +143,4 @@ class PulpRpmPushItem(PulpPushItem):
         return super(PulpRpmPushItem, self).ensure_uploaded(ctx, ctx.upload_repo)
 
     def upload_to_repo(self, repo):
-        return repo.upload_rpm(self.pushsource_item.src, cdn_path=self.cdn_path)
+        return repo.upload_rpm(self.pushsource_item.content(), cdn_path=self.cdn_path)

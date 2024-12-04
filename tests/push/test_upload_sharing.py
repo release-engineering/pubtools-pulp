@@ -19,9 +19,12 @@ class RepoWrapper(object):
         self.delegate = delegate
         self.uploads = uploads
 
-    def upload_rpm(self, path, *args, **kwargs):
-        self.uploads.append(("rpm", path))
-        return self.delegate.upload_rpm(path, *args, **kwargs)
+    def upload_rpm(self, rpm, *args, **kwargs):
+        # get the path/name if it's the file object as rpm
+        # instead of rpm path
+        rpm = rpm if isinstance(rpm, str) else rpm.name
+        self.uploads.append(("rpm", rpm))
+        return self.delegate.upload_rpm(rpm, *args, **kwargs)
 
 
 class ClientWrapper(object):
