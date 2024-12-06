@@ -11,7 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.32.0] - 2024-11-22
 
-- Introduced `--all-repos` argument for `pubtools-pulp-delete`
+- Improved `pubtools-pulp-delete` to use `--repo *` for selecting all repos
+- Modular rpms are deleted from all provided repos in `pubtools-pulp-delete`
+- Fixed crash when trying to skip publish of repos
 
 ## [1.31.0] - 2024-07-01
 
