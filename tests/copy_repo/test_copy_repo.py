@@ -507,6 +507,18 @@ def test_copy_repo_criteria(command_tester):
             [
                 str(item)
                 for item in [
+                    Criteria.with_field(
+                        "content_type_id",
+                        Matcher.in_(
+                            [
+                                "erratum",
+                                "iso",
+                                "modulemd",
+                                "package_group",
+                                "package_langpacks",
+                            ]
+                        ),
+                    ),
                     Criteria.with_unit_type(
                         RpmUnit,
                         unit_fields=(
@@ -518,22 +530,6 @@ def test_copy_repo_criteria(command_tester):
                             "md5sum",
                             "signing_key",
                         ),
-                    ),
-                    Criteria.with_unit_type(ErratumUnit, unit_fields=("unit_id",)),
-                    Criteria.with_unit_type(
-                        ModulemdUnit,
-                        unit_fields=(
-                            "name",
-                            "stream",
-                            "version",
-                            "context",
-                            "arch",
-                        ),
-                    ),
-                    Criteria.with_unit_type(FileUnit, unit_fields=("unit_id",)),
-                    Criteria.with_field(
-                        "content_type_id",
-                        Matcher.in_(["package_group", "package_langpacks"]),
                     ),
                 ]
             ]
