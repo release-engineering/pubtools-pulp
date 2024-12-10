@@ -4,7 +4,7 @@ from functools import partial
 from itertools import chain
 
 import attr
-from more_executors.futures import f_map, f_sequence, f_proxy
+from more_executors.futures import f_map, f_sequence, f_proxy, f_flat_map, f_return
 from pubtools.pulplib import (
     ContainerImageRepository,
     Criteria,
@@ -73,6 +73,23 @@ CONTENT_TYPES = (
     ContentType(("package_langpacks",)),
 )
 
+RPM_CONTENT_TYPES = (
+    "rpm",
+    "srpm",
+)
+
+NON_RPM_CONTENT_TYPES = (
+    "iso",
+    "erratum",
+    "modulemd",
+    "modulemd_defaults",
+    "yum_repo_metadata_file",
+    "package_group",
+    "package_category",
+    "package_environment",
+    "package_langpacks",
+)
+
 
 @attr.s(slots=True)
 class RepoCopy(object):
@@ -93,38 +110,56 @@ class CopyRepo(CollectorService, PulpClientService, PulpRepositoryOperation):
         out = None
 
         def str_to_content_type(content_type_id):
-            out = None
             for item in CONTENT_TYPES:
                 if content_type_id in item.content_type_ids:
-                    out = item
-                    break
-
-            if out is None:
-                self.fail("Unsupported content type: %s", content_type_id)
-
-            return out
+                    return item
 
         if self.args.content_type:
             # replace srpm with rpm - we don't need to specify it separately and remove duplicated entries
             content_types = set(
-                map(lambda x: x.replace("srpm", "rpm"), self.args.content_type)
+                map(
+                    lambda x: x.lower().strip().replace("srpm", "rpm"),
+                    self.args.content_type,
+                )
             )
-            content_types = [
-                str_to_content_type(t.lower().strip()) for t in content_types
-            ]
-            criteria = []
-            in_matcher = []  # to aggregate content types for Criteria.with_field()
 
-            for item in sorted(content_types):
-                if item.klass:
-                    criteria.append(
-                        Criteria.with_unit_type(item.klass, unit_fields=item.fields)
-                    )
-                else:
-                    in_matcher.extend(item.content_type_ids)
-            if in_matcher:
+            # check for unsupported content types
+            unsupported = content_types.difference(
+                RPM_CONTENT_TYPES + NON_RPM_CONTENT_TYPES
+            )
+            if unsupported:
+                self.fail("Unsupported content type(s): %s", ",".join(unsupported))
+
+            rpm_content_types = [
+                str_to_content_type(t) for t in content_types if t in RPM_CONTENT_TYPES
+            ]
+            non_rpm_content_types = [
+                t for t in content_types if t in NON_RPM_CONTENT_TYPES
+            ]
+
+            # NOTE: Order of appending the criteria is critical here.
+            # Non-rpm content types should be copied first as it may contain modulemd
+            # content type. Modulemd units should be copied before the modular rpms,
+            # so as in case of a failure or partial copy, the modular rpms aren't
+            # available to the users. Hence, non-rpm content type criteria is appended
+            # first in the list of criteria
+            criteria = []
+
+            # criteria for all non-rpm content types
+            # unit_fields are ignored as they are small in size and the repos have
+            # small unit counts for non-rpm content types
+            criteria.append(
+                Criteria.with_field(
+                    "content_type_id", Matcher.in_(sorted(non_rpm_content_types))
+                )
+            )
+
+            # criteria for rpm content types
+            # unit_fields to keep a check on memory consumption with large rpm unit
+            # counts in the repo
+            for item in sorted(rpm_content_types):
                 criteria.append(
-                    Criteria.with_field("content_type_id", Matcher.in_(in_matcher))
+                    Criteria.with_unit_type(item.klass, unit_fields=item.fields)
                 )
 
             out = criteria
@@ -214,14 +249,23 @@ class CopyRepo(CollectorService, PulpClientService, PulpRepositoryOperation):
             tasks = list(chain.from_iterable(copy_tasks))
             return RepoCopy(tasks=tasks, repo=repo)
 
-        for src_repo, dest_repo in repo_pairs:
+        for src_repo, dest_repo in sorted(repo_pairs):
             one_pair_copies = []
+            tasks_f = f_return()
             for item in criteria or [None]:
-                tasks_f = self.pulp_client.copy_content(
-                    src_repo, dest_repo, criteria=item
+                # ensure the criterias are processed and completed/resolved in order
+                # so that non-rpm copy completes before rpm copy
+                # pylint:disable=cell-var-from-loop
+                tasks_f = f_flat_map(
+                    tasks_f,
+                    lambda _: self.pulp_client.copy_content(
+                        src_repo,
+                        dest_repo,
+                        criteria=item,
+                    ),
                 )
+                # pylint:enable=cell-var-from-loop
                 one_pair_copies.append(tasks_f)
-
             f = f_map(f_sequence(one_pair_copies), partial(repo_copy, repo=dest_repo))
             f = f_map(f, self.log_copy)
             fts.append(f)
