@@ -1,6 +1,6 @@
 [    INFO] Check repos: started
 [    INFO] Check repos: finished
 [    INFO] Copy content: started
-[   ERROR] Unsupported content type: container
+[   ERROR] Unsupported content type(s): container
 [   ERROR] Copy content: failed
 # Raised: 30
