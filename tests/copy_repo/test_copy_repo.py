@@ -385,6 +385,16 @@ def test_copy_repo_multiple_content_types(command_tester, fake_collector):
         relative_url="another/publish/url",
         mutable_urls=["repomd.xml"],
     )
+    repoC = YumRepository(
+        id="other-yumrepo",
+        relative_url="other/publish/url",
+        mutable_urls=["repomd.xml"],
+    )
+    repoD = YumRepository(
+        id="yet-another-yumrepo",
+        relative_url="yet/another/publish/url",
+        mutable_urls=["repomd.xml"],
+    )
 
     files = [
         RpmUnit(
@@ -400,11 +410,28 @@ def test_copy_repo_multiple_content_types(command_tester, fake_collector):
             name="mymod", stream="s1", version=123, context="a1c2", arch="s390x"
         ),
     ]
+    files2 = [
+        RpmUnit(
+            name="dash",
+            version="1.24",
+            release="1.test8",
+            arch="x86_64",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+        ),
+        ModulemdUnit(
+            name="othermod", stream="s1", version=123, context="a1c2", arch="s390x"
+        ),
+    ]
 
     with FakeCopyRepo() as task_instance:
         task_instance.pulp_client_controller.insert_repository(repoA)
         task_instance.pulp_client_controller.insert_repository(repoB)
+        task_instance.pulp_client_controller.insert_repository(repoC)
+        task_instance.pulp_client_controller.insert_repository(repoD)
         task_instance.pulp_client_controller.insert_units(repoA, files)
+        task_instance.pulp_client_controller.insert_units(repoC, files2)
 
         # It should run with expected output.
         command_tester.test(
@@ -422,6 +449,7 @@ def test_copy_repo_multiple_content_types(command_tester, fake_collector):
                 "--content-type",
                 "erratum",
                 "some-yumrepo,another-yumrepo",
+                "other-yumrepo,yet-another-yumrepo",
             ],
         )
 
@@ -445,8 +473,28 @@ def test_copy_repo_multiple_content_types(command_tester, fake_collector):
             "state": "PUSHED",
             "origin": "pulp",
             "src": None,
+            "dest": "yet-another-yumrepo",
+            "filename": "dash-1.24-1.test8.x86_64.rpm",
+            "checksums": {"sha256": "a" * 64},
+            "signing_key": None,
+            "build": None,
+        },
+        {
+            "state": "PUSHED",
+            "origin": "pulp",
+            "src": None,
             "dest": "another-yumrepo",
             "filename": "mymod:s1:123:a1c2:s390x",
+            "checksums": None,
+            "signing_key": None,
+            "build": None,
+        },
+        {
+            "state": "PUSHED",
+            "origin": "pulp",
+            "src": None,
+            "dest": "yet-another-yumrepo",
+            "filename": "othermod:s1:123:a1c2:s390x",
             "checksums": None,
             "signing_key": None,
             "build": None,
@@ -482,11 +530,11 @@ def test_copy_repo_criteria(command_tester):
                 "--content-type",  # duplicate
                 "modulemd",
                 "--content-type",
-                "iso",
+                "ISO",
                 "--content-type",
-                "erratum",
+                "Erratum",
                 "--content-type",
-                "package_group",
+                "package_group ",
                 "--content-type",
                 "package_langpacks",
                 "some-yumrepo,another-yumrepo",
@@ -507,6 +555,18 @@ def test_copy_repo_criteria(command_tester):
             [
                 str(item)
                 for item in [
+                    Criteria.with_field(
+                        "content_type_id",
+                        Matcher.in_(
+                            [
+                                "erratum",
+                                "iso",
+                                "modulemd",
+                                "package_group",
+                                "package_langpacks",
+                            ]
+                        ),
+                    ),
                     Criteria.with_unit_type(
                         RpmUnit,
                         unit_fields=(
@@ -518,22 +578,6 @@ def test_copy_repo_criteria(command_tester):
                             "md5sum",
                             "signing_key",
                         ),
-                    ),
-                    Criteria.with_unit_type(ErratumUnit, unit_fields=("unit_id",)),
-                    Criteria.with_unit_type(
-                        ModulemdUnit,
-                        unit_fields=(
-                            "name",
-                            "stream",
-                            "version",
-                            "context",
-                            "arch",
-                        ),
-                    ),
-                    Criteria.with_unit_type(FileUnit, unit_fields=("unit_id",)),
-                    Criteria.with_field(
-                        "content_type_id",
-                        Matcher.in_(["package_group", "package_langpacks"]),
                     ),
                 ]
             ]
