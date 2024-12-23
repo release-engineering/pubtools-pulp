@@ -148,11 +148,14 @@ class CopyRepo(CollectorService, PulpClientService, PulpRepositoryOperation):
             # criteria for all non-rpm content types
             # unit_fields are ignored as they are small in size and the repos have
             # small unit counts for non-rpm content types
-            criteria.append(
-                Criteria.with_field(
-                    "content_type_id", Matcher.in_(sorted(non_rpm_content_types))
+            if non_rpm_content_types:
+                # type_id filter with empty list includes all the content types.
+                # hence, check for the presence of non-rpm content types.
+                criteria.append(
+                    Criteria.with_field(
+                        "content_type_id", Matcher.in_(sorted(non_rpm_content_types))
+                    )
                 )
-            )
 
             # criteria for rpm content types
             # unit_fields to keep a check on memory consumption with large rpm unit
