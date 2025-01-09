@@ -102,6 +102,14 @@ class RepoCopy(object):
     """The repo to which content was copied."""
 
 
+class freeze_arguments(partial):
+    # execute the function only with the args and kwargs that were
+    # provided while creating the object. args and kwargs provided
+    # during the call are ignored.
+    def __call__(self, /, *args, **keywords):
+        return self.func(*self.args, **self.keywords)
+
+
 class CopyRepo(CollectorService, PulpClientService, PulpRepositoryOperation):
     @property
     def content_type_criteria(self):
@@ -258,16 +266,15 @@ class CopyRepo(CollectorService, PulpClientService, PulpRepositoryOperation):
             for item in criteria or [None]:
                 # ensure the criterias are processed and completed/resolved in order
                 # so that non-rpm copy completes before rpm copy
-                # pylint:disable=cell-var-from-loop
                 tasks_f = f_flat_map(
                     tasks_f,
-                    lambda _: self.pulp_client.copy_content(
+                    freeze_arguments(
+                        self.pulp_client.copy_content,
                         src_repo,
                         dest_repo,
                         criteria=item,
                     ),
                 )
-                # pylint:enable=cell-var-from-loop
                 one_pair_copies.append(tasks_f)
             f = f_map(f_sequence(one_pair_copies), partial(repo_copy, repo=dest_repo))
             f = f_map(f, self.log_copy)
