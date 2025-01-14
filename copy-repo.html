@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>copy-repo &#8212; pubtools-pulp  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=6625fa76" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=1fc5d657" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="delete" href="delete.html" />
+    <link rel="prev" title="clear-repo" href="clear-repo.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="copy-repo">
+<h1>copy-repo<a class="headerlink" href="#copy-repo" title="Permalink to this heading">¶</a></h1>
+<p><p>&lt;undocumented task&gt;</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">copy</span><span class="o">-</span><span class="n">repo</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">url</span> <span class="n">UDCACHE_URL</span><span class="p">]</span>
+                               <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">user</span> <span class="n">UDCACHE_USER</span><span class="p">]</span>
+                               <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">password</span> <span class="n">UDCACHE_PASSWORD</span><span class="p">]</span>
+                               <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">certificate</span> <span class="n">UDCACHE_CERTIFICATE</span><span class="p">]</span>
+                               <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">certificate</span><span class="o">-</span><span class="n">key</span> <span class="n">UDCACHE_CERTIFICATE_KEY</span><span class="p">]</span>
+                               <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">url</span> <span class="n">PULP_URL</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">user</span> <span class="n">PULP_USER</span><span class="p">]</span>
+                               <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">password</span> <span class="n">PULP_PASSWORD</span><span class="p">]</span>
+                               <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">certificate</span> <span class="n">PULP_CERTIFICATE</span><span class="p">]</span>
+                               <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">certificate</span><span class="o">-</span><span class="n">key</span> <span class="n">PULP_CERTIFICATE_KEY</span><span class="p">]</span>
+                               <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">insecure</span><span class="p">]</span>
+                               <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">throttle</span> <span class="n">PULP_THROTTLE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">pulp</span><span class="o">-</span><span class="n">fake</span><span class="p">]</span>
+                               <span class="p">[</span><span class="o">--</span><span class="n">skip</span> <span class="n">SKIP</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">content</span><span class="o">-</span><span class="nb">type</span> <span class="n">CONTENT_TYPE</span><span class="p">]</span>
+                               <span class="n">repopairs</span> <span class="p">[</span><span class="n">repopairs</span> <span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<section id="positional-arguments">
+<h2>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>repopairs</kbd></dt>
+<dd><p>repository pair(s) (source, destination) to be copied. e.g. repo-A,repo-B repo-C,repo-D</p>
+</dd>
+</dl>
+</section>
+<section id="named-arguments">
+<h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>--debug, -d</kbd></dt>
+<dd><p>Show debug logs; can be provided up to three times to enable more logs</p>
+<p>Default: 0</p>
+</dd>
+<dt><kbd>--skip</kbd></dt>
+<dd><p>skip given comma-separated sub-steps</p>
+</dd>
+<dt><kbd>--content-type</kbd></dt>
+<dd><p>copy only content of these comma-separated type(s). e.g. –content-type=(rpm, srpm, modulemd, iso, erratum)</p>
+</dd>
+</dl>
+</section>
+<section id="unified-downloads-cache-environment">
+<h2>Unified Downloads Cache environment<a class="headerlink" href="#unified-downloads-cache-environment" title="Permalink to this heading">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>--udcache-url</kbd></dt>
+<dd><p>Base URL of UD cache flush API; if omitted, UD cache flush features are disabled.</p>
+</dd>
+<dt><kbd>--udcache-user</kbd></dt>
+<dd><p>Username for UD cache flush</p>
+</dd>
+<dt><kbd>--udcache-password</kbd></dt>
+<dd><p>Password for UD cache flush (or set UDCACHE_PASSWORD)</p>
+<p>Default: “”</p>
+</dd>
+<dt><kbd>--udcache-certificate</kbd></dt>
+<dd><p>Client certificate for UD cache flush (or set UDCACHE_CERT)</p>
+<p>Default: “”</p>
+</dd>
+<dt><kbd>--udcache-certificate-key</kbd></dt>
+<dd><p>Client key for UD cache flush (or set UDCACHE_KEY)</p>
+<p>Default: “”</p>
+</dd>
+</dl>
+</section>
+<section id="pulp-environment">
+<h2>Pulp environment<a class="headerlink" href="#pulp-environment" title="Permalink to this heading">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>--pulp-url</kbd></dt>
+<dd><p>Pulp server URL</p>
+</dd>
+<dt><kbd>--pulp-user</kbd></dt>
+<dd><p>Pulp username</p>
+</dd>
+<dt><kbd>--pulp-password</kbd></dt>
+<dd><p>Pulp password (or set PULP_PASSWORD environment variable)</p>
+</dd>
+<dt><kbd>--pulp-certificate</kbd></dt>
+<dd><p>Pulp certificate. Can also be a single file (.pem)</p>
+</dd>
+<dt><kbd>--pulp-certificate-key</kbd></dt>
+<dd><p>Pulp certificate key</p>
+</dd>
+<dt><kbd>--pulp-insecure</kbd></dt>
+<dd><p>Allow unverified HTTPS connection to Pulp</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--pulp-throttle</kbd></dt>
+<dd><p>Allows to enqueue or run only specified number of Pulp tasks at one moment (or set PULP_THROTTLE environment variable)</p>
+</dd>
+<dt><kbd>--pulp-fake</kbd></dt>
+<dd><p>Use a fake in-memory Pulp client rather than interacting with a real server. For development/testing only, may have limited functionality.</p>
+<p>Default: False</p>
+</dd>
+</dl>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading">¶</a></h2>
+<p>Copy content from one repository to another:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">copy</span><span class="o">-</span><span class="n">repo</span> \
+   <span class="o">--</span><span class="n">content</span><span class="o">-</span><span class="nb">type</span> <span class="n">rpm</span><span class="p">,</span><span class="n">srpm</span> \
+   <span class="n">repo</span><span class="o">-</span><span class="n">A</span><span class="p">,</span><span class="n">repo</span><span class="o">-</span><span class="n">B</span>
+</pre></div>
+</div>
+<p>This command copies RPM and SRPM content from repository <cite>repo-A</cite> to <cite>repo-B</cite>.
+If the user provides a non existing repo, the command fails.</p>
+<p>Provide multiple repository pairs to copy them in one command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">copy</span><span class="o">-</span><span class="n">repo</span> \
+   <span class="o">--</span><span class="n">content</span><span class="o">-</span><span class="nb">type</span> <span class="n">iso</span> \
+   <span class="n">repo</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">repo</span><span class="o">-</span><span class="mi">2</span> <span class="n">repo</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="n">repo</span><span class="o">-</span><span class="mi">4</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pubtools-pulp</a></h1>
+
+
+
+<p class="blurb">Publishing tools for Pulp</p>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Command Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="clear-repo.html">clear-repo</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">copy-repo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="delete.html">delete</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fix-cves.html">fix-cves</a></li>
+<li class="toctree-l1"><a class="reference internal" href="garbage-collect.html">garbage-collect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publish.html">publish</a></li>
+<li class="toctree-l1"><a class="reference internal" href="push.html">push</a></li>
+<li class="toctree-l1"><a class="reference internal" href="set-maintenance.html">set-maintenance</a></li>
+</ul>
+
+
+<hr />
+<ul>
+    
+    <li class="toctree-l1"><a href="https://github.com/release-engineering/pubtools-pulp">Source</a></li>
+    
+    <li class="toctree-l1"><a href="https://pypi.org/project/pubtools-pulp">PyPI</a></li>
+    
+    <li class="toctree-l1"><a href="genindex.html">Index</a></li>
+    
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="clear-repo.html" title="previous chapter">clear-repo</a></li>
+      <li>Next: <a href="delete.html" title="next chapter">delete</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Red Hat.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/copy-repo.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+    <a href="https://github.com/release-engineering/pubtools-pulp" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>
