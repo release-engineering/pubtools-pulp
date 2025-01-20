@@ -260,7 +260,13 @@ class CopyRepo(CollectorService, PulpClientService, PulpRepositoryOperation):
             tasks = list(chain.from_iterable(copy_tasks))
             return RepoCopy(tasks=tasks, repo=repo)
 
-        for src_repo, dest_repo in sorted(repo_pairs):
+        def repo_pair_comparator(repo_pair):
+            # comapres the repo pairs of differnt types to sort them
+            # e.g. comapre FileRepository to YumRepository repo pair
+            src, dest = repo_pair
+            return (src.type, src.id, dest.id)
+
+        for src_repo, dest_repo in sorted(repo_pairs, key=repo_pair_comparator):
             one_pair_copies = []
             tasks_f = f_return()
             for item in criteria or [None]:

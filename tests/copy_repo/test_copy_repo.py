@@ -139,7 +139,7 @@ def test_copy_invalid_content_type(command_tester, fake_collector):
     assert not fake_collector.items
 
 
-def test_copy_file_repo(command_tester, fake_collector):
+def test_copy_repo(command_tester, fake_collector):
     """Copying a repo with file content succeeds."""
 
     repoA = FileRepository(
@@ -154,18 +154,47 @@ def test_copy_file_repo(command_tester, fake_collector):
         relative_url="another/publish/url",
         mutable_urls=["mutable1", "mutable2"],
     )
+    repoC = YumRepository(
+        id="some-yumrepo",
+        eng_product_id=789,
+        relative_url="some/publish/url",
+        mutable_urls=["repomd.xml"],
+    )
+    repoD = YumRepository(
+        id="another-yumrepo",
+        eng_product_id=890,
+        relative_url="another/publish/url",
+        mutable_urls=["repomd.xml"],
+    )
 
-    files = [
+    files1 = [
         FileUnit(path="hello.txt", size=123, sha256sum="a" * 64),
         FileUnit(path="with/subdir.json", size=0, sha256sum="b" * 64),
+    ]
+    files2 = [
+        RpmUnit(
+            name="bash",
+            version="1.23",
+            release="1.test8",
+            arch="x86_64",
+            sha256sum="a" * 64,
+            md5sum="b" * 32,
+            signing_key="aabbcc",
+        ),
+        ModulemdUnit(
+            name="mymod", stream="s1", version=123, context="a1c2", arch="s390x"
+        ),
     ]
 
     with FakeCopyRepo() as task_instance:
         fakepulp = task_instance.pulp_client_controller
         fakepulp.insert_repository(repoA)
         fakepulp.insert_repository(repoB)
+        fakepulp.insert_repository(repoC)
+        fakepulp.insert_repository(repoD)
         # Populate source repository.
-        fakepulp.insert_units(repoA, files)
+        fakepulp.insert_units(repoA, files1)
+        fakepulp.insert_units(repoC, files2)
 
         # It should run with expected output.
         command_tester.test(
@@ -178,11 +207,22 @@ def test_copy_file_repo(command_tester, fake_collector):
                 "--udcache-url",
                 "https://ud.example.com/",
                 "some-filerepo,another-filerepo",
+                "some-yumrepo,another-yumrepo",
             ],
         )
 
     # It should record that it copied these push items:
     assert sorted(fake_collector.items, key=lambda pi: pi["filename"]) == [
+        {
+            "build": None,
+            "checksums": {"sha256": "a" * 64},
+            "dest": "another-yumrepo",
+            "filename": "bash-1.23-1.test8.x86_64.rpm",
+            "origin": "pulp",
+            "signing_key": None,
+            "src": None,
+            "state": "PUSHED",
+        },
         {
             "state": "PUSHED",
             "origin": "pulp",
@@ -192,6 +232,16 @@ def test_copy_file_repo(command_tester, fake_collector):
             "checksums": {"sha256": "a" * 64},
             "build": None,
             "signing_key": None,
+        },
+        {
+            "build": None,
+            "checksums": None,
+            "dest": "another-yumrepo",
+            "filename": "mymod:s1:123:a1c2:s390x",
+            "origin": "pulp",
+            "signing_key": None,
+            "src": None,
+            "state": "PUSHED",
         },
         {
             "state": "PUSHED",
@@ -208,13 +258,15 @@ def test_copy_file_repo(command_tester, fake_collector):
     # It should have published the copied Pulp repo
     assert [hist.repository.id for hist in fakepulp.publish_history] == [
         "another-filerepo",
+        "another-yumrepo",
     ]
 
     # It should have flushed the copied UD object
     assert task_instance.udcache_client.flushed_repos == [
         "another-filerepo",
+        "another-yumrepo",
     ]
-    assert task_instance.udcache_client.flushed_products == [456]
+    assert task_instance.udcache_client.flushed_products == [456, 890]
 
 
 def test_copy_file_skip_publish(command_tester):
