@@ -118,6 +118,7 @@ class CopyRepo(CollectorService, PulpClientService, PulpRepositoryOperation):
     Copied content may optionally be filtered on content types.
     If the user provides a non existing repo, the command fails.
     """
+
     @property
     def content_type_criteria(self):
         # Only return non-None if there were really any types given.
