@@ -33,7 +33,11 @@
             
   <section id="copy-repo">
 <h1>copy-repo<a class="headerlink" href="#copy-repo" title="Permalink to this heading">¶</a></h1>
-<p><p>&lt;undocumented task&gt;</p>
+<p><p>Copy content from one repository to another.</p>
+<p>This command copies content from one repository to another, for
+multiple provided <cite>source,destination</cite> pairs. Copied content may
+optionally be filtered on content types. If the user provides a non
+existing repo, the command fails.</p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pubtools</span><span class="o">-</span><span class="n">pulp</span><span class="o">-</span><span class="n">copy</span><span class="o">-</span><span class="n">repo</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">url</span> <span class="n">UDCACHE_URL</span><span class="p">]</span>
                                <span class="p">[</span><span class="o">--</span><span class="n">udcache</span><span class="o">-</span><span class="n">user</span> <span class="n">UDCACHE_USER</span><span class="p">]</span>
