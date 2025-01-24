@@ -111,6 +111,14 @@ class freeze_arguments(partial):
 
 
 class CopyRepo(CollectorService, PulpClientService, PulpRepositoryOperation):
+    """
+    Copy content from one repository to another.
+
+    This command copies content from one repository to another, for multiple provided `source,destination` pairs.
+    Copied content may optionally be filtered on content types.
+    If the user provides a non existing repo, the command fails.
+    """
+
     @property
     def content_type_criteria(self):
         # Only return non-None if there were really any types given.
