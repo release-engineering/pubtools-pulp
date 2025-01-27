@@ -72,7 +72,7 @@ class PulpFilePushItem(PulpPushItem):
 
     def upload_to_repo(self, repo):
         return repo.upload_file(
-            self.pushsource_item.src,
+            self.pushsource_item.content(),
             relative_url=self.pushsource_item.name,
             description=self.pushsource_item.description,
             version=self.pushsource_item.version,
