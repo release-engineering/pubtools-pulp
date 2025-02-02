@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.32.2] - 2025-01-27
+
+- Fixed `pubtools-pulp-copy-repo` failure for differnt repo type pairs in same request
+- Added docs for `pubtools-pulp-copy-repo`
+
 ## [1.32.1] - 2025-01-14
 
 - Improved `pubtools-pulp-copy-repo` performance reducing resource consumption
@@ -262,7 +267,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.32.1...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.32.2...HEAD
+[1.32.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.32.1...v1.32.2
 [1.32.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.32.0...v1.32.1
 [1.32.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.31.0...v1.32.0
 [1.31.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.30.1...v1.31.0
