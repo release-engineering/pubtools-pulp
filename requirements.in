@@ -2,5 +2,5 @@ pubtools>=0.3.0
 pubtools-pulplib>=2.36.0
 more_executors>=2.7.0
 pushcollector>=1.2.0
-pushsource>=2.45.0
+pushsource>=2.51.0
 monotonic; python_version < '3.3'
