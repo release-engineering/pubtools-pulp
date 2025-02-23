@@ -212,9 +212,9 @@ cryptography==44.0.1 \
     --hash=sha256:f51f5705ab27898afda1aaa430f34ad90dc117421057782022edf0600bec5f14 \
     --hash=sha256:fd0ee90072861e276b0ff08bd627abec29e32a53b2be44e41dbcdf87cbee2b00
     # via pushsource
-decorator==5.1.1 \
-    --hash=sha256:637996211036b6385ef91435e4fae22989472f9d571faba8927ba8253acbc330 \
-    --hash=sha256:b8c3f85900b9dc423225913c5aace94729fe1fa9763b38939a95226f02d37186
+decorator==5.2.0 \
+    --hash=sha256:1cf2ab68f8c1c7eae3895d82ab0daab41294cfbe6fbdebf50b44307299980762 \
+    --hash=sha256:f30a69c066f698c7c11fa1fa3425f684d3b4b01b494ee41e73c0a14f3de48427
     # via gssapi
 defusedxml==0.7.1 \
     --hash=sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69 \
@@ -324,10 +324,10 @@ kobo==0.39.0 \
     --hash=sha256:45302a8d819ae0b47e0a76d3223ee64943d4e7c988379b1f8ceff3fc99ab7a85 \
     --hash=sha256:fcf9bb7ac0ca3bc0ca2aaaff75fa974a78b3f4207037829dce2bf242def6c179
     # via pushsource
-koji==1.35.1 \
-    --hash=sha256:0302a5c12173938f88edc02dbd1fb55631454ccd3c6543446edc83befb89d3e1 \
-    --hash=sha256:8321c22920029ca2e8cf6f38eed087e2af947f40fece50aba7f0d52defd1636f \
-    --hash=sha256:916e7dd68e14980ed7245cbd700b74e79e913cfd4f250367307a8fce866381c6
+koji==1.35.2 \
+    --hash=sha256:0ece53247064c6c1c772527c74176dd07a67dd78465ddd1c7bf2170f6f673244 \
+    --hash=sha256:95685007fff8dda4a32231ace6e4d80f2294ad37f89862f9de77dfead8da08aa \
+    --hash=sha256:9bb18a407a1cfda68d378384d3e4c48bbb361cd029e1f614b36f6da02e489e3e
     # via pushsource
 more-executors==2.11.4 \
     --hash=sha256:a304139c6bece5be18aed7dcff4c48440412cb7cbe90f64ba4572772fcb0407f \
