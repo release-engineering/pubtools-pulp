@@ -262,6 +262,7 @@ def test_copy_repo(command_tester, fake_collector):
         "another-yumrepo",
     ]
 
+
 def test_copy_file_skip_publish(command_tester):
     """Copying a repo with file content while skipping publish succeeds."""
 

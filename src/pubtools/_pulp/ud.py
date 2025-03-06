@@ -105,7 +105,9 @@ class UdCacheClient(object):
             Future[None]
                 A future resolved once flush has completed.
         """
-        warnings.warn("`flush_product()` function will be deprecated.", DeprecationWarning)
+        warnings.warn(
+            "`flush_product()` function will be deprecated.", DeprecationWarning
+        )
         return self._flush_object("eng-product", product_id)
 
     def flush_repo(self, repo_id):
