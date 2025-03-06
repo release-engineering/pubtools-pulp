@@ -42,9 +42,9 @@ class UdCache(UdCacheClientService):
         for repo in repos:
             # RHELDST-24551: UD can't flush cache of repos that have no eng product ID.
             # Ensure this condition is met before flushing.
+            # RHELDST-29701: Flushing repos only is sufficient to keep UD up to date.
             if repo.eng_product_id:
                 out.append(client.flush_repo(repo.id))
-                out.append(client.flush_product(repo.eng_product_id))
 
         out.extend([client.flush_erratum(erratum.id) for erratum in (errata or [])])
 

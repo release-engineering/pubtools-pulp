@@ -12,14 +12,9 @@ from pubtools._pulp.tasks.publish import Publish, entry_point
 class FakeUdCache(object):
     def __init__(self):
         self.flushed_repos = []
-        self.flushed_products = []
 
     def flush_repo(self, repo_id):
         self.flushed_repos.append(repo_id)
-        return f_return()
-
-    def flush_product(self, product_id):
-        self.flushed_products.append(product_id)
         return f_return()
 
 
