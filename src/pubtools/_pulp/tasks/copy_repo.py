@@ -304,10 +304,6 @@ class CopyRepo(CollectorService, PulpClientService, PulpRepositoryOperation):
         # Start copying repos.
         repo_copies_fs = self.copy_content(repo_pairs)
 
-        # As copying completes, record pushitem info on what was copied.
-        # We don't have to wait on this before continuing.
-        to_await = self.record_push_items(repo_copies_fs, "PUSHED")
-
         # Don't need the repo copying tasks for anything more.
         repos_fs = [f_proxy(f_map(f, lambda cr: cr.repo)) for f in repo_copies_fs]
 
@@ -322,10 +318,10 @@ class CopyRepo(CollectorService, PulpClientService, PulpRepositoryOperation):
         f_sequence(publish_fs).result()
 
         # They should have UD cache flushed.
-        to_await.extend(self.flush_ud(repos_fs))
+        flush_fs = self.flush_ud(repos_fs)
 
         # Now make sure we wait for everything to finish.
-        for f in to_await:
+        for f in flush_fs:
             f.result()
 
 

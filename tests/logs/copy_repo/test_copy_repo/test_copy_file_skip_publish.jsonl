@@ -2,8 +2,6 @@
 {"event": {"type": "check-repos-end"}}
 {"event": {"type": "copy-content-start"}}
 {"event": {"type": "copy-content-end"}}
-{"event": {"type": "record-push-items-start"}}
-{"event": {"type": "record-push-items-end"}}
 {"event": {"type": "publish-skip"}}
 {"event": {"type": "flush-ud-cache-start"}}
 {"event": {"type": "flush-ud-cache-end"}}

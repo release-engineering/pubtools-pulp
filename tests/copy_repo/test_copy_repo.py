@@ -206,49 +206,8 @@ def test_copy_repo(command_tester, fake_collector):
             ],
         )
 
-    # It should record that it copied these push items:
-    assert sorted(fake_collector.items, key=lambda pi: pi["filename"]) == [
-        {
-            "build": None,
-            "checksums": {"sha256": "a" * 64},
-            "dest": "another-yumrepo",
-            "filename": "bash-1.23-1.test8.x86_64.rpm",
-            "origin": "pulp",
-            "signing_key": None,
-            "src": None,
-            "state": "PUSHED",
-        },
-        {
-            "state": "PUSHED",
-            "origin": "pulp",
-            "src": None,
-            "dest": "another-filerepo",
-            "filename": "hello.txt",
-            "checksums": {"sha256": "a" * 64},
-            "build": None,
-            "signing_key": None,
-        },
-        {
-            "build": None,
-            "checksums": None,
-            "dest": "another-yumrepo",
-            "filename": "mymod:s1:123:a1c2:s390x",
-            "origin": "pulp",
-            "signing_key": None,
-            "src": None,
-            "state": "PUSHED",
-        },
-        {
-            "state": "PUSHED",
-            "origin": "pulp",
-            "src": None,
-            "dest": "another-filerepo",
-            "filename": "with/subdir.json",
-            "checksums": {"sha256": "b" * 64},
-            "build": None,
-            "signing_key": None,
-        },
-    ]
+    # It shouldn't record any push items:
+    assert fake_collector.items == []
 
     # It should have published the copied Pulp repo
     assert [hist.repository.id for hist in fakepulp.publish_history] == [
@@ -363,39 +322,8 @@ def test_copy_yum_repo(command_tester, fake_collector, monkeypatch):
             ],
         )
 
-    # It should record that it copied these push items:
-    assert sorted(fake_collector.items, key=lambda pi: pi["filename"]) == [
-        {
-            "state": "PUSHED",
-            "origin": "pulp",
-            "src": None,
-            "dest": "another-yumrepo",
-            "filename": "RHSA-2021:0672",
-            "checksums": None,
-            "signing_key": None,
-            "build": None,
-        },
-        {
-            "state": "PUSHED",
-            "origin": "pulp",
-            "src": None,
-            "dest": "another-yumrepo",
-            "filename": "bash-1.23-1.test8.x86_64.rpm",
-            "checksums": {"sha256": "a" * 64},
-            "signing_key": None,
-            "build": None,
-        },
-        {
-            "state": "PUSHED",
-            "origin": "pulp",
-            "src": None,
-            "dest": "another-yumrepo",
-            "filename": "mymod:s1:123:a1c2:s390x",
-            "checksums": None,
-            "signing_key": None,
-            "build": None,
-        },
-    ]
+    # It shouldn't record any push items:
+    assert fake_collector.items == []
 
 
 def test_copy_container_repo(command_tester):
@@ -503,49 +431,8 @@ def test_copy_repo_multiple_content_types(command_tester, fake_collector):
     # produces the expected output
     assert task_instance.args.content_type == ["rpm", "modulemd", "iso", "erratum"]
 
-    # It should record that it copied these push items:
-    assert sorted(fake_collector.items, key=lambda pi: pi["filename"]) == [
-        {
-            "state": "PUSHED",
-            "origin": "pulp",
-            "src": None,
-            "dest": "another-yumrepo",
-            "filename": "bash-1.23-1.test8.x86_64.rpm",
-            "checksums": {"sha256": "a" * 64},
-            "signing_key": None,
-            "build": None,
-        },
-        {
-            "state": "PUSHED",
-            "origin": "pulp",
-            "src": None,
-            "dest": "yet-another-yumrepo",
-            "filename": "dash-1.24-1.test8.x86_64.rpm",
-            "checksums": {"sha256": "a" * 64},
-            "signing_key": None,
-            "build": None,
-        },
-        {
-            "state": "PUSHED",
-            "origin": "pulp",
-            "src": None,
-            "dest": "another-yumrepo",
-            "filename": "mymod:s1:123:a1c2:s390x",
-            "checksums": None,
-            "signing_key": None,
-            "build": None,
-        },
-        {
-            "state": "PUSHED",
-            "origin": "pulp",
-            "src": None,
-            "dest": "yet-another-yumrepo",
-            "filename": "othermod:s1:123:a1c2:s390x",
-            "checksums": None,
-            "signing_key": None,
-            "build": None,
-        },
-    ]
+    # It shouldn't record any push item:
+    assert fake_collector.items == []
 
 
 def test_copy_repo_criteria(command_tester):
