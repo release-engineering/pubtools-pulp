@@ -207,7 +207,7 @@ def test_copy_repo(command_tester, fake_collector):
         )
 
     # It shouldn't record any push items:
-    assert fake_collector.items  == []
+    assert fake_collector.items == []
 
     # It should have published the copied Pulp repo
     assert [hist.repository.id for hist in fakepulp.publish_history] == [
