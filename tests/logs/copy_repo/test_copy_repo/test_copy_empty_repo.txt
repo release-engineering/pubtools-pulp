@@ -3,8 +3,6 @@
 [    INFO] Copy content: started
 [ WARNING] another-filerepo: no content copied, tasks: e3e70682-c209-4cac-629f-6fbed82c07cd
 [    INFO] Copy content: finished
-[    INFO] Record push items: started
-[    INFO] Record push items: finished
 [    INFO] Publish: started
 [    INFO] Publish: finished
 [    INFO] Flush UD cache: started
