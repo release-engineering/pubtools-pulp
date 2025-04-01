@@ -455,10 +455,6 @@ gssapi==1.9.0 \
     --hash=sha256:f2f3a46784d8127cc7ef10d3367dedcbe82899ea296710378ccc9b7cefe96f4c \
     --hash=sha256:f468fac8f3f5fca8f4d1ca19e3cd4d2e10bd91074e7285464b22715d13548afe
     # via requests-gssapi
-humanize==4.10.0 \
-    --hash=sha256:06b6eb0293e4b85e8d385397c5868926820db32b9b654b932f57fa41c23c9978 \
-    --hash=sha256:39e7ccb96923e732b5c2e27aeaa3b10a8dfeeba3eb965ba7b74a3eb0e30040a6
-    # via pubtools-pulplib
 identify==2.6.1 \
     --hash=sha256:53863bcac7caf8d2ed85bd20312ea5dcfc22226800f6d6881f232d861db5a8f0 \
     --hash=sha256:91478c5fb7c3aac5ff7bf9b4344f803843dc586832d5f110d672b19aa1984c98
@@ -648,9 +644,9 @@ pubtools==1.4.3 \
     # via
     #   -r requirements.in
     #   pubtools-pulplib
-pubtools-pulplib==2.41.0 \
-    --hash=sha256:789612c1a7e8e535a43600b406a92d7b5205d2febe541d23a0cee1a1180e071c \
-    --hash=sha256:83b3d5b2cbc9c35c1a29f973181679fe006c6cf599496c13bdc43a3746333bdf
+pubtools-pulplib==2.42.0 \
+    --hash=sha256:3a40cea1b33432e6501d35882c4b372680814c53e9854de9deebc37a278d6529 \
+    --hash=sha256:6faa3a490f658ec22462303c38f58f269c2c1d478ec223d1c19b7aa1400084c2
     # via -r requirements.in
 pushcollector==1.3.0 \
     --hash=sha256:18281fcd4247ca8b668c25348bbc2f9cc032912cecc7037824a74ad8adcbb1c3 \
@@ -701,9 +697,9 @@ python-dateutil==2.9.0.post0 \
     # via
     #   koji
     #   pushsource
-pytz==2025.1 \
-    --hash=sha256:89dd22dca55b46eac6eda23b2d72721bf1bdfef212645d81513ef5d03038de57 \
-    --hash=sha256:c2db42be2a2518b28e65f9207c4d05e6ff547d1efa4086469ef855e4ab70178e
+pytz==2025.2 \
+    --hash=sha256:360b9e3dbb49a209c21ad61809c7fb453643e048b38924c765813546746e81c3 \
+    --hash=sha256:5ddf76296dd8c44c26eb8f4b6f35488f3ccbf6fbbd7adee0b7262d43f0ec2f00
     # via
     #   babel
     #   pushsource
@@ -792,9 +788,9 @@ requests-mock==1.12.1 \
     --hash=sha256:b1e37054004cdd5e56c84454cc7df12b25f90f382159087f4b6915aaeef39563 \
     --hash=sha256:e9e12e333b525156e82a3c852f22016b9158220d2f47454de9cae8a77d371401
     # via -r test-requirements.in
-rich==13.9.4 \
-    --hash=sha256:439594978a49a09530cff7ebc4b5c7103ef57baf48d5ea3184f21d9a2befa098 \
-    --hash=sha256:6049d5e6ec054bf2779ab3358186963bac2ea89175919d699e378b99738c2a90
+rich==14.0.0 \
+    --hash=sha256:1c9491e1951aac09caffd42f448ee3d04e58923ffe14993f6e83068dc395d7e0 \
+    --hash=sha256:82f1bc23a6a21ebca4ae0c45af9bdbc492ed20231dcb63f297d6d1021a9d5725
     # via bandit
 rpds-py==0.20.1 \
     --hash=sha256:02a0629ec053fc013808a85178524e3cb63a61dbc35b22499870194a63578fb9 \
@@ -903,9 +899,9 @@ rpds-py==0.20.1 \
     # via
     #   jsonschema
     #   referencing
-rpmdyn==2025.3.17 \
-    --hash=sha256:25214b4f5cf17ea5ec50393a7cf1a90a42d140096ffcdd70ba64356d55b486fe \
-    --hash=sha256:9581612b2bb717bfca04ce8752b6c55b8f3864712f26dbd7a15e62ef2e561730
+rpmdyn==2025.3.24 \
+    --hash=sha256:3b4c90b68b2b7a903540e0aa01c8401bbe91518d5bd51d0bdd0162123100e959 \
+    --hash=sha256:48cbb6e5b9c60441346a8355dcc029bb987e291848a9ff0f9b1f36bf0dd806ed
     # via -r test-requirements.in
 six==1.17.0 \
     --hash=sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274 \
@@ -999,9 +995,9 @@ tomlkit==0.13.2 \
     --hash=sha256:7a974427f6e119197f670fbbbeae7bef749a6c14e793db934baefc1b5f03efde \
     --hash=sha256:fff5fe59a87295b278abd31bec92c15d9bc4a06885ab12bcea52c71119392e79
     # via pylint
-typing-extensions==4.12.2 \
-    --hash=sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d \
-    --hash=sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8
+typing-extensions==4.13.0 \
+    --hash=sha256:0a4ac55a5820789d87e297727d229866c9650f6521b64206413c4fbada24d95b \
+    --hash=sha256:c8dd92cc0d6425a97c18fbb9d1954e5ff92c1ca881a309c45f06ebc0b79058e5
     # via
     #   astroid
     #   black
