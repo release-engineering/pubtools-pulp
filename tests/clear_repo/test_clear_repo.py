@@ -23,7 +23,6 @@ class FakeUdCache(object):
         self.flushed_repos = []
         self.flushed_products = []
 
-
     def flush_repo(self, repo_id):
         self.flushed_repos.append(repo_id)
         return f_return()
@@ -31,6 +30,7 @@ class FakeUdCache(object):
     def flush_product(self, product_id):
         self.flushed_products.append(product_id)
         return f_return()
+
 
 class FakeClearRepo(ClearRepo):
     """clear-repo with services overridden for test"""

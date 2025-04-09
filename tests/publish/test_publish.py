@@ -203,8 +203,8 @@ def test_repo_publish_cache_cleanup(command_tester):
 
 
 def test_product_id_flushed_once(command_tester):
-    """ A given eng product ID should only be flushed once even if it appears
-        in multiple repos
+    """A given eng product ID should only be flushed once even if it appears
+    in multiple repos
     """
     with FakePublish() as fake_publish:
         fake_pulp = fake_publish.pulp_client_controller
@@ -256,12 +256,19 @@ def test_product_id_flushed_once(command_tester):
         )
 
     # pulp repo is published
-    assert [hist.repository.id for hist in fake_pulp.publish_history] == ["product_id_flushed_once_1", "product_id_flushed_once_2", "repo1"]
+    assert [hist.repository.id for hist in fake_pulp.publish_history] == [
+        "product_id_flushed_once_1",
+        "product_id_flushed_once_2",
+        "repo1",
+    ]
     # flushed the UD object
-    assert fake_publish.udcache_client.flushed_repos == ["product_id_flushed_once_1", "product_id_flushed_once_2", "repo1"]
+    assert fake_publish.udcache_client.flushed_repos == [
+        "product_id_flushed_once_1",
+        "product_id_flushed_once_2",
+        "repo1",
+    ]
     # Assert the product ID was only flushed once
     assert fake_publish.udcache_client.flushed_products == [101]
-
 
 
 def test_repo_publish_cache_cleanup_skip_ud(command_tester):
