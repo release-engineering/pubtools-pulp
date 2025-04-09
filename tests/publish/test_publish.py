@@ -12,9 +12,14 @@ from pubtools._pulp.tasks.publish import Publish, entry_point
 class FakeUdCache(object):
     def __init__(self):
         self.flushed_repos = []
+        self.flushed_products = []
 
     def flush_repo(self, repo_id):
         self.flushed_repos.append(repo_id)
+        return f_return()
+
+    def flush_product(self, product_id):
+        self.flushed_products.append(product_id)
         return f_return()
 
 
@@ -194,6 +199,69 @@ def test_repo_publish_cache_cleanup(command_tester):
     assert [hist.repository.id for hist in fake_pulp.publish_history] == ["repo1"]
     # flushed the UD object
     assert fake_publish.udcache_client.flushed_repos == ["repo1"]
+    assert fake_publish.udcache_client.flushed_products == [101]
+
+
+def test_product_id_flushed_once(command_tester):
+    """ A given eng product ID should only be flushed once even if it appears
+        in multiple repos
+    """
+    with FakePublish() as fake_publish:
+        fake_pulp = fake_publish.pulp_client_controller
+        _add_repo(fake_pulp)
+
+        dt1 = datetime(2019, 9, 10, 0, 0, 0)
+        d1 = Distributor(
+            id="yum_distributor",
+            type_id="yum_distributor",
+            repo_id="product_id_flushed_once_1",
+            last_publish=dt1,
+            relative_url="content/unit/1/client",
+        )
+        r1 = Repository(
+            id="product_id_flushed_once_1",
+            eng_product_id=101,
+            distributors=[d1],
+            relative_url="content/unit/1/client",
+            mutable_urls=["mutable1", "mutable2"],
+        )
+        d2 = Distributor(
+            id="cdn_distributor",
+            type_id="rpm_rsync_distributor",
+            repo_id="product_id_flushed_once_2",
+            last_publish=dt1,
+            relative_url="content/unit/1/client",
+        )
+        r2 = Repository(
+            id="product_id_flushed_once_2",
+            eng_product_id=101,
+            distributors=[d2],
+            relative_url="content/unit/1/client",
+            mutable_urls=["mutable1", "mutable2"],
+        )
+
+        fake_pulp.insert_repository(r1)
+        fake_pulp.insert_repository(r2)
+        command_tester.test(
+            fake_publish.main,
+            [
+                "test-publish",
+                "--pulp-url",
+                "https://pulp.example.com",
+                "--udcache-url",
+                "https://ud.example.com/",
+                "--repo-ids",
+                "repo1,product_id_flushed_once_1,product_id_flushed_once_2",
+            ],
+        )
+
+    # pulp repo is published
+    assert [hist.repository.id for hist in fake_pulp.publish_history] == ["product_id_flushed_once_1", "product_id_flushed_once_2", "repo1"]
+    # flushed the UD object
+    assert fake_publish.udcache_client.flushed_repos == ["product_id_flushed_once_1", "product_id_flushed_once_2", "repo1"]
+    # Assert the product ID was only flushed once
+    assert fake_publish.udcache_client.flushed_products == [101]
+
 
 
 def test_repo_publish_cache_cleanup_skip_ud(command_tester):

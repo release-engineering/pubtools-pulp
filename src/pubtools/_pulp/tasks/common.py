@@ -46,6 +46,11 @@ class UdCache(UdCacheClientService):
             if repo.eng_product_id:
                 out.append(client.flush_repo(repo.id))
 
+        # RHELDST-30255: turns out we should still flush eng product IDs, but only once per ID
+        unique_product_ids = set([r.eng_product_id for r in repos if r.eng_product_id])
+        for product_id in unique_product_ids:
+            out.append(client.flush_product(product_id))
+
         out.extend([client.flush_erratum(erratum.id) for erratum in (errata or [])])
 
         return out
