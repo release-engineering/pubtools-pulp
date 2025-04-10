@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.33.2] - 2025-04-10
+
+- Re-enabled flushing UD cache by Engineering ID number
 
 ## [1.33.1] - 2025-03-24
 
@@ -277,7 +280,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.33.1...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.33.2...HEAD
+[1.33.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.33.1...v1.33.2
 [1.33.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.33.0...v1.33.1
 [1.33.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.32.2...v1.33.0
 [1.32.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.32.1...v1.32.2
