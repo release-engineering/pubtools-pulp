@@ -1,5 +1,4 @@
 import logging
-import pytest
 
 
 from pubtools._pulp.ud import UdCacheClient
@@ -21,8 +20,7 @@ def test_flush(requests_mock, caplog):
             requests_mock.register_uri("GET", url)
 
         # It should succeed
-        with pytest.deprecated_call():
-            client.flush_product(1234).result()
+        client.flush_product(1234).result()
         client.flush_repo("some-repo").result()
         client.flush_erratum("RHBA-1234").result()
 

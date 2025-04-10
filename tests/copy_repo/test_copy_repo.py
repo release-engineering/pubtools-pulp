@@ -21,9 +21,14 @@ from pubtools._pulp.ud import UdCacheClient
 class FakeUdCache(object):
     def __init__(self):
         self.flushed_repos = []
+        self.flushed_products = []
 
     def flush_repo(self, repo_id):
         self.flushed_repos.append(repo_id)
+        return f_return()
+
+    def flush_product(self, product_id):
+        self.flushed_products.append(product_id)
         return f_return()
 
 
@@ -220,6 +225,7 @@ def test_copy_repo(command_tester, fake_collector):
         "another-filerepo",
         "another-yumrepo",
     ]
+    assert task_instance.udcache_client.flushed_products == [456, 890]
 
 
 def test_copy_file_skip_publish(command_tester):
