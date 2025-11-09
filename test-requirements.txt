@@ -655,9 +655,9 @@ pathspec==0.12.1 \
     --hash=sha256:a0d503e138a4c123b27490a4f7beda6a01c6f288df0e4a8b79c7eb0dc7b4cc08 \
     --hash=sha256:a482d51503a1ab33b1c67a6c3813a26953dbdc71c31dacaef9a838c4e29f5712
     # via black
-pbr==7.0.2 \
-    --hash=sha256:2a598b3d930f260576888932969b3b7dbcaa1d86505f9317dbd34b4a83eaf7ad \
-    --hash=sha256:d0c48993f54253b2c95d433d3960c95dd56e19a5cf5a545980180e91165ba342
+pbr==7.0.3 \
+    --hash=sha256:b46004ec30a5324672683ec848aed9e8fc500b0d261d40a3229c2d2bbfcedc29 \
+    --hash=sha256:ff223894eb1cd271a98076b13d3badff3bb36c424074d26334cd25aebeecea6b
     # via stevedore
 pkgutil-resolve-name==1.3.10 \
     --hash=sha256:357d6c9e6a755653cfd78893817c0853af365dd51ec97f3d358a819373bbd174 \
