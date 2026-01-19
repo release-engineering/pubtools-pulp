@@ -6,7 +6,6 @@ from pubtools.pluggy import task_context
 
 from .step import StepDecorator, UNSET
 
-
 LOG = logging.getLogger("pubtools.pulp")
 LOG_FORMAT = "%(asctime)s [%(levelname)-8s] %(message)s"
 

@@ -3,7 +3,6 @@ from more_executors.futures import f_map, f_flat_map, f_sequence
 
 from .base import PulpPushItem, State
 
-
 # Let pylint know, because we override ensure_uploaded,
 # we do not need to override upload_to_repo:
 #

@@ -11,7 +11,6 @@ from pubtools.pulplib import (
     ErratumPackageCollection,
 )
 
-
 LOG = logging.getLogger("pubtools.pulp")
 
 

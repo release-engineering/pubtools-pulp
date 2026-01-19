@@ -132,20 +132,20 @@ def test_typical_push(
 
     # It should have invoked hook(s).
     assert len(hookspy) == 25
-    (hook_name, hook_kwargs) = hookspy[0]
+    hook_name, hook_kwargs = hookspy[0]
     assert hook_name == "task_start"
-    (hook_name, hook_kwargs) = hookspy[1]
+    hook_name, hook_kwargs = hookspy[1]
     assert hook_name == "get_cert_key_paths"
-    (hook_name, hook_kwargs) = hookspy[2]
+    hook_name, hook_kwargs = hookspy[2]
     assert hook_name == "pulp_repository_pre_publish"
-    (hook_name, hook_kwargs) = hookspy[3]
+    hook_name, hook_kwargs = hookspy[3]
     assert hook_name == "pulp_repository_published"
     # after pulp_repository_published there's 13 calls of pulp_item_push_finished
-    (hook_name, hook_kwargs) = hookspy[-15]
+    hook_name, hook_kwargs = hookspy[-15]
     assert hook_name == "task_pulp_flush"
-    (hook_name, hook_kwargs) = hookspy[-4]
+    hook_name, hook_kwargs = hookspy[-4]
     for hook_called in hookspy[15:-4]:
-        (hook_name, hook_kwargs) = hook_called
+        hook_name, hook_kwargs = hook_called
         if hook_kwargs["pulp_units"]:
             break
 
@@ -155,7 +155,7 @@ def test_typical_push(
     assert isinstance(hook_kwargs["push_item"], PushItem)
 
     assert hook_name == "pulp_item_push_finished"
-    (hook_name, hook_kwargs) = hookspy[-1]
+    hook_name, hook_kwargs = hookspy[-1]
     assert hook_name == "task_stop"
 
     # It should have recorded various push items.

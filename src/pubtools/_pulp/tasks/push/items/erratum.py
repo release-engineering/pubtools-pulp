@@ -10,7 +10,6 @@ from pubtools.pulplib import (
 from .base import supports_type, PulpPushItem, State, UploadContext
 from . import erratum_conv
 
-
 LOG = logging.getLogger("pubtools.pulp")
 
 

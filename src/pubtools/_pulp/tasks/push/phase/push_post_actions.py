@@ -5,7 +5,6 @@ from . import constants
 
 from ....hooks import pm
 
-
 LOG = logging.getLogger("pubtools.pulp")
 
 

@@ -6,7 +6,6 @@ from .base import Phase
 from ..items import PulpPushItem, PulpRpmPushItem, PulpModuleMdPushItem
 from . import constants
 
-
 LOG = logging.getLogger("pubtools.pulp")
 
 

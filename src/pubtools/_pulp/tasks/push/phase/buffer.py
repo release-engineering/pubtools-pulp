@@ -21,7 +21,7 @@ def wait_any(fs, timeout=None, return_when=concurrent.futures.ALL_COMPLETED):
     #
     # The point is that this works better with context.interruptible, as it
     # makes the behavior consistent with queue.put, future.result etc.
-    (done, not_done) = concurrent.futures.wait(
+    done, not_done = concurrent.futures.wait(
         fs, timeout=timeout, return_when=return_when
     )
     if not done:
@@ -189,7 +189,7 @@ class OutputBuffer(object):
         # necessary until this is true. Used both when adding new futures
         # and when flushing all futures.
         while len(self.__pending_futures) >= value:
-            (done, not_done) = self.__futures_wait(
+            done, not_done = self.__futures_wait(
                 self.__pending_futures, return_when=concurrent.futures.FIRST_COMPLETED
             )
             for f in done:
