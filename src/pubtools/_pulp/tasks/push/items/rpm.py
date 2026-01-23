@@ -71,7 +71,7 @@ class PulpRpmPushItem(PulpPushItem):
     @property
     def cdn_path(self):
         """Desired value of RpmUnit.cdn_path field."""
-        (n, v, r) = self.rpm_nvr
+        n, v, r = self.rpm_nvr
         return os.path.join(
             "/content/origin/rpms",
             n,

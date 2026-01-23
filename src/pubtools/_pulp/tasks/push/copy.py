@@ -34,14 +34,12 @@ class CopyOperation(object):
             log_fn = LOG.error
 
         msg = (
-            textwrap.dedent(
-                """
+            textwrap.dedent("""
                 Copy completed: {src} => {dest}
                   Task:     {task_id}
                   Criteria: {crit}
                   Copied:   {units_str}
-                """
-            )
+                """)
             .strip()
             .format(
                 src=self.src_repo_id,

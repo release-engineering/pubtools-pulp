@@ -66,7 +66,7 @@ class ProgressLogger(object):
 
             # Conditional due to py2
             if hasattr(shutil, "get_terminal_size"):
-                (width, _) = shutil.get_terminal_size()
+                width, _ = shutil.get_terminal_size()
 
         item_info = self.ctx.item_info
         snapshot = []

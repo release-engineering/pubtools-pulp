@@ -6,7 +6,6 @@ from pubtools._pulp.task import PulpTask
 
 from .base import SetMaintenance
 
-
 step = PulpTask.step
 LOG = logging.getLogger("pubtools.pulp")
 

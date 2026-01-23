@@ -6,7 +6,6 @@ from pushsource import Source
 from .base import Phase
 from ..items import PulpPushItem
 
-
 LOG = logging.getLogger("pubtools.pulp")
 
 

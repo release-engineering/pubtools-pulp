@@ -5,7 +5,6 @@ from more_executors import Executors
 
 from .base import Phase
 
-
 LOG = logging.getLogger("pubtools.pulp")
 
 CHECKSUM_THREADS = int(os.getenv("PUBTOOLS_PULP_CHECKSUM_THREADS") or "4")

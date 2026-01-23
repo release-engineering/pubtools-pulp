@@ -6,7 +6,6 @@ from pubtools.pulplib import Criteria, ErratumUnit
 from .base import Phase
 from . import constants
 
-
 LOG = logging.getLogger("pubtools.pulp")
 
 

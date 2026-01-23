@@ -4,7 +4,6 @@ from .base import Phase
 from ..items import State
 from . import constants
 
-
 LOG = logging.getLogger("pubtools.pulp")
 
 

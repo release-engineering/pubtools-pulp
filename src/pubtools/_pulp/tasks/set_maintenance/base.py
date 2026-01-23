@@ -4,7 +4,6 @@ import re
 from pubtools._pulp.task import PulpTask
 from pubtools._pulp.services import PulpClientService
 
-
 step = PulpTask.step
 LOG = logging.getLogger("pubtools.pulp")
 

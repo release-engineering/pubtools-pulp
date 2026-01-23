@@ -10,7 +10,6 @@ from pubtools.pulplib import Unit, Criteria
 
 from ..copy import CopyOperation, asserting_all_copied_ok
 
-
 # A mapping between PushItem classes and the PulpPushItem wrappers
 # we'll use to handle them. Starts empty and is built up as each
 # class is registered.
@@ -331,7 +330,7 @@ class PulpPushItem(object):
         base_crit = Criteria.with_unit_type(unit_type) if unit_type else None
 
         for key in copy_crit.keys():
-            (src_repo_id, dest_repo_id) = key
+            src_repo_id, dest_repo_id = key
 
             src_repo = pulp_client.get_repository(src_repo_id)
             dest_repo = pulp_client.get_repository(dest_repo_id)
