@@ -559,7 +559,10 @@ imagesize==1.4.1 \
 importlib-metadata==8.5.0 \
     --hash=sha256:45e54197d28b7a7f1559e60b95e7c567032b602131fbd588f1497f47880aa68b \
     --hash=sha256:71522656f0abace1d072b9e5481a48f07c138e00f079c38c8f883823f9c26bd7
-    # via sphinx
+    # via
+    #   pubtools
+    #   pushsource
+    #   sphinx
 importlib-resources==6.4.5 \
     --hash=sha256:980862a1d16c9e147a59603677fa2aa5fd82b87f223b6cb870695bcfce830065 \
     --hash=sha256:ac29d5f956f01d5e4bb63102a5a19957f1b9175e45649977264a1416783bb717
@@ -727,9 +730,9 @@ pre-commit==3.5.0 ; python_version >= "3" \
     --hash=sha256:5804465c675b659b0862f07907f96295d490822a450c4c40e747d0b1c6ebcb32 \
     --hash=sha256:841dc9aef25daba9a0238cd27984041fa0467b4199fc4852e27950664919f660
     # via -r test-requirements.in
-pubtools==1.4.4 \
-    --hash=sha256:37cd28db0817ca598f681e9f54db9c463a54f49d040fb877ff737563b79fe498 \
-    --hash=sha256:4b7579a196df5b17e4adaf19022a9f12b1d08c207cb422f1f079516ff5220215
+pubtools==1.4.5 \
+    --hash=sha256:04544718ad40fc689814e93e5af4cd343ab4688f2883e5e2cae29c8e2d7ae2cd \
+    --hash=sha256:c7270bcb8e3a7677f838023603f93e687d9efc2b63248e600bf625580b3bf3bf
     # via
     #   -r requirements.in
     #   pubtools-pulplib
@@ -743,9 +746,9 @@ pushcollector==1.3.0 \
     # via
     #   -r requirements.in
     #   pushsource
-pushsource==2.52.1 \
-    --hash=sha256:2e2195b7f1339b2210246bd23fb4214e5d3052aff87eee420d1a83f9fbc16266 \
-    --hash=sha256:7c87cfb98d408a61edf8ee2c49c90e1ca294b6827e1d028daf6e855b048fbd13
+pushsource==2.52.2 \
+    --hash=sha256:5b954905f4618b0c6bc915d1c85c549934343164ad2a96c54c60f265ebb86f14 \
+    --hash=sha256:709a213e5649f8af5f7445a13d17015690e98877b74d9ff1f33620ed542d4fc1
     # via -r requirements.in
 pyasn1==0.6.2 \
     --hash=sha256:1eb26d860996a18e9b6ed05e7aae0e9fc21619fcee6af91cca9bad4fbea224bf \
@@ -897,9 +900,9 @@ requests-mock==1.12.1 \
     --hash=sha256:b1e37054004cdd5e56c84454cc7df12b25f90f382159087f4b6915aaeef39563 \
     --hash=sha256:e9e12e333b525156e82a3c852f22016b9158220d2f47454de9cae8a77d371401
     # via -r test-requirements.in
-rich==14.3.2 \
-    --hash=sha256:08e67c3e90884651da3239ea668222d19bea7b589149d8014a21c633420dbb69 \
-    --hash=sha256:e712f11c1a562a11843306f5ed999475f09ac31ffb64281f73ab29ffdda8b3b8
+rich==14.3.3 \
+    --hash=sha256:793431c1f8619afa7d3b52b2cdec859562b950ea0d4b6b505397612db8d5362d \
+    --hash=sha256:b8daa0b9e4eef54dd8cf7c86c03713f53241884e814f4e2f5fb342fe520f639b
     # via bandit
 rpds-py==0.20.1 \
     --hash=sha256:02a0629ec053fc013808a85178524e3cb63a61dbc35b22499870194a63578fb9 \
@@ -1133,9 +1136,9 @@ urllib3==2.2.3 \
     --hash=sha256:ca899ca043dcb1bafa3e262d73aa25c465bfb49e0bd9dd5d59f1d0acba2f8fac \
     --hash=sha256:e7d814a81dad81e6caf2ec9fdedb284ecc9c73076b62654547cc64ccdcae26e9
     # via requests
-virtualenv==20.36.1 \
-    --hash=sha256:575a8d6b124ef88f6f51d56d656132389f961062a9177016a50e4f507bbcc19f \
-    --hash=sha256:8befb5c81842c641f8ee658481e42641c68b5eab3521d8e092d18320902466ba
+virtualenv==20.38.0 \
+    --hash=sha256:94f39b1abaea5185bf7ea5a46702b56f1d0c9aa2f41a6c2b8b0af4ddc74c10a7 \
+    --hash=sha256:d6e78e5889de3a4742df2d3d44e779366325a90cf356f15621fddace82431794
     # via pre-commit
 zipp==3.20.2 \
     --hash=sha256:a817ac80d6cf4b23bf7f2828b7cabf326f15a001bea8b1f9b49631780ba28350 \
