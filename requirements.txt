@@ -476,9 +476,9 @@ pushsource==2.52.2 \
     --hash=sha256:5b954905f4618b0c6bc915d1c85c549934343164ad2a96c54c60f265ebb86f14 \
     --hash=sha256:709a213e5649f8af5f7445a13d17015690e98877b74d9ff1f33620ed542d4fc1
     # via -r requirements.in
-pyasn1==0.6.2 \
-    --hash=sha256:1eb26d860996a18e9b6ed05e7aae0e9fc21619fcee6af91cca9bad4fbea224bf \
-    --hash=sha256:9b59a2b25ba7e4f8197db7686c09fb33e658b98339fadb826e9512629017833b
+pyasn1==0.6.3 \
+    --hash=sha256:697a8ecd6d98891189184ca1fa05d1bb00e2f84b5977c481452050549c8a72cf \
+    --hash=sha256:a80184d120f0864a52a073acc6fc642847d0be408e7c7252f31390c0f4eadcde
     # via pushsource
 pycparser==2.23 \
     --hash=sha256:78816d4f24add8f10a06d6f05b4d424ad9e96cfebf68a4ddc99c65c0720d00c2 \
