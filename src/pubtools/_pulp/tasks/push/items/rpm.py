@@ -145,6 +145,19 @@ class PulpRpmPushItem(PulpPushItem):
     def upload_to_repo(self, repo):
         return repo.upload_rpm(self.pushsource_item.content(), cdn_path=self.cdn_path)
 
+    @property
+    def unit_for_update(self):
+        if (
+            self.pulp_unit.cdn_path
+        ):  # if cdn_path is already set on RPM, no update is needed
+            return None
+        else:
+            # RPMs imported via e.g. sync phase do not have cdn_path set
+            return attr.evolve(
+                self.pulp_unit,
+                cdn_path=self.cdn_path,
+            )
+
     def fail_if_duplicate(self, pulp_client):
         """
         If there is already an RPM with identical CDN path of requested within push present in Pulp but has different checksum, raise an error.

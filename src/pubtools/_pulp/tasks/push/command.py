@@ -1,6 +1,6 @@
 import logging
 import sys
-
+import os
 
 from .contextlib_compat import exitstack
 from .phase import (
@@ -16,11 +16,13 @@ from .phase import (
     Context,
     ProgressLogger,
     PostPushActions,
+    Sync,
 )
 from ..common import Publisher, PulpTask
 from ...services import (
     CollectorService,
     CachingPulpClientService,
+    Pulp3ClientService,
 )
 from ...arguments import SplitAndExtend
 
@@ -28,6 +30,9 @@ step = PulpTask.step
 
 LOG = logging.getLogger("pubtools.pulp")
 
+KONFLUX_SOURCE_ENABLED = (
+    os.getenv("PUBTOOLS_PULP_KONFLUX_SOURCE_ENABLED", "False").lower() == "true"
+)
 
 # Because pylint misunderstands the type of e.g. pulp_client:
 # E1101: Instance of 'CollectorProxy' has no 'search_repository' member (no-member)
@@ -40,6 +45,7 @@ class Push(
     CachingPulpClientService,
     Publisher,
     PulpTask,
+    Pulp3ClientService,
 ):
     """Push and publish content via Pulp."""
 
@@ -128,6 +134,14 @@ class Push(
 
         # Figure out the current state of each item in Pulp.
         add_phase(QueryPulp)
+
+        if KONFLUX_SOURCE_ENABLED:
+            # Sync items from external source (e.g. Konflux) to Pulp
+            add_phase(
+                Sync,
+                pulp3_client=self.pulp3_client,
+                pulp3_credentials=self.get_pulp3_credentials(),
+            )
 
         # Ensure all items are uploaded to Pulp. This uploads bytes into Pulp
         # but does not guarantee the items are present in each of the desired

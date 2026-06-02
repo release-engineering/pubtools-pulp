@@ -1,6 +1,6 @@
 pubtools>=0.3.0
-pubtools-pulplib>=2.36.0
-more_executors>=2.7.0
+pubtools-pulplib @ git+ssh://git@github.com/rbikar/pubtools-pulplib.git@pulp3-client-II
 pushcollector>=1.2.0
-pushsource>=2.51.0
+pushsource>=2.53.0
 monotonic; python_version < '3.3'
+anyio[trio]

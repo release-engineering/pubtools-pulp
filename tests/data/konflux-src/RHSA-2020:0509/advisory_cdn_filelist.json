@@ -1,0 +1,21 @@
+{
+    "zebra-0.1-2": {
+      "rpms": {
+        "zebra-0.1-2.noarch.rpm": [
+          "dest1"
+        ]
+      },
+      "checksums": {
+        "md5": {
+          "zebra-0.1-2.noarch.rpm": "0d56f302617696d3511e71e1669e62c0"
+
+        },
+        "sha256": {
+          "zebra-0.1-2.noarch.rpm": "7aa66335d8ebc295d626abc0639135ff6dec6333d4e94e0da69ed720c5fdd5f0"
+
+        }
+      },
+      "sig_key": "fd431d51",
+      "full_sig_key": "199e2f91fd431d51"
+    }
+  }

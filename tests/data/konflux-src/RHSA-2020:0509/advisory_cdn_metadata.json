@@ -1,0 +1,73 @@
+{
+    "type": "security",
+    "release": "0",
+    "status": "final",
+    "pushcount": "3",
+    "reboot_suggested": false,
+    "references": [
+      {
+        "href": "https://access.redhat.com/errata/RHSA-2020:0509",
+        "type": "self",
+        "id": "RHSA-2020:0509",
+        "title": "RHSA-2020:0509"
+      },
+      {
+        "href": "https://bugzilla.redhat.com/show_bug.cgi?id=1796944",
+        "type": "bugzilla",
+        "title": "CVE-2019-18634 sudo: Stack based buffer overflow when pwfeedback is enabled",
+        "id": "1796944"
+      },
+      {
+        "href": "https://access.redhat.com/security/cve/CVE-2019-18634",
+        "type": "cve",
+        "id": "CVE-2019-18634",
+        "title": "CVE-2019-18634"
+      },
+      {
+        "href": "https://access.redhat.com/security/updates/classification/#important",
+        "type": "other",
+        "id": "classification",
+        "title": "important"
+      }
+    ],
+    "pkglist": [
+      {
+        "name": "RHSA-2020:0509",
+        "packages": [
+          {
+            "name": "zebra",
+            "version": "0.1",
+            "release": "2",
+            "epoch": "0",
+            "arch": "ppc64le",
+            "filename": "zebra-0.1-2.noarch.rpm",
+            "sum": [
+              "md5",
+              "0d56f302617696d3511e71e1669e62c0",
+              "sha256",
+              "7aa66335d8ebc295d626abc0639135ff6dec6333d4e94e0da69ed720c5fdd5f0"
+            ],
+            "src": "zebra-0.1-2.src.rpm"
+          }
+          
+        ],
+        "short": ""
+      }
+    ],
+    "from": "release-engineering@redhat.com",
+    "rights": "Copyright 2020 Red Hat Inc",
+    "id": "RHSA-2020:0509",
+    "title": "Important: sudo security update",
+    "description": "The sudo packages contain the sudo utility which allows system administrators to provide certain users with the permission to execute privileged commands, which are used for system management purposes, without having to log in as root.\n\nSecurity Fix(es):\n\n* sudo: Stack based buffer overflow when pwfeedback is enabled (CVE-2019-18634)\n\nFor more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.",
+    "version": "3",
+    "updated": "2020-02-13 19:00:11 UTC",
+    "issued": "2020-02-13 19:00:11 UTC",
+    "severity": "Important",
+    "summary": "An update for sudo is now available for Red Hat Enterprise Linux 8.0 Update Services for SAP Solutions.\n\nRed Hat Product Security has rated this update as having a security impact of Important. A Common Vulnerability Scoring System (CVSS) base score, which gives a detailed severity rating, is available for each vulnerability from the CVE link(s) in the References section.",
+    "solution": "For details on how to apply this update, which includes the changes described in this advisory, refer to:\n\nhttps://access.redhat.com/articles/11258",
+    "pulp_user_metadata": {
+      "content_types": [
+        "rpm"
+      ]
+    }
+  }

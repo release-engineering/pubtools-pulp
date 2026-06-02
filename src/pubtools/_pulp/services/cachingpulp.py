@@ -15,6 +15,7 @@ class CachingPulpClient(object):
         self.search_content = delegate.search_content
         self.copy_content = delegate.copy_content
         self.update_content = delegate.update_content
+        self.create_repository = delegate.create_repository
 
         self._delegate = delegate
         self._repo_cache = {}

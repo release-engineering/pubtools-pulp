@@ -7913,6 +7913,7 @@ units:
   version: '5.21'
 - _class: RpmUnit
   arch: src
+  cdn_path: /content/origin/rpms/test-srpm01/1.0/1/none/test-srpm01-1.0-1.src.rpm
   cdn_published: 2021-12-14 09:59:00
   filename: test-srpm01-1.0-1.src.rpm
   md5sum: ba9257ced24f77f4d777e399e67924f5
