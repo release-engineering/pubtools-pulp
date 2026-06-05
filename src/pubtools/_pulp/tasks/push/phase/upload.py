@@ -1,6 +1,8 @@
 import logging
 
+
 from .base import Phase
+from . import constants
 from ..items import State
 
 LOG = logging.getLogger("pubtools.pulp")
@@ -48,6 +50,12 @@ class Upload(Phase):
         upload_context = {}
 
         for item in self.iter_input():
+            # We don't want to allow any other operation on units with potentially duplicated origin path.
+            # Limited to units that would be associated to destination repos which would cause origin path collision.
+            if not constants.ALLOW_DUPLICATE_UNITS and \
+                item.pulp_state in [State.MISSING, State.PARTIAL]:
+                item.fail_if_duplicate(self.pulp_client)
+
             if item.pulp_state in [State.IN_REPOS, State.PARTIAL, State.NEEDS_UPDATE]:
                 # This item is already in Pulp.
                 uploaded += 1
@@ -59,6 +67,7 @@ class Upload(Phase):
             else:
                 # This item is not in Pulp, or otherwise needs a reupload.
                 item_type = type(item)
+
                 if item.MULTI_UPLOAD_CONTEXT:
                     if item_type not in upload_context:
                         upload_context[item_type] = {}
