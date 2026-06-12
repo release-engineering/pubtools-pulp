@@ -34,7 +34,7 @@ def test_push_rpm_duplicate_fail(
 
     # Unit is now in dest1 repository.
     # Set up a pushsource backend which requests push of the RPM with the same cdn_path/NVR/signing key but different checksum
-    # to different destination repository. 
+    # to different destination repository.
     Source.register_backend(
         "test",
         lambda: [
