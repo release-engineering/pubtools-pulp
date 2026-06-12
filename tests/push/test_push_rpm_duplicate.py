@@ -12,14 +12,14 @@ from pubtools._pulp.tasks.push.phase import constants
 def test_push_rpm_duplicate_fail(
     fake_controller, fake_push, command_tester, caplog, monkeypatch
 ):
-    """Test that push detects and fails in the case where a RPM with the same NVR but different checksum is pushed to Pulp in the destionation repository."""
+    """Test that push detects and fails in the case where a RPM with the same cdn_path but different checksum is pushed to Pulp in the destination repository."""
     monkeypatch.setattr(constants, "ALLOW_DUPLICATE_UNITS", False)
 
     client = fake_controller.client
 
     rpm_dest = client.get_repository("dest1").result()
 
-    # Make this file exist but not in all the desired repos.
+    # Make this file exist.
     existing_rpm = RpmUnit(
         name="some-rpm",
         version="1.0.0",
@@ -33,18 +33,19 @@ def test_push_rpm_duplicate_fail(
     fake_controller.insert_units(rpm_dest, [existing_rpm])
 
     # Unit is now in dest1 repository.
-    # Set up a pushsource backend which requests push of the RPM with the same NVR/signing key but different checksum
+    # Set up a pushsource backend which requests push of the RPM with the same cdn_path/NVR/signing key but different checksum
+    # to different destination repository. 
     Source.register_backend(
         "test",
         lambda: [
             RpmPushItem(
                 name="some-rpm-1.0.0-1.noarch.rpm",
-                dest=["dest1", "dest2"],
-                 # different checksum but same GPG key
+                dest=["dest2"],
+                # different checksum but same GPG key
                 sha256sum="e823456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
                 md5sum=32 * "a",
                 src="fake/path",
-                signing_key="F21541EB", 
+                signing_key="F21541EB",
             ),
         ],
     )

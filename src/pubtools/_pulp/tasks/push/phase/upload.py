@@ -52,8 +52,10 @@ class Upload(Phase):
         for item in self.iter_input():
             # We don't want to allow any other operation on units with potentially duplicated origin path.
             # Limited to units that would be associated to destination repos which would cause origin path collision.
-            if not constants.ALLOW_DUPLICATE_UNITS and \
-                item.pulp_state in [State.MISSING, State.PARTIAL]:
+            if not constants.ALLOW_DUPLICATE_UNITS and item.pulp_state in [
+                State.MISSING,
+                State.PARTIAL,
+            ]:
                 item.fail_if_duplicate(self.pulp_client)
 
             if item.pulp_state in [State.IN_REPOS, State.PARTIAL, State.NEEDS_UPDATE]:
