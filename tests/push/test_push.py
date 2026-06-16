@@ -19,7 +19,7 @@ from pubtools.pulplib import (
 from pubtools.pluggy import pm
 
 from pubtools._pulp.tasks.push import entry_point
-from pubtools._pulp.tasks.push.phase import context
+from pubtools._pulp.tasks.push.phase import context, constants
 
 from .util import hide_unit_ids
 
@@ -88,10 +88,15 @@ def test_typical_push(
     command_tester,
     hookspy,
     stub_collector,
+    monkeypatch,
 ):
     """Test a typical case of push using all sorts of content where the content
     is initially not present in Pulp.
     """
+    # patch this constant to disallow duplicate units to be uploaded to Pulp.
+    # should be a no-op for non-RPM units, should pass for RPM units.
+    monkeypatch.setattr(constants, "ALLOW_DUPLICATE_UNITS", False)
+
     # Sanity check that the Pulp server is, initially, empty.
     client = fake_controller.client
     assert list(client.search_content()) == []

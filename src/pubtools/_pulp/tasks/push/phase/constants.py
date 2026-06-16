@@ -112,3 +112,8 @@ OUT_BATCH_TIMEOUT = float(os.getenv("PUBTOOLS_PULP_OUT_BATCH_TIMEOUT") or "10.0"
 
 OUT_MAX_FUTURES = int(os.getenv("PUBTOOLS_PULP_OUT_MAX_FUTURES") or "10")
 """Max number of pending futures in output buffer."""
+
+# Special workaround for allowing duplicate units to be uploaded to Pulp.
+ALLOW_DUPLICATE_UNITS = os.getenv(
+    "PUBTOOLS_PULP_ALLOW_DUPLICATE_UNITS", "True"
+).strip().lower() in ("true", "1", "yes", "y")
