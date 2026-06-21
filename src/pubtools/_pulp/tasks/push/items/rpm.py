@@ -144,3 +144,32 @@ class PulpRpmPushItem(PulpPushItem):
 
     def upload_to_repo(self, repo):
         return repo.upload_rpm(self.pushsource_item.content(), cdn_path=self.cdn_path)
+
+    def fail_if_duplicate(self, pulp_client):
+        """
+        If there is already an RPM with identical CDN path of requested within push present in Pulp but has different checksum, raise an error.
+        Publishing such units would break integrity of repositories when published becuase of collision on origin path.
+        """
+        crit = Criteria.and_(
+            Criteria.with_unit_type(
+                RpmUnit, unit_fields=["filename", "cdn_path", "sha256sum"]
+            ),
+            Criteria.with_field("filename", self.pushsource_item.name),
+        )
+
+        results = pulp_client.search_content(crit)
+        for item in results:
+            if (
+                item.cdn_path
+                and item.cdn_path == self.cdn_path
+                and item.sha256sum != self.pushsource_item.sha256sum
+            ):
+                msg = (
+                    "Fatal error: Duplicate RPM present in Pulp: %s, sha256: %s, cdn_path: %s"
+                    % (
+                        item.filename,
+                        item.sha256sum,
+                        item.cdn_path,
+                    )
+                )
+                raise RuntimeError(msg)

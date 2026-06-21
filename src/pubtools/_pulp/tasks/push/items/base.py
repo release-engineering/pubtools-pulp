@@ -645,3 +645,7 @@ class PulpPushItem(object):
         content types which can safely reuse uploads.
         """
         return None
+
+    def fail_if_duplicate(self, pulp_client):  # pylint:disable=unused-argument
+        """Subclasses may override this method to check for duplicates and fail if found."""
+        return None
