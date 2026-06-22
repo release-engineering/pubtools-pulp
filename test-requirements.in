@@ -1,6 +1,5 @@
 pytest
 pytest-cov
-coveralls
 mock
 requests_mock
 rpmdyn
