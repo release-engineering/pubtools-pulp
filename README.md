@@ -6,7 +6,7 @@ used by [release-engineering](https://github.com/release-engineering) publishing
 
 [![PyPI version](https://badge.fury.io/py/pubtools-pulp.svg)](https://badge.fury.io/py/pubtools-pulp)
 [![Build Status](https://travis-ci.com/release-engineering/pubtools-pulp.svg?branch=master)](https://travis-ci.com/release-engineering/pubtools-pulp)
-[![Coverage Status](https://coveralls.io/repos/github/release-engineering/pubtools-pulp/badge.svg?branch=master)](https://coveralls.io/github/release-engineering/pubtools-pulp?branch=master)
+[![Coverage Status](https://app.codecov.io/gh/release-engineering/pubtools-pulp)](https://app.codecov.io/gh/release-engineering/pubtools-pulp)
 
 - [Source](https://github.com/release-engineering/pubtools-pulp)
 - [Documentation](https://release-engineering.github.io/pubtools-pulp/)
