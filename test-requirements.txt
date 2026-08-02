@@ -726,7 +726,6 @@ platformdirs==4.3.6 \
     # via
     #   black
     #   pylint
-    #   python-discovery
     #   virtualenv
 pluggy==1.5.0 \
     --hash=sha256:2cffa88e94fdc978c4c574f15f9e59b7f4201d439195c3715ca9e2486f1d0cf1 \
@@ -797,9 +796,9 @@ python-dateutil==2.9.0.post0 \
     # via
     #   koji
     #   pushsource
-python-discovery==1.5.0 \
-    --hash=sha256:3e014c6327154d3dda27939a9a0dc9c5c000439f1906d3f303b48f984bd2ecef \
-    --hash=sha256:70c4fc61b4e7404e44f01d6fc44a715c4d685ca6cea83d295922f05891877c98
+python-discovery==1.5.1 \
+    --hash=sha256:ac07f44cade589d954e9d6a1e1468539fdddd2cf676beb51da73e0f156b7c932 \
+    --hash=sha256:e2ea8b884cd1701f386eda8cf327b87743f1dc21b7f784470799537d95635384
     # via virtualenv
 pytz==2026.3.post1 \
     --hash=sha256:2211d3fcf9a797d3405cac96ac7f61d80e6a644f72a3309607282fe8a2010c5d \
