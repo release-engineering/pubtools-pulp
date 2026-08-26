@@ -248,7 +248,7 @@ def test_set_empty_cves(command_tester):
         )
 
         erratum = list(client.search_content(Criteria.with_field("id", "RHSA-1234:56")))
-    
+
         assert len(erratum) == 1
         erratum = erratum[0]
         assert erratum.id == "RHSA-1234:56"
