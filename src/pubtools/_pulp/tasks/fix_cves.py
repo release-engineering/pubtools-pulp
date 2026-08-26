@@ -140,6 +140,7 @@ class FixCves(PulpClientService, Publisher, PulpTask):
             type=str,
             action=SplitAndExtend,
             split_on=",",
+            default=[],
         )
 
     def run(self):
