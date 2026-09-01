@@ -230,6 +230,35 @@ def test_no_update_on_same_cves(command_tester):
     assert cves[0].id == "CVE-123"
 
 
+def test_set_empty_cves(command_tester):
+    with FakeFixCves() as fake_fix_cves:
+        fake_pulp = fake_fix_cves.pulp_client_controller
+        client = fake_pulp.client
+        _setup_controller(fake_pulp)
+
+        command_tester.test(
+            fake_fix_cves.main,
+            [
+                "test-fix-cves",
+                "--pulp-url",
+                "https://pulp.example.com",
+                "--advisory",
+                "RHSA-1234:56",
+            ],
+        )
+
+        erratum = list(client.search_content(Criteria.with_field("id", "RHSA-1234:56")))
+
+        assert len(erratum) == 1
+        erratum = erratum[0]
+        assert erratum.id == "RHSA-1234:56"
+        # erratum version bumped
+        assert erratum.version == "3"
+        cves = sorted([ref for ref in erratum.references if ref.type == "cve"])
+        # the CVE was removed
+        assert len(cves) == 0
+
+
 def test_no_input_advisory_cve(command_tester):
     command_tester.test(
         lambda: entry_point(FakeFixCves),
