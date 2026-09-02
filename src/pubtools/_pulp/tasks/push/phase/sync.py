@@ -145,7 +145,7 @@ class Sync(Phase):
         await self.pulp3_client.poll_task(modify_task)
         publ_task = await self.pulp3_client.create_publication(repo_href)
         return await self.pulp3_client.poll_task(publ_task)
-    
+
     """
     unused now, but will be needed if we decide to use chaining of task for better parallelism
     async def _update_ext_repo(self, repo_href, to_add):

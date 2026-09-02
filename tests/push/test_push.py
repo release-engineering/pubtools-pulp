@@ -471,7 +471,8 @@ def test_update_push(
     # RPM after push should be as it was before except that dest1 was added into
     # repository_memberships and cdn_path was updated as well.
     assert updated_rpm == attr.evolve(
-        existing_rpm, repository_memberships=["all-rpm-content", "dest1"], 
+        existing_rpm,
+        repository_memberships=["all-rpm-content", "dest1"],
         cdn_path="/content/origin/rpms/test-srpm01/1.0/1/none/test-srpm01-1.0-1.src.rpm",
     )
 
@@ -497,7 +498,15 @@ def test_update_push(
 @mock.patch("pubtools._pulp.tasks.push.phase.sync.uuid.uuid4", return_value="fake-uuid")
 @mock.patch("pubtools._pulp.tasks.push.phase.sync.Sync._sync_ext_repo")
 def test_push_with_sync(
-    mock_sync, mock_uuid, fake_controller, data_path, fake_push, fake_state_path, command_tester, monkeypatch, httpx_mock
+    mock_sync,
+    mock_uuid,
+    fake_controller,
+    data_path,
+    fake_push,
+    fake_state_path,
+    command_tester,
+    monkeypatch,
+    httpx_mock,
 ):
     """Test a push with sync phase."""
     client = fake_controller.client
@@ -507,7 +516,7 @@ def test_push_with_sync(
     # should be a no-op for non-RPM units, should pass for RPM units.
     monkeypatch.setattr(constants, "ALLOW_DUPLICATE_UNITS", False)
     monkeypatch.setattr(command, "KONFLUX_SOURCE_ENABLED", True)
-    
+
     konflux_dir = os.path.join(data_path, "konflux-src")
 
     _mock_pulp3_queries_sync_phase(httpx_mock)
@@ -520,7 +529,15 @@ def test_push_with_sync(
     args = [
         "",
         "--source",
-        "konflux:%s?%s&%s&%s&%s&%s" % (konflux_dir, "advisories=RHSA-2020:0509", "pulp_user=test", "pulp_password=test", "pulp_url=https://pulp3.example.com", "pulp_domain=test"),
+        "konflux:%s?%s&%s&%s&%s&%s"
+        % (
+            konflux_dir,
+            "advisories=RHSA-2020:0509",
+            "pulp_user=test",
+            "pulp_password=test",
+            "pulp_url=https://pulp3.example.com",
+            "pulp_domain=test",
+        ),
         "--allow-unsigned",
         "--pulp-url",
         "https://pulp.example.com/",
@@ -536,7 +553,7 @@ def test_push_with_sync(
         md5sum="0d56f302617696d3511e71e1669e62c0",
         name="zebra",
         version="0.1",
-        release="2",           
+        release="2",
         sha256sum="7aa66335d8ebc295d626abc0639135ff6dec6333d4e94e0da69ed720c5fdd5f0",
         unit_id="to-sync-rpm-id1",
     )
@@ -544,9 +561,10 @@ def test_push_with_sync(
     def import_unit(*_):
         repo = client.get_repository("tmp-konflux-fake-uuid").result()
         fake_controller.insert_units(repo, [rpm_to_sync])
+
     # this will make the RPM exist in repo that is synced from konflux source
     mock_sync.side_effect = import_unit
-    
+
     run = functools.partial(entry_point, cls=lambda: fake_push)
 
     # It should be able to run without crashing.
@@ -567,73 +585,96 @@ def test_push_with_sync(
     synced_rpm = synced_rpm[0]
 
     assert synced_rpm == attr.evolve(
-        rpm_to_sync, repository_memberships=["tmp-konflux-fake-uuid", "dest1"], 
+        rpm_to_sync,
+        repository_memberships=["tmp-konflux-fake-uuid", "dest1"],
         cdn_path="/content/origin/rpms/zebra/0.1/2/fd431d51/zebra-0.1-2.noarch.rpm",
         cdn_published=datetime.datetime(2021, 12, 10, 9, 59),
     )
 
     # Do extra check on Erratum - only in dest and all-erratum-content-2020 repo.
-    uploaded_erratum = list(
-        client.search_content(Criteria.with_unit_type(ErratumUnit))
-        
-    )
+    uploaded_erratum = list(client.search_content(Criteria.with_unit_type(ErratumUnit)))
     assert len(uploaded_erratum) == 1
     uploaded_erratum = uploaded_erratum[0]
 
     assert uploaded_erratum.id == "RHSA-2020:0509"
-    assert uploaded_erratum.repository_memberships == ["all-erratum-content-2020", "dest1"]
+    assert uploaded_erratum.repository_memberships == [
+        "all-erratum-content-2020",
+        "dest1",
+    ]
     assert uploaded_erratum.title == "Important: sudo security update"
-    
+
 
 def _mock_pulp3_queries_sync_phase(httpx_mock):
     # mock pulp3 queries, we don't have fake pulp3 client as of Sept 2026,
     # but we should rather mock real queries to pulp3 as much as possible.
-    
-    # pushsource query to pulp3 
+
+    # pushsource query to pulp3
     httpx_mock.add_response(
-        url=re.compile("https://pulp3.example.com/api/pulp/test/api/v3/content/rpm/packages/"),
+        url=re.compile(
+            "https://pulp3.example.com/api/pulp/test/api/v3/content/rpm/packages/"
+        ),
         method="GET",
-        json={"results": [{"pulp_href": "fake/href", "sha256": "7aa66335d8ebc295d626abc0639135ff6dec6333d4e94e0da69ed720c5fdd5f0", "name":"zebra-1.0-1.noarch.rpm"}]},
+        json={
+            "results": [
+                {
+                    "pulp_href": "fake/href",
+                    "sha256": "7aa66335d8ebc295d626abc0639135ff6dec6333d4e94e0da69ed720c5fdd5f0",
+                    "name": "zebra-1.0-1.noarch.rpm",
+                }
+            ]
+        },
         status_code=200,
     )
     # mock create repository in pulp3
     httpx_mock.add_response(
-        url=re.compile("https://pulp3.example.com/api/pulp/test/api/v3/repositories/rpm/rpm/"),
+        url=re.compile(
+            "https://pulp3.example.com/api/pulp/test/api/v3/repositories/rpm/rpm/"
+        ),
         method="POST",
         json={"pulp_href": "fake/href"},
         status_code=201,
     )
     # mock create distribution in pulp3
     httpx_mock.add_response(
-        url=re.compile("https://pulp3.example.com/api/pulp/test/api/v3/distributions/rpm/rpm/"),
+        url=re.compile(
+            "https://pulp3.example.com/api/pulp/test/api/v3/distributions/rpm/rpm/"
+        ),
         method="POST",
         json={"task": "fake-task"},
         status_code=201,
     )
     # mock get distribution in pulp3
     httpx_mock.add_response(
-        url=re.compile("https://pulp3.example.com/api/pulp/test/api/v3/distributions/rpm/rpm/"),
+        url=re.compile(
+            "https://pulp3.example.com/api/pulp/test/api/v3/distributions/rpm/rpm/"
+        ),
         method="GET",
         json={"count": 1, "results": [{"base_url": "fake/url"}]},
         status_code=200,
     )
     # mock modify content in pulp3
     httpx_mock.add_response(
-        url=re.compile("https://pulp3.example.com/api/pulp/test/api/v3/repositories/rpm/rpm/fake/href/modify/"),
+        url=re.compile(
+            "https://pulp3.example.com/api/pulp/test/api/v3/repositories/rpm/rpm/fake/href/modify/"
+        ),
         method="POST",
         json={"task": "fake-task"},
         status_code=201,
     )
     # mock create publication in pulp3
     httpx_mock.add_response(
-        url=re.compile("https://pulp3.example.com/api/pulp/test/api/v3/publications/rpm/rpm/"),
+        url=re.compile(
+            "https://pulp3.example.com/api/pulp/test/api/v3/publications/rpm/rpm/"
+        ),
         method="POST",
         json={"task": "fake-task"},
         status_code=201,
     )
     # mock get task in pulp3 (reusable)
     httpx_mock.add_response(
-        url=re.compile("https://pulp3.example.com/api/pulp/test/api/v3/tasks/fake-task/"),
+        url=re.compile(
+            "https://pulp3.example.com/api/pulp/test/api/v3/tasks/fake-task/"
+        ),
         method="GET",
         json={"state": "completed"},
         status_code=200,
