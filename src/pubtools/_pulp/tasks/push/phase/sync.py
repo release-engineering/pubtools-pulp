@@ -2,8 +2,8 @@ import logging
 import uuid
 import anyio
 
-from .base import Phase
 from pubtools.pulplib import RpmUnit, YumRepository, YumSyncOptions
+from .base import Phase
 from ..items import State
 
 LOG = logging.getLogger("pubtools.pulp")
@@ -145,14 +145,6 @@ class Sync(Phase):
         await self.pulp3_client.poll_task(modify_task)
         publ_task = await self.pulp3_client.create_publication(repo_href)
         return await self.pulp3_client.poll_task(publ_task)
-
-    """
-    unused now, but will be needed if we decide to use chaining of task for better parallelism
-    async def _update_ext_repo(self, repo_href, to_add):
-        
-        modify_task = await self.pulp3_client.modify_repo_content(repo_href, to_add)
-        await self.pulp3_client.poll_task(modify_task)
-    """
 
     async def _publish_ext_repo(self, repo_href):
         publ_task = await self.pulp3_client.create_publication(repo_href)

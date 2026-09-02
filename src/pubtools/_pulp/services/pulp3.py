@@ -53,7 +53,7 @@ class Pulp3ClientService(Service):
                 self.__instance = self.new_pulp3_client()
         return self.__instance
 
-    def new_pulp3_client(self, **kwargs):
+    def new_pulp3_client(self):
         """Creates and returns a new Pulp3 client with appropriate config."""
         args = self._service_args
         auth = cert = None
@@ -94,13 +94,16 @@ class Pulp3ClientService(Service):
         super(Pulp3ClientService, self).__exit__(*exc_details)
 
     def get_pulp3_credentials(self):
+        out = None, (None, None)
         if self._service_args.pulp3_user:
-            return "basic", (
+            out = "basic", (
                 self._service_args.pulp3_user,
                 self._service_args.pulp3_password,
             )
-        else:
-            return "pki", (
-                self._service_args.pulp3_cert,
-                self._service_args.pulp3_cert_key,
-            )
+        
+        elif self._service_args.pulp3_cert:
+            out = "pki", (
+            self._service_args.pulp3_cert,
+            self._service_args.pulp3_cert_key,
+        )
+        return out

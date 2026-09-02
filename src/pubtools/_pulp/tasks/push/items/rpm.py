@@ -151,12 +151,12 @@ class PulpRpmPushItem(PulpPushItem):
             self.pulp_unit.cdn_path
         ):  # if cdn_path is already set on RPM, no update is needed
             return None
-        else:
-            # RPMs imported via e.g. sync phase do not have cdn_path set
-            return attr.evolve(
-                self.pulp_unit,
-                cdn_path=self.cdn_path,
-            )
+
+        # RPMs imported via e.g. sync phase do not have cdn_path set
+        return attr.evolve(
+            self.pulp_unit,
+            cdn_path=self.cdn_path,
+        )
 
     def fail_if_duplicate(self, pulp_client):
         """

@@ -1,5 +1,5 @@
 pubtools>=0.3.0
-pubtools-pulplib @ git+ssh://git@github.com/rbikar/pubtools-pulplib.git@pulp3-client-II
+pubtools-pulplib
 pushcollector>=1.2.0
 pushsource>=2.53.0
 monotonic; python_version < '3.3'
