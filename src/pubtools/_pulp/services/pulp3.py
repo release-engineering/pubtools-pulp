@@ -100,10 +100,10 @@ class Pulp3ClientService(Service):
                 self._service_args.pulp3_user,
                 self._service_args.pulp3_password,
             )
-        
+
         elif self._service_args.pulp3_cert:
             out = "pki", (
-            self._service_args.pulp3_cert,
-            self._service_args.pulp3_cert_key,
-        )
+                self._service_args.pulp3_cert,
+                self._service_args.pulp3_cert_key,
+            )
         return out
