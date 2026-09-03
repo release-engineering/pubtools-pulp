@@ -73,7 +73,9 @@ class Sync(Phase):
         async with self.pulp3_client:
 
             items_to_add = set()
-            for item in self.iter_input():  # TODO use batch approach for bigger input data
+            for (
+                item
+            ) in self.iter_input():  # TODO use batch approach for bigger input data
                 if self.pre_push and not item.can_pre_push:
                     # We're doing a pre-push, but this item doesn't support that.
                     prepush_skipped += 1
@@ -85,7 +87,7 @@ class Sync(Phase):
                     non_rpm_skipped += 1
                     self.put_output(item)
                     continue
-                
+
                 # units are already in pulp, no need to re-sync them
                 if item.pulp_state in [
                     State.IN_REPOS,

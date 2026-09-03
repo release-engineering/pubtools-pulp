@@ -494,6 +494,7 @@ def test_update_push(
     assert updated_erratum.pkglist
     assert updated_erratum.version == "3"
 
+
 @pytest.mark.parametrize("pre_push", [True, False])
 @mock.patch("pubtools._pulp.tasks.push.phase.sync.uuid.uuid4", return_value="fake-uuid")
 @mock.patch("pubtools.pulplib.YumRepository.sync")
@@ -517,15 +518,15 @@ def test_push_with_sync(
     # should be a no-op for non-RPM units, should pass for RPM units.
     monkeypatch.setattr(constants, "ALLOW_DUPLICATE_UNITS", False)
     monkeypatch.setattr(command, "KONFLUX_SOURCE_ENABLED", True)
-    
+
     def import_unit(*_):
         repo = client.get_repository("tmp-konflux-fake-uuid").result()
         fake_controller.insert_units(repo, [rpm_to_sync])
         return mock.MagicMock()
-        
+
     # this will make the RPM exist in repo that is synced from konflux source
     mock_sync.side_effect = import_unit
-    
+
     konflux_dir = os.path.join(data_path, "konflux-src")
 
     _mock_pulp3_queries_sync_phase(httpx_mock)
@@ -607,15 +608,15 @@ def test_push_with_sync(
         # if doing pre-push, rpms are synced into tmp repo only
         assert synced_rpm == attr.evolve(
             rpm_to_sync,
-            repository_memberships=["tmp-konflux-fake-uuid"],)
+            repository_memberships=["tmp-konflux-fake-uuid"],
+        )
     else:
-         assert synced_rpm == attr.evolve(
+        assert synced_rpm == attr.evolve(
             rpm_to_sync,
             repository_memberships=["tmp-konflux-fake-uuid", "dest1"],
             cdn_path="/content/origin/rpms/zebra/0.1/2/fd431d51/zebra-0.1-2.noarch.rpm",
             cdn_published=datetime.datetime(2021, 12, 10, 9, 59),
         )
-
 
     # Do extra check on existing RPM - no change.
     present_rpm = list(
@@ -664,7 +665,7 @@ def _mock_pulp3_queries_sync_phase(httpx_mock):
                     "pulp_href": "fake/href",
                     "sha256": "cc1cd9f37d87e49e2b7d5e33b19df8a93a557b275c338c69ef8b03809c5b3314",
                     "name": "fake-1.0-1.noarch.rpm",
-                }
+                },
             ]
         },
         status_code=200,

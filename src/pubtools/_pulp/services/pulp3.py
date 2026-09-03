@@ -63,9 +63,7 @@ class Pulp3ClientService(Service):
 
         # pulp-certificate provided as argument
         if args.pulp3_cert:
-            LOG.info(
-                "Pulp certificate %s was provided as argument", args.pulp3_cert
-            )
+            LOG.info("Pulp certificate %s was provided as argument", args.pulp3_cert)
             if args.pulp3_cert_key:
                 LOG.info(
                     "Pulp3 certificate key %s was provided as argument",
