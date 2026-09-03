@@ -298,6 +298,18 @@ def test_pulp3_missing_args(caplog):
     assert excinfo.value.code == 41
     assert "Both pulp3-url and domain must be provided" in caplog.text
 
+def test_pulp3_password_missing(caplog):
+    """An error occurs if task is invoked with --pulp3-user but no --pulp3-password."""
+
+    with TaskWithPulp3Client() as task:
+        arg = ["", "--pulp-url", "http://some.url", "--domain", "test", "--pulp3-url", "http://some.url3", "--pulp3-user", "test-user"]
+        with patch("sys.argv", arg):
+            with patch("pubtools._pulp.task.PulpTask.run"):
+                with pytest.raises(SystemExit) as excinfo:
+                    task.pulp3_client
+
+    assert excinfo.value.code == 41
+    assert "No pulp3 password provided for test-user" in caplog.text
 
 @pytest.mark.parametrize(
     "args_cert, args_key, expected_creds",
