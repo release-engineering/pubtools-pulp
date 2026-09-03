@@ -73,25 +73,26 @@ class Sync(Phase):
         async with self.pulp3_client:
 
             items_to_add = set()
-            for item in self.iter_input():  # TODO use batch approach
-                ## only RPM are support for sync to rshm-pulp from external source
+            for item in self.iter_input():  # TODO use batch approach for bigger input data
+                if self.pre_push and not item.can_pre_push:
+                    # We're doing a pre-push, but this item doesn't support that.
+                    prepush_skipped += 1
+                    self.put_output(item)
+                    continue
+
+                # only RPM are supported for sync to rshm-pulp from external source
                 if item.unit_type is not RpmUnit:
                     non_rpm_skipped += 1
                     self.put_output(item)
                     continue
-
+                
+                # units are already in pulp, no need to re-sync them
                 if item.pulp_state in [
                     State.IN_REPOS,
                     State.PARTIAL,
                     State.NEEDS_UPDATE,
                 ]:
                     synced += 1
-                    self.put_output(item)
-                    continue
-
-                if self.pre_push and not item.can_pre_push:
-                    # We're doing a pre-push, but this item doesn't support that.
-                    prepush_skipped += 1
                     self.put_output(item)
                     continue
 
@@ -103,7 +104,8 @@ class Sync(Phase):
 
                 async with anyio.create_task_group() as tg:
                     # TODO when using batches and multiple repos, use chaining of tasks
-                    # with _update_ext_repo() and _publish_ext_repo() - need refactor to be able to use AnyIO's memory streams
+                    # with separated_update_ext_repo() and _publish_ext_repo()
+                    # need refactor to be able to use AnyIO's memory streams
                     tg.start_soon(
                         self._update_and_publish_repo,
                         repo["pulp_href"],
@@ -143,10 +145,6 @@ class Sync(Phase):
     async def _update_and_publish_repo(self, repo_href, to_add):
         modify_task = await self.pulp3_client.modify_repo_content(repo_href, to_add)
         await self.pulp3_client.poll_task(modify_task)
-        publ_task = await self.pulp3_client.create_publication(repo_href)
-        return await self.pulp3_client.poll_task(publ_task)
-
-    async def _publish_ext_repo(self, repo_href):
         publ_task = await self.pulp3_client.create_publication(repo_href)
         return await self.pulp3_client.poll_task(publ_task)
 

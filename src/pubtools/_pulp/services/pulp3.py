@@ -57,15 +57,14 @@ class Pulp3ClientService(Service):
         """Creates and returns a new Pulp3 client with appropriate config."""
         args = self._service_args
         auth = cert = None
-
         if not (args.pulp3_url and args.domain):
             LOG.error("Both pulp3-url and domain must be provided")
             sys.exit(41)
 
         # pulp-certificate provided as argument
-        if args.pulp_certificate:
+        if args.pulp3_cert:
             LOG.info(
-                "Pulp certificate %s was provided as argument", args.pulp_certificate
+                "Pulp certificate %s was provided as argument", args.pulp3_cert
             )
             if args.pulp3_cert_key:
                 LOG.info(
@@ -91,14 +90,14 @@ class Pulp3ClientService(Service):
         # properly exited in async code (e.g., using 'async with').
         # We cannot call __aexit__ here as this is a synchronous method.
         # Callers are responsible for managing the async context.
-        super(Pulp3ClientService, self).__exit__(*exc_details)
+        pass
 
     def get_pulp3_credentials(self):
         out = None, (None, None)
         if self._service_args.pulp3_user:
             out = "basic", (
                 self._service_args.pulp3_user,
-                self._service_args.pulp3_password,
+                self._service_args.pulp3_password or os.environ.get("PULP3_PASSWORD"),
             )
 
         elif self._service_args.pulp3_cert:

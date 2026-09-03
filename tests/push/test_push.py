@@ -494,9 +494,9 @@ def test_update_push(
     assert updated_erratum.pkglist
     assert updated_erratum.version == "3"
 
-
+@pytest.mark.parametrize("pre_push", [True, False])
 @mock.patch("pubtools._pulp.tasks.push.phase.sync.uuid.uuid4", return_value="fake-uuid")
-@mock.patch("pubtools._pulp.tasks.push.phase.sync.Sync._sync_ext_repo")
+@mock.patch("pubtools.pulplib.YumRepository.sync")
 def test_push_with_sync(
     mock_sync,
     mock_uuid,
@@ -507,8 +507,9 @@ def test_push_with_sync(
     command_tester,
     monkeypatch,
     httpx_mock,
+    pre_push,
 ):
-    """Test a push with sync phase."""
+    """Test a push with sync phase, having also existing units in Pulp. Tests also pre-push mode"""
     client = fake_controller.client
     assert list(client.search_content()) == []
 
@@ -516,7 +517,15 @@ def test_push_with_sync(
     # should be a no-op for non-RPM units, should pass for RPM units.
     monkeypatch.setattr(constants, "ALLOW_DUPLICATE_UNITS", False)
     monkeypatch.setattr(command, "KONFLUX_SOURCE_ENABLED", True)
-
+    
+    def import_unit(*_):
+        repo = client.get_repository("tmp-konflux-fake-uuid").result()
+        fake_controller.insert_units(repo, [rpm_to_sync])
+        return mock.MagicMock()
+        
+    # this will make the RPM exist in repo that is synced from konflux source
+    mock_sync.side_effect = import_unit
+    
     konflux_dir = os.path.join(data_path, "konflux-src")
 
     _mock_pulp3_queries_sync_phase(httpx_mock)
@@ -546,6 +555,8 @@ def test_push_with_sync(
         "--domain",
         "test",
     ]
+    if pre_push:
+        args.append("--pre-push")
 
     rpm_to_sync = RpmUnit(
         arch="src",
@@ -557,13 +568,22 @@ def test_push_with_sync(
         sha256sum="7aa66335d8ebc295d626abc0639135ff6dec6333d4e94e0da69ed720c5fdd5f0",
         unit_id="to-sync-rpm-id1",
     )
+    existing_rpm = RpmUnit(
+        arch="src",
+        filename="fake-0.1-2.noarch.rpm",
+        md5sum="e7cb3d31a7a16c19e9f2ff3a0f183689",
+        name="fake",
+        version="0.1",
+        release="2",
+        sha256sum="cc1cd9f37d87e49e2b7d5e33b19df8a93a557b275c338c69ef8b03809c5b3314",
+        unit_id="existing-rpm-id1",
+        cdn_path="/content/origin/rpms/fake/0.1/2/fd431d51/fake-0.1-2.noarch.rpm",
+        cdn_published=datetime.datetime(2021, 12, 10, 9, 59),
+        repository_memberships=["dest1"],
+    )
 
-    def import_unit(*_):
-        repo = client.get_repository("tmp-konflux-fake-uuid").result()
-        fake_controller.insert_units(repo, [rpm_to_sync])
-
-    # this will make the RPM exist in repo that is synced from konflux source
-    mock_sync.side_effect = import_unit
+    repo = client.get_repository("dest1").result()
+    fake_controller.insert_units(repo, [existing_rpm])
 
     run = functools.partial(entry_point, cls=lambda: fake_push)
 
@@ -577,31 +597,50 @@ def test_push_with_sync(
         compare_extra=compare_extra,
     )
 
-    # Do extra check on RPM - repository_memberships and cdn_path should be updated.
+    # Do extra check on synced RPM - repository_memberships and cdn_path should be updated.
     synced_rpm = list(
         client.search_content(Criteria.with_field("unit_id", rpm_to_sync.unit_id))
     )
     assert len(synced_rpm) == 1
     synced_rpm = synced_rpm[0]
+    if pre_push:
+        # if doing pre-push, rpms are synced into tmp repo only
+        assert synced_rpm == attr.evolve(
+            rpm_to_sync,
+            repository_memberships=["tmp-konflux-fake-uuid"],)
+    else:
+         assert synced_rpm == attr.evolve(
+            rpm_to_sync,
+            repository_memberships=["tmp-konflux-fake-uuid", "dest1"],
+            cdn_path="/content/origin/rpms/zebra/0.1/2/fd431d51/zebra-0.1-2.noarch.rpm",
+            cdn_published=datetime.datetime(2021, 12, 10, 9, 59),
+        )
 
-    assert synced_rpm == attr.evolve(
-        rpm_to_sync,
-        repository_memberships=["tmp-konflux-fake-uuid", "dest1"],
-        cdn_path="/content/origin/rpms/zebra/0.1/2/fd431d51/zebra-0.1-2.noarch.rpm",
-        cdn_published=datetime.datetime(2021, 12, 10, 9, 59),
+
+    # Do extra check on existing RPM - no change.
+    present_rpm = list(
+        client.search_content(Criteria.with_field("unit_id", existing_rpm.unit_id))
     )
+    assert len(present_rpm) == 1
+    present_rpm = present_rpm[0]
+
+    assert present_rpm == existing_rpm
 
     # Do extra check on Erratum - only in dest and all-erratum-content-2020 repo.
     uploaded_erratum = list(client.search_content(Criteria.with_unit_type(ErratumUnit)))
-    assert len(uploaded_erratum) == 1
-    uploaded_erratum = uploaded_erratum[0]
+    if pre_push:
+        # erratum is not uploaded to pulp in pre-push mode
+        assert len(uploaded_erratum) == 0
+    else:
+        assert len(uploaded_erratum) == 1
+        uploaded_erratum = uploaded_erratum[0]
 
-    assert uploaded_erratum.id == "RHSA-2020:0509"
-    assert uploaded_erratum.repository_memberships == [
-        "all-erratum-content-2020",
-        "dest1",
-    ]
-    assert uploaded_erratum.title == "Important: sudo security update"
+        assert uploaded_erratum.id == "RHSA-2020:0509"
+        assert uploaded_erratum.repository_memberships == [
+            "all-erratum-content-2020",
+            "dest1",
+        ]
+        assert uploaded_erratum.title == "Important: sudo security update"
 
 
 def _mock_pulp3_queries_sync_phase(httpx_mock):
@@ -620,6 +659,11 @@ def _mock_pulp3_queries_sync_phase(httpx_mock):
                     "pulp_href": "fake/href",
                     "sha256": "7aa66335d8ebc295d626abc0639135ff6dec6333d4e94e0da69ed720c5fdd5f0",
                     "name": "zebra-1.0-1.noarch.rpm",
+                },
+                {
+                    "pulp_href": "fake/href",
+                    "sha256": "cc1cd9f37d87e49e2b7d5e33b19df8a93a557b275c338c69ef8b03809c5b3314",
+                    "name": "fake-1.0-1.noarch.rpm",
                 }
             ]
         },

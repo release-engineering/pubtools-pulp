@@ -48,6 +48,21 @@
               "7aa66335d8ebc295d626abc0639135ff6dec6333d4e94e0da69ed720c5fdd5f0"
             ],
             "src": "zebra-0.1-2.src.rpm"
+          },
+          {
+            "name": "fake",
+            "version": "0.1",
+            "release": "2",
+            "epoch": "0",
+            "arch": "ppc64le",
+            "filename": "fake-0.1-2.noarch.rpm",
+            "sum": [
+              "md5",
+              "e7cb3d31a7a16c19e9f2ff3a0f183689",
+              "sha256",
+              "cc1cd9f37d87e49e2b7d5e33b19df8a93a557b275c338c69ef8b03809c5b3314"
+            ],
+            "src": "fake-0.1-2.src.rpm"
           }
           
         ],

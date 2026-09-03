@@ -17,5 +17,24 @@
       },
       "sig_key": "fd431d51",
       "full_sig_key": "199e2f91fd431d51"
+    },
+    "fake-0.1-2": {
+      "rpms": {
+        "fake-0.1-2.noarch.rpm": [
+          "dest1"
+        ]
+      },
+      "checksums": {
+        "md5": {
+          "fake-0.1-2.noarch.rpm": "e7cb3d31a7a16c19e9f2ff3a0f183689"
+
+        },
+        "sha256": {
+          "fake-0.1-2.noarch.rpm": "cc1cd9f37d87e49e2b7d5e33b19df8a93a557b275c338c69ef8b03809c5b3314"
+
+        }
+      },
+      "sig_key": "fd431d51",
+      "full_sig_key": "199e2f91fd431d51"
     }
   }
