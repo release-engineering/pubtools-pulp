@@ -76,7 +76,8 @@ class Pulp3ClientService(Service):
         if args.pulp3_user:
             pulp3_password = args.pulp3_password or os.environ.get("PULP3_PASSWORD")
             if not pulp3_password:
-                LOG.warning("No pulp3 password provided for %s", args.pulp3_user)
+                LOG.error("No pulp3 password provided for %s", args.pulp3_user)
+                sys.exit(41)
             auth = (args.pulp3_user, pulp3_password)
 
         return pulplib.Pulp3Client(
