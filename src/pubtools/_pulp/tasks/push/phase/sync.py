@@ -102,7 +102,8 @@ class Sync(Phase):
                 syncing += 1
 
             if items_to_add:
-                repo, dist_url = await self._create_ext_repo()
+                repo_suffix = str(uuid.uuid4())
+                repo, dist_url = await self._create_ext_repo(repo_suffix)
 
                 async with anyio.create_task_group() as tg:
                     # TODO when using batches and multiple repos, use chaining of tasks
@@ -118,7 +119,7 @@ class Sync(Phase):
                 # Create repository in internal pulp to sync from ext source
                 # TODO support for multiple repos
                 # TODO chain this with futures
-                repo = self._create_tmp_repo()
+                repo = self._create_tmp_repo(repo_suffix)
                 self._sync_ext_repo(repo, dist_url)
 
                 for item in items_to_add:
@@ -150,13 +151,12 @@ class Sync(Phase):
         publ_task = await self.pulp3_client.create_publication(repo_href)
         return await self.pulp3_client.poll_task(publ_task)
 
-    async def _create_ext_repo(self):
-        rand_str = str(uuid.uuid4())
+    async def _create_ext_repo(self, suffix):
         pulp_labels = {
             "tmp_rhsm_pulp": "true",
         }
-        repo_name = f"rhsm-pulp-sync-{rand_str}"
-        distr_name = f"rhsm-pulp-sync-{rand_str}"
+        repo_name = f"rhsm-pulp-sync-{suffix}"
+        distr_name = f"rhsm-pulp-sync-{suffix}"
 
         repo = await self.pulp3_client.create_repository(
             repo_name, pulp_labels=pulp_labels
@@ -174,10 +174,9 @@ class Sync(Phase):
             distr["base_url"],
         )
 
-    def _create_tmp_repo(self):
-        rand_str = str(uuid.uuid4())
+    def _create_tmp_repo(self, suffix):
         repo = YumRepository(
-            id=f"tmp-konflux-{rand_str}",
+            id=f"tmp-konflux-{suffix}",
             is_temporary=True,
         )
         repo = self.pulp_client.create_repository(repo).result()

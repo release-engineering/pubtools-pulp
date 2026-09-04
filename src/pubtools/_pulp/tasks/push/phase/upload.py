@@ -5,8 +5,6 @@ from .base import Phase
 from . import constants
 from ..items import State
 
-from pubtools.pulplib import YumRepository
-
 LOG = logging.getLogger("pubtools.pulp")
 
 
