@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - n/a
 
+## [1.34.0] - 2026-09-04
+
+- Introduced `Sync` phase that supports content import from external YUM repository
+- `cdn_path` is now set for `RpmUnit` in update phase if missing
+
 ## [1.33.2] - 2025-04-10
 
 - Re-enabled flushing UD cache by Engineering ID number
@@ -280,7 +285,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release to PyPI
 
-[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.33.2...HEAD
+[Unreleased]: https://github.com/release-engineering/pubtools-pulp/compare/v1.34.0...HEAD
+[1.34.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.33.2...v1.34.0
 [1.33.2]: https://github.com/release-engineering/pubtools-pulp/compare/v1.33.1...v1.33.2
 [1.33.1]: https://github.com/release-engineering/pubtools-pulp/compare/v1.33.0...v1.33.1
 [1.33.0]: https://github.com/release-engineering/pubtools-pulp/compare/v1.32.2...v1.33.0
