@@ -11,3 +11,4 @@ from .publish import Publish
 from .context import Context
 from .progress import ProgressLogger
 from .push_post_actions import PostPushActions
+from .sync import Sync

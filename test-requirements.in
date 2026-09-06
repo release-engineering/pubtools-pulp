@@ -3,6 +3,7 @@ pytest-cov
 mock
 requests_mock
 rpmdyn
+pytest-httpx
 
 # The following deps are not relevant for the legacy test env.
 black; python_version>='3'

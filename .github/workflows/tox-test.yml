@@ -3,10 +3,10 @@ name: Tox tests
 on: [push, pull_request]
 
 jobs:
-  py38:
+  py310:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Install OS packages
         run: |
           sudo apt-get -y update
@@ -14,25 +14,25 @@ jobs:
       - name: Upgrade pip
         run: pip install --upgrade pip
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v7
         with:
-          python-version: 3.8
+          python-version: "3.10"
       - name: Install Tox
         run: pip install tox
       - name: Run Tox
-        run: tox -e py38
+        run: tox -e py310
   static:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Install OS packages
         run: |
           sudo apt-get -y update
           sudo apt-get install -y rpm libkrb5-dev
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v7
         with:
-          python-version: 3.8
+          python-version: "3.10"
       - name: Install Tox
         run: pip install tox
       - name: Run Tox
@@ -42,15 +42,15 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Install OS packages
         run: |
           sudo apt-get -y update
           sudo apt-get install -y rpm libkrb5-dev
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v7
         with:
-          python-version: 3.8
+          python-version: "3.10"
       - name: Install Tox
         run: pip install tox
       - name: Install pytest cov
@@ -69,15 +69,15 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Install OS packages
         run: |
           sudo apt-get -y update
           sudo apt-get install -y rpm libkrb5-dev
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v7
         with:
-          python-version: 3.8
+          python-version: "3.10"
       - name: Install Tox
         run: pip install tox
       - name: Run Tox
@@ -85,16 +85,16 @@ jobs:
   bandit-exitzero:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Install OS packages
         run: |
           sudo apt-get -y update
           sudo apt-get install -y rpm
           sudo apt-get install -y libkrb5-dev
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v7
         with:
-          python-version: 3.8
+          python-version: "3.10"
       - name: Install Tox
         run: pip install tox
       - name: Run Tox
@@ -102,16 +102,16 @@ jobs:
   bandit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Install OS packages
         run: |
           sudo apt-get -y update
           sudo apt-get install -y rpm
           sudo apt-get install -y libkrb5-dev
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v7
         with:
-          python-version: 3.8
+          python-version: "3.10"
       - name: Install Tox
         run: pip install tox
       - name: Run Tox

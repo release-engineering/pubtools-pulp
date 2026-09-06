@@ -3,12 +3,17 @@ import pytest
 
 from mock import patch
 
-from pubtools.pulplib import Client
+from pubtools.pulplib import Client, Pulp3Client
 from pubtools._pulp.task import PulpTask, task_context
-from pubtools._pulp.services import PulpClientService
+from pubtools._pulp.services import PulpClientService, Pulp3ClientService
 
 
 class TaskWithPulpClient(PulpClientService, PulpTask):
+    pass
+
+
+# intentionally inherited from TaskWithPulpClient to test that the clients are not mixed up
+class TaskWithPulp3Client(TaskWithPulpClient, Pulp3ClientService):
     pass
 
 
@@ -46,6 +51,26 @@ def test_pulp_client():
             client = task.pulp_client
 
     assert isinstance(client, Client)
+
+
+def test_pulp3_client():
+    """Checks that the client in the task is an instance of pubtools.pulplib.Client"""
+    with TaskWithPulp3Client() as task:
+        arg = [
+            "",
+            "--pulp3-url",
+            "http://some.url",
+            "--domain",
+            "test",
+            "--pulp3-user",
+            "user",
+            "--pulp3-password",
+            "password",
+        ]
+        with patch("sys.argv", arg):
+            client = task.pulp3_client
+
+    assert isinstance(client, Pulp3Client)
 
 
 @pytest.mark.parametrize(
@@ -92,6 +117,89 @@ def test_pub_client_args_cert(mock_hook, args_cert, args_key, expected_kwargs):
 
                     client_kwargs = mock_client.mock_calls[0].kwargs
                     assert client_kwargs["cert"] == expected_kwargs
+
+
+@pytest.mark.parametrize(
+    "args_cert_pulp, args_key_pulp, args_cert_pulp3, args_key_pulp3, expected_kwargs_pulp, expected_kwargs_pulp3",
+    [
+        (
+            "args_crt",
+            "args_key",
+            "args_cert_pulp3",
+            "args_key_pulp3",
+            ("args_crt", "args_key"),
+            ("args_cert_pulp3", "args_key_pulp3"),
+        ),
+        (
+            "args_pem_pulp",
+            None,
+            "args_pem_pulp3",
+            None,
+            "args_pem_pulp",
+            "args_pem_pulp3",
+        ),
+    ],
+    ids=("args_crt_and_key", "args_cert_pem"),
+)
+@patch("pubtools.pluggy.pm.hook.get_cert_key_paths")
+def test_pub_client_args_cert_with_pulp3(
+    mock_hook,
+    args_cert_pulp,
+    args_key_pulp,
+    args_cert_pulp3,
+    args_key_pulp3,
+    expected_kwargs_pulp,
+    expected_kwargs_pulp3,
+):
+    """
+    Assuming certs are not passed in any way.
+    Checks if certificate is used when passed as argument.
+    Combination of pulp and pulp3 clients are tested.
+    """
+    # making sure certs are not passed through hook
+    mock_hook.return_value = ("does_not_exist", "does_not_exist")
+    with TaskWithPulp3Client() as task:
+        arg = [
+            "",
+            "--pulp-url",
+            "http://some.url",
+            "--domain",
+            "test",
+            "--pulp3-url",
+            "http://some.url3",
+        ]
+        if args_cert_pulp:
+            arg.extend(
+                [
+                    "--pulp-certificate",
+                    str(args_cert_pulp),
+                    "--pulp3-cert",
+                    str(args_cert_pulp3),
+                ]
+            )
+        if args_key_pulp:
+            arg.extend(
+                [
+                    "--pulp-certificate-key",
+                    str(args_key_pulp),
+                    "--pulp3-cert-key",
+                    str(args_key_pulp3),
+                ]
+            )
+        with patch("sys.argv", arg):
+            with patch("pubtools._pulp.services.pulp.pulplib.Client") as mock_client:
+                with patch(
+                    "pubtools._pulp.services.pulp3.pulplib.Pulp3Client"
+                ) as mock_pulp3_client:
+                    with patch("pubtools._pulp.task.PulpTask.run"):
+                        assert task.main() == 0
+                        assert task.pulp_client
+                        assert task.pulp3_client
+
+                        client_kwargs = mock_client.mock_calls[0].kwargs
+                        assert client_kwargs["cert"] == expected_kwargs_pulp
+                        client_kwargs_pulp3 = mock_pulp3_client.mock_calls[0].kwargs
+                        assert client_kwargs_pulp3["cert"] == expected_kwargs_pulp3
 
 
 @pytest.mark.parametrize(
@@ -177,12 +285,125 @@ def test_pulp_missing_args(caplog):
     assert "At least one of --pulp-url or --pulp-fake must be provided" in caplog.text
 
 
+def test_pulp3_missing_args(caplog):
+    """An error occurs if task is invoked with neither --pulp3-url nor --domain."""
+
+    with TaskWithPulp3Client() as task:
+        arg = ["", "--pulp-url", "http://some.url"]
+        with patch("sys.argv", arg):
+            with patch("pubtools._pulp.task.PulpTask.run"):
+                with pytest.raises(SystemExit) as excinfo:
+                    task.pulp3_client
+
+    assert excinfo.value.code == 41
+    assert "Both pulp3-url and domain must be provided" in caplog.text
+
+
+def test_pulp3_password_missing(caplog):
+    """An error occurs if task is invoked with --pulp3-user but no --pulp3-password."""
+
+    with TaskWithPulp3Client() as task:
+        arg = [
+            "",
+            "--pulp-url",
+            "http://some.url",
+            "--domain",
+            "test",
+            "--pulp3-url",
+            "http://some.url3",
+            "--pulp3-user",
+            "test-user",
+        ]
+        with patch("sys.argv", arg):
+            with patch("pubtools._pulp.task.PulpTask.run"):
+                with pytest.raises(SystemExit) as excinfo:
+                    task.pulp3_client
+
+    assert excinfo.value.code == 41
+    assert "No pulp3 password provided for test-user" in caplog.text
+
+
+@pytest.mark.parametrize(
+    "args_cert, args_key, expected_creds",
+    [
+        ("args_crt", "args_key", ("pki", ("args_crt", "args_key"))),
+        ("args_pem", None, ("pki", ("args_pem", None))),
+    ],
+    ids=("args_crt_and_key", "args_cert_pem"),
+)
+def test_pulp3_get_credentials_cert_and_key(args_cert, args_key, expected_creds):
+    """Checks that the credentials are returned correctly for pulp3 service"""
+    arg = [
+        "",
+        "--pulp-url",
+        "http://some.url",
+        "--domain",
+        "test",
+        "--pulp3-url",
+        "http://some.url3",
+        "--pulp3-cert",
+        str(args_cert),
+    ]
+    if args_key:
+        arg.extend(
+            [
+                "--pulp3-cert-key",
+                str(args_key),
+            ]
+        )
+    with TaskWithPulp3Client() as task:
+        with patch("sys.argv", arg):
+            with patch("pubtools._pulp.task.PulpTask.run"):
+                assert task.get_pulp3_credentials() == expected_creds
+
+
+def test_pulp3_get_credentials_basic():
+    """Checks that the credentials are returned correctly for pulp3 service"""
+    arg = [
+        "",
+        "--pulp-url",
+        "http://some.url",
+        "--domain",
+        "test",
+        "--pulp3-url",
+        "http://some.url3",
+        "--pulp3-user",
+        "user",
+        "--pulp3-password",
+        "password",
+    ]
+    with TaskWithPulp3Client() as task:
+        with patch("sys.argv", arg):
+            with patch("pubtools._pulp.task.PulpTask.run"):
+                assert task.get_pulp3_credentials() == ("basic", ("user", "password"))
+
+
 def test_main():
     """Checks main returns without exception when invoked with minimal args
     assuming run() and add_args() are implemented
     """
     with TaskWithPulpClient() as task:
         arg = ["", "--pulp-url", "http://some.url", "-d"]
+        with patch("sys.argv", arg):
+            with patch("pubtools._pulp.task.PulpTask.run"):
+                assert task.main() == 0
+
+
+def test_main_pulp3():
+    """Checks main returns without exception when invoked with minimal args
+    assuming run() and add_args() are implemented, using also pulp3 service
+    """
+    with TaskWithPulp3Client() as task:
+        arg = [
+            "",
+            "--pulp-url",
+            "http://some.url",
+            "--domain",
+            "test",
+            "--pulp3-url",
+            "http://some.url3",
+            "-d",
+        ]
         with patch("sys.argv", arg):
             with patch("pubtools._pulp.task.PulpTask.run"):
                 assert task.main() == 0
