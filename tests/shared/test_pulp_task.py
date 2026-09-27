@@ -285,6 +285,87 @@ def test_pulp_missing_args(caplog):
     assert "At least one of --pulp-url or --pulp-fake must be provided" in caplog.text
 
 
+def test_pulp3_client_env_vars(monkeypatch):
+    """Checks that Pulp3 client can be created from PUBTOOLS_PULP3_* env vars alone."""
+    monkeypatch.setenv("PUBTOOLS_PULP3_URL", "http://pulp3.env.example.com")
+    monkeypatch.setenv("PUBTOOLS_PULP3_DOMAIN", "env-domain")
+    monkeypatch.setenv("PUBTOOLS_PULP3_USER", "env-user")
+    monkeypatch.setenv("PUBTOOLS_PULP3_PASSWORD", "env-password")
+
+    with TaskWithPulp3Client() as task:
+        arg = ["", "--pulp-url", "http://some.url"]
+        with patch("sys.argv", arg):
+            with patch(
+                "pubtools._pulp.services.pulp3.pulplib.Pulp3Client"
+            ) as mock_pulp3_client:
+                task.pulp3_client
+
+                mock_pulp3_client.assert_called_once_with(
+                    "http://pulp3.env.example.com",
+                    domain="env-domain",
+                    auth=("env-user", "env-password"),
+                    cert=None,
+                )
+
+
+def test_pulp3_env_vars_cli_precedence(monkeypatch):
+    """CLI args take precedence over PUBTOOLS_PULP3_* env vars."""
+    monkeypatch.setenv("PUBTOOLS_PULP3_URL", "http://pulp3.env.example.com")
+    monkeypatch.setenv("PUBTOOLS_PULP3_DOMAIN", "env-domain")
+    monkeypatch.setenv("PUBTOOLS_PULP3_USER", "env-user")
+    monkeypatch.setenv("PUBTOOLS_PULP3_PASSWORD", "env-password")
+
+    with TaskWithPulp3Client() as task:
+        arg = [
+            "",
+            "--pulp-url",
+            "http://some.url",
+            "--pulp3-url",
+            "http://pulp3.cli.example.com",
+            "--domain",
+            "cli-domain",
+            "--pulp3-user",
+            "cli-user",
+            "--pulp3-password",
+            "cli-password",
+        ]
+        with patch("sys.argv", arg):
+            with patch(
+                "pubtools._pulp.services.pulp3.pulplib.Pulp3Client"
+            ) as mock_pulp3_client:
+                task.pulp3_client
+
+                mock_pulp3_client.assert_called_once_with(
+                    "http://pulp3.cli.example.com",
+                    domain="cli-domain",
+                    auth=("cli-user", "cli-password"),
+                    cert=None,
+                )
+
+
+def test_pulp3_get_credentials_basic_env_vars(monkeypatch):
+    """get_pulp3_credentials() reads from PUBTOOLS_PULP3_* env vars."""
+    monkeypatch.setenv("PUBTOOLS_PULP3_USER", "env-user")
+    monkeypatch.setenv("PUBTOOLS_PULP3_PASSWORD", "env-password")
+
+    with TaskWithPulp3Client() as task:
+        arg = [
+            "",
+            "--pulp-url",
+            "http://some.url",
+            "--domain",
+            "test",
+            "--pulp3-url",
+            "http://some.url3",
+        ]
+        with patch("sys.argv", arg):
+            with patch("pubtools._pulp.task.PulpTask.run"):
+                assert task.get_pulp3_credentials() == (
+                    "basic",
+                    ("env-user", "env-password"),
+                )
+
+
 def test_pulp3_missing_args(caplog):
     """An error occurs if task is invoked with neither --pulp3-url nor --domain."""
 

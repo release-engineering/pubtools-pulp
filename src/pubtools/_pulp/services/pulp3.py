@@ -27,9 +27,21 @@ class Pulp3ClientService(Service):
         super(Pulp3ClientService, self).add_service_args(parser)
 
         group = parser.add_argument_group("Pulp3 environment")
-        group.add_argument("--pulp3-url", help="Pulp3 server URL")
-        group.add_argument("--domain", help="Domain name for Pulp3 server")
-        group.add_argument("--pulp3-user", help="Pulp3 username", default=None)
+        group.add_argument(
+            "--pulp3-url",
+            help="Pulp3 server URL (or set PULP3_URL environment variable)",
+            default=None,
+        )
+        group.add_argument(
+            "--domain",
+            help="Domain name for Pulp3 server (or set PULP3_DOMAIN environment variable)",
+            default=None,
+        )
+        group.add_argument(
+            "--pulp3-user",
+            help="Pulp3 username (or set PULP3_USER environment variable)",
+            default=None,
+        )
         group.add_argument(
             "--pulp3-password",
             help="Pulp3 password (or set PULP3_PASSWORD environment variable)",
@@ -57,7 +69,11 @@ class Pulp3ClientService(Service):
         """Creates and returns a new Pulp3 client with appropriate config."""
         args = self._service_args
         auth = cert = None
-        if not (args.pulp3_url and args.domain):
+
+        pulp3_url = args.pulp3_url or os.environ.get("PUBTOOLS_PULP3_URL")
+        domain = args.domain or os.environ.get("PUBTOOLS_PULP3_DOMAIN")
+
+        if not (pulp3_url and domain):
             LOG.error("Both pulp3-url and domain must be provided")
             sys.exit(41)
 
@@ -72,17 +88,19 @@ class Pulp3ClientService(Service):
                 cert = (args.pulp3_cert, args.pulp3_cert_key)
             else:
                 cert = args.pulp3_cert
-        # checks if pulp password is available as environment variable
-        if args.pulp3_user:
-            pulp3_password = args.pulp3_password or os.environ.get("PULP3_PASSWORD")
-            if not pulp3_password:
-                LOG.error("No pulp3 password provided for %s", args.pulp3_user)
-                sys.exit(41)
-            auth = (args.pulp3_user, pulp3_password)
 
-        return pulplib.Pulp3Client(
-            args.pulp3_url, domain=args.domain, auth=auth, cert=cert
-        )
+        pulp3_user = args.pulp3_user or os.environ.get("PUBTOOLS_PULP3_USER")
+        # checks if pulp password is available as environment variable
+        if pulp3_user:
+            pulp3_password = args.pulp3_password or os.environ.get(
+                "PUBTOOLS_PULP3_PASSWORD"
+            )
+            if not pulp3_password:
+                LOG.error("No pulp3 password provided for %s", pulp3_user)
+                sys.exit(41)
+            auth = (pulp3_user, pulp3_password)
+
+        return pulplib.Pulp3Client(pulp3_url, domain=domain, auth=auth, cert=cert)
 
     def __exit__(self, *exc_details):
         # Note: The pulp3_client is an async context manager and must be
@@ -93,10 +111,14 @@ class Pulp3ClientService(Service):
 
     def get_pulp3_credentials(self):
         out = None, (None, None)
-        if self._service_args.pulp3_user:
+        pulp3_user = self._service_args.pulp3_user or os.environ.get(
+            "PUBTOOLS_PULP3_USER"
+        )
+        if pulp3_user:
             out = "basic", (
-                self._service_args.pulp3_user,
-                self._service_args.pulp3_password or os.environ.get("PULP3_PASSWORD"),
+                pulp3_user,
+                self._service_args.pulp3_password
+                or os.environ.get("PUBTOOLS_PULP3_PASSWORD"),
             )
 
         elif self._service_args.pulp3_cert:
