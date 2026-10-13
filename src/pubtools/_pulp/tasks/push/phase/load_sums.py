@@ -65,7 +65,17 @@ class LoadChecksums(Phase):
                     item.pushsource_item.name,
                 )
 
-                if not item.blocking_checksums:
+                if not item.pushsource_item.opener:
+                    # No local file opener (e.g. a KonfluxSource item
+                    # with a Pulp href as src). Pass through with
+                    # whatever checksums are already set.
+                    LOG.debug(
+                        "Skipping checksum computation for non-local src: %s",
+                        item.pushsource_item.src,
+                    )
+                    self.put_output(item)
+
+                elif not item.blocking_checksums:
                     # with_checksums (probably) won't block so just do
                     # it immediately, thus letting the next phase get hold
                     # of the item more quickly.
