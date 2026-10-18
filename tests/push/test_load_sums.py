@@ -1,3 +1,4 @@
+import logging
 import time
 
 import attr
@@ -116,6 +117,61 @@ def test_load_blocking_vs_nonblocking(tmpdir):
         "file12",
         "file14",
     ]
+
+
+def test_load_no_opener_passthrough(caplog):
+    """Verify that items without an opener (e.g. KonfluxSource items with a
+    Pulp href as src) are passed through without attempting checksum computation.
+    """
+    caplog.set_level(logging.DEBUG)
+    ctx = Context()
+    in_queue = ctx.new_queue()
+    in_queue_writer = buffer.OutputBuffer(in_queue, ctx)
+
+    # Simulate KonfluxSource items: src is a Pulp href, opener is None,
+    # sha256sum is set but md5sum may be missing (FIPS mode).
+    for i in range(0, 4):
+        item = FilePushItem(
+            name="rpm%s.rpm" % i,
+            src="/api/pulp/content/rpm/packages/%s/" % i,
+            sha256sum=FAKE_SHA256,
+            opener=None,
+        )
+        in_queue_writer.write(PulpFilePushItem(pushsource_item=item))
+
+    in_queue_writer.flush()
+    in_queue.put(constants.FINISHED)
+
+    phase = LoadChecksums(
+        context=ctx,
+        in_queue=in_queue,
+        update_push_items=lambda *_: (),
+    )
+
+    with phase:
+        pass
+
+    assert not ctx.has_error
+
+    all_outputs = []
+    while True:
+        items = phase.out_queue.get()
+        if items is constants.FINISHED:
+            break
+        all_outputs.extend(items)
+
+    assert len(all_outputs) == 4
+
+    # Items should be passed through with their original checksums intact
+    for item in all_outputs:
+        assert item.pushsource_item.sha256sum == FAKE_SHA256
+        # md5sum was not set and should remain unset (not computed)
+        assert item.pushsource_item.md5sum is None
+
+    assert (
+        "Skipping checksum computation for non-local src: /api/pulp/content/rpm/packages/0/"
+        in caplog.text
+    )
 
 
 def test_load_async_error(tmpdir, caplog):
