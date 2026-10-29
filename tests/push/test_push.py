@@ -19,7 +19,7 @@ from pubtools.pulplib import (
 )
 from pubtools.pluggy import pm
 
-from pubtools._pulp.tasks.push import entry_point, command
+from pubtools._pulp.tasks.push import entry_point
 from pubtools._pulp.tasks.push.phase import context, constants
 
 from .util import hide_unit_ids
@@ -517,7 +517,12 @@ def test_push_with_sync(
     # patch this constant to disallow duplicate units to be uploaded to Pulp.
     # should be a no-op for non-RPM units, should pass for RPM units.
     monkeypatch.setattr(constants, "ALLOW_DUPLICATE_UNITS", False)
-    monkeypatch.setattr(command, "KONFLUX_SOURCE_ENABLED", True)
+
+    # Whether items are synced is driven purely by the source/push items (the
+    # Konflux items below have no local opener, so they must be synced), and not
+    # by any configuration. Explicitly turn the old env var "off" to prove it
+    # has no bearing: the content is synced regardless.
+    monkeypatch.setenv("PUBTOOLS_PULP_KONFLUX_SOURCE_ENABLED", "false")
 
     def import_unit(*_):
         repo = client.get_repository("tmp-konflux-fake-uuid").result()

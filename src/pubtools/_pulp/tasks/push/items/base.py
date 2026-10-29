@@ -390,6 +390,21 @@ class PulpPushItem(object):
         """
         return not (self.pushsource_item.md5sum and self.pushsource_item.sha256sum)
 
+    @property
+    def needs_sync(self):
+        """True if this item's content must be synced into Pulp from an external
+        source (e.g. Konflux) rather than uploaded from a local file.
+
+        Such items carry no local file opener; their ``src`` refers to content
+        which already exists in an external Pulp instance and must be synced in.
+
+        This is a property of the item's source, which is what allows the Sync
+        phase to be part of every push while only acting on the items that
+        actually require it (rather than gating the whole phase on configuration
+        such as an environment variable).
+        """
+        return self.pushsource_item.opener is None
+
     def with_unit(self, unit):
         """Returns a copy of this item with state evolved according to the metadata in
         'unit'.

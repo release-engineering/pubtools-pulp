@@ -18,7 +18,7 @@ class Sync(Phase):
         context,
         in_queue,
         pulp_client,
-        pulp3_client,
+        pulp3_client_factory,
         pulp3_credentials,
         pre_push,
         allow_unsigned,
@@ -29,7 +29,10 @@ class Sync(Phase):
         )
 
         self.pulp_client = pulp_client
-        self.pulp3_client = pulp3_client
+        # The Pulp3 client is created lazily (on first sync) via this factory so
+        # that pushes with no items to sync don't require any Pulp3 config.
+        self._pulp3_client_factory = pulp3_client_factory
+        self.pulp3_client = None
         self.pre_push = pre_push
         self._default_sync_args = self._make_default_sync_args(
             pulp3_credentials, allow_unsigned
@@ -69,39 +72,47 @@ class Sync(Phase):
         syncing = 0
         non_rpm_skipped = 0
         prepush_skipped = 0
+        not_for_sync = 0
 
-        async with self.pulp3_client:
+        items_to_add = set()
+        for item in self.iter_input():  # TODO use batch approach for bigger input data
+            # Whether an item is synced is determined by the item itself (i.e. by
+            # the source of its content), not by any configuration. Items whose
+            # content is available locally are uploaded by the Upload phase, so
+            # there's nothing for us to do with them here.
+            if not item.needs_sync:
+                not_for_sync += 1
+                self.put_output(item)
+                continue
 
-            items_to_add = set()
-            for (
-                item
-            ) in self.iter_input():  # TODO use batch approach for bigger input data
-                if self.pre_push and not item.can_pre_push:
-                    # We're doing a pre-push, but this item doesn't support that.
-                    prepush_skipped += 1
-                    self.put_output(item)
-                    continue
+            if self.pre_push and not item.can_pre_push:
+                # We're doing a pre-push, but this item doesn't support that.
+                prepush_skipped += 1
+                self.put_output(item)
+                continue
 
-                # only RPM are supported for sync to rshm-pulp from external source
-                if item.unit_type is not RpmUnit:
-                    non_rpm_skipped += 1
-                    self.put_output(item)
-                    continue
+            # only RPM are supported for sync to rshm-pulp from external source
+            if item.unit_type is not RpmUnit:
+                non_rpm_skipped += 1
+                self.put_output(item)
+                continue
 
-                # units are already in pulp, no need to re-sync them
-                if item.pulp_state in [
-                    State.IN_REPOS,
-                    State.PARTIAL,
-                    State.NEEDS_UPDATE,
-                ]:
-                    synced += 1
-                    self.put_output(item)
-                    continue
+            # units are already in pulp, no need to re-sync them
+            if item.pulp_state in [
+                State.IN_REPOS,
+                State.PARTIAL,
+                State.NEEDS_UPDATE,
+            ]:
+                synced += 1
+                self.put_output(item)
+                continue
 
-                items_to_add.add(item)
-                syncing += 1
+            items_to_add.add(item)
+            syncing += 1
 
-            if items_to_add:
+        if items_to_add:
+            self.pulp3_client = self._pulp3_client_factory()
+            async with self.pulp3_client:
                 repo_suffix = str(uuid.uuid4())
                 repo, dist_url = await self._create_ext_repo(repo_suffix)
 
@@ -132,11 +143,13 @@ class Sync(Phase):
             "items-present": synced,
             "items-syncing": syncing,
             "items-non-rpm-skipped": non_rpm_skipped,
+            "items-not-for-sync": not_for_sync,
         }
         messages = [
             "%s already synced" % synced,
             "%s syncing" % syncing,
             "%s non-rpm skipped" % non_rpm_skipped,
+            "%s not for sync" % not_for_sync,
         ]
 
         if self.pre_push:

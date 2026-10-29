@@ -9,7 +9,7 @@ def test_sync_phase_get_creds_basic():
     sync_phase = Sync(
         context=MagicMock(),
         pulp_client=None,
-        pulp3_client=None,
+        pulp3_client_factory=lambda: None,
         pulp3_credentials=("basic", ("user", "password")),
         pre_push=None,
         allow_unsigned=True,
@@ -32,7 +32,7 @@ def test_sync_phase_get_creds_pki():
     sync_phase = Sync(
         context=MagicMock(),
         pulp_client=None,
-        pulp3_client=None,
+        pulp3_client_factory=lambda: None,
         pulp3_credentials=("pki", ("cert", "key")),
         pre_push=None,
         allow_unsigned=True,

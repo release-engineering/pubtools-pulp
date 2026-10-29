@@ -1,10 +1,41 @@
 import pytest
 
+from pushsource import RpmPushItem
+
 from pubtools._pulp.tasks.push.items import (
     PulpPushItem,
+    PulpRpmPushItem,
     PulpFilePushItem,
     PulpProductIdPushItem,
 )
+
+
+def test_needs_sync_without_opener():
+    """An item whose content has no local opener needs to be synced.
+
+    This models a Konflux push item, whose 'src' is a Pulp href rather than a
+    local file. It's the item (i.e. the source of its content) which decides
+    this, not any external configuration.
+    """
+    item = PulpRpmPushItem(
+        pushsource_item=RpmPushItem(
+            name="konflux.rpm", src="some/pulp/href", dest=["dest1"], opener=None
+        )
+    )
+    assert item.needs_sync is True
+
+
+def test_needs_sync_with_opener():
+    """An item with local content (an opener) is uploaded, not synced."""
+    item = PulpRpmPushItem(
+        pushsource_item=RpmPushItem(
+            name="local.rpm",
+            src="/some/local.rpm",
+            dest=["dest1"],
+            opener=lambda _: None,
+        )
+    )
+    assert item.needs_sync is False
 
 
 def test_match_items_units_empty():
