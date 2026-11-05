@@ -6,9 +6,10 @@ from more_executors.futures import f_map
 
 
 from pubtools.pulplib import FakeController, YumRepository
-from pushsource import RpmPushItem
+from pushsource import RpmPushItem, FilePushItem
 from pubtools._pulp.tasks.push.items import (
     PulpRpmPushItem,
+    PulpFilePushItem,
 )
 from pubtools._pulp.tasks.push.phase import Context, Upload, Phase, constants
 
@@ -36,6 +37,36 @@ class ClientWrapper(object):
     def get_repository(self, *args, **kwargs):
         wrapper = partial(RepoWrapper, uploads=self.uploads)
         return f_map(self.delegate.get_repository(*args, **kwargs), wrapper)
+
+
+def test_upload_fails_for_unsynced_sync_item():
+    """An item marked to_sync that reaches Upload without being synced has no
+    local content to upload, so Upload fails with a clear error rather than
+    attempting an upload with no content."""
+    ctx = Context()
+    queue = ctx.new_queue()
+    phase = Upload(
+        context=ctx,
+        pulp_client=None,
+        pre_push=None,
+        in_queue=queue,
+        update_push_items=lambda _: None,
+    )
+
+    item = PulpFilePushItem(
+        pushsource_item=FilePushItem(name="thing.txt", dest=["repo1"], to_sync=True)
+    )
+    # It's marked for sync and isn't already in Pulp.
+    assert item.needs_sync is True
+
+    queue.put([item])
+    queue.put(constants.FINISHED)
+
+    with phase:
+        pass
+
+    assert ctx.has_error
+    assert "requires sync from an external source" in str(ctx.error_exception)
 
 
 def test_uploads_shared(data_path):
