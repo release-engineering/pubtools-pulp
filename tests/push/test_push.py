@@ -19,7 +19,7 @@ from pubtools.pulplib import (
 )
 from pubtools.pluggy import pm
 
-from pubtools._pulp.tasks.push import entry_point, command
+from pubtools._pulp.tasks.push import entry_point
 from pubtools._pulp.tasks.push.phase import context, constants
 
 from .util import hide_unit_ids
@@ -517,7 +517,6 @@ def test_push_with_sync(
     # patch this constant to disallow duplicate units to be uploaded to Pulp.
     # should be a no-op for non-RPM units, should pass for RPM units.
     monkeypatch.setattr(constants, "ALLOW_DUPLICATE_UNITS", False)
-    monkeypatch.setattr(command, "KONFLUX_SOURCE_ENABLED", True)
 
     def import_unit(*_):
         repo = client.get_repository("tmp-konflux-fake-uuid").result()
@@ -657,12 +656,12 @@ def _mock_pulp3_queries_sync_phase(httpx_mock):
         json={
             "results": [
                 {
-                    "pulp_href": "fake/href",
+                    "pulp_href": "/api/pulp/test/api/v3/content/rpm/packages/zebra-href/",
                     "sha256": "7aa66335d8ebc295d626abc0639135ff6dec6333d4e94e0da69ed720c5fdd5f0",
                     "name": "zebra-1.0-1.noarch.rpm",
                 },
                 {
-                    "pulp_href": "fake/href",
+                    "pulp_href": "/api/pulp/test/api/v3/content/rpm/packages/fake-href/",
                     "sha256": "cc1cd9f37d87e49e2b7d5e33b19df8a93a557b275c338c69ef8b03809c5b3314",
                     "name": "fake-1.0-1.noarch.rpm",
                 },
