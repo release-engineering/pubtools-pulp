@@ -66,6 +66,16 @@ class Upload(Phase):
                 # We're doing a pre-push, but this item doesn't support that.
                 prepush_skipped += 1
                 self.put_output(item)
+            elif item.needs_sync:
+                # This item declared it must be synced in from an external source,
+                # so it has no local content to upload. If it reaches the Upload
+                # phase unsynced there is nothing to upload, so fail explicitly
+                # rather than attempting an upload with no content.
+                raise RuntimeError(
+                    "Fatal error: item requires sync from an external source but "
+                    "was not synced and has no local content to upload: %s"
+                    % item.pushsource_item
+                )
             else:
                 # This item is not in Pulp, or otherwise needs a reupload.
                 item_type = type(item)

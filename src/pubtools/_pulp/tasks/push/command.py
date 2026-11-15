@@ -1,6 +1,5 @@
 import logging
 import sys
-import os
 
 from .contextlib_compat import exitstack
 from .phase import (
@@ -29,10 +28,6 @@ from ...arguments import SplitAndExtend
 step = PulpTask.step
 
 LOG = logging.getLogger("pubtools.pulp")
-
-KONFLUX_SOURCE_ENABLED = (
-    os.getenv("PUBTOOLS_PULP_KONFLUX_SOURCE_ENABLED", "False").lower() == "true"
-)
 
 # Because pylint misunderstands the type of e.g. pulp_client:
 # E1101: Instance of 'CollectorProxy' has no 'search_repository' member (no-member)
@@ -135,13 +130,22 @@ class Push(
         # Figure out the current state of each item in Pulp.
         add_phase(QueryPulp)
 
-        if KONFLUX_SOURCE_ENABLED:
-            # Sync items from external source (e.g. Konflux) to Pulp
-            add_phase(
-                Sync,
-                pulp3_client=self.pulp3_client,
-                pulp3_credentials=self.get_pulp3_credentials(),
-            )
+        # Sync items from an external source (e.g. Konflux) into Pulp.
+        #
+        # This phase is always part of the pipeline. Whether any item is
+        # actually synced is decided per item, based on the item's own
+        # requirements (see PulpPushItem.needs_sync), which is driven by the
+        # source of the content rather than by configuration. Items which don't
+        # need a sync simply pass straight through to the Upload phase.
+        #
+        # The Pulp3 client is only constructed if there's something to sync,
+        # hence it's passed as a factory: a push with no items to sync doesn't
+        # require any Pulp3 configuration.
+        add_phase(
+            Sync,
+            pulp3_client_factory=lambda: self.pulp3_client,
+            pulp3_credentials=self.get_pulp3_credentials(),
+        )
 
         # Ensure all items are uploaded to Pulp. This uploads bytes into Pulp
         # but does not guarantee the items are present in each of the desired
